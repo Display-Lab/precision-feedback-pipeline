@@ -19,3 +19,9 @@ Vagrantfile
 
 /.idea/
 .DS_Store
+*.DS_Store
+*.csv
+**/bin/__pycache__/
+python/.vscode/settings.json
+**/dist/
+**/__pycache__/
