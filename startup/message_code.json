@@ -1,0 +1,39 @@
+{
+    "@context": {
+        
+        "schema-name":                          "http://schema.org/name",
+        "slowmo:Message_ids":                   "http://example.com/slowmo#Message_ids",
+        "@vocab":                               "http://schema.org/"
+      },
+
+    "slowmo:Message_ids": [
+        {
+    "1": "You are a top performer",
+    "2": "You are not a top performer",
+    "3": "Your performance is below the goal",
+    "4": "You reached the peer benchmark",
+    "5": "You reached the top-performer benchmark",
+    "6": "You reached the goal",
+    "7": "Your performance improved" ,
+    "8":"Your performance decreased",
+    "9": "Congratulations on your consistently high performance" ,
+    "10": "Your performance has remained low" ,
+    "11":"Your performance is approaching the goal",
+    "12":"Your performance is approaching the peer benchmark",
+    "13":"Your performance is approaching the top-performing benchmark",
+    "14":"Your performance dropped below the goal",
+    "15":"Your performance dropped consecutively below the goal" ,
+    "16":"Your performance dropped below the benchmark" ,
+    "17":"Your performance is above the goal this month" ,
+    "18":"You may have an opportunity to improve" ,
+    "19":"You and your team may have an opportunity to improve" ,
+    "20":"Your performance has remained above goal" ,
+    "21":"adverse event" ,
+    "22":"Your performance is improving" ,
+    "23":"Your performance is below the benckmark" ,
+    "24": "Your chart on the right shows your monthy performance "
+        }
+    ]
+   
+
+}
