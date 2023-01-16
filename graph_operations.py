@@ -27,6 +27,6 @@ def read_graph(file):
 def create_base_graph(g1,g2,g3,g4):
     base_graph=g1+g2+g3+g4 #merging graphs
     return base_graph
-def create_performer_graph(g1,g2):
-    performer_graph=g1&g2
+def create_performer_graph(g2):
+    performer_graph=g2
     return performer_graph

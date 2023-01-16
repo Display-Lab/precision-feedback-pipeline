@@ -10,11 +10,15 @@ from rdflib.namespace import FOAF, RDF, RDFS, SKOS, XSD
 from rdflib.serializer import Serializer
 from rdfpandas.graph import to_dataframe
 from graph_operations import read_graph, create_base_graph,create_performer_graph
+#import bit_stomach.bit_stomach as bit_stomach
+from bit_stomach.bit_stomach import Bit_stomach
 import json
 app = FastAPI()
 
-base_graph=Graph()
-
+measure_details=Graph()
+causal_pathways=Graph()
+templates=Graph()
+message_code=Graph()
 @app.on_event("startup")
 async def startup_event():
     try:
@@ -27,13 +31,14 @@ async def startup_event():
         f2json=json.load(f2)
         f3json=json.load(f3)
         f4json=json.load(f4)
+        global measure_details,message_code,causal_pathways,templates
         message_code=read_graph(f1json)
         causal_pathways=read_graph(f2json)
         measure_details=read_graph(f3json)
         templates=read_graph(f4json)
         
-        global base_graph
-        base_graph=create_base_graph(message_code,causal_pathways,measure_details,templates)
+        
+        #base_graph=create_base_graph(message_code,causal_pathways,measure_details,templates)
         # df=to_dataframe(base_graph)
         # df.to_csv("basegraph.csv")
         print("startup is complete")
@@ -46,14 +51,32 @@ async def root():
 
 @app.post("/createprecisionfeedback/")
 async def createprecisionfeedback(info:Request):
-    req_info1 =await info.json()
+    req_info =await info.json()
+    req_info1=req_info
+    performance_data = req_info1["Performance_data"]
+    performance_data_df =pd.DataFrame (performance_data, columns = [ "Staff_Number","Measure_Name","Month","Passed_Count","Flagged_Count","Denominator","Peer_Average"])
+    performance_data_df.columns = performance_data_df.iloc[0]
+    performance_data_df = performance_data_df[1:]
+    #df = df.iloc[1: , :]
+    #performance_data_df.to_csv('pd.csv', index=False)
+    #print(type())
+    del req_info1["Performance_data"]
+    history=req_info1["History"]
+    del req_info1["History"]
+    preferences=req_info1["Preferences"]
+    del req_info1["Preferences"]
     input_message=read_graph(req_info1)
-    performer_graph=create_performer_graph(input_message,base_graph)
+    performer_graph=create_performer_graph(measure_details)
+    bs=Bit_stomach(performer_graph,performance_data_df)
+    a=bs.annotate()
     a=performer_graph.serialize(format='json-ld', indent=4)
+    f = open("bs1.json", "w")
+    f.write(a)
+    f.close()
     
     return {
         "status":"Success",
-        "data": a
+        #"data": req_info1
     }
     
 
