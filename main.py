@@ -76,6 +76,8 @@ async def createprecisionfeedback(info:Request):
     df_graph=cs.get_graph_type()
     df_template=cs.get_template_data()
     CS=cs.create_candidates(df_graph,df_template)
+    #Thinkpuddung
+    
     
     CS=performer_graph.serialize(format='json-ld', indent=4)
     f = open("cs1.json", "w")
