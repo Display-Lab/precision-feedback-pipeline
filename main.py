@@ -13,6 +13,7 @@ from graph_operations import read_graph, create_base_graph,create_performer_grap
 #import bit_stomach.bit_stomach as bit_stomach
 from bit_stomach.bit_stomach import Bit_stomach
 from candidatesmasher.candidatesmasher import CandidateSmasher
+from thinkpudding.thinkpudding import Thinkpudding
 import json
 app = FastAPI()
 
@@ -77,16 +78,21 @@ async def createprecisionfeedback(info:Request):
     df_template=cs.get_template_data()
     CS=cs.create_candidates(df_graph,df_template)
     #Thinkpuddung
+    tp=Thinkpudding(CS,causal_pathways)
+    tp.process_causalpathways()
+    tp.process_spek()
+    tp.matching()
+    spek_tp=tp.insert()
+
     
-    
-    CS=performer_graph.serialize(format='json-ld', indent=4)
-    f = open("cs1.json", "w")
-    f.write(CS)
+    TP=performer_graph.serialize(format='json-ld', indent=4)
+    f = open("TP.json", "w")
+    f.write(TP)
     f.close()
     
     return {
         "status":"Success",
-        #"data": req_info1
+         "data": TP
     }
     
 
