@@ -1,0 +1,27 @@
+catalog-v001.xml
+
+# Abstract template and build artifacts
+doc/**/*.pdf
+doc/**/build/*
+doc/**/figures/*
+
+# Fuseki related
+fuseki.out
+run/
+
+vignettes/**/outputs/*
+vignettes/**/run/*
+vignettes/**/fuseki.out
+vignettes/**/vignette.log
+vignettes/**/tests/test_log.txt
+Vagrantfile
+.vagrant
+
+/.idea/
+.DS_Store
+*.DS_Store
+*.csv
+**/bin/__pycache__/
+python/.vscode/settings.json
+**/dist/
+**/__pycache__/

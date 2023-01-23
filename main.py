@@ -12,6 +12,7 @@ from rdfpandas.graph import to_dataframe
 from graph_operations import read_graph, create_base_graph,create_performer_graph
 #import bit_stomach.bit_stomach as bit_stomach
 from bit_stomach.bit_stomach import Bit_stomach
+from candidatesmasher.candidatesmasher import CandidateSmasher
 import json
 app = FastAPI()
 
@@ -67,11 +68,18 @@ async def createprecisionfeedback(info:Request):
     del req_info1["Preferences"]
     input_message=read_graph(req_info1)
     performer_graph=create_performer_graph(measure_details)
+    #BitStomach
     bs=Bit_stomach(performer_graph,performance_data_df)
-    a=bs.annotate()
-    a=performer_graph.serialize(format='json-ld', indent=4)
-    f = open("bs1.json", "w")
-    f.write(a)
+    BS=bs.annotate()
+    #CandidateSmasher
+    cs=CandidateSmasher(BS,templates)
+    df_graph=cs.get_graph_type()
+    df_template=cs.get_template_data()
+    CS=cs.create_candidates(df_graph,df_template)
+    
+    CS=performer_graph.serialize(format='json-ld', indent=4)
+    f = open("cs1.json", "w")
+    f.write(CS)
     f.close()
     
     return {
