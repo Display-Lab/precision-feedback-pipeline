@@ -14,6 +14,7 @@ from graph_operations import read_graph, create_base_graph,create_performer_grap
 from bit_stomach.bit_stomach import Bit_stomach
 from candidatesmasher.candidatesmasher import CandidateSmasher
 from thinkpudding.thinkpudding import Thinkpudding
+from esteemer import Esteemer
 import json
 app = FastAPI()
 
@@ -53,6 +54,7 @@ async def root():
 
 @app.post("/createprecisionfeedback/")
 async def createprecisionfeedback(info:Request):
+    selected_message={}
     req_info =await info.json()
     req_info1=req_info
     performance_data = req_info1["Performance_data"]
@@ -84,15 +86,22 @@ async def createprecisionfeedback(info:Request):
     tp.matching()
     spek_tp=tp.insert()
 
+    #Esteemer
+    es=Esteemer(spek_tp,preferences,message_code,history)
+    node,spek_es=es.select()
+    selected_message=es.get_selected_message()
     
-    TP=performer_graph.serialize(format='json-ld', indent=4)
-    f = open("TP.json", "w")
-    f.write(TP)
+    
+    # print(selected_message)
+    
+    ES=performer_graph.serialize(format='json-ld', indent=4)
+    f = open("ES.json", "w")
+    f.write(ES)
     f.close()
     
     return {
         "status":"Success",
-         "data": TP
+          "selected_message": selected_message
     }
     
 

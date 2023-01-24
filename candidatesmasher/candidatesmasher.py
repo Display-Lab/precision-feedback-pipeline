@@ -67,6 +67,7 @@ class CandidateSmasher:
         self.cp25="http://purl.obolibrary.org/obo/psdo_0000102"
         self.cp26=URIRef("http://example.com/slowmo#AncestorPerformer")
         self.cp27=URIRef("http://example.com/slowmo#AncestorTemplate")
+        self.cp28=URIRef("http://example.com/slowmo#Candidate")
 
 
         self.cp21=URIRef("http://example.com/slowmo#AncestorTemplate")
@@ -193,6 +194,7 @@ class CandidateSmasher:
                 self.a.add((oq,self.cp2,a25))
                 self.a.add((oq,self.cp1,a27))
                 self.a.add((oq,self.cp3,a26))
+                self.a.add((oq,RDF.type,self.cp28))
                 if(row["template_type_dicts"] != 0):
                     ov=BNode()
                     self.a.add((oq,self.cop4,ov))
@@ -262,6 +264,7 @@ class CandidateSmasher:
                     self.a.add((oq,self.cp26,a35))
                     self.a36=URIRef(row["index"])
                     self.a.add((oq,self.cp27,self.a36))
+                
                     
                 #print(count)
         return self.a
