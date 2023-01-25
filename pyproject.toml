@@ -13,7 +13,6 @@ fastapi = "^0.89.1"
 rdflib = "^6.2.0"
 pandas = "^1.5.3"
 rdfpandas = "^1.1.5"
-sparqlwrapper = "^2.0.0"
 scipy = "1.9.1"
 
 [build-system]

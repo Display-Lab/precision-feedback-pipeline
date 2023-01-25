@@ -12,7 +12,7 @@ from rdflib.collection import Collection
 from rdflib.namespace import FOAF, RDF, RDFS, SKOS, XSD
 from rdflib.serializer import Serializer
 from rdfpandas.graph import to_dataframe
-from SPARQLWrapper import XML, SPARQLWrapper
+
 import collections
 
 from thinkpudding.load import read,process_causalpathways,process_spek,matching

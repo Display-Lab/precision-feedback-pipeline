@@ -13,7 +13,7 @@ from rdflib.collection import Collection
 from rdflib.namespace import FOAF, RDF, RDFS, SKOS, XSD
 from rdflib.serializer import Serializer
 from rdfpandas.graph import to_dataframe
-from SPARQLWrapper import XML, SPARQLWrapper
+
 
 def monotonic_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     back_up_df=latest_measure_df

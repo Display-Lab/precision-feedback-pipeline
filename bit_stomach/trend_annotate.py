@@ -15,7 +15,7 @@ from rdflib.collection import Collection
 from rdflib.namespace import FOAF, RDF, RDFS, SKOS, XSD
 from rdflib.serializer import Serializer
 from rdfpandas.graph import to_dataframe
-from SPARQLWrapper import XML, SPARQLWrapper
+
 #from calc_gaps_slopes import gap_calc,trend_calc,monotonic_pred,mod_collector
 
 s=URIRef("http://example.com/app#display-lab")

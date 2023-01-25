@@ -13,12 +13,12 @@ from rdflib.collection import Collection
 from rdflib.namespace import FOAF, RDF, RDFS, SKOS, XSD
 from rdflib.serializer import Serializer
 from rdfpandas.graph import to_dataframe
-from SPARQLWrapper import XML, SPARQLWrapper
+
 
 
 # from .load_for_real import load
-from load import read, transform,read_contenders,read_measures,read_comparators
-from score import score, select,apply_indv_preferences,apply_history_message
+# from load import read, transform,read_contenders,read_measures,read_comparators
+# from score import score, select,apply_indv_preferences,apply_history_message
 
 # load()
 
