@@ -57,7 +57,7 @@ class CandidateSmasher:
 
         self.cp=RDF.type
         self.co=URIRef("http://purl.obolibrary.org/obo/cpo_0000053")
-        self.cp1=URIRef("name")
+        self.cp1=URIRef("http://example.com/slowmo#name")
         self.cp2=URIRef("psdo:PerformanceSummaryTextualEntity")
         self.cp3=URIRef("psdo:PerformanceSummaryDisplay")
         self.cp4=RDF.type
