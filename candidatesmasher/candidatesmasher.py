@@ -116,7 +116,7 @@ class CandidateSmasher:
         self.df_graph = self.df_graph.rename({7:"graph_type6"}, axis=1)
         self.df_graph = self.df_graph.fillna(0)
         self.df_graph=self.df_graph.reset_index(drop=True)
-        #self.df_graph.to_csv("graph_df.csv")
+        self.df_graph.to_csv("graph_df.csv")
         return self.df_graph
 
        
@@ -208,16 +208,17 @@ class CandidateSmasher:
                     ov=BNode()
                     self.a.add((oq,self.cop4,ov))
                     self.a.add((ov,RDF.type,a30))
-                if (row["template_type_dicts3"] != 0):
-                    a31=URIRef(row["template_type_dicts3"])
-                    ov=BNode()
-                    self.a.add((oq,self.cop4,ov))
-                    self.a.add((ov,RDF.type,a31))
-                if (row["template_type_dicts4"] != 0):
-                    a32=URIRef(row["template_type_dicts4"])
-                    ov=BNode()
-                    self.a.add((oq,self.cop4,ov))
-                    self.a.add((ov,RDF.type,a32))
+                if 'template_type_dicts3' in df.columns:
+                    if (row["template_type_dicts3"] != 0):
+                        a31=URIRef(row["template_type_dicts3"])
+                        ov=BNode()
+                        self.a.add((oq,self.cop4,ov))
+                        self.a.add((ov,RDF.type,a31))
+                    if (row["template_type_dicts4"] != 0):
+                        a32=URIRef(row["template_type_dicts4"])
+                        ov=BNode()
+                        self.a.add((oq,self.cop4,ov))
+                        self.a.add((ov,RDF.type,a32))
                 if (row1["graph_type1"] != 0):
                     a33=URIRef(row1["graph_type1"])
                     ov=BNode()

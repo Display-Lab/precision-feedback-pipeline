@@ -38,28 +38,61 @@ class Esteemer():
             s1= o
             for s,p,o in self.spek_tp.triples((s1,p1,None)):
                 self.y.append(s)
-        self.node=random.choice(self.y)
+        if len(self.y)!=0:
+            self.node=random.choice(self.y)
+        else:
+            self.node="No message selected"
         self.message_code=message_code
     def select(self):
-        o2=URIRef("http://example.com/slowmo#selected")
-        self.spek_tp.add((self.node,RDF.type,o2))
-        return self.node,self.spek_tp
+        if self.node== "No message selected":
+            return self.node,self.spek_tp
+        else:
+            o2=URIRef("http://example.com/slowmo#selected")
+            self.spek_tp.add((self.node,RDF.type,o2))
+            return self.node,self.spek_tp
     def get_selected_message(self):
         s_m={}
-        s=self.node
-        p=URIRef("psdo:PerformanceSummaryDisplay")
-        p2=URIRef("name")
-        p3=URIRef("psdo:PerformanceSummaryTextualEntity")
-        for s1,p1,o1 in self.spek_tp.triples((s,p,None)):
-            #print(o1)
-            s_m["display"]=o1
-        for s1,p1,o1 in self.spek_tp.triples((s,p2,None)):
-            #print(o1)
-            s_m["name"]=o1
-        for s1,p3,o1 in self.spek_tp.triples((s,p3,None)):
-            #print(o1)
-            s_m["text"]=o1
-        return s_m
+        if self.node== "No message selected":
+            s_m["text"]="No message selected"
+            return s_m
+        else:
+            s=self.node
+            p=URIRef("psdo:PerformanceSummaryDisplay")
+            p2=URIRef("name")
+            p3=URIRef("http://purl.obolibrary.org/obo/RO_0000091")
+            p4=URIRef("psdo:PerformanceSummaryTextualEntity")
+            p5=URIRef("http://example.com/slowmo#RegardingMeasure")
+            p7=URIRef("http://example.com/slowmo#RegardingComparator")
+            p11=URIRef("http://purl.org/dc/terms/title")
+
+            for s1,p32,o1 in self.spek_tp.triples((s,p4,None)):
+                #print(o1)
+                text=o1
+                f="http://schema.org/"+text
+                p23=URIRef(f)
+                for s24,p24,o24 in self.message_code.triples((None,p23,None)):
+                    s_m["text"]=o24
+                    print(o24)
+            
+            for s1,p1,o1 in self.spek_tp.triples((s,p,None)):
+                #print(o1)
+                s_m["display"]=o1
+            for s4,p4,o4 in self.spek_tp.triples((s,p3,None)):
+                s5=o4
+                for s6,p6,o6 in self.spek_tp.triples((s5,p5,None)):
+                    s_m["Measure Name"]=o6
+                for s8,p8,o8 in self.spek_tp.triples((s5,p7,None)):
+                    
+                    s10=o8
+                    for  s9,p9,o9 in self.spek_tp.triples((s10,p11,None)):
+                        s_m["compartor_type"]=o9
+
+            
+            # for k,v in s_m.items():
+            #     print(k,v)    
+            
+            return s_m
+
 
 
 

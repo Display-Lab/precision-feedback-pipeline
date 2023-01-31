@@ -22,6 +22,9 @@ measure_details=Graph()
 causal_pathways=Graph()
 templates=Graph()
 message_code=Graph()
+causal_pathways_alice=Graph()
+templates_alice=Graph()
+performer_graph= Graph()
 @app.on_event("startup")
 async def startup_event():
     try:
@@ -30,15 +33,21 @@ async def startup_event():
         f2=open("./startup/causal_pathways.json")
         f3=open("./startup/measure_details.json")
         f4=open("./startup/templates.json")
+        f5=open("./startup/causal_pathways_alice.json")
+        f6=open("./startup/templates_alice.json")
         f1json=json.load(f1)
         f2json=json.load(f2)
         f3json=json.load(f3)
         f4json=json.load(f4)
-        global measure_details,message_code,causal_pathways,templates
+        f5json=json.load(f5)
+        f6json=json.load(f6)
+        global measure_details,message_code,causal_pathways,templates,templates_alice,causal_pathways_alice
         message_code=read_graph(f1json)
         causal_pathways=read_graph(f2json)
         measure_details=read_graph(f3json)
         templates=read_graph(f4json)
+        causal_pathways_alice=read_graph(f5json)
+        templates_alice=read_graph(f6json)
         
         
         #base_graph=create_base_graph(message_code,causal_pathways,measure_details,templates)
@@ -69,17 +78,18 @@ async def createprecisionfeedback(info:Request):
     preferences=req_info1["Preferences"]
     del req_info1["Preferences"]
     input_message=read_graph(req_info1)
+    
     performer_graph=create_performer_graph(measure_details)
     #BitStomach
     bs=Bit_stomach(performer_graph,performance_data_df)
     BS=bs.annotate()
     #CandidateSmasher
-    cs=CandidateSmasher(BS,templates)
+    cs=CandidateSmasher(BS,templates_alice)
     df_graph=cs.get_graph_type()
     df_template=cs.get_template_data()
     CS=cs.create_candidates(df_graph,df_template)
     #Thinkpuddung
-    tp=Thinkpudding(CS,causal_pathways)
+    tp=Thinkpudding(CS,causal_pathways_alice)
     tp.process_causalpathways()
     tp.process_spek()
     tp.matching()
@@ -91,12 +101,30 @@ async def createprecisionfeedback(info:Request):
     selected_message=es.get_selected_message()
     
     
+    
+  
     # print(selected_message)
     
+    
     ES=performer_graph.serialize(format='json-ld', indent=4)
-    f = open("ES.json", "w")
+    f = open("E_S.json", "w")
     f.write(ES)
     f.close()
+    # for triple in performer_graph.triples((None,None,None)):
+    #     print(triple)
+    
+    # ES=performer_graph.serialize(format='json-ld', indent=4)
+    # f = open("E_S1.json", "w")
+    # f.write(ES)
+    # f.close()
+    
+    return {
+        "status":"Success",
+        "selected_message": selected_message
+    }
+    
+
+
 
 @app.post("/createprecisionfeedback/")
 async def createprecisionfeedback(info:Request):
@@ -136,12 +164,15 @@ async def createprecisionfeedback(info:Request):
     es=Esteemer(spek_tp,preferences,message_code,history)
     node,spek_es=es.select()
     selected_message=es.get_selected_message()
-    
+    for k,v in selected_message.items():
+        print(k,v)
     
     # print(selected_message)
     
+    
+    del performer_graph
     ES=performer_graph.serialize(format='json-ld', indent=4)
-    f = open("ES.json", "w")
+    f = open("ES1.json", "w")
     f.write(ES)
     f.close()
     
