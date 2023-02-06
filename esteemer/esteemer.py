@@ -30,20 +30,91 @@ class Esteemer():
     def __init__(self, spek_tp, preferences, message_code, history):
         self.y=[]
         self.spek_tp=spek_tp
-        s=URIRef("http://example.com/app#display-lab")
-        p=URIRef("http://example.com/slowmo#HasCandidate")
-        p1=URIRef("slowmo:acceptable_by")
+        self.preferences=preferences
+        self.s=URIRef("http://example.com/app#display-lab")
+        self.p=URIRef("http://example.com/slowmo#HasCandidate")
+        self.p1=URIRef("slowmo:acceptable_by")
+        self.p2=URIRef('http://example.com/slowmo#Score')
+        self.o2=Literal(1)
         
-        for s,p,o in self.spek_tp.triples( (s, p, None) ):
+        for s,p,o in self.spek_tp.triples( (self.s, self.p, None) ):
             s1= o
-            for s,p,o in self.spek_tp.triples((s1,p1,None)):
+            for s,p,o in self.spek_tp.triples((s1,self.p1,None)):
+                self.spek_tp.add((s,self.p2,self.o2))
                 self.y.append(s)
+
+        
+        self.message_code=message_code
+    def apply_preferences(self):
+        Message_Format={}
+        Display_Format={}
+        for (k, v) in self.preferences.items():
+            for (k1,v1) in v.items():
+                for (k2,v2) in v1.items():
+                    
+                    if(k1=="Message_Format"):
+                        k2=int(k2)
+                        Message_Format[k2]=v2
+                    if(k1=="Display_Format"):
+                        Display_Format[k2]=v2
+        # for k,v in Message_Format.items():
+            
+        #     print(type(k))
+        #     print(k,v)
+        # for k,v in Display_Format.items():
+        #     print(k,v)
+        p4=URIRef("psdo:PerformanceSummaryTextualEntity")
+        for x in range(len(self.y)):
+            s=self.y[x]
+            for s3,p3,o3 in self.spek_tp.triples((s,self.p2,None)):
+                score=int(o3)
+                
+
+            for s1,p32,o1 in self.spek_tp.triples((s,p4,None)):
+                o2=int(o1)
+                for k,v in Message_Format.items():
+                    if k==o2:
+                        value=float(v)
+                        score1=score*value
+                        score1=Literal(score1)
+                        self.spek_tp.remove((s,self.p2,o3))
+                        self.spek_tp.add((s,self.p2,score1))
+                # print(type(o2))
+        #         text=o1
+                
+        #indv_preferences_df = pd.json_normalize(self.preferences)
+        # display_preferences_df =indv_preferences_df [['Utilities.Display_Format.short_sentence_with_no_chart', 'Utilities.Display_Format.bar_chart','Utilities.Display_Format.line_graph']]
+        # message_preferences_df =indv_preferences_df[['Utilities.Message_Format.1','Utilities.Message_Format.2','Utilities.Message_Format.16','Utilities.Message_Format.24','Utilities.Message_Format.18','Utilities.Message_Format.11','Utilities.Message_Format.22','Utilities.Message_Format.14','Utilities.Message_Format.21']]
+        #indv_preferences_df.to_csv("indv_pref.csv")
+        # message_preferences_df.to_csv("mesaa.csv")
+
+    def select(self):
+        scores=[]
+        nodes=[]
         if len(self.y)!=0:
-            self.node=random.choice(self.y)
+            for x in range(len(self.y)):
+                s=self.y[x]
+                for s3,p3,o3 in self.spek_tp.triples((s,self.p2,None)):
+                    score=float(o3)
+                    scores.append(score)
+           
+            score_max=max(scores)
+            score_max = Literal(score_max)
+            #print(score_max)
+            for s4,p4,o4 in self.spek_tp.triples((None,self.p2,score_max)):
+                node=s4
+                nodes.append(node)
+            
+            print(score_max)
+            self.node=random.choice(nodes)
+            
         else:
             self.node="No message selected"
-        self.message_code=message_code
-    def select(self):
+
+        # if len(self.y)!=0:
+        #     self.node=random.choice(self.y)
+        # else:
+        #     self.node="No message selected"
         if self.node== "No message selected":
             return self.node,self.spek_tp
         else:

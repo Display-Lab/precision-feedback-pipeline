@@ -43,29 +43,47 @@ class Bit_stomach:
         o21=Literal("PEERS")
         o22=Literal("peers") 
         self.input_graph=input_graph
+        def remove_annotate(self):
+            s12 = URIRef('http://example.com/app#display-lab')
+            p12=URIRef('http://example.com/slowmo#IsAboutPerformer')
+            o12=BNode('p1')
+            self.input_graph.remove((o12,None,None))
+            
+            
+        def insert_blank_nodes_peers(self):
         #insert blank nodes for social comparators for each measure
-        for s,p,o in self.input_graph.triples((s, p, None)):
-            s1=o
-            o11=BNode()
-            self.input_graph.add((s1,p1,o11))  
-            s11=o11
-            self.input_graph.add((s11,p5,o5))
-            self.input_graph.add((s11,p21,o21))
-            self.input_graph.add((s11,p22,o22))
+            for sw,pw,ow in self.input_graph.triples((s, p, None)):
+                s1=ow
+                o11=BNode()
+                self.input_graph.add((s1,p1,o11))  
+                s11=o11
+                self.input_graph.add((s11,p5,o5))
+                self.input_graph.add((s11,p21,o21))
+                self.input_graph.add((s11,p22,o22))
         #get comparison values for goal from base graph and get Blank nodes for both goal and peer comparators
+        def check_rerunkey(self):
+            rerunkey=0
+            for sq,pq,oq in self.input_graph.triples((s, p, None)):
+                s1=oq
+                for s2,p2,o2 in self.input_graph.triples((s1,p1,None)):
+                    
+                    s3=o2
+                    for s4,p4,o4 in self.input_graph.triples((s3,p3,None)):
+                        if str(o4)=="peers":
+                            rerunkey=1
+            return rerunkey
+        # self.rerunkey= check_rerunkey(self)
+        # if(self.rerunkey==0):
+        insert_blank_nodes_peers(self)
+        # if(self.rerunkey==1):
+        #     remove_annotate(self)
+           
         for s,p,o in self.input_graph.triples((s, p, None)):
             s1=o
             for s2,p2,o2 in self.input_graph.triples((s1,p1,None)):
                 self.measure_dicts[s1]=o2
                 s3=o2
                 for s4,p4,o4 in self.input_graph.triples((s3,p3,None)):
-            # if str(o4)=="peers":
-            #     #social_dicts[s1]=o2
-            #     s5=s3
-            #     #f.write(str(s5))
-            #     # a.add((s5,p5,o5))
-            #     for s7,p7,o7 in a.triples((s3,p6,None)):
-            #         social_comparison_dicts[s1]=o7
                         if str(o4)=="goal":
                             self.goal_dicts[s1]=o2
                             for s8,p8,o8 in self.input_graph.triples((s3,p6,None)):

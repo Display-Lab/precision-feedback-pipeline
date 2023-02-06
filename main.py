@@ -24,7 +24,7 @@ templates=Graph()
 message_code=Graph()
 causal_pathways_alice=Graph()
 templates_alice=Graph()
-performer_graph= Graph()
+
 @app.on_event("startup")
 async def startup_event():
     try:
@@ -33,21 +33,22 @@ async def startup_event():
         f2=open("./startup/causal_pathways.json")
         f3=open("./startup/measure_details.json")
         f4=open("./startup/templates.json")
-        f5=open("./startup/causal_pathways_alice.json")
-        f6=open("./startup/templates_alice.json")
+        # f5=open("./startup/causal_pathways_alice.json")
+        # f6=open("./startup/templates_alice.json")
+        global measure_details,message_code,causal_pathways,templates,templates_alice,causal_pathways_alice,f3json
         f1json=json.load(f1)
         f2json=json.load(f2)
         f3json=json.load(f3)
         f4json=json.load(f4)
-        f5json=json.load(f5)
-        f6json=json.load(f6)
-        global measure_details,message_code,causal_pathways,templates,templates_alice,causal_pathways_alice
+        # f5json=json.load(f5)
+        # f6json=json.load(f6)
+        
         message_code=read_graph(f1json)
         causal_pathways=read_graph(f2json)
-        measure_details=read_graph(f3json)
+        
         templates=read_graph(f4json)
-        causal_pathways_alice=read_graph(f5json)
-        templates_alice=read_graph(f6json)
+        # causal_pathways_alice=read_graph(f5json)
+        # templates_alice=read_graph(f6json)
         
         
         #base_graph=create_base_graph(message_code,causal_pathways,measure_details,templates)
@@ -78,7 +79,11 @@ async def createprecisionfeedback(info:Request):
     preferences=req_info1["Preferences"]
     del req_info1["Preferences"]
     input_message=read_graph(req_info1)
+    measure_details= Graph()
+    for s,p,o in measure_details.triples((None,None,None)):
+        measure_details.remove((s,p,o))
     
+    measure_details=read_graph(f3json)
     performer_graph=create_performer_graph(measure_details)
     #BitStomach
     bs=Bit_stomach(performer_graph,performance_data_df)
@@ -144,6 +149,11 @@ async def createprecisionfeedback(info:Request):
     preferences=req_info1["Preferences"]
     del req_info1["Preferences"]
     input_message=read_graph(req_info1)
+    measure_details= Graph()
+    for s,p,o in measure_details.triples((None,None,None)):
+        measure_details.remove((s,p,o))
+    
+    measure_details=read_graph(f3json)
     performer_graph=create_performer_graph(measure_details)
     #BitStomach
     bs=Bit_stomach(performer_graph,performance_data_df)
@@ -162,15 +172,17 @@ async def createprecisionfeedback(info:Request):
 
     #Esteemer
     es=Esteemer(spek_tp,preferences,message_code,history)
+    
+    es.apply_preferences()
     node,spek_es=es.select()
     selected_message=es.get_selected_message()
-    for k,v in selected_message.items():
-        print(k,v)
+    # for k,v in selected_message.items():
+    #     print(k,v)
     
     # print(selected_message)
     
     
-    del performer_graph
+   
     ES=performer_graph.serialize(format='json-ld', indent=4)
     f = open("ES1.json", "w")
     f.write(ES)

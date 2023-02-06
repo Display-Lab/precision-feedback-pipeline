@@ -67,7 +67,8 @@ def peer_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bnode
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
- 
+    print(latest_measure_df)
+    # print(latest_measure_df["goal_gap_size"][1])
     if((latest_measure_df["goal_gap_size"][2]>0 and latest_measure_df["goal_gap_size"][1]>0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
         ac=BNode(latest_measure_df["Measure_Name"][0])
         av=comparator_bnode

@@ -41,12 +41,12 @@ def goal_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
         o14=BNode() 
         input_graph.add((s14,p14,o14))
         input_graph=annotate_performance_goal_gap(input_graph,o14,ac,av)
-        if(gap_size[0]>0):
+        if(latest_measure_df['goal_comparison_value'][0]<=latest_measure_df['Performance_Rate'][0]):
             o14=BNode() 
             input_graph.add((s14,p14,o14))
             input_graph=annotate_positive_goal_gap(input_graph,o14,ac,av,goal_gap_size)
 
-        if(gap_size[0]<0):
+        if(latest_measure_df['goal_comparison_value'][0]>latest_measure_df['Performance_Rate'][0]):
             o14=BNode() 
             input_graph.add((s14,p14,o14))
             input_graph=annotate_negative_goal_gap(input_graph,o14,ac,av,goal_gap_size)
@@ -127,7 +127,7 @@ def peer_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
         o14=BNode() 
         input_graph.add((s14,p14,o14))
         input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
-        if(latest_measure_df['Peer_Average'][0]<latest_measure_df['Performance_Rate'][0]):
+        if(latest_measure_df['Peer_Average'][0]<=latest_measure_df['Performance_Rate'][0]):
             o14=BNode() 
             input_graph.add((s14,p14,o14))
             input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)

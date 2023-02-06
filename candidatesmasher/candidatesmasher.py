@@ -247,24 +247,26 @@ class CandidateSmasher:
                     self.a.add((ov,RDF.type,a34))
                     self.a.add((ov,self.cp23,ah))
                     self.a.add((ov,self.cp24,ag))
-                if (row1["graph_type5"] != 0):
-                    a34=URIRef(row1["graph_type5"])
-                    ov=BNode()
-                    self.a.add((oq,self.cop4,ov))
-                    self.a.add((ov,RDF.type,a34))
-                    self.a.add((ov,self.cp23,ah))
-                    self.a.add((ov,self.cp24,ag))
-                if (row1["graph_type6"] != 0):
-                    a34=URIRef(row1["graph_type6"])
-                    ov=BNode()
-                    self.a.add((oq,self.cop4,ov))
-                    self.a.add((ov,RDF.type,a34))
-                    self.a.add((ov,self.cp23,ah))
-                    self.a.add((ov,self.cp24,ag))
-                    a35=BNode("-p1")
-                    self.a.add((oq,self.cp26,a35))
-                    self.a36=URIRef(row["index"])
-                    self.a.add((oq,self.cp27,self.a36))
+                if "graph_type5" in self.df_graph.columns:
+                    if (row1["graph_type5"] != 0):
+                        a34=URIRef(row1["graph_type5"])
+                        ov=BNode()
+                        self.a.add((oq,self.cop4,ov))
+                        self.a.add((ov,RDF.type,a34))
+                        self.a.add((ov,self.cp23,ah))
+                        self.a.add((ov,self.cp24,ag))
+                if "graph_type6" in self.df_graph.columns:
+                    if (row1["graph_type6"] != 0):
+                        a34=URIRef(row1["graph_type6"])
+                        ov=BNode()
+                        self.a.add((oq,self.cop4,ov))
+                        self.a.add((ov,RDF.type,a34))
+                        self.a.add((ov,self.cp23,ah))
+                        self.a.add((ov,self.cp24,ag))
+                        a35=BNode("-p1")
+                        self.a.add((oq,self.cp26,a35))
+                        self.a36=URIRef(row["index"])
+                        self.a.add((oq,self.cp27,self.a36))
                 
                     
                 #print(count)
