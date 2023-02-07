@@ -30,7 +30,7 @@
         {"@type": "http://purl.obolibrary.org/obo/psdo_0000041"}
       ],
       "psdo:PerformanceSummaryTextualEntity": "1",
-      "psdo:PerformanceSummaryDisplay": "line,bar,none"
+      "psdo:PerformanceSummaryDisplay": "line"
     },
     {
       "@id": "http://feedbacktailor.org/ftkb#WorseSocialBar",
@@ -43,7 +43,7 @@
         {"@type": "http://purl.obolibrary.org/obo/psdo_0000041"}
       ],
       "psdo:PerformanceSummaryTextualEntity": "2",
-      "psdo:PerformanceSummaryDisplay": "line,bar,none"
+      "psdo:PerformanceSummaryDisplay": "bar"
     },
     {
       "@id": "http://feedbacktailor.org/ftkb#ReachedSocialBar",
@@ -58,7 +58,7 @@
         {"@type": "http://purl.obolibrary.org/obo/psdo_0000121"}
       ],
       "psdo:PerformanceSummaryTextualEntity": "5",
-      "psdo:PerformanceSummaryDisplay": "line,bar,none"
+      "psdo:PerformanceSummaryDisplay": "bar"
     },
     {
       "@id": "http://feedbacktailor.org/ftkb#BetterGoalBar",
@@ -71,7 +71,7 @@
         {"@type": "http://purl.obolibrary.org/obo/psdo_0000041"}
       ],
       "psdo:PerformanceSummaryTextualEntity": "4",
-      "psdo:PerformanceSummaryDisplay": "line,bar,none"
+      "psdo:PerformanceSummaryDisplay": "line"
     },
     {
       "@id": "http://feedbacktailor.org/ftkb#ApproachingGoalBar",
@@ -86,7 +86,7 @@
         {"@type": "http://purl.obolibrary.org/obo/psdo_0000120"}
       ],
       "psdo:PerformanceSummaryTextualEntity": "11",
-      "psdo:PerformanceSummaryDisplay": "line,bar,none"
+      "psdo:PerformanceSummaryDisplay": "bar"
     },
     {
       "@id": "http://feedbacktailor.org/ftkb#LostGoalBar",
@@ -102,7 +102,7 @@
         {"@type": "http://purl.obolibrary.org/obo/psdo_0000122"}
       ],
       "psdo:PerformanceSummaryTextualEntity": "14",
-      "psdo:PerformanceSummaryDisplay": "line,bar,none"
+      "psdo:PerformanceSummaryDisplay": "bar"
     },
     {
       "@id": "http://feedbacktailor.org/ftkb#ReachedGoalBar",
@@ -117,7 +117,7 @@
         {"@type": "http://purl.obolibrary.org/obo/psdo_0000121"}
       ],
       "psdo:PerformanceSummaryTextualEntity": "6",
-      "psdo:PerformanceSummaryDisplay": "line,bar.none"
+      "psdo:PerformanceSummaryDisplay": "line"
     },
     {
       "@id": "http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
@@ -130,7 +130,7 @@
         {"@type": "http://purl.obolibrary.org/obo/psdo_0000119"}
       ],
       "psdo:PerformanceSummaryTextualEntity": "15",
-      "psdo:PerformanceSummaryDisplay": "line,bar,none"
+      "psdo:PerformanceSummaryDisplay": "line"
     }
   ]
 }

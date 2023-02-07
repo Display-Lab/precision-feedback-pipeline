@@ -71,7 +71,7 @@ class Esteemer():
                 
 
             for s1,p32,o1 in self.spek_tp.triples((s,p4,None)):
-                o2=int(o1)
+                o2=float(o1)
                 for k,v in Message_Format.items():
                     if k==o2:
                         value=float(v)
@@ -81,6 +81,21 @@ class Esteemer():
                         self.spek_tp.add((s,self.p2,score1))
                 # print(type(o2))
         #         text=o1
+        p5=URIRef("psdo:PerformanceSummaryDisplay")
+        for x in range(len(self.y)):
+            s=self.y[x]
+            for s3,p3,o3 in self.spek_tp.triples((s,self.p2,None)):
+                score=float(o3)
+            for s1,p32,o1 in self.spek_tp.triples((s,p5,None)): 
+                o1=str(o1)
+                for k,v in Display_Format.items():
+                    if o1==k:
+                        value=float(v)  
+                        score1=score*value
+                        score1=Literal(score1)
+                        self.spek_tp.remove((s,self.p2,o3))
+                        self.spek_tp.add((s,self.p2,score1))
+
                 
         #indv_preferences_df = pd.json_normalize(self.preferences)
         # display_preferences_df =indv_preferences_df [['Utilities.Display_Format.short_sentence_with_no_chart', 'Utilities.Display_Format.bar_chart','Utilities.Display_Format.line_graph']]
