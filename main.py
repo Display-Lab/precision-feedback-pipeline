@@ -189,9 +189,9 @@ async def createprecisionfeedback(info:Request):
     # print(selected_message)
     #Runnning Pictoralist
     pc=Pictoralist(selected_message,performance_data_df)
-    pc.create_graph()
-    
-   
+    base64_image=pc.create_graph()
+    selected_message["image"]=base64_image
+    # '<img align="left" src="data:image/png;base64,%s">' %base64_image
     ES=performer_graph.serialize(format='json-ld', indent=4)
     f = open("ES1.json", "w")
     f.write(ES)

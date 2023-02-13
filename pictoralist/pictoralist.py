@@ -6,6 +6,8 @@ import json
 import re
 import numpy as np 
 import matplotlib.pyplot as plt 
+import io
+import base64
 #from asyncore import read
 
 import pandas as pd
@@ -15,6 +17,7 @@ from rdflib.namespace import FOAF, RDF, RDFS, SKOS, XSD
 from rdflib.serializer import Serializer
 from rdfpandas.graph import to_dataframe
 from SPARQLWrapper import XML, SPARQLWrapper
+
 
 
 
@@ -94,7 +97,16 @@ class Pictoralist():
             plt.legend(bbox_to_anchor=(1, 0), loc="lower right")
         #plt.legend(bbox_to_anchor=(-0.75, -0.15), loc="lower left")
         #plt.legend(loc='center left', bbox_to_anchor=(1, 0.5), fancybox = True, shadow = True)
-            plt.show()
+            #plt.show()
+            plt.savefig("cache/cached1.png")
+            # cached_img = open("cache/cached1.png")
+            s = io.BytesIO()
+            plt.savefig(s, format='png', bbox_inches="tight")
+            plt.close()
+            s = base64.b64encode(s.getvalue()).decode("utf-8").replace("\n", "")
+            return  s
+
+
 
         if self.display_format == 'line':
             self.graph_df = self.performance_data[self.performance_data['Measure_Name'] ==  self.measure_name]
@@ -125,7 +137,13 @@ class Pictoralist():
             plt.ylabel("Performance")
             plt.title(self.text+"\n"+" for the measure "+self.measure_name +" ("+self.title+")")
             plt.legend(["Your Performance","Peers","Benchmark"])
-            plt.show()
+            #plt.show()
+            plt.savefig("cache/cached1.png")
+            s = io.BytesIO()
+            plt.savefig(s, format='png', bbox_inches="tight")
+            plt.close()
+            s = base64.b64encode(s.getvalue()).decode("utf-8").replace("\n", "")
+            return  s
 
         #self.last_4_measure.to_csv("last4measure.csv")
         
