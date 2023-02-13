@@ -15,6 +15,8 @@ from bit_stomach.bit_stomach import Bit_stomach
 from candidatesmasher.candidatesmasher import CandidateSmasher
 from thinkpudding.thinkpudding import Thinkpudding
 from esteemer.esteemer import Esteemer
+from pictoralist.pictoralist import Pictoralist
+
 import json
 app = FastAPI()
 
@@ -105,6 +107,9 @@ async def createprecisionfeedback(info:Request):
     node,spek_es=es.select()
     selected_message=es.get_selected_message()
     
+    ##Runnning Pictoralist
+    pc=Pictoralist(selected_message,performance_data_df)
+    # pc.create_graph()
     
     
   
@@ -174,13 +179,17 @@ async def createprecisionfeedback(info:Request):
     es=Esteemer(spek_tp,preferences,message_code,history)
     
     es.apply_preferences()
+    # es.apply_history()
     node,spek_es=es.select()
+    es.apply_history()
     selected_message=es.get_selected_message()
     # for k,v in selected_message.items():
     #     print(k,v)
     
     # print(selected_message)
-    
+    #Runnning Pictoralist
+    pc=Pictoralist(selected_message,performance_data_df)
+    pc.create_graph()
     
    
     ES=performer_graph.serialize(format='json-ld', indent=4)

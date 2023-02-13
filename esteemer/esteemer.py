@@ -8,7 +8,7 @@ import random
 #from asyncore import read
 
 import pandas as pd
-from rdflib import Graph, Literal, Namespace, URIRef
+from rdflib import Graph, Literal, Namespace, URIRef, BNode
 from rdflib.collection import Collection
 from rdflib.namespace import FOAF, RDF, RDFS, SKOS, XSD
 from rdflib.serializer import Serializer
@@ -31,6 +31,7 @@ class Esteemer():
         self.y=[]
         self.spek_tp=spek_tp
         self.preferences=preferences
+        self.history=history
         self.s=URIRef("http://example.com/app#display-lab")
         self.p=URIRef("http://example.com/slowmo#HasCandidate")
         self.p1=URIRef("slowmo:acceptable_by")
@@ -102,26 +103,73 @@ class Esteemer():
         # message_preferences_df =indv_preferences_df[['Utilities.Message_Format.1','Utilities.Message_Format.2','Utilities.Message_Format.16','Utilities.Message_Format.24','Utilities.Message_Format.18','Utilities.Message_Format.11','Utilities.Message_Format.22','Utilities.Message_Format.14','Utilities.Message_Format.21']]
         #indv_preferences_df.to_csv("indv_pref.csv")
         # message_preferences_df.to_csv("mesaa.csv")
+    def apply_history(self):
+        # for x in range(len(self.scores)):
+        #         print(self.scores[x])
+        Text=[]
+        Display=[]
+        Measure_Name=[]
+        nodes1=[]
+        for (k, v) in self.history.items():
+            # print(k,v)
+            for (k1,v1) in v.items():
+                
+                if(k1=="Text"):
+                    # print(k1)
+                    # print(v1)
+                    Text.append(v1)
+                if(k1=="Measure Name"):
+                    Measure_Name.append(v1)
+                if(k1=="Display"):
+                    Display.append(v1)
+        s_m1=self.get_selected_message()
+        texta= s_m1["text"]
+        texta=str(texta)
+        displaya=s_m1["display"]
+        displaya=str(displaya)
+        measure_namea=s_m1["Measure Name"]
+        measure_namea=str(measure_namea)
+        if displaya in Display or measure_namea in Measure_Name or texta or Text:
+            self.score_max=float(self.score_max)
+            self.scores.remove(self.score_max)
+            self.score_max=max(self.scores)
+            self.score_max = Literal(self.score_max)
+        # print(self.score_max)
+            for s4,p4,o4 in self.spek_tp.triples((None,self.p2,self.score_max)):
+                self.node=s4
+            # print(self.node)
+            return self.node
+        else:
+            return self.node
+     
+
+                
+            
+            
 
     def select(self):
-        scores=[]
+        self.scores=[]
         nodes=[]
         if len(self.y)!=0:
             for x in range(len(self.y)):
                 s=self.y[x]
                 for s3,p3,o3 in self.spek_tp.triples((s,self.p2,None)):
                     score=float(o3)
-                    scores.append(score)
-           
-            score_max=max(scores)
-            score_max = Literal(score_max)
+                    self.scores.append(score)
+            
+            self.score_max=max(self.scores)
+            self.score_max = Literal(self.score_max)
             #print(score_max)
-            for s4,p4,o4 in self.spek_tp.triples((None,self.p2,score_max)):
+            for s4,p4,o4 in self.spek_tp.triples((None,self.p2,self.score_max)):
                 node=s4
                 nodes.append(node)
             
-            print(score_max)
+            # print(self.score_max)
+
             self.node=random.choice(nodes)
+            #self.apply_history(self)
+            
+            
             
         else:
             self.node="No message selected"
@@ -150,7 +198,8 @@ class Esteemer():
             p5=URIRef("http://example.com/slowmo#RegardingMeasure")
             p7=URIRef("http://example.com/slowmo#RegardingComparator")
             p11=URIRef("http://purl.org/dc/terms/title")
-
+            p121=URIRef("http://purl.org/dc/terms/title")
+            # s_m["node"]=self.node
             for s1,p32,o1 in self.spek_tp.triples((s,p4,None)):
                 #print(o1)
                 text=o1
@@ -158,7 +207,7 @@ class Esteemer():
                 p23=URIRef(f)
                 for s24,p24,o24 in self.message_code.triples((None,p23,None)):
                     s_m["text"]=o24
-                    print(o24)
+                    # print(o24)
             
             for s1,p1,o1 in self.spek_tp.triples((s,p,None)):
                 #print(o1)
@@ -167,11 +216,19 @@ class Esteemer():
                 s5=o4
                 for s6,p6,o6 in self.spek_tp.triples((s5,p5,None)):
                     s_m["Measure Name"]=o6
-                for s8,p8,o8 in self.spek_tp.triples((s5,p7,None)):
+                    s11=o6
+                    #print(o6)
                     
+                    #     s_m["Title"]=o12
+                for s8,p8,o8 in self.spek_tp.triples((s5,p7,None)):
                     s10=o8
                     for  s9,p9,o9 in self.spek_tp.triples((s10,p11,None)):
-                        s_m["compartor_type"]=o9
+                        s_m["Comparator Type"]=o9
+
+            s11= BNode(s_m["Measure Name"]  )
+            # print(s11)     
+            for  s02,p02,o02 in self.spek_tp.triples((s11,p11,None)):
+                s_m["Title"]=o02    
 
             
             # for k,v in s_m.items():

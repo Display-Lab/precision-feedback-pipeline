@@ -554,13 +554,12 @@
       "Month1": 
         {
           
-          "slowmo:AncestorTemplate{Literal}":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-          "psdo:PerformanceSummaryDisplayCompatibletype{Literal}":"bar,line,text",
-          "psdo:PerformanceSummaryDisplay{Literal}":"https://github.com/Display-Lab/card-study/blob/master/cards/fig_comp_bar.R",
-          "psdo:PerformanceSummaryTextualEntity{Literal}":"Your performance is getting worse for the measure [measure_details]",
-          "slowmo:acceptable_by{URIRef}[0]":"http://feedbacktailor.org/ftkb#Worsening",
+          "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
+          "Display":"bar,line,text",
+          "Text":"Your performance is getting worse for the measure [measure_details]",
+          "Causal pathways":"http://feedbacktailor.org/ftkb#Worsening",
           "comparison value":"0.9",
-          "name":"goal",
+          "comparator":"goal",
           "title":"Protective Tidal Volume, 8 mL/kg PBW",
           "Measure Name":"PUL02"
           
@@ -568,13 +567,12 @@
       "Month2":
         {
             
-          "slowmo:AncestorTemplate{Literal}":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-          "psdo:PerformanceSummaryDisplayCompatibletype{Literal}":"bar,line,text",
-          "psdo:PerformanceSummaryDisplay{Literal}":"https://github.com/Display-Lab/card-study/blob/master/cards/fig_comp_bar.R",
-          "psdo:PerformanceSummaryTextualEntity{Literal}":"Your performance is getting worse for the measure [measure_details]",
-          "slowmo:acceptable_by{URIRef}[0]":"http://feedbacktailor.org/ftkb#Worsening",
+          "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
+          "Display":"bar,line,text",
+          "Text":"Your performance is getting worse for the measure [measure_details]",
+          "Causal pathways":"http://feedbacktailor.org/ftkb#Worsening",
           "comparison value":null,
-          "name":"peers",
+          "comparator":"peers",
           "title":"PONV Prophylaxis: Pediatrics",
           "Measure Name":"PONV04"
         
@@ -582,40 +580,37 @@
         "Month3":
         {
           
-          "slowmo:AncestorTemplate{Literal}":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-          "psdo:PerformanceSummaryDisplayCompatibletype{Literal}":"bar,line,text",
-          "psdo:PerformanceSummaryDisplay{Literal}":"https://github.com/Display-Lab/card-study/blob/master/cards/fig_comp_bar.R",
-          "psdo:PerformanceSummaryTextualEntity{Literal}":"Your performance is getting worse for the measure [measure_details]",
-          "slowmo:acceptable_by{URIRef}[0]":"http://feedbacktailor.org/ftkb#Worsening",
-          "slowmo:acceptable_by{URIRef}[1]":null,
+          "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
+          "Display":"bar,line,text",
+          "Text":"Your performance is getting worse for the measure [measure_details]",
+          "Causal pathways[0]":"http://feedbacktailor.org/ftkb#Worsening",
+          "Causal pathways[1]":null,
           "comparison value":null,
-          "name":"peers",
+          "comparator":"peers",
           "title":"Minimizing Colloid Use (Cardiac)",
           "Measure Name":"FLUID01C"
           
         },
         "Month4":
         {
-          "slowmo:AncestorTemplate{Literal}":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-          "psdo:PerformanceSummaryDisplayCompatibletype{Literal}":"bar,line,text",
-          "psdo:PerformanceSummaryDisplay{Literal}":"https://github.com/Display-Lab/card-study/blob/master/cards/fig_comp_bar.R",
-          "psdo:PerformanceSummaryTextualEntity{Literal}":"Your performance is getting worse for the measure [measure_details]",
-          "slowmo:acceptable_by{URIRef}[0]":"http://feedbacktailor.org/ftkb#Worsening",
-          "slowmo:acceptable_by{URIRef}[1]":null,
+          "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
+          "Display":"bar,line,text",
+          "Text":"Your performance is getting worse for the measure [measure_details]",
+          "Causal pathways[0]":"http://feedbacktailor.org/ftkb#Worsening",
+          "Causal pathways[1]":null,
           "comparison value":"0.9",
-          "name":"goal",
+          "comparator":"goal",
           "title":"PONV Prophylaxis: Pediatrics",
           "Measure Name":"PONV04"
         },
           "Month5":
         {
          
-          "slowmo:AncestorTemplate{Literal}":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-          "psdo:PerformanceSummaryDisplayCompatibletype{Literal}":"bar,line,text",
-          "psdo:PerformanceSummaryDisplay{Literal}":"https://github.com/Display-Lab/card-study/blob/master/cards/fig_comp_bar.R",
-          "psdo:PerformanceSummaryTextualEntity{Literal}":"Your performance is getting worse for the measure [measure_details]",
-          "slowmo:acceptable_by{URIRef}[0]":"http://feedbacktailor.org/ftkb#Worsening",
-          "slowmo:acceptable_by{URIRef}[1]":null,
+          "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
+          "Display":"bar,line,text",
+          "Text":"Your performance is getting worse for the measure [measure_details]",
+          "Causal pathways[0]":"http://feedbacktailor.org/ftkb#Worsening",
+          "Causal pathways[1]":null,
           "comparison value":"0.9",
           "name":"goal",
           "title":"Train of Four Taken",

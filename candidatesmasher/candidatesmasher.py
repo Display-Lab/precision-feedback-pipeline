@@ -86,20 +86,26 @@ class CandidateSmasher:
         for s,p,o in self.a.triples((self.so, self.po, None)):
             s1=o
             for s2,p2,o2 in self.a.triples((s1,self.p1,None)):
+                
                 self.measure_dicts[s1]=o2
                 s3=o2
+                final_node_type=[]
                 node_type=[]
+                node_type1=[]
                 node_type.append(s1)
                 node_type.append(o2)
-            for s4,p4,o4 in self.a.triples((s3,self.p3,None)):
-                if str(o4)=="goal":
-                    self.goal_dicts[s1]=o2
-                
-                    s7=o2
+                self.a.remove((s1,self.p1,o2))
+                # for s21,p21,o21 in self.a.triples((s1,self.p1,None)):
+                    
+                #      node_type.append(s1)
+                #      node_type.append(o21)
+                self.a.add((s1,self.p1,o2))
+            
             for  s81,p81,o81 in self.a.triples((None, None,o2)):
                 for s82,p82,o82 in self.a.triples((s81,RDF.type,None)):
                     if str(o82) != self.cp25:
-                        node_type.append(o82)
+                        # print(o82)
+                        node_type.append(str(o82))
                     
             node_type_tuple=tuple(node_type)
         
@@ -219,34 +225,38 @@ class CandidateSmasher:
                         ov=BNode()
                         self.a.add((oq,self.cop4,ov))
                         self.a.add((ov,RDF.type,a32))
-                if (row1["graph_type1"] != 0):
-                    a33=URIRef(row1["graph_type1"])
-                    ov=BNode()
-                    self.a.add((oq,self.cop4,ov))
-                    self.a.add((ov,RDF.type,a33))
-                    self.a.add((ov,self.cp23,ah))
-                    self.a.add((ov,self.cp24,ag))
-                if (row1["graph_type2"] != 0):
-                    a34=URIRef(row1["graph_type2"])
-                    ov=BNode()
-                    self.a.add((oq,self.cop4,ov))
-                    self.a.add((ov,RDF.type,a34))
-                    self.a.add((ov,self.cp23,ah))
-                    self.a.add((ov,self.cp24,ag))
-                if (row1["graph_type3"] != 0):
-                    a34=URIRef(row1["graph_type3"])
-                    ov=BNode()
-                    self.a.add((oq,self.cop4,ov))
-                    self.a.add((ov,RDF.type,a34))
-                    self.a.add((ov,self.cp23,ah))
-                    self.a.add((ov,self.cp24,ag))
-                if (row1["graph_type4"] != 0):
-                    a34=URIRef(row1["graph_type4"])
-                    ov=BNode()
-                    self.a.add((oq,self.cop4,ov))
-                    self.a.add((ov,RDF.type,a34))
-                    self.a.add((ov,self.cp23,ah))
-                    self.a.add((ov,self.cp24,ag))
+                if "graph_type1" in self.df_graph.columns:
+                    if (row1["graph_type1"] != 0):
+                        a33=URIRef(row1["graph_type1"])
+                        ov=BNode()
+                        self.a.add((oq,self.cop4,ov))
+                        self.a.add((ov,RDF.type,a33))
+                        self.a.add((ov,self.cp23,ah))
+                        self.a.add((ov,self.cp24,ag))
+                if "graph_type2" in self.df_graph.columns:
+                    if (row1["graph_type2"] != 0):
+                        a34=URIRef(row1["graph_type2"])
+                        ov=BNode()
+                        self.a.add((oq,self.cop4,ov))
+                        self.a.add((ov,RDF.type,a34))
+                        self.a.add((ov,self.cp23,ah))
+                        self.a.add((ov,self.cp24,ag))
+                if "graph_type3" in self.df_graph.columns:
+                    if (row1["graph_type3"] != 0):
+                        a34=URIRef(row1["graph_type3"])
+                        ov=BNode()
+                        self.a.add((oq,self.cop4,ov))
+                        self.a.add((ov,RDF.type,a34))
+                        self.a.add((ov,self.cp23,ah))
+                        self.a.add((ov,self.cp24,ag))
+                if "graph_type4" in self.df_graph.columns:
+                    if (row1["graph_type4"] != 0):
+                        a34=URIRef(row1["graph_type4"])
+                        ov=BNode()
+                        self.a.add((oq,self.cop4,ov))
+                        self.a.add((ov,RDF.type,a34))
+                        self.a.add((ov,self.cp23,ah))
+                        self.a.add((ov,self.cp24,ag))
                 if "graph_type5" in self.df_graph.columns:
                     if (row1["graph_type5"] != 0):
                         a34=URIRef(row1["graph_type5"])

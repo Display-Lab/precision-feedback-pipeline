@@ -4,140 +4,6 @@
         "@type": [
             "http://example.com/slowmo#spek"
         ],
-        "http://example.com/slowmo#HasCandidate": [
-            {
-                "@id": "_:Ned33632795fd44acacd379392106d764"
-            },
-            {
-                "@id": "_:Nab6360019b644653b106a1510129e16a"
-            },
-            {
-                "@id": "_:Naa026c3c8bdb4d4d89e88a2ee0d62139"
-            },
-            {
-                "@id": "_:N50207d22f3d6481bbd595cc3d358219a"
-            },
-            {
-                "@id": "_:Nb49622455ba442e2b6b051f3ab5477f2"
-            },
-            {
-                "@id": "_:N3a4aee488cf84e6595c10faeb50d4f8e"
-            },
-            {
-                "@id": "_:N6a89904b5a1e4e50bf4d2de28e1e34a2"
-            },
-            {
-                "@id": "_:N26f4addfa2bf4aa8bee8bcd369bd3a5c"
-            },
-            {
-                "@id": "_:N4217d85b4eac4060b8ed96e1ae268254"
-            },
-            {
-                "@id": "_:Na502b0d12e204a92b60546855d6bf991"
-            },
-            {
-                "@id": "_:N2d98fdaedf1b468892d20d7e977451ee"
-            },
-            {
-                "@id": "_:Nb438032d48934eb5b3b430dc9302040c"
-            },
-            {
-                "@id": "_:N9243fb0821a14fe8840541562c5b53d4"
-            },
-            {
-                "@id": "_:N691d2b5820484f85a4aeda55c719a6c4"
-            },
-            {
-                "@id": "_:Ncf64bd149dd243f3a03146a7b5ea3112"
-            },
-            {
-                "@id": "_:N2d22bf51031b4925976841c4cbeab7cf"
-            },
-            {
-                "@id": "_:N5f350d83d13343b4a264286c79c243cd"
-            },
-            {
-                "@id": "_:N5592aa38106f43cdb43e708d33ce28be"
-            },
-            {
-                "@id": "_:N9d4e29adf55c4cbcb4d2c1717d6e0769"
-            },
-            {
-                "@id": "_:N64b58387432d4d70abcbcc32accbf125"
-            },
-            {
-                "@id": "_:Nb2b1160d782a4a3fa0610b9d281d67fe"
-            },
-            {
-                "@id": "_:Na96158e633c54e608e68d1f7fdfd023d"
-            },
-            {
-                "@id": "_:N08b6e6a4b79c43cd8d8730880014702c"
-            },
-            {
-                "@id": "_:Nc2da32824a39412e916daadddd1b2560"
-            },
-            {
-                "@id": "_:Nefe551ebcbfb4776a2c9c2c96be7311c"
-            },
-            {
-                "@id": "_:N8195ec04ca3e48058a411cd76897de52"
-            },
-            {
-                "@id": "_:Na463e3ce2cfc402a91eac10dfb27d0d1"
-            },
-            {
-                "@id": "_:N6cfcaf78f71543c7a6703e87c4fbd689"
-            },
-            {
-                "@id": "_:Ncac6188e91ec430f8f49c75d2cde60f0"
-            },
-            {
-                "@id": "_:N84b523a5fe8b47178523626e09048b27"
-            },
-            {
-                "@id": "_:N0a1ef57d4148439f86949562a18defcf"
-            },
-            {
-                "@id": "_:Na08d5265124d42f99a76a778095dc87d"
-            },
-            {
-                "@id": "_:Nb595a0b56d864560b1ba82cc73ca4538"
-            },
-            {
-                "@id": "_:Nc140298d5f524d5e9093b109fc99844d"
-            },
-            {
-                "@id": "_:Nd76c0e1799624de999263c14e8b05f9e"
-            },
-            {
-                "@id": "_:Nfdb78d62526549efad58351f9f28563d"
-            },
-            {
-                "@id": "_:N458c04b45de9484caf17e7391fbb5f1f"
-            },
-            {
-                "@id": "_:N9ec2265d3eb54d378ace1df2c1cbcb75"
-            },
-            {
-                "@id": "_:N417d4586b3c74dc4806cad7bc991a8ee"
-            },
-            {
-                "@id": "_:N28b0cd6ad1354ce580e50c8506af24e5"
-            },
-            {
-                "@id": "_:N6952500985074fdabedcc27b5959186c"
-            },
-            {
-                "@id": "_:N789bb36f77e844ef839090b39b15300d"
-            },
-            {
-                "@id": "_:Ndf6fba0ca9d54d9083474688ffbe91a5"
-            },
-            {
-                "@id": "_:N52becf33fa9d456bb998ef03d5580228"
-            }
-        ],
         "http://example.com/slowmo#IsAboutMeasure": [
             {
                 "@id": "_:NMB01"
@@ -274,7 +140,7 @@
         ],
         "http://example.com/slowmo#IsAboutOrganization": [
             {
-                "@id": "_:N3bba9c564e434fc1a97d74a498b387bb"
+                "@id": "_:Na309e67077ff49efb53a435dff5d27c3"
             }
         ],
         "http://example.com/slowmo#IsAboutPerformer": [
@@ -284,18 +150,18 @@
         ]
     },
     {
-        "@id": "_:N3bba9c564e434fc1a97d74a498b387bb",
+        "@id": "_:Na309e67077ff49efb53a435dff5d27c3",
         "@type": [
             "http://schema.org/Organization"
         ],
         "http://schema.org/address": [
             {
-                "@id": "_:Nb4db38280e1c47478a101ca3b82e848d"
+                "@id": "_:Nb32f3ff9cd064916871c9e5f1582a5d0"
             }
         ]
     },
     {
-        "@id": "_:Nb4db38280e1c47478a101ca3b82e848d",
+        "@id": "_:Nb32f3ff9cd064916871c9e5f1582a5d0",
         "@type": [
             "http://schema.org/PostalAddress"
         ],
@@ -332,10 +198,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N7a5ceead662b433c9203117669ec8bb1"
+                "@id": "_:Na2530d53656448bca85bab48c147a42a"
             },
             {
-                "@id": "_:N60152247f5484eac83fd93a8e554a5c6"
+                "@id": "_:Nd635c169692c44eca261ccea75d44e14"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -350,7 +216,7 @@
         ]
     },
     {
-        "@id": "_:N7a5ceead662b433c9203117669ec8bb1",
+        "@id": "_:Na2530d53656448bca85bab48c147a42a",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -371,7 +237,7 @@
         ]
     },
     {
-        "@id": "_:N60152247f5484eac83fd93a8e554a5c6",
+        "@id": "_:Nd635c169692c44eca261ccea75d44e14",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -393,10 +259,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N18aca534ff7d47c78980c64a5893e03a"
+                "@id": "_:Nb84d52de785f432499bbd6c3205fa8f9"
             },
             {
-                "@id": "_:N94500d8d218645e5b357d4a39ed28e8e"
+                "@id": "_:N7567a4db6ab64100aaaf83daed0df4de"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -411,7 +277,7 @@
         ]
     },
     {
-        "@id": "_:N18aca534ff7d47c78980c64a5893e03a",
+        "@id": "_:Nb84d52de785f432499bbd6c3205fa8f9",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -432,7 +298,7 @@
         ]
     },
     {
-        "@id": "_:N94500d8d218645e5b357d4a39ed28e8e",
+        "@id": "_:N7567a4db6ab64100aaaf83daed0df4de",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -454,10 +320,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N3ffdcd04f8ec4289bda9f95a570fca42"
+                "@id": "_:N296dc1fd1de3499e9e751140e2355807"
             },
             {
-                "@id": "_:N45ce581a245a430c98d8f9770b2b7bb7"
+                "@id": "_:Ndeb66c2546d94403a6e110acf9a8b689"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -472,7 +338,7 @@
         ]
     },
     {
-        "@id": "_:N3ffdcd04f8ec4289bda9f95a570fca42",
+        "@id": "_:N296dc1fd1de3499e9e751140e2355807",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -493,7 +359,7 @@
         ]
     },
     {
-        "@id": "_:N45ce581a245a430c98d8f9770b2b7bb7",
+        "@id": "_:Ndeb66c2546d94403a6e110acf9a8b689",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -515,10 +381,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N9812c37b1e0f4909b66c2bad9df494a2"
+                "@id": "_:N206729cb05b0426ebb8ca35be5edcd7f"
             },
             {
-                "@id": "_:N0670932c666b413d9dd41fcea1bcbc62"
+                "@id": "_:Ncc241a08c8994e8f8c5441340cd9c7e7"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -533,7 +399,7 @@
         ]
     },
     {
-        "@id": "_:N9812c37b1e0f4909b66c2bad9df494a2",
+        "@id": "_:N206729cb05b0426ebb8ca35be5edcd7f",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -554,7 +420,7 @@
         ]
     },
     {
-        "@id": "_:N0670932c666b413d9dd41fcea1bcbc62",
+        "@id": "_:Ncc241a08c8994e8f8c5441340cd9c7e7",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -576,10 +442,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N8b118e6767be4e44b0e1cc056702548c"
+                "@id": "_:N723a79e3e15849f6850acab862db4466"
             },
             {
-                "@id": "_:N04fd42c56a714b6398d86915bb218a6a"
+                "@id": "_:Ne28362eaa3f84708b83db878507188a1"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -594,7 +460,7 @@
         ]
     },
     {
-        "@id": "_:N8b118e6767be4e44b0e1cc056702548c",
+        "@id": "_:N723a79e3e15849f6850acab862db4466",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -615,7 +481,7 @@
         ]
     },
     {
-        "@id": "_:N04fd42c56a714b6398d86915bb218a6a",
+        "@id": "_:Ne28362eaa3f84708b83db878507188a1",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -637,10 +503,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N97f22c3ae6864fd4b760c9f24b5d3ca1"
+                "@id": "_:N153ddd8a4bb1401ba1b7f5e042d83369"
             },
             {
-                "@id": "_:N9d3d3ffde4144186a3a15facbd8b9f62"
+                "@id": "_:Nf64d2f1e7fa14428a60e16a9bb9227aa"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -655,7 +521,7 @@
         ]
     },
     {
-        "@id": "_:N97f22c3ae6864fd4b760c9f24b5d3ca1",
+        "@id": "_:N153ddd8a4bb1401ba1b7f5e042d83369",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -676,7 +542,7 @@
         ]
     },
     {
-        "@id": "_:N9d3d3ffde4144186a3a15facbd8b9f62",
+        "@id": "_:Nf64d2f1e7fa14428a60e16a9bb9227aa",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -698,10 +564,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N1a43459c29f94dc5b2c3482860a182e7"
+                "@id": "_:N3eec0545fa654eaa89c41e26768a9012"
             },
             {
-                "@id": "_:Nd6231aaef2c748bf9f4d9b6d7068d031"
+                "@id": "_:N07873be12a5948ff9ff11760be6d65bb"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -716,7 +582,7 @@
         ]
     },
     {
-        "@id": "_:N1a43459c29f94dc5b2c3482860a182e7",
+        "@id": "_:N3eec0545fa654eaa89c41e26768a9012",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -737,7 +603,7 @@
         ]
     },
     {
-        "@id": "_:Nd6231aaef2c748bf9f4d9b6d7068d031",
+        "@id": "_:N07873be12a5948ff9ff11760be6d65bb",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -759,10 +625,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Naad6e51dafc94b18a10e917efb1ec7c7"
+                "@id": "_:Naef20e0f51144ba2ae470b2b3b9cb51a"
             },
             {
-                "@id": "_:N0b85300df4cb43b299b2edb0f5038faa"
+                "@id": "_:Ne97b051805ad4918af5cfc97f9cd5801"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -777,7 +643,7 @@
         ]
     },
     {
-        "@id": "_:Naad6e51dafc94b18a10e917efb1ec7c7",
+        "@id": "_:Naef20e0f51144ba2ae470b2b3b9cb51a",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -798,7 +664,7 @@
         ]
     },
     {
-        "@id": "_:N0b85300df4cb43b299b2edb0f5038faa",
+        "@id": "_:Ne97b051805ad4918af5cfc97f9cd5801",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -820,10 +686,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N73d094984c384b44943f9f4a51f007e7"
+                "@id": "_:N1e4defb8cf114c0eb85334a98fb9f1bf"
             },
             {
-                "@id": "_:Na1e8797f9a2944fe9c26afade36a797d"
+                "@id": "_:N13864d83a192480194df22f6408d8a6d"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -838,7 +704,7 @@
         ]
     },
     {
-        "@id": "_:N73d094984c384b44943f9f4a51f007e7",
+        "@id": "_:N1e4defb8cf114c0eb85334a98fb9f1bf",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -859,7 +725,7 @@
         ]
     },
     {
-        "@id": "_:Na1e8797f9a2944fe9c26afade36a797d",
+        "@id": "_:N13864d83a192480194df22f6408d8a6d",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -881,10 +747,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nb5640dd8eab24f2eabd2389c6d607611"
+                "@id": "_:Nb69cfc89e16144aab242870a3fc1d621"
             },
             {
-                "@id": "_:N2e03e52759c14b6886469952926186ac"
+                "@id": "_:N5d1522b1aa684e8e8803ad2a920538d6"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -899,7 +765,7 @@
         ]
     },
     {
-        "@id": "_:Nb5640dd8eab24f2eabd2389c6d607611",
+        "@id": "_:Nb69cfc89e16144aab242870a3fc1d621",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -920,7 +786,7 @@
         ]
     },
     {
-        "@id": "_:N2e03e52759c14b6886469952926186ac",
+        "@id": "_:N5d1522b1aa684e8e8803ad2a920538d6",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -942,10 +808,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nbc120417f8f444eea84ce90df6fa5ea6"
+                "@id": "_:N5fd8cd00393c48d4a564d0bd75a09447"
             },
             {
-                "@id": "_:Nbabf9c68d780444f871410021c760b8c"
+                "@id": "_:Nb6e0e06f925947b5a5c62b86f8127cc5"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -960,7 +826,7 @@
         ]
     },
     {
-        "@id": "_:Nbc120417f8f444eea84ce90df6fa5ea6",
+        "@id": "_:N5fd8cd00393c48d4a564d0bd75a09447",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -981,7 +847,7 @@
         ]
     },
     {
-        "@id": "_:Nbabf9c68d780444f871410021c760b8c",
+        "@id": "_:Nb6e0e06f925947b5a5c62b86f8127cc5",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1003,10 +869,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nf6b95b002f654aa2a58436c672d4a328"
+                "@id": "_:N53b0cc485f5241d28e42021a4bbff0fa"
             },
             {
-                "@id": "_:Nc72785c23af643cab8f73d9c1d44c23a"
+                "@id": "_:Nd187410d82d94e0398408854e75d66c1"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1021,7 +887,7 @@
         ]
     },
     {
-        "@id": "_:Nf6b95b002f654aa2a58436c672d4a328",
+        "@id": "_:N53b0cc485f5241d28e42021a4bbff0fa",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1042,7 +908,7 @@
         ]
     },
     {
-        "@id": "_:Nc72785c23af643cab8f73d9c1d44c23a",
+        "@id": "_:Nd187410d82d94e0398408854e75d66c1",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1064,10 +930,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N82b78144363f4187ad4d57ebf7c3baf2"
+                "@id": "_:Nb17a2e68c45f461889c975e69547c9ce"
             },
             {
-                "@id": "_:N0a70c1d41a594378b7a3bcc308eb98e9"
+                "@id": "_:N04afc72db1c24bcd905abbfdf93311fa"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1082,7 +948,7 @@
         ]
     },
     {
-        "@id": "_:N82b78144363f4187ad4d57ebf7c3baf2",
+        "@id": "_:Nb17a2e68c45f461889c975e69547c9ce",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1103,7 +969,7 @@
         ]
     },
     {
-        "@id": "_:N0a70c1d41a594378b7a3bcc308eb98e9",
+        "@id": "_:N04afc72db1c24bcd905abbfdf93311fa",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1125,10 +991,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nb93b2795fc8d413c9211fa797c4e71e3"
+                "@id": "_:N399381fb9d3e4eada24a02272db078ba"
             },
             {
-                "@id": "_:Nf50e2c51ae39481f9388bc2b0db22985"
+                "@id": "_:N13bbeae5b737465fad0c78b2a5e4dffd"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1143,7 +1009,7 @@
         ]
     },
     {
-        "@id": "_:Nb93b2795fc8d413c9211fa797c4e71e3",
+        "@id": "_:N399381fb9d3e4eada24a02272db078ba",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1164,7 +1030,7 @@
         ]
     },
     {
-        "@id": "_:Nf50e2c51ae39481f9388bc2b0db22985",
+        "@id": "_:N13bbeae5b737465fad0c78b2a5e4dffd",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1186,10 +1052,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Na1d10987acd345f684b92bbba038bdbf"
+                "@id": "_:Nf135fb9971fd4c86be1b940ceb7e82da"
             },
             {
-                "@id": "_:Na696d09df6744717949631e28e680743"
+                "@id": "_:Nd626d125f0704294a017034499f6d100"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1204,7 +1070,7 @@
         ]
     },
     {
-        "@id": "_:Na1d10987acd345f684b92bbba038bdbf",
+        "@id": "_:Nf135fb9971fd4c86be1b940ceb7e82da",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1225,7 +1091,7 @@
         ]
     },
     {
-        "@id": "_:Na696d09df6744717949631e28e680743",
+        "@id": "_:Nd626d125f0704294a017034499f6d100",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1247,10 +1113,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nbfc50b8381644f23bc7d23835a65ff2e"
+                "@id": "_:Nce748464936c4938b5cf8898fcd5a20b"
             },
             {
-                "@id": "_:N200889a7235d468caadc5818f57e8c12"
+                "@id": "_:N4336df5b137a4475bf0e635eeada4c89"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1265,7 +1131,7 @@
         ]
     },
     {
-        "@id": "_:Nbfc50b8381644f23bc7d23835a65ff2e",
+        "@id": "_:Nce748464936c4938b5cf8898fcd5a20b",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1286,7 +1152,7 @@
         ]
     },
     {
-        "@id": "_:N200889a7235d468caadc5818f57e8c12",
+        "@id": "_:N4336df5b137a4475bf0e635eeada4c89",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1308,10 +1174,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nec435349af394e8187644de04a9e3b79"
+                "@id": "_:Nd1de376494b84c979a58384603a70b8f"
             },
             {
-                "@id": "_:Neaa22b87fa18494ea570ef7b8d23657c"
+                "@id": "_:N42663c83106943f08f38900dc0a57597"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1326,7 +1192,7 @@
         ]
     },
     {
-        "@id": "_:Nec435349af394e8187644de04a9e3b79",
+        "@id": "_:Nd1de376494b84c979a58384603a70b8f",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1347,7 +1213,7 @@
         ]
     },
     {
-        "@id": "_:Neaa22b87fa18494ea570ef7b8d23657c",
+        "@id": "_:N42663c83106943f08f38900dc0a57597",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1369,10 +1235,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Na000be6b69994aa09fc88c91ed86985c"
+                "@id": "_:N6b82d6d052b643c78a396a3d524b2144"
             },
             {
-                "@id": "_:N65b0ad7254fe4bcca2a58805b9ab3b15"
+                "@id": "_:N5ecbf3dfd2664d79a1f8ed46c73ae114"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1387,7 +1253,7 @@
         ]
     },
     {
-        "@id": "_:Na000be6b69994aa09fc88c91ed86985c",
+        "@id": "_:N6b82d6d052b643c78a396a3d524b2144",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1408,7 +1274,7 @@
         ]
     },
     {
-        "@id": "_:N65b0ad7254fe4bcca2a58805b9ab3b15",
+        "@id": "_:N5ecbf3dfd2664d79a1f8ed46c73ae114",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1430,10 +1296,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nb2b38fbc11cc40e6961a7e3098ae8656"
+                "@id": "_:N512f8ca00c654e3baee91f04428eb620"
             },
             {
-                "@id": "_:N0b9558c0386b4bbda58e04f0bc6eb675"
+                "@id": "_:Nd3081b702bff4317b0bb084e93dc45f8"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1448,7 +1314,7 @@
         ]
     },
     {
-        "@id": "_:Nb2b38fbc11cc40e6961a7e3098ae8656",
+        "@id": "_:N512f8ca00c654e3baee91f04428eb620",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1469,7 +1335,7 @@
         ]
     },
     {
-        "@id": "_:N0b9558c0386b4bbda58e04f0bc6eb675",
+        "@id": "_:Nd3081b702bff4317b0bb084e93dc45f8",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1491,10 +1357,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nd3958e6b1c334ae8b4170b3a7c8c8473"
+                "@id": "_:Nbfd96eda873b42a49e83d3604341f66b"
             },
             {
-                "@id": "_:N24188a96a0c44936a3882cd6d3f8c4f0"
+                "@id": "_:Nb773bad6cad349a7925a73c6df72e1d4"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1509,7 +1375,7 @@
         ]
     },
     {
-        "@id": "_:Nd3958e6b1c334ae8b4170b3a7c8c8473",
+        "@id": "_:Nbfd96eda873b42a49e83d3604341f66b",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1530,7 +1396,7 @@
         ]
     },
     {
-        "@id": "_:N24188a96a0c44936a3882cd6d3f8c4f0",
+        "@id": "_:Nb773bad6cad349a7925a73c6df72e1d4",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1552,10 +1418,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N28e3489ed1a0471295aede0a92543d25"
+                "@id": "_:N0319e57b8bf94dc69707ba2e995c8bad"
             },
             {
-                "@id": "_:N8cd1350be8bb4c8e9563c91f07334d9b"
+                "@id": "_:N61f4ddc3d9fe46bb854f6d9fe3cd8eba"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1570,7 +1436,7 @@
         ]
     },
     {
-        "@id": "_:N28e3489ed1a0471295aede0a92543d25",
+        "@id": "_:N0319e57b8bf94dc69707ba2e995c8bad",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1591,7 +1457,7 @@
         ]
     },
     {
-        "@id": "_:N8cd1350be8bb4c8e9563c91f07334d9b",
+        "@id": "_:N61f4ddc3d9fe46bb854f6d9fe3cd8eba",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1613,10 +1479,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N24298fe375d645b3a7765b6cf39c28f4"
+                "@id": "_:N6f9590530e6b407799635766421f01bf"
             },
             {
-                "@id": "_:N8772db27430949fc9e91da126f7b6eeb"
+                "@id": "_:Nbb03466cc4e245f09f9619a2fec4caa9"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1631,7 +1497,7 @@
         ]
     },
     {
-        "@id": "_:N24298fe375d645b3a7765b6cf39c28f4",
+        "@id": "_:N6f9590530e6b407799635766421f01bf",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1652,7 +1518,7 @@
         ]
     },
     {
-        "@id": "_:N8772db27430949fc9e91da126f7b6eeb",
+        "@id": "_:Nbb03466cc4e245f09f9619a2fec4caa9",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1674,10 +1540,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N257ee6bb179a41d4bd3a3955588cebbf"
+                "@id": "_:Ncbbdf236b5e04b48b6340bed13d26d49"
             },
             {
-                "@id": "_:N5be96309b9ed42689a6c91ab12d0ccaf"
+                "@id": "_:N5c958858003c445786b3471834de2434"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1692,7 +1558,7 @@
         ]
     },
     {
-        "@id": "_:N257ee6bb179a41d4bd3a3955588cebbf",
+        "@id": "_:Ncbbdf236b5e04b48b6340bed13d26d49",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1713,7 +1579,7 @@
         ]
     },
     {
-        "@id": "_:N5be96309b9ed42689a6c91ab12d0ccaf",
+        "@id": "_:N5c958858003c445786b3471834de2434",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1735,10 +1601,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N9c3cac04019c4633a9da26355398f741"
+                "@id": "_:N0014a2f99cf24e0fba08779c1bab0f69"
             },
             {
-                "@id": "_:Nc2a76ff8c9a545af95eb5b31728993ad"
+                "@id": "_:N69a4092e22c14142825dbc546ab15089"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1753,7 +1619,7 @@
         ]
     },
     {
-        "@id": "_:N9c3cac04019c4633a9da26355398f741",
+        "@id": "_:N0014a2f99cf24e0fba08779c1bab0f69",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1774,7 +1640,7 @@
         ]
     },
     {
-        "@id": "_:Nc2a76ff8c9a545af95eb5b31728993ad",
+        "@id": "_:N69a4092e22c14142825dbc546ab15089",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1796,10 +1662,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nc0cd67f8b9f04be988ceef1134fd91dd"
+                "@id": "_:N46571ea6636948cd8bfe94bebc50144c"
             },
             {
-                "@id": "_:N1073862732ef431f86c92491f7f7499e"
+                "@id": "_:N29ea333a8255401e902374369595d5f4"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1814,7 +1680,7 @@
         ]
     },
     {
-        "@id": "_:Nc0cd67f8b9f04be988ceef1134fd91dd",
+        "@id": "_:N46571ea6636948cd8bfe94bebc50144c",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1835,7 +1701,7 @@
         ]
     },
     {
-        "@id": "_:N1073862732ef431f86c92491f7f7499e",
+        "@id": "_:N29ea333a8255401e902374369595d5f4",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1857,10 +1723,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nf147d7b61843436b8bca6fb4a8b86fb1"
+                "@id": "_:Nc7ddc5b6e3004ff7a02c11a19b8147bb"
             },
             {
-                "@id": "_:N594095cf35164e4a9e30cc870aa9d9d7"
+                "@id": "_:N10db9c4c96e1468abd0f3ae48dc1213c"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1875,7 +1741,7 @@
         ]
     },
     {
-        "@id": "_:Nf147d7b61843436b8bca6fb4a8b86fb1",
+        "@id": "_:Nc7ddc5b6e3004ff7a02c11a19b8147bb",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1896,7 +1762,7 @@
         ]
     },
     {
-        "@id": "_:N594095cf35164e4a9e30cc870aa9d9d7",
+        "@id": "_:N10db9c4c96e1468abd0f3ae48dc1213c",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1918,10 +1784,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N7f800c8e7f1341b091dafc9565bc708a"
+                "@id": "_:N8de6d36b5a094b34b1a8fca436f38d0a"
             },
             {
-                "@id": "_:Nb57ae05b1f2c4ed29e58d88c6466c5e1"
+                "@id": "_:N5a29f225bcf246518c40c44734a7894f"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1936,7 +1802,7 @@
         ]
     },
     {
-        "@id": "_:N7f800c8e7f1341b091dafc9565bc708a",
+        "@id": "_:N8de6d36b5a094b34b1a8fca436f38d0a",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1957,7 +1823,7 @@
         ]
     },
     {
-        "@id": "_:Nb57ae05b1f2c4ed29e58d88c6466c5e1",
+        "@id": "_:N5a29f225bcf246518c40c44734a7894f",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1979,10 +1845,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Ne2a2a33edec84d60bd138b5cce66f637"
+                "@id": "_:N94931614cdea4f1cb17dd40ad93906f4"
             },
             {
-                "@id": "_:Nd95d760157fd4f0baaf98224e717b4fa"
+                "@id": "_:N845db2b64d90402f94037fdafdfc1acd"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1997,7 +1863,7 @@
         ]
     },
     {
-        "@id": "_:Ne2a2a33edec84d60bd138b5cce66f637",
+        "@id": "_:N94931614cdea4f1cb17dd40ad93906f4",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2018,7 +1884,7 @@
         ]
     },
     {
-        "@id": "_:Nd95d760157fd4f0baaf98224e717b4fa",
+        "@id": "_:N845db2b64d90402f94037fdafdfc1acd",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2040,10 +1906,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N496d7679e6ed47bbab749801a9a22169"
+                "@id": "_:N4c2028ba40224a89ac9d5ca5f5bf47fc"
             },
             {
-                "@id": "_:N02cac122b7ed462fac4b9f3691ef34b9"
+                "@id": "_:Neb99f4d32fb04456ab5a8ea37743e617"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2058,7 +1924,7 @@
         ]
     },
     {
-        "@id": "_:N496d7679e6ed47bbab749801a9a22169",
+        "@id": "_:N4c2028ba40224a89ac9d5ca5f5bf47fc",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2079,7 +1945,7 @@
         ]
     },
     {
-        "@id": "_:N02cac122b7ed462fac4b9f3691ef34b9",
+        "@id": "_:Neb99f4d32fb04456ab5a8ea37743e617",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2101,10 +1967,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nd8effccc0451467ba8a94c3893d0d545"
+                "@id": "_:N29cd02a9491e4992936192f015db5d40"
             },
             {
-                "@id": "_:N01265a9730814f5d905643f530dfef93"
+                "@id": "_:N821531ac9c1c4e57babb9f9a1422b0b3"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2119,7 +1985,7 @@
         ]
     },
     {
-        "@id": "_:Nd8effccc0451467ba8a94c3893d0d545",
+        "@id": "_:N29cd02a9491e4992936192f015db5d40",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2140,7 +2006,7 @@
         ]
     },
     {
-        "@id": "_:N01265a9730814f5d905643f530dfef93",
+        "@id": "_:N821531ac9c1c4e57babb9f9a1422b0b3",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2162,10 +2028,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nfbb36e170d374ac7bec3977f7e50e547"
+                "@id": "_:N19feadd0c11348b4a02a48e15f24849e"
             },
             {
-                "@id": "_:N2fdba7d67fc0444582531eff74859436"
+                "@id": "_:N51682efef6a348d2b1d68930eeba6f9a"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2180,7 +2046,7 @@
         ]
     },
     {
-        "@id": "_:Nfbb36e170d374ac7bec3977f7e50e547",
+        "@id": "_:N19feadd0c11348b4a02a48e15f24849e",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2201,7 +2067,7 @@
         ]
     },
     {
-        "@id": "_:N2fdba7d67fc0444582531eff74859436",
+        "@id": "_:N51682efef6a348d2b1d68930eeba6f9a",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2223,10 +2089,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N28ab76100e9e4bcb9dfbd7848dd65c3a"
+                "@id": "_:N3fde5b4de0404b60aee8113c9122fe15"
             },
             {
-                "@id": "_:N40f9363c435d495d9339a6285bc63b17"
+                "@id": "_:N8e62672026174b5687ea9eee16f97b45"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2241,7 +2107,7 @@
         ]
     },
     {
-        "@id": "_:N28ab76100e9e4bcb9dfbd7848dd65c3a",
+        "@id": "_:N3fde5b4de0404b60aee8113c9122fe15",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2262,7 +2128,7 @@
         ]
     },
     {
-        "@id": "_:N40f9363c435d495d9339a6285bc63b17",
+        "@id": "_:N8e62672026174b5687ea9eee16f97b45",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2284,10 +2150,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N46ae51c7cfd94c358812a1d848e0df64"
+                "@id": "_:N232e7740640242778045d626ea5551fc"
             },
             {
-                "@id": "_:Ndfabe0aca082444785e6b5d7aba56585"
+                "@id": "_:Nd032d20a3fa24575b3f8b4c5eae2688f"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2302,7 +2168,7 @@
         ]
     },
     {
-        "@id": "_:N46ae51c7cfd94c358812a1d848e0df64",
+        "@id": "_:N232e7740640242778045d626ea5551fc",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2323,7 +2189,7 @@
         ]
     },
     {
-        "@id": "_:Ndfabe0aca082444785e6b5d7aba56585",
+        "@id": "_:Nd032d20a3fa24575b3f8b4c5eae2688f",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2345,10 +2211,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N7e22f9b1e7954cf98e41bc0f9a26ce1d"
+                "@id": "_:N8c63e0bc8e6a404a8df304aa2f883da2"
             },
             {
-                "@id": "_:N3edc46c8624a4d6fa2c8f078ce106341"
+                "@id": "_:N3a809a5d462d4bbabdbd79e55fa7f880"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2363,7 +2229,7 @@
         ]
     },
     {
-        "@id": "_:N7e22f9b1e7954cf98e41bc0f9a26ce1d",
+        "@id": "_:N8c63e0bc8e6a404a8df304aa2f883da2",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2384,7 +2250,7 @@
         ]
     },
     {
-        "@id": "_:N3edc46c8624a4d6fa2c8f078ce106341",
+        "@id": "_:N3a809a5d462d4bbabdbd79e55fa7f880",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2406,10 +2272,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nb1ed98bcefcc4339a9ddb606641d8c06"
+                "@id": "_:Nf99f2dfbfec44a9084771b31648b904d"
             },
             {
-                "@id": "_:N10ee603ab7c6487d96c7fdc3843ae757"
+                "@id": "_:N6f878113e8eb4c6689274a60cbd01462"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2424,7 +2290,7 @@
         ]
     },
     {
-        "@id": "_:Nb1ed98bcefcc4339a9ddb606641d8c06",
+        "@id": "_:Nf99f2dfbfec44a9084771b31648b904d",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2445,7 +2311,7 @@
         ]
     },
     {
-        "@id": "_:N10ee603ab7c6487d96c7fdc3843ae757",
+        "@id": "_:N6f878113e8eb4c6689274a60cbd01462",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2467,10 +2333,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Ndb931a1b624d4a5383cf6791f946a57c"
+                "@id": "_:N99a32befc355405eb20c97ebedd6a153"
             },
             {
-                "@id": "_:N34086a09d913490b967d37e73abb858b"
+                "@id": "_:N56885f88dbfb47d58c0b2cad18a43fb4"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2485,7 +2351,7 @@
         ]
     },
     {
-        "@id": "_:Ndb931a1b624d4a5383cf6791f946a57c",
+        "@id": "_:N99a32befc355405eb20c97ebedd6a153",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2506,7 +2372,7 @@
         ]
     },
     {
-        "@id": "_:N34086a09d913490b967d37e73abb858b",
+        "@id": "_:N56885f88dbfb47d58c0b2cad18a43fb4",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2528,10 +2394,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Ndbede23f3f804da997c086fb9536d811"
+                "@id": "_:N69f0bc5dda504725b7dbe59f569fed64"
             },
             {
-                "@id": "_:N410b68e7f63443448f4420f939f82010"
+                "@id": "_:Ne6a076d1ffa34c5db573a317b475d74f"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2546,7 +2412,7 @@
         ]
     },
     {
-        "@id": "_:Ndbede23f3f804da997c086fb9536d811",
+        "@id": "_:N69f0bc5dda504725b7dbe59f569fed64",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2567,7 +2433,7 @@
         ]
     },
     {
-        "@id": "_:N410b68e7f63443448f4420f939f82010",
+        "@id": "_:Ne6a076d1ffa34c5db573a317b475d74f",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2589,10 +2455,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N0a8856e0b7fc44ccb06e432545e85144"
+                "@id": "_:N0120eff862e447369c0107e7bc824c54"
             },
             {
-                "@id": "_:Nd36c93f543cc41678f900deabccb514f"
+                "@id": "_:Ne30550fe5b164393ae06d37250b2c0b1"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2607,7 +2473,7 @@
         ]
     },
     {
-        "@id": "_:N0a8856e0b7fc44ccb06e432545e85144",
+        "@id": "_:N0120eff862e447369c0107e7bc824c54",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2628,7 +2494,7 @@
         ]
     },
     {
-        "@id": "_:Nd36c93f543cc41678f900deabccb514f",
+        "@id": "_:Ne30550fe5b164393ae06d37250b2c0b1",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2650,10 +2516,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N73e67352ed46488ab6bfda48b0a1c0b4"
+                "@id": "_:N8acefc35afcc4832b8b6f1f2d46d0159"
             },
             {
-                "@id": "_:Nd729006b9c01430bb0f3c27849ddd8e2"
+                "@id": "_:Nd772642db64e4e058eedf4fe4a07c394"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2668,7 +2534,7 @@
         ]
     },
     {
-        "@id": "_:N73e67352ed46488ab6bfda48b0a1c0b4",
+        "@id": "_:N8acefc35afcc4832b8b6f1f2d46d0159",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2689,7 +2555,7 @@
         ]
     },
     {
-        "@id": "_:Nd729006b9c01430bb0f3c27849ddd8e2",
+        "@id": "_:Nd772642db64e4e058eedf4fe4a07c394",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2711,10 +2577,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N383caef17f1941c5adeb50197a50f6c0"
+                "@id": "_:Nf4a6bcc33c57411b9ba9720b86f65523"
             },
             {
-                "@id": "_:Nee919f5094ad4f17b47a797092490b0e"
+                "@id": "_:Nce0f4c7937e948158acbc71cb97e2cb9"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2729,7 +2595,7 @@
         ]
     },
     {
-        "@id": "_:N383caef17f1941c5adeb50197a50f6c0",
+        "@id": "_:Nf4a6bcc33c57411b9ba9720b86f65523",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2750,7 +2616,7 @@
         ]
     },
     {
-        "@id": "_:Nee919f5094ad4f17b47a797092490b0e",
+        "@id": "_:Nce0f4c7937e948158acbc71cb97e2cb9",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2772,10 +2638,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nd9afdb84b8b848debe1e6a744aa14af6"
+                "@id": "_:Nff199e4880364e65987c73f2f1fb73a5"
             },
             {
-                "@id": "_:Nfd0537b623b44e3d809465eefb5e7303"
+                "@id": "_:N263ed0c71ec044f4830a2710912e7b6e"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2790,7 +2656,7 @@
         ]
     },
     {
-        "@id": "_:Nd9afdb84b8b848debe1e6a744aa14af6",
+        "@id": "_:Nff199e4880364e65987c73f2f1fb73a5",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2811,7 +2677,7 @@
         ]
     },
     {
-        "@id": "_:Nfd0537b623b44e3d809465eefb5e7303",
+        "@id": "_:N263ed0c71ec044f4830a2710912e7b6e",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2833,10 +2699,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nf1eecf8a79724873b31171d193b86d35"
+                "@id": "_:Nc67a4163bc784b1688c31604a698b98f"
             },
             {
-                "@id": "_:Na89961c7f08e41049f55ffae8e70dcd2"
+                "@id": "_:N2a654d28efe54dfabc5fe1056297c15e"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2851,7 +2717,7 @@
         ]
     },
     {
-        "@id": "_:Nf1eecf8a79724873b31171d193b86d35",
+        "@id": "_:Nc67a4163bc784b1688c31604a698b98f",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2872,7 +2738,7 @@
         ]
     },
     {
-        "@id": "_:Na89961c7f08e41049f55ffae8e70dcd2",
+        "@id": "_:N2a654d28efe54dfabc5fe1056297c15e",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2894,10 +2760,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N03336fcbf32047bdb8cc2b59ba09840c"
+                "@id": "_:N6a788ce38f6b4713a8cc2be77bf00d5e"
             },
             {
-                "@id": "_:N6cab2ef3ca5d4993acb1155f31de9ca5"
+                "@id": "_:Ned1c0e3b01d64758971f79d1473c0c46"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2912,7 +2778,7 @@
         ]
     },
     {
-        "@id": "_:N03336fcbf32047bdb8cc2b59ba09840c",
+        "@id": "_:N6a788ce38f6b4713a8cc2be77bf00d5e",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2933,7 +2799,7 @@
         ]
     },
     {
-        "@id": "_:N6cab2ef3ca5d4993acb1155f31de9ca5",
+        "@id": "_:Ned1c0e3b01d64758971f79d1473c0c46",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2955,10 +2821,10 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N4d0d11f39e1940d0bd42ac7714c4c475"
+                "@id": "_:N0cdd8ee15d1c42b4bf5faf6ab51b6bff"
             },
             {
-                "@id": "_:Na1c66bf2f03e403d8abd7bd14724f62c"
+                "@id": "_:Nc202af0ef55644caaa55acabbf167d3a"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2973,7 +2839,7 @@
         ]
     },
     {
-        "@id": "_:N4d0d11f39e1940d0bd42ac7714c4c475",
+        "@id": "_:N0cdd8ee15d1c42b4bf5faf6ab51b6bff",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2994,7 +2860,7 @@
         ]
     },
     {
-        "@id": "_:Na1c66bf2f03e403d8abd7bd14724f62c",
+        "@id": "_:Nc202af0ef55644caaa55acabbf167d3a",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -3016,223 +2882,45 @@
         ],
         "http://purl.obolibrary.org/obo/RO_0000091": [
             {
-                "@id": "_:N38eeaf3088bf4760b21543db73b6ad81"
+                "@id": "_:Nff1eb1eeb73a4050a93ab8b31b804006"
             },
             {
-                "@id": "_:N89f09dacb30d4aaf86e3098d3876da26"
+                "@id": "_:N476b7e0eed6f49ae8fcc86d3fc79a5c5"
             },
             {
-                "@id": "_:N7316569fa48448d185635eb569041945"
+                "@id": "_:Nf3f806ba42124d429a177f4282732ed7"
             },
             {
-                "@id": "_:N2c7954c4cb994d61b512ec7ae1eb63df"
+                "@id": "_:N4d1c6e1c9de14ce381c38c52091eaaa8"
             },
             {
-                "@id": "_:Ndf939d2be446469ca3e57f5310c0f4c8"
+                "@id": "_:Nf448fbe405984b5d990cc033776f57f6"
             },
             {
-                "@id": "_:Naae88c06d8c0434695a86e7ebb446278"
+                "@id": "_:Ncf61ab5753014ee1b35bd540cf8bf0af"
             },
             {
-                "@id": "_:N49e9c4477d2c49d3acae429275800d0e"
+                "@id": "_:Ncef628eedcc841eda673f9f1a75e9c07"
             },
             {
-                "@id": "_:Nbb72fe63dae3476eb183c8ba7fcb6f7d"
+                "@id": "_:N0da53e6e583940e6b24813a3df730b81"
             },
             {
-                "@id": "_:Nc70f63d376a947fb928d85c7ef20f017"
+                "@id": "_:Nca7a82d4299644c38f21a72897939ba4"
             },
             {
-                "@id": "_:Ndbaf1564e1154538bfb1e707ca22b7cb"
-            },
-            {
-                "@id": "_:N85e2bbf93c3644608a60f114144244f1"
-            },
-            {
-                "@id": "_:Nf546e27ed6e7469aa193d2e8c5f1b282"
-            },
-            {
-                "@id": "_:N7f2a1d0a8f0e48ce94e53eaf4f749ece"
-            },
-            {
-                "@id": "_:N1eb9a08afda444d9abce983e24e216e7"
-            },
-            {
-                "@id": "_:Nd703abb3653041848265d31d66e8acf0"
-            },
-            {
-                "@id": "_:N247ec3261cd64eeab0cb03f12ed47793"
-            },
-            {
-                "@id": "_:N6debe091e78c4e87a6a01e983de0f97c"
-            },
-            {
-                "@id": "_:N2fefa52519ea41bc873bb5302e5745a8"
-            },
-            {
-                "@id": "_:N51d89d774d37416bb1501d9739db2e55"
-            },
-            {
-                "@id": "_:N2e21a2a2c3cc4886ab189de38b1b1409"
+                "@id": "_:Nad9672bfb0c848519d74fa3a04a3076e"
             }
         ]
     },
     {
-        "@id": "_:N38eeaf3088bf4760b21543db73b6ad81",
+        "@id": "_:Nff1eb1eeb73a4050a93ab8b31b804006",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:N46ae51c7cfd94c358812a1d848e0df64"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@id": "_:ABX01"
-            }
-        ]
-    },
-    {
-        "@id": "_:N89f09dacb30d4aaf86e3098d3876da26",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000106"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:N46ae51c7cfd94c358812a1d848e0df64"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@id": "_:ABX01"
-            }
-        ]
-    },
-    {
-        "@id": "_:N7316569fa48448d185635eb569041945",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000105"
-        ],
-        "http://example.com/slowmo#PerformanceGapSize": [
-            {
-                "@value": 0.9
-            }
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:N46ae51c7cfd94c358812a1d848e0df64"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@id": "_:ABX01"
-            }
-        ]
-    },
-    {
-        "@id": "_:N2c7954c4cb994d61b512ec7ae1eb63df",
-        "@type": [
-            "http://example.com/slowmo#ConsecutivePositiveGap"
-        ],
-        "http://example.com/slowmo#Numberofmonths": [
-            {
-                "@value": 7
-            }
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:N46ae51c7cfd94c358812a1d848e0df64"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@id": "_:ABX01"
-            }
-        ]
-    },
-    {
-        "@id": "_:Ndf939d2be446469ca3e57f5310c0f4c8",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000095"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:Ndfabe0aca082444785e6b5d7aba56585"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@id": "_:ABX01"
-            }
-        ]
-    },
-    {
-        "@id": "_:Naae88c06d8c0434695a86e7ebb446278",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000106"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:Ndfabe0aca082444785e6b5d7aba56585"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@id": "_:ABX01"
-            }
-        ]
-    },
-    {
-        "@id": "_:N49e9c4477d2c49d3acae429275800d0e",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000105"
-        ],
-        "http://example.com/slowmo#PerformanceGapSize": [
-            {
-                "@value": 0.99
-            }
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:Ndfabe0aca082444785e6b5d7aba56585"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@id": "_:ABX01"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nbb72fe63dae3476eb183c8ba7fcb6f7d",
-        "@type": [
-            "http://example.com/slowmo#ConsecutivePositiveGap"
-        ],
-        "http://example.com/slowmo#Numberofmonths": [
-            {
-                "@value": 7
-            }
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:Ndfabe0aca082444785e6b5d7aba56585"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@id": "_:ABX01"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nc70f63d376a947fb928d85c7ef20f017",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000094"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:N82b78144363f4187ad4d57ebf7c3baf2"
+                "@id": "_:Nb17a2e68c45f461889c975e69547c9ce"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3242,13 +2930,13 @@
         ]
     },
     {
-        "@id": "_:Ndbaf1564e1154538bfb1e707ca22b7cb",
+        "@id": "_:N476b7e0eed6f49ae8fcc86d3fc79a5c5",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000106"
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:N82b78144363f4187ad4d57ebf7c3baf2"
+                "@id": "_:Nb17a2e68c45f461889c975e69547c9ce"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3258,18 +2946,18 @@
         ]
     },
     {
-        "@id": "_:N85e2bbf93c3644608a60f114144244f1",
+        "@id": "_:Nf3f806ba42124d429a177f4282732ed7",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000104"
         ],
         "http://example.com/slowmo#PerformanceGapSize": [
             {
-                "@value": -0.44545454545454544
+                "@value": -0.5363636363636364
             }
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:N82b78144363f4187ad4d57ebf7c3baf2"
+                "@id": "_:Nb17a2e68c45f461889c975e69547c9ce"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3279,18 +2967,18 @@
         ]
     },
     {
-        "@id": "_:Nf546e27ed6e7469aa193d2e8c5f1b282",
+        "@id": "_:N4d1c6e1c9de14ce381c38c52091eaaa8",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000100"
         ],
         "http://example.com/slowmo#PerformanceTrendSlope": [
             {
-                "@value": -4.676393565282454e-17
+                "@value": -1.4029180695847364e-16
             }
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:N82b78144363f4187ad4d57ebf7c3baf2"
+                "@id": "_:Nb17a2e68c45f461889c975e69547c9ce"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3300,14 +2988,14 @@
         ],
         "http://example.com/slowmo#numberofmonths": [
             {
-                "@value": 3
+                "@value": 1
             }
         ]
     },
     {
-        "@id": "_:N7f2a1d0a8f0e48ce94e53eaf4f749ece",
+        "@id": "_:Nf448fbe405984b5d990cc033776f57f6",
         "@type": [
-            "http://example.com/slowmo#ConsecutiveNegativeGap"
+            "http://example.com/slowmo#ConsecutiveGoalNegativeGap"
         ],
         "http://example.com/slowmo#Numberofmonths": [
             {
@@ -3316,7 +3004,7 @@
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:N82b78144363f4187ad4d57ebf7c3baf2"
+                "@id": "_:Nb17a2e68c45f461889c975e69547c9ce"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3326,34 +3014,13 @@
         ]
     },
     {
-        "@id": "_:N1eb9a08afda444d9abce983e24e216e7",
-        "@type": [
-            "http://example.com/slowmo#MonotonicTrend"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:N82b78144363f4187ad4d57ebf7c3baf2"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@id": "_:AKI01"
-            }
-        ],
-        "http://example.com/slowmo#Timeofmonotonicity": [
-            {
-                "@value": 3
-            }
-        ]
-    },
-    {
-        "@id": "_:Nd703abb3653041848265d31d66e8acf0",
+        "@id": "_:Ncf61ab5753014ee1b35bd540cf8bf0af",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:N0a70c1d41a594378b7a3bcc308eb98e9"
+                "@id": "_:N04afc72db1c24bcd905abbfdf93311fa"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3363,13 +3030,13 @@
         ]
     },
     {
-        "@id": "_:N247ec3261cd64eeab0cb03f12ed47793",
+        "@id": "_:Ncef628eedcc841eda673f9f1a75e9c07",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000106"
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:N0a70c1d41a594378b7a3bcc308eb98e9"
+                "@id": "_:N04afc72db1c24bcd905abbfdf93311fa"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3379,18 +3046,18 @@
         ]
     },
     {
-        "@id": "_:N6debe091e78c4e87a6a01e983de0f97c",
+        "@id": "_:N0da53e6e583940e6b24813a3df730b81",
         "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000105"
+            "http://purl.obolibrary.org/obo/psdo_0000104"
         ],
         "http://example.com/slowmo#PerformanceGapSize": [
             {
-                "@value": 0.3445454545454546
+                "@value": -0.6363636363636364
             }
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:N0a70c1d41a594378b7a3bcc308eb98e9"
+                "@id": "_:N04afc72db1c24bcd905abbfdf93311fa"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3400,18 +3067,18 @@
         ]
     },
     {
-        "@id": "_:N2fefa52519ea41bc873bb5302e5745a8",
+        "@id": "_:Nca7a82d4299644c38f21a72897939ba4",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000100"
         ],
         "http://example.com/slowmo#PerformanceTrendSlope": [
             {
-                "@value": -4.676393565282454e-17
+                "@value": -1.4029180695847364e-16
             }
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:N0a70c1d41a594378b7a3bcc308eb98e9"
+                "@id": "_:N04afc72db1c24bcd905abbfdf93311fa"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3421,2497 +3088,29 @@
         ],
         "http://example.com/slowmo#numberofmonths": [
             {
-                "@value": 3
+                "@value": 1
             }
         ]
     },
     {
-        "@id": "_:N51d89d774d37416bb1501d9739db2e55",
+        "@id": "_:Nad9672bfb0c848519d74fa3a04a3076e",
         "@type": [
-            "http://example.com/slowmo#ConsecutivePositiveGap"
+            "http://example.com/slowmo#ConsecutivePeerNegativeGap"
         ],
         "http://example.com/slowmo#Numberofmonths": [
             {
-                "@value": 12
-            }
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:N0a70c1d41a594378b7a3bcc308eb98e9"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@id": "_:AKI01"
-            }
-        ]
-    },
-    {
-        "@id": "_:N2e21a2a2c3cc4886ab189de38b1b1409",
-        "@type": [
-            "http://example.com/slowmo#MonotonicTrend"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:N0a70c1d41a594378b7a3bcc308eb98e9"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@id": "_:AKI01"
-            }
-        ],
-        "http://example.com/slowmo#Timeofmonotonicity": [
-            {
                 "@value": 3
             }
-        ]
-    },
-    {
-        "@id": "_:Ned33632795fd44acacd379392106d764",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N4074f66684564f3790dd3763501bd625"
-            },
-            {
-                "@id": "_:N93198e817cd34832a9204cf259f86acc"
-            },
-            {
-                "@id": "_:Nab6fa0c28f7b4664b94d55b463fb2eed"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N4074f66684564f3790dd3763501bd625",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N93198e817cd34832a9204cf259f86acc",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Nab6fa0c28f7b4664b94d55b463fb2eed",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Nab6360019b644653b106a1510129e16a",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N9cae50be9f33486cb5389cc73d27d995"
-            },
-            {
-                "@id": "_:N09f9652ea89e41b78680f7b10fcd93eb"
-            },
-            {
-                "@id": "_:N6b289c7c3c7748cfafeb1423f9c3c320"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N9cae50be9f33486cb5389cc73d27d995",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N09f9652ea89e41b78680f7b10fcd93eb",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N6b289c7c3c7748cfafeb1423f9c3c320",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Naa026c3c8bdb4d4d89e88a2ee0d62139",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N6e3bf1cdee3d46eeb8fcde16577987ac"
-            },
-            {
-                "@id": "_:N7800e80b41e941838b712ea4ec2f5201"
-            },
-            {
-                "@id": "_:Na73df2ea7bfc42779888a02eb31a8ecb"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N6e3bf1cdee3d46eeb8fcde16577987ac",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N7800e80b41e941838b712ea4ec2f5201",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Na73df2ea7bfc42779888a02eb31a8ecb",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N50207d22f3d6481bbd595cc3d358219a",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N9af0d58bb6b1419a8506cdaf5583416f"
-            },
-            {
-                "@id": "_:N19701c6ebc734a15a2136c13eed33251"
-            },
-            {
-                "@id": "_:Nd9594215c5d74fd38146722b4016795a"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N9af0d58bb6b1419a8506cdaf5583416f",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N19701c6ebc734a15a2136c13eed33251",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Nd9594215c5d74fd38146722b4016795a",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Nb49622455ba442e2b6b051f3ab5477f2",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Na6d478c5b4ba4e009fe2d073634e78ba"
-            },
-            {
-                "@id": "_:Na97c992ab64c4b498162cd2c7ab44141"
-            },
-            {
-                "@id": "_:N3fd3cdca149649a695c047d69387cd1f"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Na6d478c5b4ba4e009fe2d073634e78ba",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Na97c992ab64c4b498162cd2c7ab44141",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N3fd3cdca149649a695c047d69387cd1f",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N3a4aee488cf84e6595c10faeb50d4f8e",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Nc5f04f731c4d488d9c319c488761e043"
-            },
-            {
-                "@id": "_:N8ef246376e59443ea132db8ec745342c"
-            },
-            {
-                "@id": "_:N0c77d57e70c547ef8383f53d9aeb4d5c"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nc5f04f731c4d488d9c319c488761e043",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N8ef246376e59443ea132db8ec745342c",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N0c77d57e70c547ef8383f53d9aeb4d5c",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N6a89904b5a1e4e50bf4d2de28e1e34a2",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Nf8933b4c0b314fc59767b8d2e5fbf6d6"
-            },
-            {
-                "@id": "_:N2e97ecb0431844a79e5644714e3511a2"
-            },
-            {
-                "@id": "_:N9152067be636416f9be5a3c957469f99"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nf8933b4c0b314fc59767b8d2e5fbf6d6",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N2e97ecb0431844a79e5644714e3511a2",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N9152067be636416f9be5a3c957469f99",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N26f4addfa2bf4aa8bee8bcd369bd3a5c",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Nfea1cb8e8ed343e8b20d520f2888b140"
-            },
-            {
-                "@id": "_:N56f6437e67cd4e8098ddda9bd1637daa"
-            },
-            {
-                "@id": "_:Nb0d11a4c872c47718127febf09289b19"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nfea1cb8e8ed343e8b20d520f2888b140",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N56f6437e67cd4e8098ddda9bd1637daa",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Nb0d11a4c872c47718127febf09289b19",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N4217d85b4eac4060b8ed96e1ae268254",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N08a6f20c5f314a2c80193e53da57a2b8"
-            },
-            {
-                "@id": "_:Nb58c316635fc4b418738e51297fbfa64"
-            },
-            {
-                "@id": "_:Nf6d490dcaf3f4858bac1eb34d4351653"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N08a6f20c5f314a2c80193e53da57a2b8",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Nb58c316635fc4b418738e51297fbfa64",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Nf6d490dcaf3f4858bac1eb34d4351653",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Na502b0d12e204a92b60546855d6bf991",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Nd89eac72551645bbaef7fc521232669c"
-            },
-            {
-                "@id": "_:N7a9952d4518b4a40827ca92329d05de1"
-            },
-            {
-                "@id": "_:Nbcb39bb6a18d4918b3b06d55dff7cfa5"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nd89eac72551645bbaef7fc521232669c",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N7a9952d4518b4a40827ca92329d05de1",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Nbcb39bb6a18d4918b3b06d55dff7cfa5",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N2d98fdaedf1b468892d20d7e977451ee",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Nb21e6906b2734721a7d38b0b57e9c536"
-            },
-            {
-                "@id": "_:N7c30248efb3d418592fc4ab7c17d19c4"
-            },
-            {
-                "@id": "_:Ned678dbf438044858fdbd844fe20d0ba"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nb21e6906b2734721a7d38b0b57e9c536",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N7c30248efb3d418592fc4ab7c17d19c4",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Ned678dbf438044858fdbd844fe20d0ba",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Nb438032d48934eb5b3b430dc9302040c",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N33871f8ec85a4da99514ac7ace6d9c3c"
-            },
-            {
-                "@id": "_:N336b3daa861b448c9b60f80d2941f6a2"
-            },
-            {
-                "@id": "_:N00c419ba3e1442489fadc03126492d1c"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N33871f8ec85a4da99514ac7ace6d9c3c",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N336b3daa861b448c9b60f80d2941f6a2",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N00c419ba3e1442489fadc03126492d1c",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N9243fb0821a14fe8840541562c5b53d4",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#AncestorPerformer": [
-            {
-                "@id": "_:-p1"
-            }
-        ],
-        "http://example.com/slowmo#AncestorTemplate": [
-            {
-                "@id": "http://feedbacktailor.org/ftkb#TopPerformerBar"
-            }
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Nfc8b512f9ddc47a9ad763694857b0640"
-            },
-            {
-                "@id": "_:Na2d2a71a0c0241d09400938d5dc77ca7"
-            },
-            {
-                "@id": "_:Ndb223ab140414090936e425992899476"
-            },
-            {
-                "@id": "_:Nce06facd2a2f411fa3d83142813d451b"
-            },
-            {
-                "@id": "_:Nf44a0736b11d4f7d85b85e5c30add377"
-            },
-            {
-                "@id": "_:N81c66ab2e3f142bdbaffb4990a2efaa5"
-            },
-            {
-                "@id": "_:Nfdea9b6c8f224bafbe2f10b0fa76c6df"
-            },
-            {
-                "@id": "_:Nd75a0fa925be4cf599ba074531fbab77"
-            },
-            {
-                "@id": "_:N18a0ea0671bd4f52a4c5f62351e45d29"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nfc8b512f9ddc47a9ad763694857b0640",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Na2d2a71a0c0241d09400938d5dc77ca7",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Ndb223ab140414090936e425992899476",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Nce06facd2a2f411fa3d83142813d451b",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:N0a70c1d41a594378b7a3bcc308eb98e9"
+                "@id": "_:N04afc72db1c24bcd905abbfdf93311fa"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
             {
-                "@value": "AKI01"
+                "@id": "_:AKI01"
             }
-        ]
-    },
-    {
-        "@id": "_:Nf44a0736b11d4f7d85b85e5c30add377",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000106"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:N0a70c1d41a594378b7a3bcc308eb98e9"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@value": "AKI01"
-            }
-        ]
-    },
-    {
-        "@id": "_:N81c66ab2e3f142bdbaffb4990a2efaa5",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000105"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:N0a70c1d41a594378b7a3bcc308eb98e9"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@value": "AKI01"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nfdea9b6c8f224bafbe2f10b0fa76c6df",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000100"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:N0a70c1d41a594378b7a3bcc308eb98e9"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@value": "AKI01"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nd75a0fa925be4cf599ba074531fbab77",
-        "@type": [
-            "http://example.com/slowmo#ConsecutivePositiveGap"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:N0a70c1d41a594378b7a3bcc308eb98e9"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@value": "AKI01"
-            }
-        ]
-    },
-    {
-        "@id": "_:N18a0ea0671bd4f52a4c5f62351e45d29",
-        "@type": [
-            "http://example.com/slowmo#MonotonicTrend"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:N0a70c1d41a594378b7a3bcc308eb98e9"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@value": "AKI01"
-            }
-        ]
-    },
-    {
-        "@id": "_:-p1"
-    },
-    {
-        "@id": "_:N691d2b5820484f85a4aeda55c719a6c4",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N20219dc5464942a6aadb5db65dd08239"
-            },
-            {
-                "@id": "_:N45f8e33cb93c486a944138369fd2dbba"
-            },
-            {
-                "@id": "_:N21e10bf578eb405fac3b0b4fbcce85c7"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N20219dc5464942a6aadb5db65dd08239",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N45f8e33cb93c486a944138369fd2dbba",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N21e10bf578eb405fac3b0b4fbcce85c7",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Ncf64bd149dd243f3a03146a7b5ea3112",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N326370e2cd9b47d4a40f51f9e94629b7"
-            },
-            {
-                "@id": "_:Nde891f58abf4463aa2c4511634504cdb"
-            },
-            {
-                "@id": "_:Na6fab8f1f0df47c2859a93448c8ea845"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N326370e2cd9b47d4a40f51f9e94629b7",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Nde891f58abf4463aa2c4511634504cdb",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Na6fab8f1f0df47c2859a93448c8ea845",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N2d22bf51031b4925976841c4cbeab7cf",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Na33e8d08f5364008a824c81ed0d8495c"
-            },
-            {
-                "@id": "_:N1a4f5bfa424243d59cc0982c79bbedab"
-            },
-            {
-                "@id": "_:N20fd5bdbca454cefb54158755a1127a0"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Na33e8d08f5364008a824c81ed0d8495c",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N1a4f5bfa424243d59cc0982c79bbedab",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N20fd5bdbca454cefb54158755a1127a0",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N5f350d83d13343b4a264286c79c243cd",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N53aed7d43025439d9d59de7df5a85e58"
-            },
-            {
-                "@id": "_:N80caf35775a7400581e0a35222d812c5"
-            },
-            {
-                "@id": "_:N41856eccb1964d578380144a6b23090d"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N53aed7d43025439d9d59de7df5a85e58",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N80caf35775a7400581e0a35222d812c5",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N41856eccb1964d578380144a6b23090d",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N5592aa38106f43cdb43e708d33ce28be",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Na469b742f3ad4e19b6508e410944c6bc"
-            },
-            {
-                "@id": "_:Nc7aa76e99b954b59aca2e7b351107eca"
-            },
-            {
-                "@id": "_:Nee0b66115fb9492e8ad544cb205f6c41"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Na469b742f3ad4e19b6508e410944c6bc",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Nc7aa76e99b954b59aca2e7b351107eca",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Nee0b66115fb9492e8ad544cb205f6c41",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N9d4e29adf55c4cbcb4d2c1717d6e0769",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Nc7165bb3b3154226bac47c57ddb3a742"
-            },
-            {
-                "@id": "_:N56fc90e6c06145f6aac039cd1a36e6be"
-            },
-            {
-                "@id": "_:Nfd1f3ed0e8f042ac98855bea16003448"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nc7165bb3b3154226bac47c57ddb3a742",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N56fc90e6c06145f6aac039cd1a36e6be",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Nfd1f3ed0e8f042ac98855bea16003448",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N64b58387432d4d70abcbcc32accbf125",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N8e1debb7beba4e24be682e6db36d79d7"
-            },
-            {
-                "@id": "_:Nd0efc27ae35b4064b76c05822ac351db"
-            },
-            {
-                "@id": "_:Nf764a2bfc62142f8850adedbba5c5984"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N8e1debb7beba4e24be682e6db36d79d7",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Nd0efc27ae35b4064b76c05822ac351db",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Nf764a2bfc62142f8850adedbba5c5984",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Nb2b1160d782a4a3fa0610b9d281d67fe",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N85a9d9c59b114af18589b0387d4b6e8d"
-            },
-            {
-                "@id": "_:Nee954ea56da8417da967cfe27f1ec232"
-            },
-            {
-                "@id": "_:Ne59842e7bd064a0aae08302b0ab7e3ce"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N85a9d9c59b114af18589b0387d4b6e8d",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Nee954ea56da8417da967cfe27f1ec232",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Ne59842e7bd064a0aae08302b0ab7e3ce",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Na96158e633c54e608e68d1f7fdfd023d",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N22165cca122c482c8174a56cc96354e3"
-            },
-            {
-                "@id": "_:Nc7d55e93a6fb43fe9821d05c1156ec27"
-            },
-            {
-                "@id": "_:N757655ff9ed94b1cb85de6eba1f1ec2d"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N22165cca122c482c8174a56cc96354e3",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Nc7d55e93a6fb43fe9821d05c1156ec27",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N757655ff9ed94b1cb85de6eba1f1ec2d",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N08b6e6a4b79c43cd8d8730880014702c",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Nc480e041f98f43b6846826a1bafa9602"
-            },
-            {
-                "@id": "_:N3365252da9ff4ac4a877399de2e78966"
-            },
-            {
-                "@id": "_:N73498f00f90e4959bb76486f9f5c13be"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nc480e041f98f43b6846826a1bafa9602",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N3365252da9ff4ac4a877399de2e78966",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N73498f00f90e4959bb76486f9f5c13be",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Nc2da32824a39412e916daadddd1b2560",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N0bed0d4c07e042ec8122a8de5aa94354"
-            },
-            {
-                "@id": "_:Na25a409c7b1a4b78b969fd20f0b06ea9"
-            },
-            {
-                "@id": "_:Nf10eccaa4abe415db8a50e6d394fb476"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N0bed0d4c07e042ec8122a8de5aa94354",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Na25a409c7b1a4b78b969fd20f0b06ea9",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Nf10eccaa4abe415db8a50e6d394fb476",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Nefe551ebcbfb4776a2c9c2c96be7311c",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N63dcb5e9b01f4516bbdeab3b107c47fd"
-            },
-            {
-                "@id": "_:N5237de8058674f31bb6cd1bde3eafaae"
-            },
-            {
-                "@id": "_:Nb4d0d46b38d54afa85ccbbdaa61f6acb"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N63dcb5e9b01f4516bbdeab3b107c47fd",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N5237de8058674f31bb6cd1bde3eafaae",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Nb4d0d46b38d54afa85ccbbdaa61f6acb",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N8195ec04ca3e48058a411cd76897de52",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Nd185fba3194c4f5981166821865c1cf7"
-            },
-            {
-                "@id": "_:N325c4c63d8cf4240b39ce33f02d04695"
-            },
-            {
-                "@id": "_:Na80f5cc5c49e45e28956296d4496b1df"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nd185fba3194c4f5981166821865c1cf7",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N325c4c63d8cf4240b39ce33f02d04695",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Na80f5cc5c49e45e28956296d4496b1df",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Na463e3ce2cfc402a91eac10dfb27d0d1",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N1129b691d99640f4bde479b2fd74926d"
-            },
-            {
-                "@id": "_:Nab9a86137df34eaf98bc8ddc56503356"
-            },
-            {
-                "@id": "_:N795d60933ec948d6b0f81cd34c1b3fd2"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N1129b691d99640f4bde479b2fd74926d",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Nab9a86137df34eaf98bc8ddc56503356",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N795d60933ec948d6b0f81cd34c1b3fd2",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N6cfcaf78f71543c7a6703e87c4fbd689",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N8f3001f617754444a6733d8ecb382b61"
-            },
-            {
-                "@id": "_:N811cf532df3d49488aa8d6a9fd2e7fb4"
-            },
-            {
-                "@id": "_:N92590fed799b42cc8b1188b2d23e9679"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N8f3001f617754444a6733d8ecb382b61",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N811cf532df3d49488aa8d6a9fd2e7fb4",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N92590fed799b42cc8b1188b2d23e9679",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Ncac6188e91ec430f8f49c75d2cde60f0",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Nde72f7e004da4a1a804b2204e65a90a9"
-            },
-            {
-                "@id": "_:N48f641bf79c14f619c5da1f3ed35d897"
-            },
-            {
-                "@id": "_:N97c5640272344c9dbfded8c5a70156c8"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nde72f7e004da4a1a804b2204e65a90a9",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N48f641bf79c14f619c5da1f3ed35d897",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N97c5640272344c9dbfded8c5a70156c8",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N84b523a5fe8b47178523626e09048b27",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N080e7c997b0843cf830fda6d201ee258"
-            },
-            {
-                "@id": "_:N6fa76aea2dbb4e0c8ed469e3b0715e3e"
-            },
-            {
-                "@id": "_:Nfdbd21d171ef4389925375f00f8cf913"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N080e7c997b0843cf830fda6d201ee258",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N6fa76aea2dbb4e0c8ed469e3b0715e3e",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Nfdbd21d171ef4389925375f00f8cf913",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N0a1ef57d4148439f86949562a18defcf",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N66d857c02c1041a4bebbf7aee5ad5c21"
-            },
-            {
-                "@id": "_:N8463d704162f4a00aaa0b32bc275b8e7"
-            },
-            {
-                "@id": "_:Nb74466aa23404bdbb9f9e44d2ade0c50"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N66d857c02c1041a4bebbf7aee5ad5c21",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N8463d704162f4a00aaa0b32bc275b8e7",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Nb74466aa23404bdbb9f9e44d2ade0c50",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Na08d5265124d42f99a76a778095dc87d",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Nfe89e16152ef4cbfb48e18067bd7a3cb"
-            },
-            {
-                "@id": "_:Nfcfdb0c492954088b2667b86c1d0b6d5"
-            },
-            {
-                "@id": "_:N2356e9a9789746b98d383b89a9f58e06"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nfe89e16152ef4cbfb48e18067bd7a3cb",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Nfcfdb0c492954088b2667b86c1d0b6d5",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N2356e9a9789746b98d383b89a9f58e06",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Nb595a0b56d864560b1ba82cc73ca4538",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Naa9f75502dde43e79e4105bc15968511"
-            },
-            {
-                "@id": "_:Necf5221932184348aa0c65d736a5ae47"
-            },
-            {
-                "@id": "_:Ncabcc5d97489418eadc515e0735c7cd9"
-            },
-            {
-                "@id": "_:N429248b03ba7427583113ed946d84d75"
-            },
-            {
-                "@id": "_:N8a6f134269cc4513a5a6ad373166becf"
-            },
-            {
-                "@id": "_:N0a3bf7f5b24d4ab890878525a41a44b4"
-            },
-            {
-                "@id": "_:Nbbade206ba414d288ed7ab6b20fa9f25"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Naa9f75502dde43e79e4105bc15968511",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Necf5221932184348aa0c65d736a5ae47",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Ncabcc5d97489418eadc515e0735c7cd9",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N429248b03ba7427583113ed946d84d75",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000095"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:Ndfabe0aca082444785e6b5d7aba56585"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@value": "ABX01"
-            }
-        ]
-    },
-    {
-        "@id": "_:N8a6f134269cc4513a5a6ad373166becf",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000106"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:Ndfabe0aca082444785e6b5d7aba56585"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@value": "ABX01"
-            }
-        ]
-    },
-    {
-        "@id": "_:N0a3bf7f5b24d4ab890878525a41a44b4",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000105"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:Ndfabe0aca082444785e6b5d7aba56585"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@value": "ABX01"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nbbade206ba414d288ed7ab6b20fa9f25",
-        "@type": [
-            "http://example.com/slowmo#ConsecutivePositiveGap"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:Ndfabe0aca082444785e6b5d7aba56585"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@value": "ABX01"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nc140298d5f524d5e9093b109fc99844d",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Naf20d58a5b2d40c286c0d42aaecdbaec"
-            },
-            {
-                "@id": "_:N871b51361d464391b35d97718c33d531"
-            },
-            {
-                "@id": "_:N0c795fe70cbb41889a4ed44134c760a6"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Naf20d58a5b2d40c286c0d42aaecdbaec",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N871b51361d464391b35d97718c33d531",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N0c795fe70cbb41889a4ed44134c760a6",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Nd76c0e1799624de999263c14e8b05f9e",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N9f771e9e514d4ae9a701a1842562d35b"
-            },
-            {
-                "@id": "_:N14aad9adcaba4fa4a905dfaad0705a9d"
-            },
-            {
-                "@id": "_:N108f7326f704471bad7baca8ba1abb27"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N9f771e9e514d4ae9a701a1842562d35b",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N14aad9adcaba4fa4a905dfaad0705a9d",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N108f7326f704471bad7baca8ba1abb27",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Nfdb78d62526549efad58351f9f28563d",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Na07a9efec13543408fbcce4303b6b26b"
-            },
-            {
-                "@id": "_:N9f3c2d0ed3f540f78f27d337649b75d0"
-            },
-            {
-                "@id": "_:Neb31b531a568438883d2b77082a2cd05"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Na07a9efec13543408fbcce4303b6b26b",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N9f3c2d0ed3f540f78f27d337649b75d0",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Neb31b531a568438883d2b77082a2cd05",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N458c04b45de9484caf17e7391fbb5f1f",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N7569de301e134e85a2725d4cb6439ad2"
-            },
-            {
-                "@id": "_:N2c2003fd97084a6b95a96ffb22872963"
-            },
-            {
-                "@id": "_:N25edbd34b5ac44eb933a69a6ee0af255"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N7569de301e134e85a2725d4cb6439ad2",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N2c2003fd97084a6b95a96ffb22872963",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N25edbd34b5ac44eb933a69a6ee0af255",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N9ec2265d3eb54d378ace1df2c1cbcb75",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Nf785a3e9ea6840b2bc22c870fa943352"
-            },
-            {
-                "@id": "_:N1b955cf91dc34336abdcf2e64201cd7f"
-            },
-            {
-                "@id": "_:N8404d0f741c9433fb4bb6742b0a6f89e"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nf785a3e9ea6840b2bc22c870fa943352",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N1b955cf91dc34336abdcf2e64201cd7f",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N8404d0f741c9433fb4bb6742b0a6f89e",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N417d4586b3c74dc4806cad7bc991a8ee",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N061f2409f55d4230979532d46f54dcdd"
-            },
-            {
-                "@id": "_:N11755f481ae74ddabccdabea2c056c32"
-            },
-            {
-                "@id": "_:N56b90d3461324fd5b58f763154e3d92f"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N061f2409f55d4230979532d46f54dcdd",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N11755f481ae74ddabccdabea2c056c32",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N56b90d3461324fd5b58f763154e3d92f",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N28b0cd6ad1354ce580e50c8506af24e5",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N04c46de4683e4356b2789f74ead13604"
-            },
-            {
-                "@id": "_:Ndcdc97fe51744dad89e5134c4a19cfa8"
-            },
-            {
-                "@id": "_:N9f18e71c0d8f4ac99e5a0878f5fc1dcd"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N04c46de4683e4356b2789f74ead13604",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Ndcdc97fe51744dad89e5134c4a19cfa8",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N9f18e71c0d8f4ac99e5a0878f5fc1dcd",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N6952500985074fdabedcc27b5959186c",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N24eb20cc97a541ca95a6acb015058358"
-            },
-            {
-                "@id": "_:N9fad64d16d71416daef9e59455f1760b"
-            },
-            {
-                "@id": "_:Nf37be13cff1a4b318973c4f554c9417e"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N24eb20cc97a541ca95a6acb015058358",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N9fad64d16d71416daef9e59455f1760b",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:Nf37be13cff1a4b318973c4f554c9417e",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N789bb36f77e844ef839090b39b15300d",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Nd81bbad49fec4765af3472200391d10a"
-            },
-            {
-                "@id": "_:Ndfd8bd44c80943adafef5ff5fabf874c"
-            },
-            {
-                "@id": "_:N521f52a8331e43f3a52518b518353ba2"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Nd81bbad49fec4765af3472200391d10a",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Ndfd8bd44c80943adafef5ff5fabf874c",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N521f52a8331e43f3a52518b518353ba2",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:Ndf6fba0ca9d54d9083474688ffbe91a5",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:N8c32708b1fd34056b2ae1525d33719d8"
-            },
-            {
-                "@id": "_:N492cc29dbbff4613af3d19c4e5d40eb6"
-            },
-            {
-                "@id": "_:N9eccc6f9ac5f4fff8d1477d538122aab"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:N8c32708b1fd34056b2ae1525d33719d8",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:N492cc29dbbff4613af3d19c4e5d40eb6",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N9eccc6f9ac5f4fff8d1477d538122aab",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
-        ]
-    },
-    {
-        "@id": "_:N52becf33fa9d456bb998ef03d5580228",
-        "@type": [
-            "http://purl.obolibrary.org/obo/cpo_0000053",
-            "http://example.com/slowmo#Candidate"
-        ],
-        "http://example.com/slowmo#name": [
-            {
-                "@id": "top performer bar"
-            }
-        ],
-        "http://purl.obolibrary.org/obo/RO_0000091": [
-            {
-                "@id": "_:Ne0fc2afdb0eb495d8a134b050ad42024"
-            },
-            {
-                "@id": "_:Nb44a31572b8945398bcad849926d6416"
-            },
-            {
-                "@id": "_:N038318ab881842bab0a51e1b226f54ff"
-            }
-        ],
-        "psdo:PerformanceSummaryDisplay": [
-            {
-                "@id": "line,bar,none"
-            }
-        ],
-        "psdo:PerformanceSummaryTextualEntity": [
-            {
-                "@id": "1"
-            }
-        ]
-    },
-    {
-        "@id": "_:Ne0fc2afdb0eb495d8a134b050ad42024",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000117"
-        ]
-    },
-    {
-        "@id": "_:Nb44a31572b8945398bcad849926d6416",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000045"
-        ]
-    },
-    {
-        "@id": "_:N038318ab881842bab0a51e1b226f54ff",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000041"
         ]
     }
 ]

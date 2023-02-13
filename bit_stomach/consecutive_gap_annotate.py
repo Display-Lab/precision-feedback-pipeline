@@ -40,7 +40,7 @@ def goal_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bnode
         event="positive"
         number=find_number(back_up_df,event)
         input_graph.add((s14,p14,o14))
-        input_graph=annotate_consecutive_positive_gap(input_graph,o14,ac,av,number)
+        input_graph=annotate_consecutive_goal_positive_gap(input_graph,o14,ac,av,number)
     if((latest_measure_df["goal_gap_size"][2]<0 and latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]<0)==True):
         ac=BNode(latest_measure_df["Measure_Name"][0])
         av=comparator_bnode
@@ -48,7 +48,7 @@ def goal_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bnode
         number=find_number(back_up_df,event)
         o14=BNode() 
         input_graph.add((s14,p14,o14))
-        input_graph=annotate_consecutive_negative_gap(input_graph,o14,ac,av,number)
+        input_graph=annotate_consecutive_goal_negative_gap(input_graph,o14,ac,av,number)
 
 
 
@@ -67,7 +67,7 @@ def peer_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bnode
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
-    print(latest_measure_df)
+    # print(latest_measure_df)
     # print(latest_measure_df["goal_gap_size"][1])
     if((latest_measure_df["goal_gap_size"][2]>0 and latest_measure_df["goal_gap_size"][1]>0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
         ac=BNode(latest_measure_df["Measure_Name"][0])
@@ -76,7 +76,7 @@ def peer_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bnode
         event="positive"
         number=find_number(back_up_df,event)
         input_graph.add((s14,p14,o14))
-        input_graph=annotate_consecutive_positive_gap(input_graph,o14,ac,av,number)
+        input_graph=annotate_consecutive_peer_positive_gap(input_graph,o14,ac,av,number)
     if((latest_measure_df["goal_gap_size"][2]<0 and latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]<0)==True):
         ac=BNode(latest_measure_df["Measure_Name"][0])
         av=comparator_bnode
@@ -84,7 +84,7 @@ def peer_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bnode
         number=find_number(back_up_df,event)
         o14=BNode() 
         input_graph.add((s14,p14,o14))
-        input_graph=annotate_consecutive_negative_gap(input_graph,o14,ac,av,number)
+        input_graph=annotate_consecutive_peer_negative_gap(input_graph,o14,ac,av,number)
 
 
 
@@ -93,9 +93,9 @@ def peer_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bnode
 
     
 
-def annotate_consecutive_positive_gap(a,s16,measure_Name,o16,number):
+def annotate_consecutive_goal_positive_gap(a,s16,measure_Name,o16,number):
     p15=RDF.type
-    o15=URIRef('http://example.com/slowmo#ConsecutivePositiveGap')
+    o15=URIRef('http://example.com/slowmo#ConsecutiveGoalPositiveGap')
     a.add((s16,p15,o15))
     p16=URIRef('http://example.com/slowmo#RegardingComparator')
     a.add((s16,p16,o16))
@@ -107,9 +107,10 @@ def annotate_consecutive_positive_gap(a,s16,measure_Name,o16,number):
     a.add((s16,p18,o18))
     return a
 
-def annotate_consecutive_negative_gap(a,s16,measure_Name,o16,number):
+
+def annotate_consecutive_goal_negative_gap(a,s16,measure_Name,o16,number):
     p15=RDF.type
-    o15=URIRef('http://example.com/slowmo#ConsecutiveNegativeGap')
+    o15=URIRef('http://example.com/slowmo#ConsecutiveGoalNegativeGap')
     a.add((s16,p15,o15))
     p16=URIRef('http://example.com/slowmo#RegardingComparator')
     a.add((s16,p16,o16))
@@ -120,6 +121,35 @@ def annotate_consecutive_negative_gap(a,s16,measure_Name,o16,number):
     o18=Literal(number)
     a.add((s16,p18,o18))
     return a
+
+def annotate_consecutive_peer_positive_gap(a,s16,measure_Name,o16,number):
+    p15=RDF.type
+    o15=URIRef('http://example.com/slowmo#ConsecutivePeerPositiveGap')
+    a.add((s16,p15,o15))
+    p16=URIRef('http://example.com/slowmo#RegardingComparator')
+    a.add((s16,p16,o16))
+    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
+    o17=measure_Name
+    a.add((s16,p17,o17))
+    p18=URIRef('http://example.com/slowmo#Numberofmonths')
+    o18=Literal(number)
+    a.add((s16,p18,o18))
+    return a
+    
+
+def annotate_consecutive_peer_negative_gap(a,s16,measure_Name,o16,number):
+    p15=RDF.type
+    o15=URIRef('http://example.com/slowmo#ConsecutivePeerNegativeGap')
+    a.add((s16,p15,o15))
+    p16=URIRef('http://example.com/slowmo#RegardingComparator')
+    a.add((s16,p16,o16))
+    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
+    o17=measure_Name
+    a.add((s16,p17,o17))
+    p18=URIRef('http://example.com/slowmo#Numberofmonths')
+    o18=Literal(number)
+    a.add((s16,p18,o18))
+    return a    
 
 def find_number(backup_df,trend_sign1):
     if(trend_sign1=="negative"):
