@@ -122,9 +122,12 @@ class Esteemer():
                     Measure_Name.append(v1)
                 if(k1=="Display"):
                     Display.append(v1)
+    
         s_m1=self.get_selected_message()
         texta= s_m1["text"]
         texta=str(texta)
+        if texta == "No message selected":
+            return self.node
         displaya=s_m1["display"]
         displaya=str(displaya)
         measure_namea=s_m1["Measure Name"]

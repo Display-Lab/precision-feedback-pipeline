@@ -63,78 +63,6 @@ async def startup_event():
 @app.get("/")
 async def root():
     return{"Hello":"Universe"}
-@app.post("/createprecisionfeedback/alice/")
-async def createprecisionfeedback(info:Request):
-    selected_message={}
-    req_info =await info.json()
-    req_info1=req_info
-    performance_data = req_info1["Performance_data"]
-    performance_data_df =pd.DataFrame (performance_data, columns = [ "Staff_Number","Measure_Name","Month","Passed_Count","Flagged_Count","Denominator","Peer_Average"])
-    performance_data_df.columns = performance_data_df.iloc[0]
-    performance_data_df = performance_data_df[1:]
-    #df = df.iloc[1: , :]
-    #performance_data_df.to_csv('pd.csv', index=False)
-    #print(type())
-    del req_info1["Performance_data"]
-    history=req_info1["History"]
-    del req_info1["History"]
-    preferences=req_info1["Preferences"]
-    del req_info1["Preferences"]
-    input_message=read_graph(req_info1)
-    measure_details= Graph()
-    for s,p,o in measure_details.triples((None,None,None)):
-        measure_details.remove((s,p,o))
-    
-    measure_details=read_graph(f3json)
-    performer_graph=create_performer_graph(measure_details)
-    #BitStomach
-    bs=Bit_stomach(performer_graph,performance_data_df)
-    BS=bs.annotate()
-    #CandidateSmasher
-    cs=CandidateSmasher(BS,templates_alice)
-    df_graph=cs.get_graph_type()
-    df_template=cs.get_template_data()
-    CS=cs.create_candidates(df_graph,df_template)
-    #Thinkpuddung
-    tp=Thinkpudding(CS,causal_pathways_alice)
-    tp.process_causalpathways()
-    tp.process_spek()
-    tp.matching()
-    spek_tp=tp.insert()
-
-    #Esteemer
-    es=Esteemer(spek_tp,preferences,message_code,history)
-    node,spek_es=es.select()
-    selected_message=es.get_selected_message()
-    
-    ##Runnning Pictoralist
-    pc=Pictoralist(selected_message,performance_data_df)
-    # pc.create_graph()
-    
-    
-  
-    # print(selected_message)
-    
-    
-    ES=performer_graph.serialize(format='json-ld', indent=4)
-    f = open("E_S.json", "w")
-    f.write(ES)
-    f.close()
-    # for triple in performer_graph.triples((None,None,None)):
-    #     print(triple)
-    
-    # ES=performer_graph.serialize(format='json-ld', indent=4)
-    # f = open("E_S1.json", "w")
-    # f.write(ES)
-    # f.close()
-    
-    return {
-        "status":"Success",
-        "selected_message": selected_message
-    }
-    
-
-
 
 @app.post("/createprecisionfeedback/")
 async def createprecisionfeedback(info:Request):
@@ -142,12 +70,23 @@ async def createprecisionfeedback(info:Request):
     req_info =await info.json()
     req_info1=req_info
     performance_data = req_info1["Performance_data"]
+    vignette=req_info1["vignette"]
+    
     performance_data_df =pd.DataFrame (performance_data, columns = [ "Staff_Number","Measure_Name","Month","Passed_Count","Flagged_Count","Denominator","Peer_Average"])
     performance_data_df.columns = performance_data_df.iloc[0]
     performance_data_df = performance_data_df[1:]
     #df = df.iloc[1: , :]
     #performance_data_df.to_csv('pd.csv', index=False)
     #print(type())
+    if vignette=="alice":
+        # print(vignette)
+        f2=open("./startup/alice/causal_pathways.json")
+        f4=open("./startup/alice/templates.json")
+        f2json=json.load(f2)
+        f4json=json.load(f4)
+        causal_pathways=read_graph(f2json)
+        templates=read_graph(f4json)
+
     del req_info1["Performance_data"]
     history=req_info1["History"]
     del req_info1["History"]
@@ -187,15 +126,17 @@ async def createprecisionfeedback(info:Request):
     #     print(k,v)
     
     # print(selected_message)
-    #Runnning Pictoralist
-    pc=Pictoralist(selected_message,performance_data_df)
-    base64_image=pc.create_graph()
-    selected_message["image"]=base64_image
+    if selected_message["text"]!= "No message selected":
+        #Runnning Pictoralist
+        pc=Pictoralist(selected_message,performance_data_df)
+        base64_image=pc.create_graph()
+        selected_message["image"]=base64_image
     # '<img align="left" src="data:image/png;base64,%s">' %base64_image
     ES=performer_graph.serialize(format='json-ld', indent=4)
     f = open("ES1.json", "w")
     f.write(ES)
     f.close()
+    # print(vignette)
     
     return {
         "status":"Success",
