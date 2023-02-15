@@ -398,6 +398,20 @@
         ]
       },
       {
+        "@id": "_:SUS04",
+        "@type": "http://purl.obolibrary.org/obo/psdo_0000102",
+        "dc:title": "Fresh Gas Flow, less than or equal to 2L/min",
+        "identifier": "SUS04",
+        "slowmo:WithComparator": [
+          {
+            "@type": "http://purl.obolibrary.org/obo/psdo_0000094",
+            "name": "goal",
+            "dc:title": "GOAL",
+            "slowmo:ComparisonValue": 0.9
+          }
+        ]
+      },
+      {
         "@id": "_:PONV03",
         "@type": "http://purl.obolibrary.org/obo/psdo_0000102",
         "dc:title": "Postoperative Nausea or Vomiting Outcome",

@@ -103,7 +103,7 @@ class Bit_stomach:
         self.performance_data_df["Measure_Name"]=self.performance_data_df["Measure_Name"].str.decode(encoding="UTF-8")
 
         measure_list=self.performance_data_df["Measure_Name"].drop_duplicates()
- 
+        
         for index, element in enumerate(measure_list):
             measure_name=element
             a=pr.gaol_gap_annotate(measure_name,**self.goal_dicts)

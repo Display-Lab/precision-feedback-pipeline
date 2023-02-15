@@ -135,7 +135,8 @@ class Esteemer():
         if displaya in Display or measure_namea in Measure_Name or texta or Text:
             self.score_max=float(self.score_max)
             self.scores.remove(self.score_max)
-            self.score_max=max(self.scores)
+            if len(self.scores)!=0:
+                self.score_max=max(self.scores)
             self.score_max = Literal(self.score_max)
         # print(self.score_max)
             for s4,p4,o4 in self.spek_tp.triples((None,self.p2,self.score_max)):
@@ -159,8 +160,8 @@ class Esteemer():
                 for s3,p3,o3 in self.spek_tp.triples((s,self.p2,None)):
                     score=float(o3)
                     self.scores.append(score)
-            
-            self.score_max=max(self.scores)
+            if len(self.scores)!=0:
+                self.score_max=max(self.scores)
             self.score_max = Literal(self.score_max)
             #print(score_max)
             for s4,p4,o4 in self.spek_tp.triples((None,self.p2,self.score_max)):

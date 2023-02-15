@@ -78,10 +78,18 @@ async def createprecisionfeedback(info:Request):
     #df = df.iloc[1: , :]
     #performance_data_df.to_csv('pd.csv', index=False)
     #print(type())
-    if vignette=="alice":
+    if vignette=="social_better":
         # print(vignette)
-        f2=open("./startup/alice/causal_pathways.json")
-        f4=open("./startup/alice/templates.json")
+        f2=open("./startup/social_better/causal_pathways.json")
+        f4=open("./startup/social_better/templates.json")
+        f2json=json.load(f2)
+        f4json=json.load(f4)
+        causal_pathways=read_graph(f2json)
+        templates=read_graph(f4json)
+    if vignette=="social_worse":
+        # print(vignette)
+        f2=open("./startup/social_worse/causal_pathways.json")
+        f4=open("./startup/social_worse/templates.json")
         f2json=json.load(f2)
         f4json=json.load(f4)
         causal_pathways=read_graph(f2json)
@@ -102,17 +110,29 @@ async def createprecisionfeedback(info:Request):
     #BitStomach
     bs=Bit_stomach(performer_graph,performance_data_df)
     BS=bs.annotate()
+    op=BS.serialize(format='json-ld', indent=4)
+    f = open("outputs/spek_bs.json", "w")
+    f.write(op)
+    f.close()
     #CandidateSmasher
     cs=CandidateSmasher(BS,templates)
     df_graph=cs.get_graph_type()
     df_template=cs.get_template_data()
     CS=cs.create_candidates(df_graph,df_template)
+    op=CS.serialize(format='json-ld', indent=4)
+    f = open("outputs/spek_cs.json", "w")
+    f.write(op)
+    f.close()
     #Thinkpuddung
     tp=Thinkpudding(CS,causal_pathways)
     tp.process_causalpathways()
     tp.process_spek()
     tp.matching()
     spek_tp=tp.insert()
+    op=spek_tp.serialize(format='json-ld', indent=4)
+    f = open("outputs/spek_tp.json", "w")
+    f.write(op)
+    f.close()
 
     #Esteemer
     es=Esteemer(spek_tp,preferences,message_code,history)
@@ -133,7 +153,7 @@ async def createprecisionfeedback(info:Request):
         selected_message["image"]=base64_image
     # '<img align="left" src="data:image/png;base64,%s">' %base64_image
     ES=performer_graph.serialize(format='json-ld', indent=4)
-    f = open("ES1.json", "w")
+    f = open("outputs/spek_es.json", "w")
     f.write(ES)
     f.close()
     # print(vignette)
