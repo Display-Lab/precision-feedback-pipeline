@@ -213,19 +213,32 @@ class CandidateSmasher:
         self.df_template_type_dicts=pd.DataFrame.from_dict(template_type_dicts,orient='index')
         self.df_template_type_dicts = self.df_template_type_dicts.rename({0:"template_type_dicts"}, axis=1)
         self.df=pd.concat([self.df_text, self.df_display_dicts,self.df_name_dicts,self.df_template_type_dicts], axis=1)
+       
         self.df = self.df.rename({1:"template_type_dicts1"}, axis=1)
         self.df = self.df.rename({2:"template_type_dicts2"}, axis=1)
         self.df = self.df.rename({3:"template_type_dicts3"}, axis=1)
         self.df = self.df.rename({4:"template_type_dicts4"}, axis=1)
         self.df = self.df.fillna(0)
         self.df = self.df.reset_index()
-        #self.df.to_csv("template.csv")
+        
+        if "template_type_dicts3" not in self.df.columns:
+            self.df['template_type_dicts3'] = 0
+        if "template_type_dicts4" not in self.df.columns:
+            self.df['template_type_dicts4'] = 0
+            
+        # if "template_type_dicts3" in self.df.columns:
+        #     self.df["template_type_dicts3"]=0
+        # if "template_type_dicts4" in self.df.columns:
+        #     self.df["template_type_dicts4"]=0
+        self.df.to_csv("template.csv")
     
         return self.df
 
     def create_candidates(self,df,df_graph):
         #self.df_graph.to_csv("df_graph_final.csv")
         count=0
+        
+        
         for rowIndex,row in self.df.iterrows():
             # print(row)
             for rowIndex1, row1 in self.df_merged.iterrows():
@@ -264,17 +277,18 @@ class CandidateSmasher:
                     ov=BNode()
                     self.a.add((oq,self.cop4,ov))
                     self.a.add((ov,RDF.type,a30))
-                if 'template_type_dicts3' in df.columns:
-                    if (row["template_type_dicts3"] != 0):
-                        a31=URIRef(row["template_type_dicts3"])
-                        ov=BNode()
-                        self.a.add((oq,self.cop4,ov))
-                        self.a.add((ov,RDF.type,a31))
-                    if (row["template_type_dicts4"] != 0):
-                        a32=URIRef(row["template_type_dicts4"])
-                        ov=BNode()
-                        self.a.add((oq,self.cop4,ov))
-                        self.a.add((ov,RDF.type,a32))
+                
+                if (row["template_type_dicts3"] != 0):
+                    a31=URIRef(row["template_type_dicts3"])
+                    ov=BNode()
+                    self.a.add((oq,self.cop4,ov))
+                    self.a.add((ov,RDF.type,a31))
+               
+                if (row["template_type_dicts4"] != 0):
+                    a32=URIRef(row["template_type_dicts4"])
+                    ov=BNode()
+                    self.a.add((oq,self.cop4,ov))
+                    self.a.add((ov,RDF.type,a32))
                 if "graph_type1" in self.df_graph.columns:
                     if (row1["graph_type1"] != 0):
                         a33=URIRef(row1["graph_type1"])

@@ -94,6 +94,38 @@ async def createprecisionfeedback(info:Request):
         f4json=json.load(f4)
         causal_pathways=read_graph(f2json)
         templates=read_graph(f4json)
+    if vignette=="goal_better":
+        # print(vignette)
+        f2=open("./startup/goal_better/causal_pathways.json")
+        f4=open("./startup/goal_better/templates.json")
+        f2json=json.load(f2)
+        f4json=json.load(f4)
+        causal_pathways=read_graph(f2json)
+        templates=read_graph(f4json)
+    if vignette=="goal_worse":
+        # print(vignette)
+        f2=open("./startup/goal_worse/causal_pathways.json")
+        f4=open("./startup/goal_worse/templates.json")
+        f2json=json.load(f2)
+        f4json=json.load(f4)
+        causal_pathways=read_graph(f2json)
+        templates=read_graph(f4json)
+    if vignette=="social_gain":
+        # print(vignette)
+        f2=open("./startup/social_gain/causal_pathways.json")
+        f4=open("./startup/social_gain/templates.json")
+        f2json=json.load(f2)
+        f4json=json.load(f4)
+        causal_pathways=read_graph(f2json)
+        templates=read_graph(f4json)
+    if vignette=="social_loss":
+        # print(vignette)
+        f2=open("./startup/social_loss/causal_pathways.json")
+        f4=open("./startup/social_loss/templates.json")
+        f2json=json.load(f2)
+        f4json=json.load(f4)
+        causal_pathways=read_graph(f2json)
+        templates=read_graph(f4json)
 
     del req_info1["Performance_data"]
     history=req_info1["History"]

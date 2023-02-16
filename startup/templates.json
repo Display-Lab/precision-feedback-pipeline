@@ -70,7 +70,7 @@
         {"@type": "http://purl.obolibrary.org/obo/psdo_0000046"},
         {"@type": "http://purl.obolibrary.org/obo/psdo_0000041"}
       ],
-      "psdo:PerformanceSummaryTextualEntity": "4",
+      "psdo:PerformanceSummaryTextualEntity": "17",
       "psdo:PerformanceSummaryDisplay": "line"
     },
     {
