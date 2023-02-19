@@ -9,7 +9,7 @@ doc/**/figures/*
 fuseki.out
 run/
 cache/*
-outputs/*
+
 vignettes/**/outputs/*
 vignettes/**/run/*
 vignettes/**/fuseki.out
