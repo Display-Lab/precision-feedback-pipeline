@@ -160,6 +160,7 @@
         
     }
   },
-  "vignette":"social_worse"
+  "vignette":"social_worse",
+  "debug":"yes"
   }
   

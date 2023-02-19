@@ -154,6 +154,7 @@
         
     }
   },
-  "vignette":"goal_better"
+  "vignette":"goal_better",
+  "debug":"yes"
   }
   

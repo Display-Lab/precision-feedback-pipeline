@@ -154,5 +154,6 @@
       
   }
 },
-"vignette":"goal_loss"
+"vignette":"goal_loss",
+"debug":"yes"
 }

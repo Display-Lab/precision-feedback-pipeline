@@ -670,7 +670,8 @@
         
     }
   },
-  "vignette":"base"
+  "vignette":"base",
+  "debug":"no"
   
   }
   

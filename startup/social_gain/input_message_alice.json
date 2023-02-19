@@ -160,6 +160,7 @@
         
     }
   },
-  "vignette":"social_gain"
+  "vignette":"social_gain",
+  "debug":"yes"
   }
   

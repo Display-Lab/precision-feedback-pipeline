@@ -161,6 +161,7 @@
         
     }
   },
-  "vignette":"goal_worse"
+  "vignette":"goal_worse",
+  "debug":"yes"
   }
   
