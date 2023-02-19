@@ -1,0 +1,39 @@
+{
+  "@context": {
+    "IAO-IsAbout":                          "http://purl.obolibrary.org/obo/IAO_0000136",
+    "obo":                                  "http://purl.obolibrary.org/obo/",
+    "psdo-AchievementSet":                  "http://purl.obolibrary.org/obo/psdo_0000121",
+    "psdo-GoalComparatorElement":           "http://purl.obolibrary.org/obo/psdo_0000046",
+    "psdo-NegativePerformanceGapSet":       "http://purl.obolibrary.org/obo/psdo_0000116",
+    "psdo-NegativePerformanceTrendSet":     "http://purl.obolibrary.org/obo/psdo_0000119",
+    "psdo-PerformanceSummaryDisplay":       "http://purl.obolibrary.org/obo/psdo_0000003",
+    "psdo-PerformanceSummaryDocument":      "http://purl.obolibrary.org/obo/psdo_0000098",
+    "psdo-PerformanceSummaryTextualEntity": "http://purl.obolibrary.org/obo/psdo_0000110",
+    "psdo-PositivePerformanceGapSet":       "http://purl.obolibrary.org/obo/psdo_0000117",
+    "psdo-PositivePerformanceTrendSet":     "http://purl.obolibrary.org/obo/psdo_0000120",
+    "psdo-RecipientElement":                "http://purl.obolibrary.org/obo/psdo_0000041",
+    "psdo-SocialComparatorElement":         "http://purl.obolibrary.org/obo/psdo_0000045",
+    "psdo-Template":                        "http://purl.obolibrary.org/obo/psdo_0000002",
+    "schema-name":                          "http://schema.org/name",
+    "slowmo":                               "http://example.com/slowmo#",
+    "@vocab":                               "http://schema.org/"
+  },
+  "@templates": [
+    {
+      "@id": "http://feedbacktailor.org/ftkb#ReachedGoalBar",
+      "@type": "http://purl.obolibrary.org/obo/psdo_0000002",
+      "name": "reached goal bar",
+
+      "http://purl.obolibrary.org/obo/IAO_0000136":[
+        {"@type": "http://purl.obolibrary.org/obo/psdo_0000041"},
+        {"@type": "http://purl.obolibrary.org/obo/psdo_0000117"},
+        {"@type": "http://purl.obolibrary.org/obo/psdo_0000045"},
+        {"@type": "http://purl.obolibrary.org/obo/psdo_0000120"},
+        {"@type": "http://purl.obolibrary.org/obo/psdo_0000121"}
+      ],
+      "psdo:PerformanceSummaryTextualEntity": "4",
+      "psdo:PerformanceSummaryDisplay": "line"
+    }
+  ]
+}
+

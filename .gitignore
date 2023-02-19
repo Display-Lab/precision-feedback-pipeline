@@ -8,6 +8,7 @@ doc/**/figures/*
 # Fuseki related
 fuseki.out
 run/
+cache/*
 outputs/*
 vignettes/**/outputs/*
 vignettes/**/run/*
