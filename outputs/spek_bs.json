@@ -143,7 +143,7 @@
         ],
         "http://example.com/slowmo#IsAboutOrganization": [
             {
-                "@id": "_:Nc8dac4e701fd4eb5a48d3957304bb8ef"
+                "@id": "_:N0e98b811a2fd4cbf807fc95623d573d4"
             }
         ],
         "http://example.com/slowmo#IsAboutPerformer": [
@@ -153,18 +153,18 @@
         ]
     },
     {
-        "@id": "_:Nc8dac4e701fd4eb5a48d3957304bb8ef",
+        "@id": "_:N0e98b811a2fd4cbf807fc95623d573d4",
         "@type": [
             "http://schema.org/Organization"
         ],
         "http://schema.org/address": [
             {
-                "@id": "_:Nee8c67780a6a445ab9298f3a39983d28"
+                "@id": "_:N7c1fd377e1014154a0626bad9534b800"
             }
         ]
     },
     {
-        "@id": "_:Nee8c67780a6a445ab9298f3a39983d28",
+        "@id": "_:N7c1fd377e1014154a0626bad9534b800",
         "@type": [
             "http://schema.org/PostalAddress"
         ],
@@ -201,10 +201,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Ne93bd752ecff4d24a265564dcb0d41a1"
+                "@id": "_:Nda52bd4d61c44d71b3e5d7a00309efba"
             },
             {
-                "@id": "_:N87e882d032d145e89df12ada6454938f"
+                "@id": "_:N3917851656ea422a971784bfd3a76b9a"
+            },
+            {
+                "@id": "_:N7059dfa8af3b4195b20598a00e657adb"
+            },
+            {
+                "@id": "_:Nf1de946155424ed28337392ea492d704"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -219,7 +225,7 @@
         ]
     },
     {
-        "@id": "_:Ne93bd752ecff4d24a265564dcb0d41a1",
+        "@id": "_:Nda52bd4d61c44d71b3e5d7a00309efba",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -240,7 +246,39 @@
         ]
     },
     {
-        "@id": "_:N87e882d032d145e89df12ada6454938f",
+        "@id": "_:N3917851656ea422a971784bfd3a76b9a",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N7059dfa8af3b4195b20598a00e657adb",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nf1de946155424ed28337392ea492d704",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -262,10 +300,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N9d7297cc87d34aedbc6676e6a2c58b25"
+                "@id": "_:N2d2006b1daa040919507cdf71f7fcb38"
             },
             {
-                "@id": "_:Nc5c6fdb3f50a4e99acd503c1a69c7262"
+                "@id": "_:Nece19882686441b9be244bf74c201570"
+            },
+            {
+                "@id": "_:N873eaaaa7fe247a4a6b4be67b6c0667c"
+            },
+            {
+                "@id": "_:Ned1ccc572d39404c9e963315ca64cffe"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -280,7 +324,7 @@
         ]
     },
     {
-        "@id": "_:N9d7297cc87d34aedbc6676e6a2c58b25",
+        "@id": "_:N2d2006b1daa040919507cdf71f7fcb38",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -301,7 +345,39 @@
         ]
     },
     {
-        "@id": "_:Nc5c6fdb3f50a4e99acd503c1a69c7262",
+        "@id": "_:Nece19882686441b9be244bf74c201570",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N873eaaaa7fe247a4a6b4be67b6c0667c",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Ned1ccc572d39404c9e963315ca64cffe",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -323,10 +399,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N8cd6d665cb014a37be287392f01f08a5"
+                "@id": "_:N90a93acad2bd403e8fa8a3a62b80b916"
             },
             {
-                "@id": "_:N5d835b1d2abb42939bb44ee69d597aa8"
+                "@id": "_:Nd353cb8eee6e4e7ab4be1da6e87d2026"
+            },
+            {
+                "@id": "_:Nc9635757a0264eecaf1ae26c532b1834"
+            },
+            {
+                "@id": "_:N561e807f13914182aaf3a64c51223b1c"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -341,7 +423,7 @@
         ]
     },
     {
-        "@id": "_:N8cd6d665cb014a37be287392f01f08a5",
+        "@id": "_:N90a93acad2bd403e8fa8a3a62b80b916",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -362,7 +444,39 @@
         ]
     },
     {
-        "@id": "_:N5d835b1d2abb42939bb44ee69d597aa8",
+        "@id": "_:Nd353cb8eee6e4e7ab4be1da6e87d2026",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nc9635757a0264eecaf1ae26c532b1834",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N561e807f13914182aaf3a64c51223b1c",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -384,10 +498,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N8b70d109d2054b05b5e8edaae54836d4"
+                "@id": "_:Nb78c5b826e80449c91c55691c2030370"
             },
             {
-                "@id": "_:N54c71fec32974688bfad29c7b967edb7"
+                "@id": "_:N3aaebb983ccc4a45a6801e9ca5358461"
+            },
+            {
+                "@id": "_:N9220595c0be5495ebc7c6c49364008ee"
+            },
+            {
+                "@id": "_:Ne0e07e98b4f648acbbd25cb8b51f20a6"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -402,7 +522,7 @@
         ]
     },
     {
-        "@id": "_:N8b70d109d2054b05b5e8edaae54836d4",
+        "@id": "_:Nb78c5b826e80449c91c55691c2030370",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -423,7 +543,39 @@
         ]
     },
     {
-        "@id": "_:N54c71fec32974688bfad29c7b967edb7",
+        "@id": "_:N3aaebb983ccc4a45a6801e9ca5358461",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N9220595c0be5495ebc7c6c49364008ee",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Ne0e07e98b4f648acbbd25cb8b51f20a6",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -445,10 +597,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N6d8a1674805342c1980eafe1d9a07a76"
+                "@id": "_:Ndaf50bcb63aa466d8dbf3196b2a88fc1"
             },
             {
-                "@id": "_:N9a504a9a900a482da44dcf47e62f7cff"
+                "@id": "_:N7a56b0a3f52943a4a3c722dc1a929e11"
+            },
+            {
+                "@id": "_:N5adbb552555448ebadb123adede41bb4"
+            },
+            {
+                "@id": "_:N43c731b057e14127bd0172356ca6c6a2"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -463,7 +621,7 @@
         ]
     },
     {
-        "@id": "_:N6d8a1674805342c1980eafe1d9a07a76",
+        "@id": "_:Ndaf50bcb63aa466d8dbf3196b2a88fc1",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -484,7 +642,39 @@
         ]
     },
     {
-        "@id": "_:N9a504a9a900a482da44dcf47e62f7cff",
+        "@id": "_:N7a56b0a3f52943a4a3c722dc1a929e11",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N5adbb552555448ebadb123adede41bb4",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N43c731b057e14127bd0172356ca6c6a2",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -506,10 +696,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nbbe262d4d1a348af90ea7c790f8ed3f2"
+                "@id": "_:Nde28d6f3b7da4fa2826937c7aa6b0274"
             },
             {
-                "@id": "_:Na63f0415bf304d93991accbfb46b8bfd"
+                "@id": "_:Ndd92d8ad500a498493eb4df2294ccf19"
+            },
+            {
+                "@id": "_:Nc0a98b7402844374ad10d30f89edc569"
+            },
+            {
+                "@id": "_:N2041e55444484ae2a236775a13deb2d2"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -524,7 +720,7 @@
         ]
     },
     {
-        "@id": "_:Nbbe262d4d1a348af90ea7c790f8ed3f2",
+        "@id": "_:Nde28d6f3b7da4fa2826937c7aa6b0274",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -545,7 +741,39 @@
         ]
     },
     {
-        "@id": "_:Na63f0415bf304d93991accbfb46b8bfd",
+        "@id": "_:Ndd92d8ad500a498493eb4df2294ccf19",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nc0a98b7402844374ad10d30f89edc569",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N2041e55444484ae2a236775a13deb2d2",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -567,10 +795,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nb743cd7104d9401e8f3d18c2cfbff09d"
+                "@id": "_:N0f739de1eba44cb8a79e739297f49c22"
             },
             {
-                "@id": "_:Nd6e38acd1a854f7998c5af75fc8ab546"
+                "@id": "_:Nc4b4ab9df9a04c11badde89a0aae9d61"
+            },
+            {
+                "@id": "_:N701c58391861411ba790d46171f89234"
+            },
+            {
+                "@id": "_:Ne89301c3ab9b4d6c9cb8deb9f5fa8d3e"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -585,7 +819,7 @@
         ]
     },
     {
-        "@id": "_:Nb743cd7104d9401e8f3d18c2cfbff09d",
+        "@id": "_:N0f739de1eba44cb8a79e739297f49c22",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -606,7 +840,39 @@
         ]
     },
     {
-        "@id": "_:Nd6e38acd1a854f7998c5af75fc8ab546",
+        "@id": "_:Nc4b4ab9df9a04c11badde89a0aae9d61",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N701c58391861411ba790d46171f89234",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Ne89301c3ab9b4d6c9cb8deb9f5fa8d3e",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -628,10 +894,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N2d384f38ad4a4031b312b410208ea0dd"
+                "@id": "_:N60ab43b1e997417caa601d62eae37751"
             },
             {
-                "@id": "_:Ndf2f6a67c0d84859bae2151a69d5becb"
+                "@id": "_:Ndbd79b91542c4089996f4b519d44d3f9"
+            },
+            {
+                "@id": "_:N1675ea905eda45858e4695b082800ca4"
+            },
+            {
+                "@id": "_:N94d558afc5e74f3280021412b301a153"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -646,7 +918,7 @@
         ]
     },
     {
-        "@id": "_:N2d384f38ad4a4031b312b410208ea0dd",
+        "@id": "_:N60ab43b1e997417caa601d62eae37751",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -667,7 +939,39 @@
         ]
     },
     {
-        "@id": "_:Ndf2f6a67c0d84859bae2151a69d5becb",
+        "@id": "_:Ndbd79b91542c4089996f4b519d44d3f9",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N1675ea905eda45858e4695b082800ca4",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N94d558afc5e74f3280021412b301a153",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -689,10 +993,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nbbc21968fd194870bbe217cb7737a4bf"
+                "@id": "_:N42be899c797f4b969fd58822e816be96"
             },
             {
-                "@id": "_:N6ce54221df9f4b368f45553a35c2db2c"
+                "@id": "_:N147c07828b3d4248aca7d17b43cda49d"
+            },
+            {
+                "@id": "_:N7b24e5697705462f9bdb524baab4122e"
+            },
+            {
+                "@id": "_:N3e517cb20e164cdc861846f47b06b0d4"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -707,7 +1017,7 @@
         ]
     },
     {
-        "@id": "_:Nbbc21968fd194870bbe217cb7737a4bf",
+        "@id": "_:N42be899c797f4b969fd58822e816be96",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -728,7 +1038,39 @@
         ]
     },
     {
-        "@id": "_:N6ce54221df9f4b368f45553a35c2db2c",
+        "@id": "_:N147c07828b3d4248aca7d17b43cda49d",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N7b24e5697705462f9bdb524baab4122e",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N3e517cb20e164cdc861846f47b06b0d4",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -750,10 +1092,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N57a63b667aed4a7f864462726edcbcab"
+                "@id": "_:N4b19c7700ce24370a77958e1edddeec3"
             },
             {
-                "@id": "_:N6f8d59be88d8470e9f8950d4a8796879"
+                "@id": "_:N1cb03576cdb040bd8a7c7af574775c2a"
+            },
+            {
+                "@id": "_:N6dda30f2363a475ba89a67d29c651b81"
+            },
+            {
+                "@id": "_:Ndd9e7826a25f4bd1b7d62d823664c49b"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -768,7 +1116,7 @@
         ]
     },
     {
-        "@id": "_:N57a63b667aed4a7f864462726edcbcab",
+        "@id": "_:N4b19c7700ce24370a77958e1edddeec3",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -789,7 +1137,39 @@
         ]
     },
     {
-        "@id": "_:N6f8d59be88d8470e9f8950d4a8796879",
+        "@id": "_:N1cb03576cdb040bd8a7c7af574775c2a",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N6dda30f2363a475ba89a67d29c651b81",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Ndd9e7826a25f4bd1b7d62d823664c49b",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -811,10 +1191,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nfabe5601f02a4921bf49d46f6f2ceede"
+                "@id": "_:Nc3007eebaa6649c191e64415615f991a"
             },
             {
-                "@id": "_:Ne335d766228c4749a74f60d94deff4d7"
+                "@id": "_:N87a21c429c33473db34b05f36a8243f9"
+            },
+            {
+                "@id": "_:N5da729edfa664172983a3acda7022f44"
+            },
+            {
+                "@id": "_:Na3572cd138f5464cad4c49e86a2755f6"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -829,7 +1215,7 @@
         ]
     },
     {
-        "@id": "_:Nfabe5601f02a4921bf49d46f6f2ceede",
+        "@id": "_:Nc3007eebaa6649c191e64415615f991a",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -850,7 +1236,39 @@
         ]
     },
     {
-        "@id": "_:Ne335d766228c4749a74f60d94deff4d7",
+        "@id": "_:N87a21c429c33473db34b05f36a8243f9",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N5da729edfa664172983a3acda7022f44",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Na3572cd138f5464cad4c49e86a2755f6",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -872,10 +1290,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N60075a76bfc9462b83aedef71dc1fbc7"
+                "@id": "_:N13e4f02695cd42569b24f6523c6462fe"
             },
             {
-                "@id": "_:Nd878cc1c56ab4287903958bad04d9fda"
+                "@id": "_:Naae210c2705a48febd752337c4e3015e"
+            },
+            {
+                "@id": "_:N00add99b4b9742e7b58e56a49a0575e4"
+            },
+            {
+                "@id": "_:N7bb7c87497d642af9421820eee671dab"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -890,7 +1314,7 @@
         ]
     },
     {
-        "@id": "_:N60075a76bfc9462b83aedef71dc1fbc7",
+        "@id": "_:N13e4f02695cd42569b24f6523c6462fe",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -911,7 +1335,39 @@
         ]
     },
     {
-        "@id": "_:Nd878cc1c56ab4287903958bad04d9fda",
+        "@id": "_:Naae210c2705a48febd752337c4e3015e",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N00add99b4b9742e7b58e56a49a0575e4",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N7bb7c87497d642af9421820eee671dab",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -933,10 +1389,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nb8bee3e09aad4db1b710ca0e4469d994"
+                "@id": "_:Ne5ce6282c8dd46259f0a7f815215c98e"
             },
             {
-                "@id": "_:Nfce7f7fd4f6a4a7ba9f1b260b93655ae"
+                "@id": "_:Ne294bf83f9d44abfb729f7a60d994b91"
+            },
+            {
+                "@id": "_:Nc6f0af32c3bb4c82b811e543c5843b6f"
+            },
+            {
+                "@id": "_:Na06033f8665a4a88ae84c6ddf77dc3af"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -951,7 +1413,7 @@
         ]
     },
     {
-        "@id": "_:Nb8bee3e09aad4db1b710ca0e4469d994",
+        "@id": "_:Ne5ce6282c8dd46259f0a7f815215c98e",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -972,7 +1434,39 @@
         ]
     },
     {
-        "@id": "_:Nfce7f7fd4f6a4a7ba9f1b260b93655ae",
+        "@id": "_:Ne294bf83f9d44abfb729f7a60d994b91",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nc6f0af32c3bb4c82b811e543c5843b6f",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Na06033f8665a4a88ae84c6ddf77dc3af",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -994,10 +1488,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N45e7475573784541a7cc6e55c63f1b11"
+                "@id": "_:Nb91e738ca07c4a5d993a8e24d994101e"
             },
             {
-                "@id": "_:N46ec33ca61884aceb3efd344f0243bf0"
+                "@id": "_:N948db25e0ef0402bb3ad95df3a0476a9"
+            },
+            {
+                "@id": "_:N98cfe52c6d3f41398959036ac470f5a3"
+            },
+            {
+                "@id": "_:Neaf81a704625491c8f429ece0abb43c2"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1012,7 +1512,7 @@
         ]
     },
     {
-        "@id": "_:N45e7475573784541a7cc6e55c63f1b11",
+        "@id": "_:Nb91e738ca07c4a5d993a8e24d994101e",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1033,7 +1533,39 @@
         ]
     },
     {
-        "@id": "_:N46ec33ca61884aceb3efd344f0243bf0",
+        "@id": "_:N948db25e0ef0402bb3ad95df3a0476a9",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N98cfe52c6d3f41398959036ac470f5a3",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Neaf81a704625491c8f429ece0abb43c2",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1055,10 +1587,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N435f991f44cc491cb835b045c42495c5"
+                "@id": "_:N07f7db48bec24a34bde58cee058ac9e2"
             },
             {
-                "@id": "_:Nae97b61d4e794466bb7376f9fcaeadc2"
+                "@id": "_:Nc70e3a8427014299bf7d823dbcc3205b"
+            },
+            {
+                "@id": "_:N84d999d72b924f8fb1f79a57b45989d2"
+            },
+            {
+                "@id": "_:N5d0860c76169497fa20ce92b570f441f"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1073,7 +1611,7 @@
         ]
     },
     {
-        "@id": "_:N435f991f44cc491cb835b045c42495c5",
+        "@id": "_:N07f7db48bec24a34bde58cee058ac9e2",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1094,7 +1632,39 @@
         ]
     },
     {
-        "@id": "_:Nae97b61d4e794466bb7376f9fcaeadc2",
+        "@id": "_:Nc70e3a8427014299bf7d823dbcc3205b",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N84d999d72b924f8fb1f79a57b45989d2",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N5d0860c76169497fa20ce92b570f441f",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1116,10 +1686,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N01a50e58d511436ab88a711ac724c0de"
+                "@id": "_:Nf6a1940e01b2482881d8d0af6ea1d718"
             },
             {
-                "@id": "_:Nd081a31512874429a064b8f3f95254fa"
+                "@id": "_:N8b7db51115eb4170bcc7e0a48424b061"
+            },
+            {
+                "@id": "_:N7acd6aa197024112b4f73a2877664da0"
+            },
+            {
+                "@id": "_:N4f1b770b8b2b4d4da4a545143a28b6b8"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1134,7 +1710,7 @@
         ]
     },
     {
-        "@id": "_:N01a50e58d511436ab88a711ac724c0de",
+        "@id": "_:Nf6a1940e01b2482881d8d0af6ea1d718",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1155,7 +1731,39 @@
         ]
     },
     {
-        "@id": "_:Nd081a31512874429a064b8f3f95254fa",
+        "@id": "_:N8b7db51115eb4170bcc7e0a48424b061",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N7acd6aa197024112b4f73a2877664da0",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N4f1b770b8b2b4d4da4a545143a28b6b8",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1177,10 +1785,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N75097cc691e642459d6c46767ddd0fa0"
+                "@id": "_:Nae035701cf5f4bcd9774b82805c03826"
             },
             {
-                "@id": "_:Nee2b9dd899fd41009fbbda92c2498bcb"
+                "@id": "_:N47e02face6cf4edfa94c5144ad1baa3d"
+            },
+            {
+                "@id": "_:N515362de76a448edaf89b99e566568ca"
+            },
+            {
+                "@id": "_:Nbf468911c0db4e9ea2e7c4d20e47488f"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1195,7 +1809,7 @@
         ]
     },
     {
-        "@id": "_:N75097cc691e642459d6c46767ddd0fa0",
+        "@id": "_:Nae035701cf5f4bcd9774b82805c03826",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1216,7 +1830,39 @@
         ]
     },
     {
-        "@id": "_:Nee2b9dd899fd41009fbbda92c2498bcb",
+        "@id": "_:N47e02face6cf4edfa94c5144ad1baa3d",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N515362de76a448edaf89b99e566568ca",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nbf468911c0db4e9ea2e7c4d20e47488f",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1238,10 +1884,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Ne4a29c4574cd400fb3f4816cc023ae61"
+                "@id": "_:N852ef9d8408f4978aea6a9abebe59340"
             },
             {
-                "@id": "_:N6cb5a2106dac4143b8fa38e1d3f6d8e0"
+                "@id": "_:Nf50d926a2b914afda2e378c99a4a3347"
+            },
+            {
+                "@id": "_:Nca02e6fb863641bf924795609ca6291f"
+            },
+            {
+                "@id": "_:N20f5af37cb8e43a7b71bdcbdaf247074"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1256,7 +1908,7 @@
         ]
     },
     {
-        "@id": "_:Ne4a29c4574cd400fb3f4816cc023ae61",
+        "@id": "_:N852ef9d8408f4978aea6a9abebe59340",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1277,7 +1929,39 @@
         ]
     },
     {
-        "@id": "_:N6cb5a2106dac4143b8fa38e1d3f6d8e0",
+        "@id": "_:Nf50d926a2b914afda2e378c99a4a3347",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nca02e6fb863641bf924795609ca6291f",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N20f5af37cb8e43a7b71bdcbdaf247074",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1299,10 +1983,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N3230308baa78486089da2550dbddf13d"
+                "@id": "_:N531eb155471a46928271a0d9dd3e4b54"
             },
             {
-                "@id": "_:N2bc9cc64c9e741c7810364bb16eb6235"
+                "@id": "_:N1079804fb8a14138899f06e8365f8331"
+            },
+            {
+                "@id": "_:N3eb5e37ce90f440f885c5d744c7fa01f"
+            },
+            {
+                "@id": "_:N05b1eebaf1854bf1908b07528eadbe28"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1317,7 +2007,7 @@
         ]
     },
     {
-        "@id": "_:N3230308baa78486089da2550dbddf13d",
+        "@id": "_:N531eb155471a46928271a0d9dd3e4b54",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1338,7 +2028,39 @@
         ]
     },
     {
-        "@id": "_:N2bc9cc64c9e741c7810364bb16eb6235",
+        "@id": "_:N1079804fb8a14138899f06e8365f8331",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N3eb5e37ce90f440f885c5d744c7fa01f",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N05b1eebaf1854bf1908b07528eadbe28",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1360,10 +2082,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N1211b50125ea4937a8e2d7e2edb8db98"
+                "@id": "_:N1b9b8ccf44f44b73bee3266e603fbbeb"
             },
             {
-                "@id": "_:Ne502b82d16234ad3a10ec322a5656168"
+                "@id": "_:N39a5146913d443ed9b472846eccea42e"
+            },
+            {
+                "@id": "_:N466aac9b6ae4421ba40e4b4066ee35eb"
+            },
+            {
+                "@id": "_:N55ad53ebd2cc4c47987e448e0236817a"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1378,7 +2106,7 @@
         ]
     },
     {
-        "@id": "_:N1211b50125ea4937a8e2d7e2edb8db98",
+        "@id": "_:N1b9b8ccf44f44b73bee3266e603fbbeb",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1399,7 +2127,39 @@
         ]
     },
     {
-        "@id": "_:Ne502b82d16234ad3a10ec322a5656168",
+        "@id": "_:N39a5146913d443ed9b472846eccea42e",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N466aac9b6ae4421ba40e4b4066ee35eb",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N55ad53ebd2cc4c47987e448e0236817a",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1421,10 +2181,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nc600bd490fc841fa848251c977594739"
+                "@id": "_:N1f12bf08807243a4a3136e3340e33b5b"
             },
             {
-                "@id": "_:Nd15d2793ee8845ac98b0186930e191b1"
+                "@id": "_:Nc2b701fd18c9490f9e40ee38a749c935"
+            },
+            {
+                "@id": "_:Ncda957e5d7c74bc18e85c0efbf8c9c68"
+            },
+            {
+                "@id": "_:Ne05f41c197c9465098a13af9a91aacde"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1439,7 +2205,7 @@
         ]
     },
     {
-        "@id": "_:Nc600bd490fc841fa848251c977594739",
+        "@id": "_:N1f12bf08807243a4a3136e3340e33b5b",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1460,7 +2226,39 @@
         ]
     },
     {
-        "@id": "_:Nd15d2793ee8845ac98b0186930e191b1",
+        "@id": "_:Nc2b701fd18c9490f9e40ee38a749c935",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:Ncda957e5d7c74bc18e85c0efbf8c9c68",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Ne05f41c197c9465098a13af9a91aacde",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1482,10 +2280,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N973500e2451b40a787cf2d9caeaa6205"
+                "@id": "_:Naf6345f254d54a5589d9a8aef51251a3"
             },
             {
-                "@id": "_:N0425297c6e8f4e37a719fd644736de15"
+                "@id": "_:Na3cd2dc7d588479092c20f5d9d726411"
+            },
+            {
+                "@id": "_:Nd97fce662dd14e5690e07b26b57abbfb"
+            },
+            {
+                "@id": "_:N95298e08990a4073b51344080e5e897e"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1500,7 +2304,7 @@
         ]
     },
     {
-        "@id": "_:N973500e2451b40a787cf2d9caeaa6205",
+        "@id": "_:Naf6345f254d54a5589d9a8aef51251a3",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1521,7 +2325,39 @@
         ]
     },
     {
-        "@id": "_:N0425297c6e8f4e37a719fd644736de15",
+        "@id": "_:Na3cd2dc7d588479092c20f5d9d726411",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nd97fce662dd14e5690e07b26b57abbfb",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N95298e08990a4073b51344080e5e897e",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1543,10 +2379,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N02496cc96f40465d88a254811064675f"
+                "@id": "_:N9edab9092cf64681b2af647d3339fceb"
             },
             {
-                "@id": "_:N014b19562f6b466d85904ed7c000be19"
+                "@id": "_:Ned62ea3db0ce4770832ba9984122b3ec"
+            },
+            {
+                "@id": "_:N1f2572c7725343368ee0893fcdea3095"
+            },
+            {
+                "@id": "_:N77c44ffd02c945ff80e2e297fb17ed86"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1561,7 +2403,7 @@
         ]
     },
     {
-        "@id": "_:N02496cc96f40465d88a254811064675f",
+        "@id": "_:N9edab9092cf64681b2af647d3339fceb",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1582,7 +2424,39 @@
         ]
     },
     {
-        "@id": "_:N014b19562f6b466d85904ed7c000be19",
+        "@id": "_:Ned62ea3db0ce4770832ba9984122b3ec",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N1f2572c7725343368ee0893fcdea3095",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N77c44ffd02c945ff80e2e297fb17ed86",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1604,10 +2478,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N17d97ac9f18d4c2cab470c7e6f807552"
+                "@id": "_:N0e94f1e26d9446b2a7b1619bca853cb1"
             },
             {
-                "@id": "_:Na98af57e261641c189061798b15caeb4"
+                "@id": "_:N43daacba03e44ee781670f67bc501b84"
+            },
+            {
+                "@id": "_:N3ba0b74bf8004fc7a0c2abb9094faa00"
+            },
+            {
+                "@id": "_:Nc532b6b7dc464b26871968f57fcd79e6"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1622,7 +2502,7 @@
         ]
     },
     {
-        "@id": "_:N17d97ac9f18d4c2cab470c7e6f807552",
+        "@id": "_:N0e94f1e26d9446b2a7b1619bca853cb1",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1643,7 +2523,39 @@
         ]
     },
     {
-        "@id": "_:Na98af57e261641c189061798b15caeb4",
+        "@id": "_:N43daacba03e44ee781670f67bc501b84",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N3ba0b74bf8004fc7a0c2abb9094faa00",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nc532b6b7dc464b26871968f57fcd79e6",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1665,10 +2577,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N5630291ab4644648be3e35d55e9cb046"
+                "@id": "_:N853e6f65a61e4550aae6572878d66486"
             },
             {
-                "@id": "_:Na279d389bcef4e13bbd038fbaf8c6b34"
+                "@id": "_:Ncca38a6ba4a6491c801ddbaf6c7a2562"
+            },
+            {
+                "@id": "_:N47ed860e2047440aaf6839b55a6ba164"
+            },
+            {
+                "@id": "_:N2dc942daafe543f1ab94ff41d994d954"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1683,7 +2601,7 @@
         ]
     },
     {
-        "@id": "_:N5630291ab4644648be3e35d55e9cb046",
+        "@id": "_:N853e6f65a61e4550aae6572878d66486",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1704,7 +2622,39 @@
         ]
     },
     {
-        "@id": "_:Na279d389bcef4e13bbd038fbaf8c6b34",
+        "@id": "_:Ncca38a6ba4a6491c801ddbaf6c7a2562",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N47ed860e2047440aaf6839b55a6ba164",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N2dc942daafe543f1ab94ff41d994d954",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1726,10 +2676,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N4954e27c9d824b0a9725eebd5549c3b1"
+                "@id": "_:Na0c0e514867b416db703f6fa9f4844bc"
             },
             {
-                "@id": "_:N5dc4d36691354d41a9f5844810419c59"
+                "@id": "_:N01ebcfc95e3540089cb0991015aa17e5"
+            },
+            {
+                "@id": "_:N5692e9cf683b4e608d06c1bfad756288"
+            },
+            {
+                "@id": "_:Nd7c0e00b50aa4be190cf308ffc4d080e"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1744,7 +2700,7 @@
         ]
     },
     {
-        "@id": "_:N4954e27c9d824b0a9725eebd5549c3b1",
+        "@id": "_:Na0c0e514867b416db703f6fa9f4844bc",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1765,7 +2721,39 @@
         ]
     },
     {
-        "@id": "_:N5dc4d36691354d41a9f5844810419c59",
+        "@id": "_:N01ebcfc95e3540089cb0991015aa17e5",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N5692e9cf683b4e608d06c1bfad756288",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nd7c0e00b50aa4be190cf308ffc4d080e",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1787,10 +2775,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Na2bde5cbdfd7430789ce6c43ec72b49a"
+                "@id": "_:N4062f993f87e412ab38e8d50a053f181"
             },
             {
-                "@id": "_:Ndde30034dc1f4160bddfc09bf150467f"
+                "@id": "_:Nd6b909a1a42f4ea9a46bce8330ea9b0d"
+            },
+            {
+                "@id": "_:N6b09873d957f4dde9a11ba0960fff7eb"
+            },
+            {
+                "@id": "_:N93db829535994892bd89ad32938745e8"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1805,7 +2799,7 @@
         ]
     },
     {
-        "@id": "_:Na2bde5cbdfd7430789ce6c43ec72b49a",
+        "@id": "_:N4062f993f87e412ab38e8d50a053f181",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1826,7 +2820,39 @@
         ]
     },
     {
-        "@id": "_:Ndde30034dc1f4160bddfc09bf150467f",
+        "@id": "_:Nd6b909a1a42f4ea9a46bce8330ea9b0d",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N6b09873d957f4dde9a11ba0960fff7eb",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N93db829535994892bd89ad32938745e8",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1848,10 +2874,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N382ab1f546f0464da7835c2ea2097935"
+                "@id": "_:Ne59d950e34fe4716823652904dafdc7d"
             },
             {
-                "@id": "_:Ndd0a19ca0c974ca789d91019e1a549f1"
+                "@id": "_:Na0d5399229ef49b58758093040a958fb"
+            },
+            {
+                "@id": "_:N88e7450eeb1741fd9db3662ef8124c84"
+            },
+            {
+                "@id": "_:Nf6380cc8c7114031b389cd07bd44df28"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1866,7 +2898,7 @@
         ]
     },
     {
-        "@id": "_:N382ab1f546f0464da7835c2ea2097935",
+        "@id": "_:Ne59d950e34fe4716823652904dafdc7d",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1887,7 +2919,39 @@
         ]
     },
     {
-        "@id": "_:Ndd0a19ca0c974ca789d91019e1a549f1",
+        "@id": "_:Na0d5399229ef49b58758093040a958fb",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N88e7450eeb1741fd9db3662ef8124c84",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nf6380cc8c7114031b389cd07bd44df28",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1909,10 +2973,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N07ba47db77ee42fd93cdcf7c60bb948f"
+                "@id": "_:Nc038545789d844e38d63bd8afc7a1526"
             },
             {
-                "@id": "_:N5b42c6a171254f038a4261924ab44666"
+                "@id": "_:N42830e58c2eb49e0962a1a070f6b4487"
+            },
+            {
+                "@id": "_:N4075e85a5dbb4631b4f0cb47a6396ba9"
+            },
+            {
+                "@id": "_:Ne0688e53d4654a5aa2548c7e3ef0d96c"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1927,7 +2997,7 @@
         ]
     },
     {
-        "@id": "_:N07ba47db77ee42fd93cdcf7c60bb948f",
+        "@id": "_:Nc038545789d844e38d63bd8afc7a1526",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -1948,7 +3018,39 @@
         ]
     },
     {
-        "@id": "_:N5b42c6a171254f038a4261924ab44666",
+        "@id": "_:N42830e58c2eb49e0962a1a070f6b4487",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N4075e85a5dbb4631b4f0cb47a6396ba9",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Ne0688e53d4654a5aa2548c7e3ef0d96c",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -1970,10 +3072,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N33bfdd1837664e749cb92759dbb41249"
+                "@id": "_:N4a69edb5df8140919300be069031dbe9"
             },
             {
-                "@id": "_:N3893a9ef9672424dbaf2bc42b0f64f9e"
+                "@id": "_:N10d5eff5a024401cb4047db79df2a68f"
+            },
+            {
+                "@id": "_:Nee174e076e864566a8682373b1ffc779"
+            },
+            {
+                "@id": "_:N212a2f3b9d4340979e64dbc9da184b71"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -1988,7 +3096,7 @@
         ]
     },
     {
-        "@id": "_:N33bfdd1837664e749cb92759dbb41249",
+        "@id": "_:N4a69edb5df8140919300be069031dbe9",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2009,7 +3117,39 @@
         ]
     },
     {
-        "@id": "_:N3893a9ef9672424dbaf2bc42b0f64f9e",
+        "@id": "_:N10d5eff5a024401cb4047db79df2a68f",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nee174e076e864566a8682373b1ffc779",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N212a2f3b9d4340979e64dbc9da184b71",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2031,10 +3171,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N8f973e0b0bc9445ea09526def13934dd"
+                "@id": "_:Naf9105e3931c47ee8f11f7bc16785e21"
             },
             {
-                "@id": "_:N847992c4941c4eba9079d45a4c4795af"
+                "@id": "_:N58ebd1a966464428b0c08da40453895e"
+            },
+            {
+                "@id": "_:N13d4f12691024bbba4e7f0abb0ff4c77"
+            },
+            {
+                "@id": "_:Nccf3a9b6a8f04d5bb08eac5f3e956204"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2049,7 +3195,7 @@
         ]
     },
     {
-        "@id": "_:N8f973e0b0bc9445ea09526def13934dd",
+        "@id": "_:Naf9105e3931c47ee8f11f7bc16785e21",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2070,7 +3216,39 @@
         ]
     },
     {
-        "@id": "_:N847992c4941c4eba9079d45a4c4795af",
+        "@id": "_:N58ebd1a966464428b0c08da40453895e",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N13d4f12691024bbba4e7f0abb0ff4c77",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nccf3a9b6a8f04d5bb08eac5f3e956204",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2092,10 +3270,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N1150af944a8a450aa05557ace1001eb1"
+                "@id": "_:N9cbb9d3fb7734ebfb691a722cbb8993c"
             },
             {
-                "@id": "_:N5a4c98933a8f48279c568a0bde82c96a"
+                "@id": "_:N21efc79e1b7d49719b527eed7c2e9f8d"
+            },
+            {
+                "@id": "_:N1091e2ca5bc24043bacb8bf045d6e7c7"
+            },
+            {
+                "@id": "_:N29427a22dde84872a19221b61cc778c6"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2110,7 +3294,7 @@
         ]
     },
     {
-        "@id": "_:N1150af944a8a450aa05557ace1001eb1",
+        "@id": "_:N9cbb9d3fb7734ebfb691a722cbb8993c",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2131,7 +3315,39 @@
         ]
     },
     {
-        "@id": "_:N5a4c98933a8f48279c568a0bde82c96a",
+        "@id": "_:N21efc79e1b7d49719b527eed7c2e9f8d",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N1091e2ca5bc24043bacb8bf045d6e7c7",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N29427a22dde84872a19221b61cc778c6",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2153,10 +3369,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N3a2d49722d18451f9148754ba6afa7e8"
+                "@id": "_:Nb5d4a27fb83a4bffa11093a658b81382"
             },
             {
-                "@id": "_:N35f34c7c608e455490a2634baa4bbc42"
+                "@id": "_:N285a329a4434424982dad4e41105a56d"
+            },
+            {
+                "@id": "_:N50a7b4e5a2f14cc6af66a63e1109e5c8"
+            },
+            {
+                "@id": "_:N8b57837b8c0b47bcab3eb683c9edd263"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2171,7 +3393,7 @@
         ]
     },
     {
-        "@id": "_:N3a2d49722d18451f9148754ba6afa7e8",
+        "@id": "_:Nb5d4a27fb83a4bffa11093a658b81382",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2192,7 +3414,39 @@
         ]
     },
     {
-        "@id": "_:N35f34c7c608e455490a2634baa4bbc42",
+        "@id": "_:N285a329a4434424982dad4e41105a56d",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N50a7b4e5a2f14cc6af66a63e1109e5c8",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N8b57837b8c0b47bcab3eb683c9edd263",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2214,10 +3468,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N34a67976bfd14c728347d3a1f216b8ae"
+                "@id": "_:Nce8e29ecb67d44dbbf23163a6f4c9585"
             },
             {
-                "@id": "_:N97bc9a30c6464125b309ac64bb3f8b1a"
+                "@id": "_:N3d44c0c0705d4ed8b49e90431201badf"
+            },
+            {
+                "@id": "_:Nbf9be7d492ba483584c750271cfe4a69"
+            },
+            {
+                "@id": "_:N656801ca3bd940ae8c6a1c6dc81be875"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2232,7 +3492,7 @@
         ]
     },
     {
-        "@id": "_:N34a67976bfd14c728347d3a1f216b8ae",
+        "@id": "_:Nce8e29ecb67d44dbbf23163a6f4c9585",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2253,7 +3513,39 @@
         ]
     },
     {
-        "@id": "_:N97bc9a30c6464125b309ac64bb3f8b1a",
+        "@id": "_:N3d44c0c0705d4ed8b49e90431201badf",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nbf9be7d492ba483584c750271cfe4a69",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N656801ca3bd940ae8c6a1c6dc81be875",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2275,10 +3567,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N5860e4671ba44aee98eba61f29dfc326"
+                "@id": "_:Nfd95fa787e634a60bd4b6f1e6cb30aa9"
             },
             {
-                "@id": "_:Nb897e5552c0949cc825f75b8586dea7a"
+                "@id": "_:N3b566577b5de4a548dbd4f2e6405cfa6"
+            },
+            {
+                "@id": "_:Ne0a9fff33c994ad8a7985022ca0b65a0"
+            },
+            {
+                "@id": "_:N954e3163165f49a4a6e1cdc11baccf1e"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2293,7 +3591,7 @@
         ]
     },
     {
-        "@id": "_:N5860e4671ba44aee98eba61f29dfc326",
+        "@id": "_:Nfd95fa787e634a60bd4b6f1e6cb30aa9",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2314,7 +3612,39 @@
         ]
     },
     {
-        "@id": "_:Nb897e5552c0949cc825f75b8586dea7a",
+        "@id": "_:N3b566577b5de4a548dbd4f2e6405cfa6",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:Ne0a9fff33c994ad8a7985022ca0b65a0",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N954e3163165f49a4a6e1cdc11baccf1e",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2336,10 +3666,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N694813f4c511452c883a053a6191def9"
+                "@id": "_:Ncfa6ada1c4ec4cb0a9407daedb237980"
             },
             {
-                "@id": "_:Ne0e430ce5855428885e97cd6cabe5394"
+                "@id": "_:N2736302a12fe44939f612140618dcdd1"
+            },
+            {
+                "@id": "_:Nf0985c7e65124c7a82eb979e56b768de"
+            },
+            {
+                "@id": "_:Nf1b0eac86a154a23bdb67c07bfcc61ac"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2354,7 +3690,7 @@
         ]
     },
     {
-        "@id": "_:N694813f4c511452c883a053a6191def9",
+        "@id": "_:Ncfa6ada1c4ec4cb0a9407daedb237980",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2375,7 +3711,39 @@
         ]
     },
     {
-        "@id": "_:Ne0e430ce5855428885e97cd6cabe5394",
+        "@id": "_:N2736302a12fe44939f612140618dcdd1",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nf0985c7e65124c7a82eb979e56b768de",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nf1b0eac86a154a23bdb67c07bfcc61ac",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2397,10 +3765,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N8ffe852182e94bf6b1496e6272c77068"
+                "@id": "_:N3d06174db7f944949a6be1bc525378fd"
             },
             {
-                "@id": "_:N2306a874af834fa1b9a1dd144f1847e4"
+                "@id": "_:Ne7f96d381076461fbb02f54bb43ba212"
+            },
+            {
+                "@id": "_:N8f32e9b0cffa4b40bf7b0c9185fa49f5"
+            },
+            {
+                "@id": "_:Nbdb38130ad0a4fef81046d55f53d8602"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2415,7 +3789,7 @@
         ]
     },
     {
-        "@id": "_:N8ffe852182e94bf6b1496e6272c77068",
+        "@id": "_:N3d06174db7f944949a6be1bc525378fd",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2436,7 +3810,39 @@
         ]
     },
     {
-        "@id": "_:N2306a874af834fa1b9a1dd144f1847e4",
+        "@id": "_:Ne7f96d381076461fbb02f54bb43ba212",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N8f32e9b0cffa4b40bf7b0c9185fa49f5",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nbdb38130ad0a4fef81046d55f53d8602",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2458,10 +3864,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N512139b35db24506afeb88dea03a208c"
+                "@id": "_:N5699746fc0cf4dcdb1d66e65e9d45560"
             },
             {
-                "@id": "_:Neebd315b06d84ee5aee27bb6a2f04aad"
+                "@id": "_:N4bb82c0f40dc49789cc1aa37beb19ab3"
+            },
+            {
+                "@id": "_:Nff5a2a92f80544e8a269acb73415eff7"
+            },
+            {
+                "@id": "_:Nc6d69d525e4e45499c89f2fdf7d3d06f"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2476,7 +3888,7 @@
         ]
     },
     {
-        "@id": "_:N512139b35db24506afeb88dea03a208c",
+        "@id": "_:N5699746fc0cf4dcdb1d66e65e9d45560",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2497,7 +3909,39 @@
         ]
     },
     {
-        "@id": "_:Neebd315b06d84ee5aee27bb6a2f04aad",
+        "@id": "_:N4bb82c0f40dc49789cc1aa37beb19ab3",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nff5a2a92f80544e8a269acb73415eff7",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nc6d69d525e4e45499c89f2fdf7d3d06f",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2519,10 +3963,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N5dcc664559054ea082c176ebaddfb83b"
+                "@id": "_:N12685457c24245cc8f13c9c33471b451"
             },
             {
-                "@id": "_:Nf138257d721b4566bd35807a9ac4df1d"
+                "@id": "_:N53657acf3c2544ed90a765877568668a"
+            },
+            {
+                "@id": "_:Nc125e420232b4a42b86c04f0995e1f9e"
+            },
+            {
+                "@id": "_:N51d3e0df89ec43afa8761985c2dea910"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2537,7 +3987,7 @@
         ]
     },
     {
-        "@id": "_:N5dcc664559054ea082c176ebaddfb83b",
+        "@id": "_:N12685457c24245cc8f13c9c33471b451",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2558,7 +4008,39 @@
         ]
     },
     {
-        "@id": "_:Nf138257d721b4566bd35807a9ac4df1d",
+        "@id": "_:N53657acf3c2544ed90a765877568668a",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nc125e420232b4a42b86c04f0995e1f9e",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N51d3e0df89ec43afa8761985c2dea910",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2580,10 +4062,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Nb163835e54be4ae698c46fb58efccc90"
+                "@id": "_:N154f3459dad24851ac30193207e2aa87"
             },
             {
-                "@id": "_:N38af97fea71d4af7a876bfbd8873084f"
+                "@id": "_:N1df3a5b79d044962a231ca1820eb74bc"
+            },
+            {
+                "@id": "_:N2475efec00694559bb705c5597ecc96d"
+            },
+            {
+                "@id": "_:N2063724f90a341a8a7cfd371e3231b10"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2598,7 +4086,7 @@
         ]
     },
     {
-        "@id": "_:Nb163835e54be4ae698c46fb58efccc90",
+        "@id": "_:N154f3459dad24851ac30193207e2aa87",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2619,7 +4107,39 @@
         ]
     },
     {
-        "@id": "_:N38af97fea71d4af7a876bfbd8873084f",
+        "@id": "_:N1df3a5b79d044962a231ca1820eb74bc",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N2475efec00694559bb705c5597ecc96d",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N2063724f90a341a8a7cfd371e3231b10",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2641,10 +4161,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:Ne3986223b32c46a58309e3e097ef61f8"
+                "@id": "_:N4f151b7902bb46f5a5c36e0c5be5eb1b"
             },
             {
-                "@id": "_:N236b09861d654f4b93c82ef5884487a2"
+                "@id": "_:N746d5c6013264695aa8f54347efaf6fb"
+            },
+            {
+                "@id": "_:N61d45f06e48345778e8c57547651708e"
+            },
+            {
+                "@id": "_:N570ef7f66ce54dd29ab36836595d498b"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2659,7 +4185,7 @@
         ]
     },
     {
-        "@id": "_:Ne3986223b32c46a58309e3e097ef61f8",
+        "@id": "_:N4f151b7902bb46f5a5c36e0c5be5eb1b",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2680,7 +4206,39 @@
         ]
     },
     {
-        "@id": "_:N236b09861d654f4b93c82ef5884487a2",
+        "@id": "_:N746d5c6013264695aa8f54347efaf6fb",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N61d45f06e48345778e8c57547651708e",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N570ef7f66ce54dd29ab36836595d498b",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2702,10 +4260,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N3f65f2677d614beca781decd779c6732"
+                "@id": "_:Nc0fd56edd77b4836b9062c89c978790a"
             },
             {
-                "@id": "_:Na284e776c21d4e588d43e4d6cc39381d"
+                "@id": "_:Nb47fa2f7aa7949fe9187a3ac5fa91592"
+            },
+            {
+                "@id": "_:N14c1a6a6f5834fccac5397d09822459c"
+            },
+            {
+                "@id": "_:N64e71bef2a7849b3a66543c376ebb5b5"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2720,7 +4284,7 @@
         ]
     },
     {
-        "@id": "_:N3f65f2677d614beca781decd779c6732",
+        "@id": "_:Nc0fd56edd77b4836b9062c89c978790a",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2741,7 +4305,39 @@
         ]
     },
     {
-        "@id": "_:Na284e776c21d4e588d43e4d6cc39381d",
+        "@id": "_:Nb47fa2f7aa7949fe9187a3ac5fa91592",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N14c1a6a6f5834fccac5397d09822459c",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N64e71bef2a7849b3a66543c376ebb5b5",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2763,10 +4359,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N5a00a39f361449eda21879e24c741e96"
+                "@id": "_:Nf7ad0fa555b642b3aee1377b3adfc1b9"
             },
             {
-                "@id": "_:Ncc20d0cb6ecc41cb867acba0dc01f960"
+                "@id": "_:N54cc8cd3bd364f4ebc32994ce32901c5"
+            },
+            {
+                "@id": "_:N3f180380a2434bf48e59a86d60440e84"
+            },
+            {
+                "@id": "_:Nadfc6104fe5f4833aec1754e70cbb369"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2781,7 +4383,7 @@
         ]
     },
     {
-        "@id": "_:N5a00a39f361449eda21879e24c741e96",
+        "@id": "_:Nf7ad0fa555b642b3aee1377b3adfc1b9",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2802,7 +4404,39 @@
         ]
     },
     {
-        "@id": "_:Ncc20d0cb6ecc41cb867acba0dc01f960",
+        "@id": "_:N54cc8cd3bd364f4ebc32994ce32901c5",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N3f180380a2434bf48e59a86d60440e84",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nadfc6104fe5f4833aec1754e70cbb369",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2824,10 +4458,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N3309b1b147a94bff947b07f7b2f95b8b"
+                "@id": "_:N462c2fefe49046409722adc253170c71"
             },
             {
-                "@id": "_:N49085841d4914286a33442dabdcc5bef"
+                "@id": "_:Na992adb712a040a49ee8b46ab545bb9a"
+            },
+            {
+                "@id": "_:N863bdfad9e5544829a11c2733df8c410"
+            },
+            {
+                "@id": "_:Ne432f2b261884e268110ce036ce79d29"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2842,7 +4482,7 @@
         ]
     },
     {
-        "@id": "_:N3309b1b147a94bff947b07f7b2f95b8b",
+        "@id": "_:N462c2fefe49046409722adc253170c71",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2863,7 +4503,39 @@
         ]
     },
     {
-        "@id": "_:N49085841d4914286a33442dabdcc5bef",
+        "@id": "_:Na992adb712a040a49ee8b46ab545bb9a",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N863bdfad9e5544829a11c2733df8c410",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Ne432f2b261884e268110ce036ce79d29",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2885,10 +4557,16 @@
         ],
         "http://example.com/slowmo#WithComparator": [
             {
-                "@id": "_:N9b2ccb3cf649460f93c3cd4cf377bfa6"
+                "@id": "_:Nd6c6d7cf4e7f4e41a0d7f0cb298da265"
             },
             {
-                "@id": "_:N0d8ed020164545b1b6740397984a66bb"
+                "@id": "_:Nc378114fae4a41a891521538522675a4"
+            },
+            {
+                "@id": "_:N364398dbc60d43e4958ce9a740e5b3fb"
+            },
+            {
+                "@id": "_:Nba221721d6fc460e9c52737e6e621c8c"
             }
         ],
         "http://purl.org/dc/terms/title": [
@@ -2903,7 +4581,7 @@
         ]
     },
     {
-        "@id": "_:N9b2ccb3cf649460f93c3cd4cf377bfa6",
+        "@id": "_:Nd6c6d7cf4e7f4e41a0d7f0cb298da265",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
@@ -2924,7 +4602,39 @@
         ]
     },
     {
-        "@id": "_:N0d8ed020164545b1b6740397984a66bb",
+        "@id": "_:Nc378114fae4a41a891521538522675a4",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N364398dbc60d43e4958ce9a740e5b3fb",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000095"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nba221721d6fc460e9c52737e6e621c8c",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
@@ -2946,51 +4656,48 @@
         ],
         "http://purl.obolibrary.org/obo/RO_0000091": [
             {
-                "@id": "_:Naaeba288e3c44144a7330c36b9524576"
+                "@id": "_:N4fe76ca4e6b744f59551e23ce08d719f"
             },
             {
-                "@id": "_:N4138682312ff48f9b9b39437f0eb6629"
+                "@id": "_:N29dc1d47face4d41b95f18c80a15cd07"
             },
             {
-                "@id": "_:Ne490a66c1a324c8bbffde8b420263875"
+                "@id": "_:Ncaff1b2e170f4fae96a7f6cd0f2ba2d2"
             },
             {
-                "@id": "_:N5ca55571f5494c559bc3786f71e9a73b"
+                "@id": "_:N20084134f6c5453386f0ee10b2714d5e"
             },
             {
-                "@id": "_:Ndac53341b65b4747b12f6b1dbcf1f02c"
+                "@id": "_:Ne307213a96e54e57a51013a5f254045a"
             },
             {
-                "@id": "_:N43097a9561274f02b343e45974c818cb"
+                "@id": "_:N1a5baafb56c84afeaaac96727198d3b2"
             },
             {
-                "@id": "_:N5d065a055c8f4ef5873be37b544c544a"
+                "@id": "_:Neda8ed0fdcc3466a9e0f4c84b6f2ae43"
             },
             {
-                "@id": "_:N1833cf8130394a55b553d98880936e7f"
+                "@id": "_:Nec44717581194e40be6b627fd6e124d6"
             },
             {
-                "@id": "_:Ncb7d2bfdc88044e2ae8c537f981cc127"
+                "@id": "_:Nb4ec028e65404ff58cd2a1d57c24db20"
             },
             {
-                "@id": "_:Nd2fa15ebbbb64a68a81f298321aaae23"
+                "@id": "_:N2366a4fce81244e3b0a4560e906f9eac"
             },
             {
-                "@id": "_:N9d6ccca99ad8456baf1e743a8c327171"
-            },
-            {
-                "@id": "_:Nbc7e9dfbf080455eac430715e9007294"
+                "@id": "_:N53a032e3d4f44bfda719b7f6931ac95f"
             }
         ]
     },
     {
-        "@id": "_:Naaeba288e3c44144a7330c36b9524576",
+        "@id": "_:N4fe76ca4e6b744f59551e23ce08d719f",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000094"
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:Na2bde5cbdfd7430789ce6c43ec72b49a"
+                "@id": "_:N4062f993f87e412ab38e8d50a053f181"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3000,13 +4707,13 @@
         ]
     },
     {
-        "@id": "_:N4138682312ff48f9b9b39437f0eb6629",
+        "@id": "_:N29dc1d47face4d41b95f18c80a15cd07",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000106"
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:Na2bde5cbdfd7430789ce6c43ec72b49a"
+                "@id": "_:N4062f993f87e412ab38e8d50a053f181"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3016,18 +4723,18 @@
         ]
     },
     {
-        "@id": "_:Ne490a66c1a324c8bbffde8b420263875",
+        "@id": "_:Ncaff1b2e170f4fae96a7f6cd0f2ba2d2",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000104"
         ],
         "http://example.com/slowmo#PerformanceGapSize": [
             {
-                "@value": -0.07777777777777772
+                "@value": -0.014285714285714235
             }
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:Na2bde5cbdfd7430789ce6c43ec72b49a"
+                "@id": "_:N4062f993f87e412ab38e8d50a053f181"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3037,18 +4744,18 @@
         ]
     },
     {
-        "@id": "_:N5ca55571f5494c559bc3786f71e9a73b",
+        "@id": "_:N20084134f6c5453386f0ee10b2714d5e",
         "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000099"
+            "http://purl.obolibrary.org/obo/psdo_0000100"
         ],
         "http://example.com/slowmo#PerformanceTrendSlope": [
             {
-                "@value": 4.5039919591890924e-17
+                "@value": -7.111566251351214e-18
             }
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:Na2bde5cbdfd7430789ce6c43ec72b49a"
+                "@id": "_:N4062f993f87e412ab38e8d50a053f181"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3058,18 +4765,39 @@
         ],
         "http://example.com/slowmo#numberofmonths": [
             {
-                "@value": 1
+                "@value": 2
             }
         ]
     },
     {
-        "@id": "_:Ndac53341b65b4747b12f6b1dbcf1f02c",
+        "@id": "_:Ne307213a96e54e57a51013a5f254045a",
         "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000112"
+            "http://example.com/slowmo#ConsecutiveGoalNegativeGap"
+        ],
+        "http://example.com/slowmo#Numberofmonths": [
+            {
+                "@value": 3
+            }
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:Na2bde5cbdfd7430789ce6c43ec72b49a"
+                "@id": "_:N4062f993f87e412ab38e8d50a053f181"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N1a5baafb56c84afeaaac96727198d3b2",
+        "@type": [
+            "http://example.com/slowmo#MonotonicTrend"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N4062f993f87e412ab38e8d50a053f181"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3077,36 +4805,20 @@
                 "@id": "_:SUS04"
             }
         ],
-        "http://example.com/slowmo#TimeSinceLastLoss": [
+        "http://example.com/slowmo#Timeofmonotonicity": [
             {
                 "@value": 2
             }
         ]
     },
     {
-        "@id": "_:N43097a9561274f02b343e45974c818cb",
-        "@type": [
-            "http://example.com/slowmo#NonMonotonicTrend"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:Na2bde5cbdfd7430789ce6c43ec72b49a"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@id": "_:SUS04"
-            }
-        ]
-    },
-    {
-        "@id": "_:N5d065a055c8f4ef5873be37b544c544a",
+        "@id": "_:Neda8ed0fdcc3466a9e0f4c84b6f2ae43",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000095"
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:Ndde30034dc1f4160bddfc09bf150467f"
+                "@id": "_:N93db829535994892bd89ad32938745e8"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3116,13 +4828,13 @@
         ]
     },
     {
-        "@id": "_:N1833cf8130394a55b553d98880936e7f",
+        "@id": "_:Nec44717581194e40be6b627fd6e124d6",
         "@type": [
             "http://purl.obolibrary.org/obo/psdo_0000106"
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:Ndde30034dc1f4160bddfc09bf150467f"
+                "@id": "_:N93db829535994892bd89ad32938745e8"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3132,18 +4844,18 @@
         ]
     },
     {
-        "@id": "_:Ncb7d2bfdc88044e2ae8c537f981cc127",
+        "@id": "_:Nb4ec028e65404ff58cd2a1d57c24db20",
         "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000104"
+            "http://purl.obolibrary.org/obo/psdo_0000105"
         ],
         "http://example.com/slowmo#PerformanceGapSize": [
             {
-                "@value": -0.0377777777777778
+                "@value": 0.0357142857142857
             }
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:Ndde30034dc1f4160bddfc09bf150467f"
+                "@id": "_:N93db829535994892bd89ad32938745e8"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3153,18 +4865,18 @@
         ]
     },
     {
-        "@id": "_:Nd2fa15ebbbb64a68a81f298321aaae23",
+        "@id": "_:N2366a4fce81244e3b0a4560e906f9eac",
         "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000099"
+            "http://purl.obolibrary.org/obo/psdo_0000100"
         ],
         "http://example.com/slowmo#PerformanceTrendSlope": [
             {
-                "@value": 4.5039919591890924e-17
+                "@value": -7.111566251351214e-18
             }
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:Ndde30034dc1f4160bddfc09bf150467f"
+                "@id": "_:N93db829535994892bd89ad32938745e8"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -3174,44 +4886,28 @@
         ],
         "http://example.com/slowmo#numberofmonths": [
             {
-                "@value": 1
-            }
-        ]
-    },
-    {
-        "@id": "_:N9d6ccca99ad8456baf1e743a8c327171",
-        "@type": [
-            "http://purl.obolibrary.org/obo/psdo_0000112"
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:Ndde30034dc1f4160bddfc09bf150467f"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@id": "_:SUS04"
-            }
-        ],
-        "http://example.com/slowmo#TimeSinceLastLoss": [
-            {
                 "@value": 2
             }
         ]
     },
     {
-        "@id": "_:Nbc7e9dfbf080455eac430715e9007294",
+        "@id": "_:N53a032e3d4f44bfda719b7f6931ac95f",
         "@type": [
-            "http://example.com/slowmo#NonMonotonicTrend"
+            "http://example.com/slowmo#MonotonicTrend"
         ],
         "http://example.com/slowmo#RegardingComparator": [
             {
-                "@id": "_:Ndde30034dc1f4160bddfc09bf150467f"
+                "@id": "_:N93db829535994892bd89ad32938745e8"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
             {
                 "@id": "_:SUS04"
+            }
+        ],
+        "http://example.com/slowmo#Timeofmonotonicity": [
+            {
+                "@value": 2
             }
         ]
     }
