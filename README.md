@@ -20,3 +20,7 @@ To test the pipeline locally:
 4. Download ,postman app from ```https://www.postman.com/downloads/``` and install it.
 
 5. Send a POST request to the ip address ```127.0.0.1:8000/createprecisionfeedback/``` with details present in input_message.json using the postman app
+
+6. If you are running the pipeline in heroku have the debug="no" in input
+
+7. If you are running the pipeline locally and want to see intermediate files have the debug="yes" in input_message.json
