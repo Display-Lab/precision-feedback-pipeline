@@ -47,17 +47,17 @@ class Esteemer():
         
         self.message_code=message_code
     def apply_preferences(self):
-        Message_Format={}
-        Display_Format={}
+        self.Message_Format={}
+        self.Display_Format={}
         for (k, v) in self.preferences.items():
             for (k1,v1) in v.items():
                 for (k2,v2) in v1.items():
                     
                     if(k1=="Message_Format"):
                         k2=int(k2)
-                        Message_Format[k2]=v2
+                        self.Message_Format[k2]=v2
                     if(k1=="Display_Format"):
-                        Display_Format[k2]=v2
+                        self.Display_Format[k2]=v2
         # for k,v in Message_Format.items():
             
         #     print(type(k))
@@ -68,12 +68,12 @@ class Esteemer():
         for x in range(len(self.y)):
             s=self.y[x]
             for s3,p3,o3 in self.spek_tp.triples((s,self.p2,None)):
-                score=int(o3)
+                score=float(o3)
                 
 
             for s1,p32,o1 in self.spek_tp.triples((s,p4,None)):
                 o2=float(o1)
-                for k,v in Message_Format.items():
+                for k,v in self.Message_Format.items():
                     if k==o2:
                         value=float(v)
                         score1=score*value
@@ -89,8 +89,8 @@ class Esteemer():
                 score=float(o3)
             for s1,p32,o1 in self.spek_tp.triples((s,p5,None)): 
                 o1=str(o1)
-                for k,v in Display_Format.items():
-                    if o1==k:
+                for k,v in self.Display_Format.items():
+                    if o1==k or o1=="line,bar,none":
                         value=float(v)  
                         score1=score*value
                         score1=Literal(score1)
@@ -216,6 +216,9 @@ class Esteemer():
             for s1,p1,o1 in self.spek_tp.triples((s,p,None)):
                 #print(o1)
                 s_m["display"]=o1
+                if str(o1)=="line,bar,none":
+                    s_m["display"]=max(self.Display_Format, key=self.Display_Format.get)
+
             for s4,p4,o4 in self.spek_tp.triples((s,p3,None)):
                 s5=o4
                 for s6,p6,o6 in self.spek_tp.triples((s5,p5,None)):

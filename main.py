@@ -47,7 +47,7 @@ async def startup_event():
         
         message_code=read_graph(f1json)
         causal_pathways=read_graph(f2json)
-        
+        global templates
         templates=read_graph(f4json)
         # causal_pathways_alice=read_graph(f5json)
         # templates_alice=read_graph(f6json)
@@ -78,7 +78,7 @@ async def createprecisionfeedback(info:Request):
     #df = df.iloc[1: , :]
     #performance_data_df.to_csv('pd.csv', index=False)
     #print(type())
-    if vignette!="base":
+    if str(vignette)!="base":
         csp="./startup/"+str(vignette)+"/causal_pathways.json"
         temp="./startup/"+str(vignette)+"/templates.json"
         f2=open(csp)
@@ -87,6 +87,14 @@ async def createprecisionfeedback(info:Request):
         f4json=json.load(f4)
         causal_pathways=read_graph(f2json)
         templates=read_graph(f4json)
+    else:
+        f2=open("./startup/causal_pathways.json")
+        f4=open("./startup/templates.json")
+        f2json=json.load(f2)
+        f4json=json.load(f4)
+        causal_pathways=read_graph(f2json)
+        templates=read_graph(f4json)
+
     del req_info1["Performance_data"]
     history=req_info1["History"]
     del req_info1["History"]

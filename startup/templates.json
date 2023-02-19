@@ -30,7 +30,7 @@
         {"@type": "http://purl.obolibrary.org/obo/psdo_0000041"}
       ],
       "psdo:PerformanceSummaryTextualEntity": "1",
-      "psdo:PerformanceSummaryDisplay": "line"
+      "psdo:PerformanceSummaryDisplay": "line,bar,none"
     },
     {
       "@id": "http://feedbacktailor.org/ftkb#WorseSocialBar",
