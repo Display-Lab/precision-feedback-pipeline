@@ -81,6 +81,8 @@ class CandidateSmasher:
         self.template_type_dicts={}
         self.candidate_id_dicts={}
         self.goal_dicts={}
+        self.top_10_dicts={}
+        self.top_25_dicts={}
         self.graph_type_list=[]
         self.graph_type_list1=[]
 
@@ -95,12 +97,18 @@ class CandidateSmasher:
                 final_node_type=[]
                 node_type=[]
                 node_type1=[]
+                node_type2=[]
                 node_type.append(s1)
                 node_type.append(o2)
                 for s4,p4,o4 in self.a.triples((s3,self.p3,None)):
                         #print(o4)
                         if str(o4)=="goal":
                             self.goal_dicts[s1]=o2
+                        if str(o4)=="top_10":
+                            self.top_10_dicts[s1]=o2
+                        if str(o4)=="top_25":
+                            self.top_25_dicts[s1]=o2
+                        
                 
                 # self.a.remove((s1,self.p1,o2))
                 # for s2,p2,o21 in self.a.triples((s1,self.p1,None)):
@@ -120,7 +128,7 @@ class CandidateSmasher:
         
             self.graph_type_list.append(node_type_tuple)
        
-            
+        
         new = pd.DataFrame.from_dict(self.goal_dicts, orient ='index')
         new= new.reset_index()
         new = new.rename({"index":"Measure_Name"}, axis=1)
@@ -141,9 +149,54 @@ class CandidateSmasher:
             node_type_tuple1=tuple(node_type1)
             node_type_tuple1=node_type_tuple1
             self.goal_types.append(node_type_tuple1)
+
+        new1 = pd.DataFrame.from_dict(self.top_10_dicts, orient ='index')
+        new1= new1.reset_index()
+        new1 = new1.rename({"index":"Measure_Name"}, axis=1)
+        new1 = new1.rename({0:"Comparator_Node"}, axis=1)
+        self.top_10_types=[]
+        for rowIndex, row in new1.iterrows(): 
+            s1=row["Measure_Name"]
+            o2=row["Comparator_Node"]
+            node_type2=[]
+            for  s81,p81,o81 in self.a.triples((None, None,o2)):
+                for s82,p82,o82 in self.a.triples((s81,RDF.type,None)):
+                    if s1 not in node_type2:
+                        node_type2.append(s1)
+                    if o2 not in node_type2:
+                        node_type2.append(o2)
+                    if str(o82) != self.cp25:
+                        node_type2.append(str(o82))
+            node_type_tuple2=tuple(node_type2)
+            node_type_tuple2=node_type_tuple2
+            self.top_10_types.append(node_type_tuple2)
+        
+        new2 = pd.DataFrame.from_dict(self.top_25_dicts, orient ='index')
+        new2= new2.reset_index()
+        new2 = new2.rename({"index":"Measure_Name"}, axis=1)
+        new2 = new2.rename({0:"Comparator_Node"}, axis=1)
+        # new2.to_csv("top_25.csv")
+        self.top_25_types=[]
+        for rowIndex, row in new2.iterrows(): 
+            s1=row["Measure_Name"]
+            o2=row["Comparator_Node"]
+            node_type3=[]
+            for  s81,p81,o81 in self.a.triples((None, None,o2)):
+                for s82,p82,o82 in self.a.triples((s81,RDF.type,None)):
+                    if s1 not in node_type3:
+                        node_type3.append(s1)
+                    if o2 not in node_type3:
+                        node_type3.append(o2)
+                    if str(o82) != self.cp25:
+                        node_type3.append(str(o82))
+            node_type_tuple3=tuple(node_type3)
+            node_type_tuple3=node_type_tuple3
+            self.top_25_types.append(node_type_tuple3)
         
         self.df_graph = pd.DataFrame(self.graph_type_list)
         self.goal_types=pd.DataFrame(self.goal_types)
+        self.top_10_types=pd.DataFrame(self.top_10_types)
+        self.top_25_types=pd.DataFrame(self.top_25_types)
         self.df_graph = self.df_graph.rename({0:"Measure_Name"}, axis=1)
         self.df_graph = self.df_graph.rename({1:"Comparator_Node"}, axis=1)
         self.df_graph = self.df_graph.rename({2:"graph_type1"}, axis=1)
@@ -169,11 +222,76 @@ class CandidateSmasher:
         self.goal_types["comparator_type"]="goal"
         self.goal_types=self.goal_types.reset_index(drop=True)
         # self.goal_types.to_csv("goal_types.csv")
-        self.df_merged = pd.concat([self.df_graph, self.goal_types], ignore_index=True, sort=False)
+
+
+        self.top_10_types = self.top_10_types.rename({0:"Measure_Name"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({1:"Comparator_Node"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({2:"graph_type1"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({3:"graph_type2"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({4:"graph_type3"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({5:"graph_type4"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({6:"graph_type5"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({7:"graph_type6"}, axis=1)
+        self.top_10_types = self.top_10_types.fillna(0)
+        # self.top_10=self.top_10_types
+        self.top_10_types["comparator_type"]="top_10"
+        self.top_10_types=self.top_10_types.reset_index(drop=True)
+        # self.top_10_types.to_csv("top_10_types.csv")
+        # self.top_10.to_csv("top_10.csv")
+
+        self.top_25_types = self.top_25_types.rename({0:"Measure_Name"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({1:"Comparator_Node"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({2:"graph_type1"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({3:"graph_type2"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({4:"graph_type3"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({5:"graph_type4"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({6:"graph_type5"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({7:"graph_type6"}, axis=1)
+        self.top_25_types = self.top_25_types.fillna(0)
+        # self.top_25=self.top_25_types
+        self.top_25_types["comparator_type"]="top_25"
+        self.top_25_types=self.top_25_types.reset_index(drop=True)
+        # self.top_25_types.to_csv("top_25_types.csv")
+        df1 = self.top_10_types.drop(self.top_10_types.columns[-1],axis=1)
+        df1=df1.drop(['Comparator_Node'], axis=1)
+        df1=df1.loc[df1['graph_type1'] != 0]
+        df1=df1.reset_index(drop="True")
+        Measure_list_top_25=[]
+        top_10_list = list(df1.itertuples(index=False, name=None))
+        for x in range(len(top_10_list)):
+            print(top_10_list[x])
+        df2 = self.top_25_types.drop(self.top_25_types.columns[-1],axis=1)
+        df2=df2.drop(['Comparator_Node'], axis=1)
+        df2=df2.loc[df2['graph_type1'] != 0]
+        df2=df2.reset_index(drop="True")
+        top_25_list=list(df2.itertuples(index=False, name=None))
+        for x in range(len(top_25_list)):
+            if(top_25_list[x] in top_10_list):
+                Measure_list_top_25.append(top_25_list[x][0])
+
+        # df2 = self.top_25_types.drop(self.top_25_types.columns[-1],axis=1)
+        
+        # df2=df2.loc[df2['graph_type1'] != 0]
+        # df2=df2.reset_index(drop="True")
+       
+        # top_25_list = df2.Measure_Name.values.tolist()
+        # self.df_graph = self.df_graph[self.df_graph.Measure_Name.isin(top_25_list) == False]
+       
+       
+
+        
+        self.top_25_types = self.top_25_types[self.top_25_types.Measure_Name.isin(Measure_list_top_25) == False]
+        # self.df_graph = self.df_graph[self.df_graph.Measure_Name.isin(top_10_list) == False]
+       
+        # for x in range(len(top_25_list)):
+        #     print(top_25_list[x])
+        #self.df_graph = self.df_graph[self.df_graph.Measure_Name.isin(top_10_list) == False]
+        self.df_merged = pd.concat([self.df_graph, self.goal_types,self.top_10_types,self.top_25_types], ignore_index=True, sort=False)
+        self.df_merged =self.df_merged.fillna(0)
         # self.df_merged.to_csv("df_merged.csv")
         return self.df_merged
 
-       
+     
 
     def get_template_data(self):
         for s,p,o in self.b.triples((None,self.p23,None)):

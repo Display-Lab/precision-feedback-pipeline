@@ -72,7 +72,7 @@ async def createprecisionfeedback(info:Request):
     performance_data = req_info1["Performance_data"]
     vignette=req_info1["vignette"]
     debug=req_info1["debug"]
-    performance_data_df =pd.DataFrame (performance_data, columns = [ "Staff_Number","Measure_Name","Month","Passed_Count","Flagged_Count","Denominator","Peer_Average"])
+    performance_data_df =pd.DataFrame (performance_data, columns = [ "Staff_Number","Measure_Name","Month","Passed_Count","Flagged_Count","Denominator","Peer_Average","Top_10_Average","Top_25_Average"])
     performance_data_df.columns = performance_data_df.iloc[0]
     performance_data_df = performance_data_df[1:]
     #df = df.iloc[1: , :]
@@ -144,6 +144,7 @@ async def createprecisionfeedback(info:Request):
     # es.apply_history()
     node,spek_es=es.select()
     es.apply_history()
+  
     selected_message=es.get_selected_message()
     # for k,v in selected_message.items():
     #     print(k,v)

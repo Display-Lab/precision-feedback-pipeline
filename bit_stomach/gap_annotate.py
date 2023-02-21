@@ -27,7 +27,7 @@ def goal_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     latest_measure_df=latest_measure_df.reset_index(drop=True)
     #a=insert_annotate(input_graph)
     
-    gap_size=latest_measure_df['goal_comparison_value']-latest_measure_df['Performance_Rate']
+    gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['goal_comparison_value']
     
     if (gap_size[0]!= 0):
         ac=BNode(latest_measure_df["Measure_Name"][0])
@@ -113,7 +113,7 @@ def peer_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     latest_measure_df=latest_measure_df.reset_index(drop=True)
     #a=insert_annotate(input_graph)
     
-    gap_size=latest_measure_df['Peer_Average']-latest_measure_df['Performance_Rate']
+    gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['Peer_Average']
     
     if (gap_size[0]!= 0):
         ac=BNode(latest_measure_df["Measure_Name"][0])
@@ -132,6 +132,74 @@ def peer_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
             input_graph.add((s14,p14,o14))
             input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)
         if(latest_measure_df['Performance_Rate'][0]<latest_measure_df['Peer_Average'][0]):
+            o14=BNode() 
+            input_graph.add((s14,p14,o14))
+            input_graph=annotate_negative_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+        
+
+    
+
+    return input_graph
+
+def top_10_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
+    s14=s13
+    p14=URIRef('http://purl.obolibrary.org/obo/RO_0000091')
+    latest_measure_df=latest_measure_df.reset_index(drop=True)
+    #a=insert_annotate(input_graph)
+    
+    gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['Top_10_Average']
+    
+    if (gap_size[0]!= 0):
+        ac=BNode(latest_measure_df["Measure_Name"][0])
+        av=comparator_bnode
+        goal_gap_size=gap_size[0]
+        goal_gap_size=Literal(goal_gap_size)
+    #         #annotate goal comparator
+        o14=BNode() 
+        input_graph.add((s14,p14,o14))
+        input_graph=annotate_peer_comparator(input_graph,o14,ac,av)
+        o14=BNode() 
+        input_graph.add((s14,p14,o14))
+        input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
+        if(latest_measure_df['Top_10_Average'][0]<=latest_measure_df['Performance_Rate'][0]):
+            o14=BNode() 
+            input_graph.add((s14,p14,o14))
+            input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+        if(latest_measure_df['Performance_Rate'][0]<latest_measure_df['Top_10_Average'][0]):
+            o14=BNode() 
+            input_graph.add((s14,p14,o14))
+            input_graph=annotate_negative_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+        
+
+    
+
+    return input_graph
+
+def top_25_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
+    s14=s13
+    p14=URIRef('http://purl.obolibrary.org/obo/RO_0000091')
+    latest_measure_df=latest_measure_df.reset_index(drop=True)
+    #a=insert_annotate(input_graph)
+    
+    gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['Top_25_Average']
+    
+    if (gap_size[0]!= 0):
+        ac=BNode(latest_measure_df["Measure_Name"][0])
+        av=comparator_bnode
+        goal_gap_size=gap_size[0]
+        goal_gap_size=Literal(goal_gap_size)
+    #         #annotate goal comparator
+        o14=BNode() 
+        input_graph.add((s14,p14,o14))
+        input_graph=annotate_peer_comparator(input_graph,o14,ac,av)
+        o14=BNode() 
+        input_graph.add((s14,p14,o14))
+        input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
+        if(latest_measure_df['Top_25_Average'][0]<=latest_measure_df['Performance_Rate'][0]):
+            o14=BNode() 
+            input_graph.add((s14,p14,o14))
+            input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+        if(latest_measure_df['Performance_Rate'][0]<latest_measure_df['Top_25_Average'][0]):
             o14=BNode() 
             input_graph.add((s14,p14,o14))
             input_graph=annotate_negative_peer_gap(input_graph,o14,ac,av,goal_gap_size)

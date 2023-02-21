@@ -91,7 +91,77 @@ def peer_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bnode
     #print(latest_measure_df)
     return input_graph
 
-    
+def top_10_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
+    s14=s13
+    p14=URIRef('http://purl.obolibrary.org/obo/RO_0000091')
+    latest_measure_df=latest_measure_df.reset_index(drop=True)
+    goal_gap_size=[]
+    goal_gap_size=latest_measure_df['Top_10_Average']-latest_measure_df['Performance_Rate']
+    latest_measure_df["goal_gap_size"]=goal_gap_size
+    back_up_df=latest_measure_df
+    idx= latest_measure_df.groupby(['Measure_Name'])['Month'].nlargest(3) .reset_index()
+    l=idx['level_1'].tolist()
+    latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
+    latest_measure_df = latest_measure_df.reset_index(drop=True)
+    # print(latest_measure_df)
+    # print(latest_measure_df["goal_gap_size"][1])
+    if((latest_measure_df["goal_gap_size"][2]>0 and latest_measure_df["goal_gap_size"][1]>0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
+        ac=BNode(latest_measure_df["Measure_Name"][0])
+        av=comparator_bnode
+        o14=BNode() 
+        event="positive"
+        number=find_number(back_up_df,event)
+        input_graph.add((s14,p14,o14))
+        input_graph=annotate_consecutive_peer_positive_gap(input_graph,o14,ac,av,number)
+    if((latest_measure_df["goal_gap_size"][2]<0 and latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]<0)==True):
+        ac=BNode(latest_measure_df["Measure_Name"][0])
+        av=comparator_bnode
+        event="negative"
+        number=find_number(back_up_df,event)
+        o14=BNode() 
+        input_graph.add((s14,p14,o14))
+        input_graph=annotate_consecutive_peer_negative_gap(input_graph,o14,ac,av,number)
+
+
+
+    #print(latest_measure_df)
+    return input_graph
+def top_25_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
+    s14=s13
+    p14=URIRef('http://purl.obolibrary.org/obo/RO_0000091')
+    latest_measure_df=latest_measure_df.reset_index(drop=True)
+    goal_gap_size=[]
+    goal_gap_size=latest_measure_df['Top_25_Average']-latest_measure_df['Performance_Rate']
+    latest_measure_df["goal_gap_size"]=goal_gap_size
+    back_up_df=latest_measure_df
+    idx= latest_measure_df.groupby(['Measure_Name'])['Month'].nlargest(3) .reset_index()
+    l=idx['level_1'].tolist()
+    latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
+    latest_measure_df = latest_measure_df.reset_index(drop=True)
+    # print(latest_measure_df)
+    # print(latest_measure_df["goal_gap_size"][1])
+    if((latest_measure_df["goal_gap_size"][2]>0 and latest_measure_df["goal_gap_size"][1]>0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
+        ac=BNode(latest_measure_df["Measure_Name"][0])
+        av=comparator_bnode
+        o14=BNode() 
+        event="positive"
+        number=find_number(back_up_df,event)
+        input_graph.add((s14,p14,o14))
+        input_graph=annotate_consecutive_peer_positive_gap(input_graph,o14,ac,av,number)
+    if((latest_measure_df["goal_gap_size"][2]<0 and latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]<0)==True):
+        ac=BNode(latest_measure_df["Measure_Name"][0])
+        av=comparator_bnode
+        event="negative"
+        number=find_number(back_up_df,event)
+        o14=BNode() 
+        input_graph.add((s14,p14,o14))
+        input_graph=annotate_consecutive_peer_negative_gap(input_graph,o14,ac,av,number)
+
+
+
+    #print(latest_measure_df)
+    return input_graph
+
 
 def annotate_consecutive_goal_positive_gap(a,s16,measure_Name,o16,number):
     p15=RDF.type

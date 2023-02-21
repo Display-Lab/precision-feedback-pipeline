@@ -29,6 +29,8 @@ class Bit_stomach:
         self.measure_dicts={}
         self.goal_dicts={}
         self.goal_comparison_dicts={}
+        self.top_10_dicts={}
+        self.top_25_dicts={}
         self.performance_data_df=performance_data
         self.input_graph=input_graph
         s=URIRef("http://example.com/app#display-lab")
@@ -42,13 +44,37 @@ class Bit_stomach:
         p22=URIRef("http://schema.org/name")
         o21=Literal("PEERS")
         o22=Literal("peers") 
+        o212=Literal("TOP_10")
+        o222=Literal("top_10") 
+        o2122=Literal("TOP_25")
+        o2222=Literal("top_25")
         self.input_graph=input_graph
         def remove_annotate(self):
             s12 = URIRef('http://example.com/app#display-lab')
             p12=URIRef('http://example.com/slowmo#IsAboutPerformer')
             o12=BNode('p1')
             self.input_graph.remove((o12,None,None))
-            
+
+        def insert_blank_nodes_top_25(self):
+        #insert blank nodes for social comparators for each measure
+            for sw,pw,ow in self.input_graph.triples((s, p, None)):
+                s1=ow
+                o11=BNode()
+                self.input_graph.add((s1,p1,o11))  
+                s11=o11
+                self.input_graph.add((s11,p5,o5))
+                self.input_graph.add((s11,p21,o2122))
+                self.input_graph.add((s11,p22,o2222))
+        def insert_blank_nodes_top_10(self):
+        #insert blank nodes for social comparators for each measure
+            for sw,pw,ow in self.input_graph.triples((s, p, None)):
+                s1=ow
+                o11=BNode()
+                self.input_graph.add((s1,p1,o11))  
+                s11=o11
+                self.input_graph.add((s11,p5,o5))
+                self.input_graph.add((s11,p21,o212))
+                self.input_graph.add((s11,p22,o222))    
             
         def insert_blank_nodes_peers(self):
         #insert blank nodes for social comparators for each measure
@@ -74,6 +100,8 @@ class Bit_stomach:
             return rerunkey
         # self.rerunkey= check_rerunkey(self)
         # if(self.rerunkey==0):
+        insert_blank_nodes_top_10(self)
+        insert_blank_nodes_top_25(self)
         insert_blank_nodes_peers(self)
         # if(self.rerunkey==1):
         #     remove_annotate(self)
@@ -84,10 +112,19 @@ class Bit_stomach:
                 self.measure_dicts[s1]=o2
                 s3=o2
                 for s4,p4,o4 in self.input_graph.triples((s3,p3,None)):
-                        if str(o4)=="goal":
-                            self.goal_dicts[s1]=o2
-                            for s8,p8,o8 in self.input_graph.triples((s3,p6,None)):
-                                self.goal_comparison_dicts[s1]=o8
+                    if str(o4)=="top_10":
+                        #print(o2)
+                        self.top_10_dicts[s1]=o2
+                    if str(o4)=="top_25":
+                        #print(o2)
+                        self.top_25_dicts[s1]=o2
+
+                    if str(o4)=="goal":
+                        #print(o2)
+                        self.goal_dicts[s1]=o2
+                        for s8,p8,o8 in self.input_graph.triples((s3,p6,None)):
+                            self.goal_comparison_dicts[s1]=o8
+        
 
     def annotate(self):
         a=self.input_graph
@@ -116,5 +153,14 @@ class Bit_stomach:
             a=pr.peer_acheivement_loss_annotate(measure_name, **self.measure_dicts) 
             a=pr.peerconsecutive_annotate(measure_name,**self.measure_dicts)
             a=pr.peer_monotonicity_annotate(measure_name,**self.measure_dicts)
-        
+            a=pr.top_10_gap_annotate(measure_name,**self.top_10_dicts)
+            a=pr.top_10_trend_annotate(measure_name,**self.top_10_dicts)
+            a=pr.top_10_acheivement_loss_annotate(measure_name,**self.top_10_dicts)
+            a=pr.top_10consecutive_annotate(measure_name,**self.top_10_dicts)
+            a=pr.top_10_monotonicity_annotate(measure_name,**self.top_10_dicts)
+            a=pr.top_25_gap_annotate(measure_name,**self.top_25_dicts)
+            a=pr.top_25_trend_annotate(measure_name,**self.top_25_dicts)
+            a=pr.top_25_acheivement_loss_annotate(measure_name,**self.top_25_dicts)
+            a=pr.top_25consecutive_annotate(measure_name,**self.top_25_dicts)
+            a=pr.top_25_monotonicity_annotate(measure_name,**self.top_25_dicts)
         return self.input_graph

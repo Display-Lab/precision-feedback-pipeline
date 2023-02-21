@@ -16,9 +16,9 @@ from rdfpandas.graph import to_dataframe
 
 #from calc_gaps_slopes import gap_calc,trend_calc,monotonic_pred,mod_collector
 #from insert_annotate import insert_annotate
-from bit_stomach.gap_annotate import goal_gap_annotate,peer_gap_annotate
-from bit_stomach.acheivement_loss_annotate import goal_acheivementloss_annotate,peer_acheivementloss_annotate
-from bit_stomach.consecutive_gap_annotate import goal_consecutive_annotate,peer_consecutive_annotate
+from bit_stomach.gap_annotate import goal_gap_annotate,peer_gap_annotate,top_10_gap_annotate,top_25_gap_annotate
+from bit_stomach.acheivement_loss_annotate import goal_acheivementloss_annotate,peer_acheivementloss_annotate,top_10_acheivementloss_annotate,top_25_acheivementloss_annotate
+from bit_stomach.consecutive_gap_annotate import goal_consecutive_annotate,peer_consecutive_annotate,top_10_consecutive_annotate,top_25_consecutive_annotate
 from bit_stomach.trend_annotate import trend_annotate
 from bit_stomach.monotinicity_annotate import monotonic_annotate
 warnings.filterwarnings("ignore")
@@ -41,6 +41,8 @@ class Prepare_data_annotate:
                 performance_rate.append(row['Passed_Count']/row['Denominator'])
         self.performance_data['Performance_Rate']=performance_rate
         self.performance_data['Peer_Average']=self.performance_data['Peer_Average']/100
+        self.performance_data['Top_10_Average']=self.performance_data['Top_10_Average']/100
+        self.performance_data['Top_25_Average']=self.performance_data['Top_25_Average']/100
         self.performance_data['Month'] = pd.to_datetime(self.performance_data['Month'])
         self.performance_data[['Measure_Name']] = self.performance_data[['Measure_Name']].astype(str)
         self.comparison_vaues[['Measure_Name']] = self.comparison_vaues[['Measure_Name']].astype(str)
@@ -50,6 +52,8 @@ class Prepare_data_annotate:
         self.data=self.performance_data.merge(self.comparison_vaues, how='outer', on=['Measure_Name'])
         self.data["Measure_Name"]=self.data["Measure_Name"].str.decode(encoding="UTF-8")
         self.data[['Peer_Average']] = self.data[['Peer_Average']].astype(float)
+        self.data[['Top_10_Average']] = self.data[['Top_10_Average']].astype(float)
+        self.data[['Top_25_Average']] = self.data[['Top_25_Average']].astype(float)
         self.data[['Performance_Rate']] = self.data[['Performance_Rate']].astype(float)
         self.data[['goal_comparison_value']] = self.data[['goal_comparison_value']].astype(float)
         idx= self.data.groupby(['Measure_Name'])['Month'].transform(max) == self.data['Month']
@@ -97,6 +101,18 @@ class Prepare_data_annotate:
         self.a,self.s13=self.insert_annotate(self.input_graph)
         a = peer_gap_annotate(self.a,self.s13,measure_data1,comparator_bnode)
         return a
+    
+    def top_10_gap_annotate(self,measure_name:str,**top_10_dicts):
+        measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**top_10_dicts)
+        self.a,self.s13=self.insert_annotate(self.input_graph)
+        a = top_10_gap_annotate(self.a,self.s13,measure_data1,comparator_bnode)
+        return a
+    def top_25_gap_annotate(self,measure_name:str,**top_10_dicts):
+        measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**top_10_dicts)
+        self.a,self.s13=self.insert_annotate(self.input_graph)
+        a = top_25_gap_annotate(self.a,self.s13,measure_data1,comparator_bnode)
+        return a
+
 
     def goal_trend_annotate(self,measure_name:str,**goal_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal_dicts)
@@ -110,6 +126,20 @@ class Prepare_data_annotate:
         a = trend_annotate(self.a,self.s13,measure_data2,comparator_bnode)
         return a
     
+    def top_10_trend_annotate(self,measure_name:str,**goal_dicts):
+        measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal_dicts)
+        self.a,self.s13=self.insert_annotate(self.input_graph)
+        a = trend_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+        return a
+
+    def top_25_trend_annotate(self,measure_name:str,**goal_dicts):
+        measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal_dicts)
+        self.a,self.s13=self.insert_annotate(self.input_graph)
+        a = trend_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+        return a
+
+    
+    
     def goal_acheivement_loss_annotate(self,measure_name:str,**goal_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal_dicts)
         self.a,self.s13=self.insert_annotate(self.input_graph)
@@ -122,6 +152,19 @@ class Prepare_data_annotate:
         a = peer_acheivementloss_annotate(self.a,self.s13,measure_data2,comparator_bnode)
         return a  
 
+    def top_10_acheivement_loss_annotate(self,measure_name:str,**goal_dicts):
+        measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal_dicts)
+        self.a,self.s13=self.insert_annotate(self.input_graph)
+        a = top_10_acheivementloss_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+        return a
+    
+    def top_25_acheivement_loss_annotate(self,measure_name:str,**goal_dicts):
+        measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal_dicts)
+        self.a,self.s13=self.insert_annotate(self.input_graph)
+        a = top_25_acheivementloss_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+        return a
+
+
     def goalconsecutive_annotate(self,measure_name:str,**goal_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal_dicts)
         self.a,self.s13=self.insert_annotate(self.input_graph)
@@ -132,6 +175,17 @@ class Prepare_data_annotate:
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal_dicts)
         self.a,self.s13=self.insert_annotate(self.input_graph)
         a = peer_consecutive_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+        return a
+
+    def top_10consecutive_annotate(self,measure_name:str,**goal_dicts):
+        measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal_dicts)
+        self.a,self.s13=self.insert_annotate(self.input_graph)
+        a = top_10_consecutive_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+        return a 
+    def top_25consecutive_annotate(self,measure_name:str,**goal_dicts):
+        measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal_dicts)
+        self.a,self.s13=self.insert_annotate(self.input_graph)
+        a = top_25_consecutive_annotate(self.a,self.s13,measure_data2,comparator_bnode)
         return a 
 
     def goal_monotonicity_annotate(self,measure_name:str,**goal_dicts):
@@ -144,6 +198,17 @@ class Prepare_data_annotate:
         self.a,self.s13=self.insert_annotate(self.input_graph)
         a = monotonic_annotate(self.a,self.s13,measure_data2,comparator_bnode)
         return a
+    def top_10_monotonicity_annotate(self,measure_name:str,**goal_dicts):
+        measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal_dicts)
+        self.a,self.s13=self.insert_annotate(self.input_graph)
+        a = monotonic_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+    
+    def top_25_monotonicity_annotate(self,measure_name:str,**goal_dicts):
+        measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal_dicts)
+        self.a,self.s13=self.insert_annotate(self.input_graph)
+        a = monotonic_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+        return a
+
 
 
 
