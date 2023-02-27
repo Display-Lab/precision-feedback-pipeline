@@ -37,7 +37,9 @@ class Bit_stomach:
         p=URIRef('http://example.com/slowmo#IsAboutMeasure')
         p1=URIRef("http://example.com/slowmo#WithComparator")
         p3=URIRef('http://schema.org/name')
-        o5=URIRef("http://purl.obolibrary.org/obo/psdo_0000095")
+        o5=URIRef("http://purl.obolibrary.org/obo/PSDO_0000095")
+        o55=URIRef("http://purl.obolibrary.org/obo/PSDO_0000128")
+        o555=URIRef("http://purl.obolibrary.org/obo/PSDO_0000129")
         p5=RDF.type
         p6=URIRef("http://example.com/slowmo#ComparisonValue")
         p21=URIRef("http://purl.org/dc/terms/title")
@@ -62,7 +64,7 @@ class Bit_stomach:
                 o11=BNode()
                 self.input_graph.add((s1,p1,o11))  
                 s11=o11
-                self.input_graph.add((s11,p5,o5))
+                self.input_graph.add((s11,p5,o55))
                 self.input_graph.add((s11,p21,o2122))
                 self.input_graph.add((s11,p22,o2222))
         def insert_blank_nodes_top_10(self):
@@ -72,7 +74,7 @@ class Bit_stomach:
                 o11=BNode()
                 self.input_graph.add((s1,p1,o11))  
                 s11=o11
-                self.input_graph.add((s11,p5,o5))
+                self.input_graph.add((s11,p5,o555))
                 self.input_graph.add((s11,p21,o212))
                 self.input_graph.add((s11,p22,o222))    
             

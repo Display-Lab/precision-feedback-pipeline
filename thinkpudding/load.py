@@ -8,7 +8,7 @@ from rdflib.collection import Collection
 from rdflib.namespace import FOAF, RDF, RDFS, SKOS, XSD
 from rdflib.serializer import Serializer
 from rdfpandas.graph import to_dataframe
-
+from SPARQLWrapper import XML, SPARQLWrapper
 
 warnings.filterwarnings("ignore")
 
@@ -25,13 +25,15 @@ def process_causalpathways(causal_pathways):
     causal_dicts={}
     caus_type_dicts={}
     caus_out_dict={}
-    caus_o = URIRef("http://purl.obolibrary.org/obo/cpo_0000029")
+    caus_p = URIRef("http://schema.org/name")
+    precdn=URIRef("http://purl.bioontology.org/ontology/SNOMEDCT/has_precondition")
     caus_s=[]
-    for s, p, o in causal_pathways.triples((None,  RDF.type, caus_o)):
+    for s, p, o in causal_pathways.triples((None,  caus_p, None)):
+        # print(s)
         caus_s.append(s)
     for x in range(len(caus_s)):
         s=caus_s[x]
-        p=URIRef("http://example.com/slowmo#HasPrecondition")
+        p=precdn
         for s,p,o in causal_pathways.triples( (s, p, None) ):
             causal_dicts[o]=s
     ids= list(causal_dicts.values())
@@ -49,47 +51,64 @@ def process_causalpathways(causal_pathways):
 def process_spek(spek_cs):
 
     spek_out_dicts={}
-    BL=[]
+    comparator_dicts={}
     #s=URIRef("http://example.com/app#mpog-aspire") 
     s=URIRef("http://example.com/app#display-lab")
     p=URIRef("http://example.com/slowmo#HasCandidate")
-    p1=URIRef("slowmo-HasPrecondition")
+    gap_comparator=[URIRef('http://purl.obolibrary.org/obo/PSDO_0000104'),URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')]
     p1=URIRef("http://purl.obolibrary.org/obo/RO_0000091")
-    slowmo_precndtn=URIRef("http://purl.obolibrary.org/obo/psdo_0000117")
-    comparator_type=URIRef("http://purl.obolibrary.org/obo/psdo_0000094")
+    p2=URIRef("http://example.com/slowmo#RegardingComparator")
+
     i=0
     for s,p,o in spek_cs.triples( (s, p, None) ):
         s1= o
+        BL=[]
         y=[o for s,p,o in spek_cs.triples((s1,p1,None))]
         for i in range(len(y)):
+            # print(y[i])
             s=y[i]
 
             for s,p,o in spek_cs.triples((s,RDF.type,None)):
+                
                 y[i]=o
+                
+                if o in gap_comparator:
+                    
+                    for s,p,o in spek_cs.triples((s,p2,None)):
+                        s=o
+                        for s,p,o in spek_cs.triples((s,RDF.type,None)):
+                            # print(o)
+                            BL.append(o)
+        
         spek_out_dicts[s1] = y
-    return spek_out_dicts
+        comparator_dicts[s1]=BL
+    # for k,v in comparator_dicts.items():
+    #     print(k,v)
+    return spek_out_dicts,comparator_dicts
 
-def matching(caus_out_dict,spek_out_dicts):
+def matching(caus_out_dict,spek_out_dicts,comparator_dicts):
     final_dict={}
     fg=list(caus_out_dict.values())
     fr=list(spek_out_dicts.values())
+    fz=list(comparator_dicts.values())
     accept_ids=[]
     bnodes=[]
+    
+
+    
     for i in range(len(fg)):
         for x in range(len (fr)):
             result =  all(elem in fr[x]  for elem in fg[i])
+            # print(result)
             if result == True:
-                 # l=list(spek_out_dicts.keys())[list(spek_out_dicts.values()).index(fr[x])]
-                l=[k for k,v in spek_out_dicts.items() if v == fr[x]]
-                #print(l)
-                bnodes.append(l)
-                y=[k for k,v in caus_out_dict.items() if v == fg[i]]
-                #y=list(caus_out_dict.keys())[list(caus_out_dict.values()).index(fg[i])]
-                #blist.append(y)
-              
-                accept_ids.append(y)
-                #print(z)
-                #final_dict[y]=l
-                #print (final_dict)
+                for a in range(len(fz)):
+
+                    result1 = any(elem in fr[x]  for elem in fz[a])
+                    if result1 == True:
+                        l=[k for k,v in spek_out_dicts.items() if v == fr[x]]
+                        bnodes.append(l)
+                        y=[k for k,v in caus_out_dict.items() if v == fg[i]]
+                        accept_ids.append(y)
+                
     merged_list = [(accept_ids[i], bnodes[i]) for i in range(0, len(accept_ids))]
     return merged_list

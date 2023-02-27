@@ -89,7 +89,7 @@ def trend_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
 
 def annotate_negative_trend(a,s16,measure_Name,o16,trend_slope,number):
     p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/psdo_0000100')
+    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000100')
     a.add((s16,p15,o15))
     p16=URIRef('http://example.com/slowmo#RegardingComparator')
     a.add((s16,p16,o16))
@@ -108,7 +108,7 @@ def annotate_negative_trend(a,s16,measure_Name,o16,trend_slope,number):
 
 def annotate_positive_trend(a,s16,measure_Name,o16,trend_slope,number):
     p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/psdo_0000099')
+    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000099')
     a.add((s16,p15,o15))
     p16=URIRef('http://example.com/slowmo#RegardingComparator')
     a.add((s16,p16,o16))

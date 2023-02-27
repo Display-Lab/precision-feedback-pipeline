@@ -43,7 +43,7 @@ class Esteemer():
             for s,p,o in self.spek_tp.triples((s1,self.p1,None)):
                 self.spek_tp.add((s,self.p2,self.o2))
                 self.y.append(s)
-
+                # print(s)
         
         self.message_code=message_code
     def apply_preferences(self):
@@ -154,39 +154,41 @@ class Esteemer():
     def select(self):
         self.scores=[]
         nodes=[]
-        if len(self.y)!=0:
-            for x in range(len(self.y)):
-                s=self.y[x]
-                for s3,p3,o3 in self.spek_tp.triples((s,self.p2,None)):
-                    score=float(o3)
-                    self.scores.append(score)
-            if len(self.scores)!=0:
-                self.score_max=max(self.scores)
-            self.score_max = Literal(self.score_max)
-            #print(score_max)
-            for s4,p4,o4 in self.spek_tp.triples((None,self.p2,self.score_max)):
-                node=s4
-                nodes.append(node)
+        # if len(self.y)!=0:
+        #     for x in range(len(self.y)):
+        #         s=self.y[x]
+        #         for s3,p3,o3 in self.spek_tp.triples((s,self.p2,None)):
+        #             score=float(o3)
+        #             self.scores.append(score)
+        #     if len(self.scores)!=0:
+        #         self.score_max=max(self.scores)
+        #     self.score_max = Literal(self.score_max)
+        #     #print(score_max)
+        #     for s4,p4,o4 in self.spek_tp.triples((None,self.p2,self.score_max)):
+        #         node=s4
+        #         nodes.append(node)
             
-            # print(self.score_max)
+        #     # print(self.score_max)
 
-            self.node=random.choice(nodes)
-            #self.apply_history(self)
+        #     self.node=random.choice(nodes)
+        #     #self.apply_history(self)
             
             
             
+        # else:
+        #     self.node="No message selected"
+
+        if len(self.y)!=0:
+            self.node=random.choice(self.y)
         else:
             self.node="No message selected"
 
-        # if len(self.y)!=0:
-        #     self.node=random.choice(self.y)
-        # else:
-        #     self.node="No message selected"
         if self.node== "No message selected":
             return self.node,self.spek_tp
         else:
             o2=URIRef("http://example.com/slowmo#selected")
             self.spek_tp.add((self.node,RDF.type,o2))
+            print(self.node)
             return self.node,self.spek_tp
     def get_selected_message(self):
         s_m={}
@@ -195,7 +197,7 @@ class Esteemer():
             return s_m
         else:
             s=self.node
-            p=URIRef("psdo:PerformanceSummaryDisplay")
+            # p=URIRef("psdo:PerformanceSummaryDisplay")
             p2=URIRef("name")
             p3=URIRef("http://purl.obolibrary.org/obo/RO_0000091")
             p4=URIRef("psdo:PerformanceSummaryTextualEntity")
