@@ -131,20 +131,21 @@ async def createprecisionfeedback(info:Request):
     tp.process_spek()
     tp.matching()
     spek_tp=tp.insert()
+    op=spek_tp.serialize(format='json-ld', indent=4)
     if str(debug)=="yes":
         op=spek_tp.serialize(format='json-ld', indent=4)
         f = open("outputs/spek_tp.json", "w")
         f.write(op)
         f.close()
 
-    #Esteemer
-    es=Esteemer(spek_tp,preferences,message_code,history)
+    # #Esteemer
+    # es=Esteemer(spek_tp,preferences,message_code,history)
     
-    # es.apply_preferences()
-    # es.apply_history()
-    node,spek_es=es.select()
-    
+    # # es.apply_preferences()
     # # es.apply_history()
+    # node,spek_es=es.select()
+
+    # # # es.apply_history()
   
     # selected_message=es.get_selected_message()
     # for k,v in selected_message.items():
@@ -166,7 +167,8 @@ async def createprecisionfeedback(info:Request):
     
     return {
         "status":"Success",
-          "selected_message": selected_message
+        "selected_message": op
+        #   "selected_message": selected_message
     }
     
 
