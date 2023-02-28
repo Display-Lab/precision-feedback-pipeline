@@ -7,6 +7,7 @@ To test the pipeline hosted in heroku:
 
 2. send a POST request  to the ip address ```https://pfpapi.herokuapp.com/createprecisionfeedback/```
 with the details present in input_message.json using the postman app.
+3. If you are running the pipeline in heroku have the debug="no" in input
 
 To test the pipeline locally:
 
@@ -21,6 +22,6 @@ To test the pipeline locally:
 
 5. Send a POST request to the ip address ```127.0.0.1:8000/createprecisionfeedback/``` with details present in input_message.json using the postman app
 
-6. If you are running the pipeline in heroku have the debug="no" in input
+6. If you are running the pipeline locally and want to see intermediate files have the debug="yes" in input_message.json 
 
-7. If you are running the pipeline locally and want to see intermediate files have the debug="yes" in input_message.json
+7. If you are testing a vignette- have additional informat at the end of the input message as vignette=<vignetter name>
