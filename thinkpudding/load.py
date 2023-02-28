@@ -27,6 +27,7 @@ def process_causalpathways(causal_pathways):
     caus_out_dict={}
     caus_p = URIRef("http://schema.org/name")
     precdn=URIRef("http://purl.bioontology.org/ontology/SNOMEDCT/has_precondition")
+    gap_comparator=[URIRef('http://purl.obolibrary.org/obo/PSDO_0000104'),URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')]
     caus_s=[]
     for s, p, o in causal_pathways.triples((None,  caus_p, None)):
         # print(s)
@@ -45,17 +46,24 @@ def process_causalpathways(causal_pathways):
             s=y[i]
             for s,p,o in causal_pathways.triples((s,RDF.type,None)):
                 y[i]=o
-        caus_type_dicts[ids[x]]=y        
-    return caus_type_dicts
+                
+        caus_type_dicts[ids[x]]=y  
+    for k,v in caus_type_dicts.items():
+        for x in range(len(v)):
+            if v[x] in  gap_comparator:
+                gap=v[x]
+                
 
-def process_spek(spek_cs):
+    return caus_type_dicts,gap
+
+def process_spek(spek_cs,gap):
 
     spek_out_dicts={}
     comparator_dicts={}
     #s=URIRef("http://example.com/app#mpog-aspire") 
     s=URIRef("http://example.com/app#display-lab")
     p=URIRef("http://example.com/slowmo#HasCandidate")
-    gap_comparator=[URIRef('http://purl.obolibrary.org/obo/PSDO_0000104'),URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')]
+    
     p1=URIRef("http://purl.obolibrary.org/obo/RO_0000091")
     p2=URIRef("http://example.com/slowmo#RegardingComparator")
 
@@ -72,7 +80,7 @@ def process_spek(spek_cs):
                 
                 y[i]=o
                 
-                if o in gap_comparator:
+                if o == gap:
                     
                     for s,p,o in spek_cs.triples((s,p2,None)):
                         s=o
@@ -93,7 +101,7 @@ def matching(caus_out_dict,spek_out_dicts,comparator_dicts):
     fz=list(comparator_dicts.values())
     accept_ids=[]
     bnodes=[]
-    
+    comparator_list=["http://purl.obolibrary.org/obo/PSDO_0000128","http://purl.obolibrary.org/obo/PSDO_0000129"]
 
     
     for i in range(len(fg)):
@@ -103,12 +111,22 @@ def matching(caus_out_dict,spek_out_dicts,comparator_dicts):
             if result == True:
                 for a in range(len(fz)):
 
-                    result1 = any(elem in fr[x]  for elem in fz[a])
-                    if result1 == True:
-                        l=[k for k,v in spek_out_dicts.items() if v == fr[x]]
-                        bnodes.append(l)
-                        y=[k for k,v in caus_out_dict.items() if v == fg[i]]
-                        accept_ids.append(y)
+                    result1 = False
+                    
+                    for f in range(len(fr[x])):
+                        for g in range(len(fz[a])):
+                            if str(fr[x][f]) in comparator_list:
+                                if fr[x][f] == fz[a][g]:
+                                    result1=True
+                                    
+                                if result1 == True:
+                                    l=[k for k,v in spek_out_dicts.items() if v == fr[x]]
+                                    bnodes.append(l)
+                                    y=[k for k,v in caus_out_dict.items() if v == fg[i]]
+                                    accept_ids.append(y)
+                                
+                    
+                    
                 
     merged_list = [(accept_ids[i], bnodes[i]) for i in range(0, len(accept_ids))]
     return merged_list

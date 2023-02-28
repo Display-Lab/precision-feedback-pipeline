@@ -36,14 +36,14 @@ class Thinkpudding:
     def process_causalpathways(self):
         start_time = time.time()
         
-        self.caus_out_dict=process_causalpathways(self.causal_pathways)
+        self.caus_out_dict,self.gap=process_causalpathways(self.causal_pathways)
         # for k,v in self.caus_out_dict.items():
         #     print(k,v)
         logging.critical(" processing causal pathways--- %s seconds ---" % (time.time() - start_time))
 
     def process_spek(self):
         start_time = time.time()
-        self.spek_out_dicts,self.comparator_dicts=process_spek(self.spek_cs)
+        self.spek_out_dicts,self.comparator_dicts=process_spek(self.spek_cs,self.gap)
         logging.critical(" processing spek_cs--- %s seconds ---" % (time.time() - start_time))
     
     def matching(self):
