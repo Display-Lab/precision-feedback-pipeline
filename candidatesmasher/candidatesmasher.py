@@ -347,7 +347,8 @@ class CandidateSmasher:
         self.df_template_type_dicts  = self.df_template_type_dicts .rename({1:"template_type_dicts1"}, axis=1)
         self.df_template_type_dicts  = self.df_template_type_dicts .rename({2:"template_type_dicts2"}, axis=1)
         self.df_template_type_dicts  = self.df_template_type_dicts .rename({3:"template_type_dicts3"}, axis=1)
-        self.df_template_type_dicts  = self.df_template_type_dicts .rename({4:"template_type_dicts4"}, axis=1)
+        if(4 in self.df_template_type_dicts.columns):
+            self.df_template_type_dicts  = self.df_template_type_dicts .rename({4:"template_type_dicts4"}, axis=1)
         self.df=pd.concat([self.df_text,self.df_name_dicts,self.df_template_type_dicts], axis=1)
        
         # self.df = self.df.rename({1:"template_type_dicts1"}, axis=1)
@@ -424,12 +425,12 @@ class CandidateSmasher:
                             ov=BNode()
                             self.a.add((oq,self.cop4,ov))
                             self.a.add((ov,RDF.type,a31))
-                    
-                        if (row["template_type_dicts4"] != 0):
-                            a32=URIRef(row["template_type_dicts4"])
-                            ov=BNode()
-                            self.a.add((oq,self.cop4,ov))
-                            self.a.add((ov,RDF.type,a32))
+                        if "template_type_dicts4" in self.df.columns:
+                            if (row["template_type_dicts4"] != 0):
+                                a32=URIRef(row["template_type_dicts4"])
+                                ov=BNode()
+                                self.a.add((oq,self.cop4,ov))
+                                self.a.add((ov,RDF.type,a32))
                 
                         idx=self.df_merged[self.df_merged["graph_type1"]==row1["graph_type1"]].index.values
                         row_list = self.df_merged.loc[idx, :].values.flatten().tolist()

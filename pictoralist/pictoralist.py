@@ -27,7 +27,8 @@ class Pictoralist():
     def __init__(self, selected_message, performance_data: pd.DataFrame=()):
         self.selected_message_dict=selected_message
         self.performance_data = performance_data
-        self.display_format = self.selected_message_dict["display"]
+
+        self.display_format = self.selected_message_dict["Display"]
         self.text= self.selected_message_dict["text"]
         self.measure_name= self.selected_message_dict["Measure Name"]
     
@@ -40,7 +41,9 @@ class Pictoralist():
         self.performance_data['Month']= pd.to_datetime(self.performance_data['Month'], errors='coerce')
         self.display_format=str(self.display_format)
         self.measure_name=str(self.measure_name)
-        if self.display_format == "bar":
+        if self.display_format == "line graph,bar chart":
+            self.display_format == "bar chart"
+        if self.display_format == "bar chart":
             # print(self.performance_data)
             self.graph_df = self.performance_data[self.performance_data['Measure_Name'] ==  self.measure_name]
             idx= self.graph_df.groupby(['Measure_Name'])['Month'].nlargest(4) .reset_index()
@@ -108,7 +111,7 @@ class Pictoralist():
 
 
 
-        if self.display_format == 'line':
+        if self.display_format == 'line graph':
             self.graph_df = self.performance_data[self.performance_data['Measure_Name'] ==  self.measure_name]
             self.graph_df['Date'] = pd.to_datetime(self.graph_df['Month'])
             self.graph_df['year']= pd.DatetimeIndex(self.graph_df['Month']).year
