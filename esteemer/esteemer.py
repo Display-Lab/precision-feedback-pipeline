@@ -74,13 +74,17 @@ class Esteemer():
             p10= URIRef("http://purl.org/dc/terms/title")
             p12=URIRef("http://purl.obolibrary.org/obo/IAO_0000573")
             p13=URIRef("http://purl.obolibrary.org/obo/STATO_0000166")
+            p20=URIRef("http://example.com/slowmo#AncestorTemplate")
             sw=0
             
-
+            s_m["node"]=self.node
+            for s21,p21,o21 in self.spek_tp.triples((s,p20,None)):
+                s_m["Template ID"] = o21
             for s2,p2,o2 in self.spek_tp.triples((s,p1,None)):
                 s_m["text"] = o2
             for s9,p9,o9 in self.spek_tp.triples((s,p8,None)):
                 s_m["Comparator Type"] = o9
+            
 
             for s5,p5,o5 in self.spek_tp.triples((s,p3,None)):
                 s6=o5
