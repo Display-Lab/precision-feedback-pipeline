@@ -1,4 +1,4 @@
-# pfp_API
+# precision-feedback-pipeline
 
 This is the pipeline service that implements Precision Feedback Pipeline.
 
