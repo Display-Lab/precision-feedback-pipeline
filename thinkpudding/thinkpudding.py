@@ -1,21 +1,9 @@
-import json
-import sys
-import warnings
 import time
 import logging
-import json
 #from asyncore import read
 
-import pandas as pd
-from rdflib import Graph, Literal, Namespace, URIRef,BNode
-from rdflib.collection import Collection
-from rdflib.namespace import FOAF, RDF, RDFS, SKOS, XSD
-from rdflib.serializer import Serializer
-from rdfpandas.graph import to_dataframe
-from SPARQLWrapper import XML, SPARQLWrapper
-import collections
 
-from thinkpudding.load import read,process_causalpathways,process_spek,matching
+from thinkpudding.load import process_causalpathways, process_spek, matching
 from thinkpudding.insert import insert
 class Thinkpudding:
     start_time1 = time.time()

@@ -1,9 +1,3 @@
-import sys
-import warnings
-import time
-import logging
-import json
-import re
 import numpy as np 
 import matplotlib.pyplot as plt 
 import io
@@ -11,12 +5,6 @@ import base64
 #from asyncore import read
 
 import pandas as pd
-from rdflib import Graph, Literal, Namespace, URIRef
-from rdflib.collection import Collection
-from rdflib.namespace import FOAF, RDF, RDFS, SKOS, XSD
-from rdflib.serializer import Serializer
-from rdfpandas.graph import to_dataframe
-from SPARQLWrapper import XML, SPARQLWrapper
 
 
 
@@ -43,7 +31,7 @@ class Pictoralist():
         self.measure_name=str(self.measure_name)
         if self.display_format == "line graph,bar chart":
             self.display_format = "bar chart"
-            print(self.display_format)
+            # print(self.display_format)
         if self.display_format == "bar chart":
             # print(self.performance_data)
             self.graph_df = self.performance_data[self.performance_data['Measure_Name'] ==  self.measure_name]
