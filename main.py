@@ -152,11 +152,11 @@ async def createprecisionfeedback(info:Request):
     #     print(k,v)
     
     # # print(selected_message)
-    # if selected_message["text"]!= "No message selected":
+    if selected_message["text"]!= "No message selected":
     # #Runnning Pictoralist
-    #     pc=Pictoralist(selected_message,performance_data_df)
-    #     base64_image=pc.create_graph()
-    #     selected_message["image"]=base64_image
+        pc=Pictoralist(selected_message,performance_data_df)
+        base64_image=pc.create_graph()
+        selected_message["image"]=base64_image
     # # '<img align="left" src="data:image/png;base64,%s">' %base64_image
     ES=spek_es.serialize(format='json-ld', indent=4)
     if str(debug)=="yes":

@@ -42,7 +42,8 @@ class Pictoralist():
         self.display_format=str(self.display_format)
         self.measure_name=str(self.measure_name)
         if self.display_format == "line graph,bar chart":
-            self.display_format == "bar chart"
+            self.display_format = "bar chart"
+            print(self.display_format)
         if self.display_format == "bar chart":
             # print(self.performance_data)
             self.graph_df = self.performance_data[self.performance_data['Measure_Name'] ==  self.measure_name]
