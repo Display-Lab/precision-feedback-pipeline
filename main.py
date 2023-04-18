@@ -10,14 +10,12 @@ from candidatesmasher.candidatesmasher import CandidateSmasher
 from thinkpudding.thinkpudding import Thinkpudding
 from esteemer.esteemer import Esteemer
 from pictoralist.pictoralist import Pictoralist
-
 import json
 import requests
 from requests_file import FileAdapter
 import os
 class Settings(BaseSettings):
     pathways: str = "file://"+os.path.abspath("startup/causal_pathways.json")
-    
     measures: str ="file://"+os.path.abspath("startup/measure_details.json")
     templates: str ="file://"+os.path.abspath("startup/templates.json")
    
