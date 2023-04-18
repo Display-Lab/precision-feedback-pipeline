@@ -16,6 +16,7 @@ rdfpandas = "^1.1.5"
 scipy = "1.9.1"
 matplotlib = "3.6.1"
 numpy = "1.23.2"
+requests_file = "1.5.1"
 
 [build-system]
 requires = ["poetry-core"]
