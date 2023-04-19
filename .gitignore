@@ -21,3 +21,5 @@ python/.vscode/settings.json
 **/__pycache__/
 .python-version
 ES.json
+cache/cached1.png
+.DS_Store
