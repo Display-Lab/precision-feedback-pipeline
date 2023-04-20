@@ -24,4 +24,10 @@ To test the pipeline locally:
 
 6. If you are running the pipeline locally and want to see intermediate files have the debug="yes" in input_message.json 
 
-7. If you are testing a vignette- have additional informat at the end of the input message as vignette=<vignetter name>
+7. if you want to set export variable for the causal pathways in the pipeline, you can do so by using the   command
+    poetry export PATHWAYS='url'
+    example:     
+    export PATHWAYS=https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/causal_pathways/social_better.json
+
+    Then use the command
+    poetry uvicorn main:app --reload
