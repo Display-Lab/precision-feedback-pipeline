@@ -31,9 +31,9 @@ class Prepare_data_annotate:
             else:
                 performance_rate.append(row['Passed_Count']/row['Denominator'])
         self.performance_data['Performance_Rate']=performance_rate
-        self.performance_data['Peer_Average']=self.performance_data['Peer_Average']/100
-        self.performance_data['Top_10_Average']=self.performance_data['Top_10_Average']/100
-        self.performance_data['Top_25_Average']=self.performance_data['Top_25_Average']/100
+        self.performance_data['peer_average_comparator']=self.performance_data['peer_average_comparator']/100
+        self.performance_data['peer_90th_percentile_benchmark']=self.performance_data['peer_90th_percentile_benchmark']/100
+        self.performance_data['peer_75th_percentile_benchmark']=self.performance_data['peer_75th_percentile_benchmark']/100
         self.performance_data['Month'] = pd.to_datetime(self.performance_data['Month'])
         self.performance_data[['Measure_Name']] = self.performance_data[['Measure_Name']].astype(str)
         self.comparison_vaues[['Measure_Name']] = self.comparison_vaues[['Measure_Name']].astype(str)
@@ -42,9 +42,9 @@ class Prepare_data_annotate:
         self.comparison_vaues.Measure_Name = self.comparison_vaues.Measure_Name.str.encode('utf-8')
         self.data=self.performance_data.merge(self.comparison_vaues, how='outer', on=['Measure_Name'])
         self.data["Measure_Name"]=self.data["Measure_Name"].str.decode(encoding="UTF-8")
-        self.data[['Peer_Average']] = self.data[['Peer_Average']].astype(float)
-        self.data[['Top_10_Average']] = self.data[['Top_10_Average']].astype(float)
-        self.data[['Top_25_Average']] = self.data[['Top_25_Average']].astype(float)
+        self.data[['peer_average_comparator']] = self.data[['peer_average_comparator']].astype(float)
+        self.data[['peer_90th_percentile_benchmark']] = self.data[['peer_90th_percentile_benchmark']].astype(float)
+        self.data[['peer_75th_percentile_benchmark']] = self.data[['peer_75th_percentile_benchmark']].astype(float)
         self.data[['Performance_Rate']] = self.data[['Performance_Rate']].astype(float)
         self.data[['goal_comparison_value']] = self.data[['goal_comparison_value']].astype(float)
         idx= self.data.groupby(['Measure_Name'])['Month'].transform(max) == self.data['Month']

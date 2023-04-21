@@ -46,7 +46,7 @@ class Pictoralist():
             #     self.last_4_measure['performance_data'] =100
         #self.last_4_measure['performance_data'] =  self.last_4_measure['performance_data'].round(decimals = 1)
             self.comparison_value=self.comparison_value*100
-            self.peer_average= self.last_4_measure["Peer_Average"]*100
+            self.peer_average= self.last_4_measure["peer_average_comparator"]*100
             self.benchmark=[90,90,90,90]
             self.performance_data=self.last_4_measure['Performance_Rate']*100
         
@@ -116,7 +116,7 @@ class Pictoralist():
             #     self.graph_df['performance_data'] =100
             self.performance_data=self.graph_df['Performance_Rate']*100
             #print(self.performance_data)
-            self.peer_average=self.graph_df['Peer_Average']*100
+            self.peer_average=self.graph_df['peer_average_comparator']*100
             self.performance_data = self.performance_data.tolist()
             self.benchmark=[90,90,90,90,90,90,90,90,90,90,90,90]
             self.performance_data = [round(item, 2) for item in self.performance_data]
