@@ -16,7 +16,7 @@ from requests_file import FileAdapter
 import os
 class Settings(BaseSettings):
     pathways: str = "file://"+os.path.abspath("startup/causal_pathways.json")
-    measures: str ="file://"+os.path.abspath("startup/measure_details.json")
+    measures: str ="file://"+os.path.abspath("startup/measures.json")
     templates: str ="file://"+os.path.abspath("startup/templates.json")
    
 se =requests.Session()
