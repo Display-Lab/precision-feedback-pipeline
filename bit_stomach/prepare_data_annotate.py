@@ -35,19 +35,19 @@ class Prepare_data_annotate:
         self.performance_data['peer_90th_percentile_benchmark']=self.performance_data['peer_90th_percentile_benchmark']/100
         self.performance_data['peer_75th_percentile_benchmark']=self.performance_data['peer_75th_percentile_benchmark']/100
         self.performance_data['Month'] = pd.to_datetime(self.performance_data['Month'])
-        self.performance_data[['Measure_Name']] = self.performance_data[['Measure_Name']].astype(str)
-        self.comparison_vaues[['Measure_Name']] = self.comparison_vaues[['Measure_Name']].astype(str)
+        self.performance_data[['measure']] = self.performance_data[['measure']].astype(str)
+        self.comparison_vaues[['measure']] = self.comparison_vaues[['measure']].astype(str)
         
-        self.performance_data.Measure_Name = self.performance_data.Measure_Name.str.encode('utf-8')
-        self.comparison_vaues.Measure_Name = self.comparison_vaues.Measure_Name.str.encode('utf-8')
-        self.data=self.performance_data.merge(self.comparison_vaues, how='outer', on=['Measure_Name'])
-        self.data["Measure_Name"]=self.data["Measure_Name"].str.decode(encoding="UTF-8")
+        self.performance_data.measure = self.performance_data.measure.str.encode('utf-8')
+        self.comparison_vaues.measure = self.comparison_vaues.measure.str.encode('utf-8')
+        self.data=self.performance_data.merge(self.comparison_vaues, how='outer', on=['measure'])
+        self.data["measure"]=self.data["measure"].str.decode(encoding="UTF-8")
         self.data[['peer_average_comparator']] = self.data[['peer_average_comparator']].astype(float)
         self.data[['peer_90th_percentile_benchmark']] = self.data[['peer_90th_percentile_benchmark']].astype(float)
         self.data[['peer_75th_percentile_benchmark']] = self.data[['peer_75th_percentile_benchmark']].astype(float)
         self.data[['Performance_Rate']] = self.data[['Performance_Rate']].astype(float)
         self.data[['goal_comparison_value']] = self.data[['goal_comparison_value']].astype(float)
-        idx= self.data.groupby(['Measure_Name'])['Month'].transform(max) == self.data['Month']
+        idx= self.data.groupby(['measure'])['Month'].transform(max) == self.data['Month']
         self.latest_measure = self.data[idx]
         
         
@@ -56,9 +56,9 @@ class Prepare_data_annotate:
 
     def prepare_data_measure_name(self,measure_name:str,**goal_dicts):
         global measure_data1
-        measure_data1 = self.latest_measure[self.latest_measure['Measure_Name'] == measure_name]
+        measure_data1 = self.latest_measure[self.latest_measure['measure'] == measure_name]
         global measure_data2
-        measure_data2 = self.data[self.data['Measure_Name'] == measure_name]
+        measure_data2 = self.data[self.data['measure'] == measure_name]
         ac=BNode(measure_name)
         global comparator_bnode
         comparator_bnode=goal_dicts.get(ac)

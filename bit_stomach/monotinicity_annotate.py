@@ -9,21 +9,21 @@ def monotonic_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     s14=s13
     p14=URIRef('http://purl.obolibrary.org/obo/RO_0000091')
     latest_measure_df=latest_measure_df.reset_index(drop=True)
-    idx= latest_measure_df.groupby(['Measure_Name'])['Month'].nlargest(3) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(3) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
     m1=latest_measure_df["Performance_Rate"][1]-latest_measure_df["Performance_Rate"][0]
     m2=latest_measure_df["Performance_Rate"][2]-latest_measure_df["Performance_Rate"][1]
     if(m1>0 and m2 <0)or(m1<0 and m2>0):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         o14=BNode() 
         input_graph.add((s14,p14,o14))
         input_graph=annotate_non_monotonic_trend(input_graph,o14,ac,av)
         
     if(m1>0 and m2>0) or (m1<0 and m2<0):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         o14=BNode()
         if(m1>0 and m2>0):

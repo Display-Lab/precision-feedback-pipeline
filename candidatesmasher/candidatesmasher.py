@@ -128,11 +128,11 @@ class CandidateSmasher:
         
         new = pd.DataFrame.from_dict(self.goal_dicts, orient ='index')
         new= new.reset_index()
-        new = new.rename({"index":"Measure_Name"}, axis=1)
+        new = new.rename({"index":"measure"}, axis=1)
         new = new.rename({0:"Comparator_Node"}, axis=1)
         self.goal_types=[]
         for rowIndex, row in new.iterrows(): 
-            s1=row["Measure_Name"]
+            s1=row["measure"]
             o2=row["Comparator_Node"]
             node_type1=[]
             for  s81,p81,o81 in self.a.triples((None, None,o2)):
@@ -153,11 +153,11 @@ class CandidateSmasher:
 
         new1 = pd.DataFrame.from_dict(self.top_10_dicts, orient ='index')
         new1= new1.reset_index()
-        new1 = new1.rename({"index":"Measure_Name"}, axis=1)
+        new1 = new1.rename({"index":"measure"}, axis=1)
         new1 = new1.rename({0:"Comparator_Node"}, axis=1)
         self.top_10_types=[]
         for rowIndex, row in new1.iterrows(): 
-            s1=row["Measure_Name"]
+            s1=row["measure"]
             o2=row["Comparator_Node"]
             node_type2=[]
             for  s81,p81,o81 in self.a.triples((None, None,o2)):
@@ -179,12 +179,12 @@ class CandidateSmasher:
         
         new2 = pd.DataFrame.from_dict(self.top_25_dicts, orient ='index')
         new2= new2.reset_index()
-        new2 = new2.rename({"index":"Measure_Name"}, axis=1)
+        new2 = new2.rename({"index":"measure"}, axis=1)
         new2 = new2.rename({0:"Comparator_Node"}, axis=1)
         # new2.to_csv("top_25.csv")
         self.top_25_types=[]
         for rowIndex, row in new2.iterrows(): 
-            s1=row["Measure_Name"]
+            s1=row["measure"]
             o2=row["Comparator_Node"]
             node_type3=[]
             for  s81,p81,o81 in self.a.triples((None, None,o2)):
@@ -208,7 +208,7 @@ class CandidateSmasher:
         self.goal_types=pd.DataFrame(self.goal_types)
         self.top_10_types=pd.DataFrame(self.top_10_types)
         self.top_25_types=pd.DataFrame(self.top_25_types)
-        self.df_graph = self.df_graph.rename({0:"Measure_Name"}, axis=1)
+        self.df_graph = self.df_graph.rename({0:"measure"}, axis=1)
         self.df_graph = self.df_graph.rename({1:"Comparator_Node1"}, axis=1)
         self.df_graph = self.df_graph.rename({2:"graph_type1"}, axis=1)
         self.df_graph = self.df_graph.rename({3:"graph_type2"}, axis=1)
@@ -223,7 +223,7 @@ class CandidateSmasher:
         self.df_graph = self.df_graph.drop('comparator_type1', axis=1)
         # self.df_graph.to_csv("graph_df.csv")
         # self.df_graph1=pd.DataFrame(self.graph_type_list1)
-        self.goal_types = self.goal_types.rename({0:"Measure_Name"}, axis=1)
+        self.goal_types = self.goal_types.rename({0:"measure"}, axis=1)
         self.goal_types = self.goal_types.rename({1:"Comparator_Node"}, axis=1)
         self.goal_types = self.goal_types.rename({2:"graph_type1"}, axis=1)
         self.goal_types = self.goal_types.rename({3:"graph_type2"}, axis=1)
@@ -238,7 +238,7 @@ class CandidateSmasher:
         # self.goal_types.to_csv("goal_types.csv")
 
 
-        self.top_10_types = self.top_10_types.rename({0:"Measure_Name"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({0:"measure"}, axis=1)
         self.top_10_types = self.top_10_types.rename({1:"Comparator_Node111"}, axis=1)
         self.top_10_types = self.top_10_types.rename({2:"graph_type111"}, axis=1)
         self.top_10_types = self.top_10_types.rename({3:"graph_type211"}, axis=1)
@@ -253,7 +253,7 @@ class CandidateSmasher:
         self.top_10_types = self.top_10_types.drop('comparator_type111', axis=1)
         # self.top_10_types.to_csv("top_10_types.csv")
 
-        self.top_25_types = self.top_25_types.rename({0:"Measure_Name"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({0:"measure"}, axis=1)
         self.top_25_types = self.top_25_types.rename({1:"Comparator_Node11"}, axis=1)
         self.top_25_types = self.top_25_types.rename({2:"graph_type11"}, axis=1)
         self.top_25_types = self.top_25_types.rename({3:"graph_type21"}, axis=1)
@@ -269,7 +269,7 @@ class CandidateSmasher:
         # self.top_25_types.to_csv("top_25_types.csv")
 
         # dfs = [self.df_graph, self.top_10_types, self.top_25_types]
-        dfs=self.df_graph.merge(self.top_10_types,on='Measure_Name').merge(self.top_25_types,on='Measure_Name')
+        dfs=self.df_graph.merge(self.top_10_types,on='measure').merge(self.top_25_types,on='measure')
         dfs["comparator_type"]="peers"
         # dfs.to_csv("dfs.csv")
         self.df_merged = pd.concat([dfs, self.goal_types], ignore_index=True, sort=False)
@@ -370,7 +370,7 @@ class CandidateSmasher:
             for rowIndex1, row1 in self.df_merged.iterrows():
                 # print(row1)
                 # print(row1["comparator_type"])
-                measure_name=row1["Measure_Name"]
+                measure_name=row1["measure"]
                 # oxcv=BNode(row1["Comparator_Node"][0])
         
                 oq=BNode()

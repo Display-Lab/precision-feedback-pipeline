@@ -19,7 +19,7 @@ def goal_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['goal_comparison_value']
     
     if (gap_size[0]!= 0):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         goal_gap_size=gap_size[0]
         goal_gap_size=Literal(goal_gap_size)
@@ -105,7 +105,7 @@ def peer_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_average_comparator']
     
     if (gap_size[0]!= 0):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         goal_gap_size=gap_size[0]
         goal_gap_size=Literal(goal_gap_size)
@@ -152,7 +152,7 @@ def top_10_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_90th_percentile_benchmark']
     
     if (gap_size[0]!= 0):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         goal_gap_size=gap_size[0]
         goal_gap_size=Literal(goal_gap_size)
@@ -196,7 +196,7 @@ def top_25_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_75th_percentile_benchmark']
     
     if (gap_size[0]!= 0):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         goal_gap_size=gap_size[0]
         goal_gap_size=Literal(goal_gap_size)

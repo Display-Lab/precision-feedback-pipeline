@@ -121,14 +121,14 @@ class Bit_stomach:
         
 #socialdf=pd.DataFrame(social_comparison_dicts.items())
         goaldf1=pd.DataFrame(self.goal_comparison_dicts.items())
-        goaldf1.columns =['Measure_Name', 'goal_comparison_value']
+        goaldf1.columns =['measure', 'goal_comparison_value']
         
         pr=Prepare_data_annotate(a,self.performance_data_df,goaldf1)
 
         measure_list=[]
-        self.performance_data_df["Measure_Name"]=self.performance_data_df["Measure_Name"].str.decode(encoding="UTF-8")
+        self.performance_data_df["measure"]=self.performance_data_df["measure"].str.decode(encoding="UTF-8")
 
-        measure_list=self.performance_data_df["Measure_Name"].drop_duplicates()
+        measure_list=self.performance_data_df["measure"].drop_duplicates()
         
         for index, element in enumerate(measure_list):
             measure_name=element

@@ -34,8 +34,8 @@ class Pictoralist():
             # print(self.display_format)
         if self.display_format == "bar chart":
             # print(self.performance_data)
-            self.graph_df = self.performance_data[self.performance_data['Measure_Name'] ==  self.measure_name]
-            idx= self.graph_df.groupby(['Measure_Name'])['Month'].nlargest(4) .reset_index()
+            self.graph_df = self.performance_data[self.performance_data['measure'] ==  self.measure_name]
+            idx= self.graph_df.groupby(['measure'])['Month'].nlargest(4) .reset_index()
             l=idx['level_1'].tolist()
             self.last_4_measure =  self.performance_data[self.performance_data.index.isin(l)]
             # print(self.last_4_measure)
@@ -101,7 +101,7 @@ class Pictoralist():
 
 
         if self.display_format == 'line graph':
-            self.graph_df = self.performance_data[self.performance_data['Measure_Name'] ==  self.measure_name]
+            self.graph_df = self.performance_data[self.performance_data['measure'] ==  self.measure_name]
             self.graph_df['Date'] = pd.to_datetime(self.graph_df['Month'])
             self.graph_df['year']= pd.DatetimeIndex(self.graph_df['Month']).year
             self.graph_df['month1'] = pd.DatetimeIndex(self.graph_df['Month']).month

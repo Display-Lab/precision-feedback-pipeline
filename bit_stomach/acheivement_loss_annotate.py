@@ -16,13 +16,13 @@ def goal_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator_b
     goal_gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['goal_comparison_value']
     latest_measure_df["goal_gap_size"]=goal_gap_size
     back_up_df=latest_measure_df
-    idx= latest_measure_df.groupby(['Measure_Name'])['Month'].nlargest(2) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(2) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
  
     if((latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         o14=BNode() 
         event="loss"
@@ -30,7 +30,7 @@ def goal_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator_b
         input_graph.add((s14,p14,o14))
         input_graph=annotate_loss(input_graph,o14,ac,av,number)
     if((latest_measure_df["goal_gap_size"][1]>=0 and latest_measure_df["goal_gap_size"][0]<0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         o14=BNode() 
         event="acheivement"
@@ -59,7 +59,7 @@ def annotate_loss(a,s16,measure_Name,o16,number):
 
 def annotate_acheivement(a,s16,measure_Name,o16,number):
     p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/psdo_0000112')
+    o15=URIRef('http://purl.obolibrary.org/obo/psdao_0000112')
     a.add((s16,p15,o15))
     p16=URIRef('http://example.com/slowmo#RegardingComparator')
     a.add((s16,p16,o16))
@@ -80,14 +80,14 @@ def peer_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator_b
     goal_gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_average_comparator']
     latest_measure_df["goal_gap_size"]=goal_gap_size
     back_up_df=latest_measure_df
-    idx= latest_measure_df.groupby(['Measure_Name'])['Month'].nlargest(2) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(2) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
     
     # print(latest_measure_df)
     if((latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         o14=BNode() 
         event="loss"
@@ -95,7 +95,7 @@ def peer_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator_b
         input_graph.add((s14,p14,o14))
         input_graph=annotate_loss(input_graph,o14,ac,av,number)
     if((latest_measure_df["goal_gap_size"][1]>=0 and latest_measure_df["goal_gap_size"][0]<0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         
         av=comparator_bnode
         o14=BNode() 
@@ -118,14 +118,14 @@ def top_10_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator
     goal_gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_90th_percentile_benchmark']
     latest_measure_df["goal_gap_size"]=goal_gap_size
     back_up_df=latest_measure_df
-    idx= latest_measure_df.groupby(['Measure_Name'])['Month'].nlargest(2) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(2) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
     
     # print(latest_measure_df)
     if((latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         o14=BNode() 
         event="loss"
@@ -133,7 +133,7 @@ def top_10_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator
         input_graph.add((s14,p14,o14))
         input_graph=annotate_loss(input_graph,o14,ac,av,number)
     if((latest_measure_df["goal_gap_size"][1]>=0 and latest_measure_df["goal_gap_size"][0]<0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         
         av=comparator_bnode
         o14=BNode() 
@@ -155,14 +155,14 @@ def top_25_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator
     goal_gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_75th_percentile_benchmark']
     latest_measure_df["goal_gap_size"]=goal_gap_size
     back_up_df=latest_measure_df
-    idx= latest_measure_df.groupby(['Measure_Name'])['Month'].nlargest(2) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(2) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
     
     # print(latest_measure_df)
     if((latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         o14=BNode() 
         event="loss"
@@ -170,7 +170,7 @@ def top_25_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator
         input_graph.add((s14,p14,o14))
         input_graph=annotate_loss(input_graph,o14,ac,av,number)
     if((latest_measure_df["goal_gap_size"][1]>=0 and latest_measure_df["goal_gap_size"][0]<0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         
         av=comparator_bnode
         o14=BNode() 

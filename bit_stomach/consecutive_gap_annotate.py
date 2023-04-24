@@ -14,13 +14,13 @@ def goal_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bnode
     goal_gap_size=latest_measure_df['goal_comparison_value']-latest_measure_df['Performance_Rate']
     latest_measure_df["goal_gap_size"]=goal_gap_size
     back_up_df=latest_measure_df
-    idx= latest_measure_df.groupby(['Measure_Name'])['Month'].nlargest(3) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(3) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
  
     if((latest_measure_df["goal_gap_size"][2]>0 and latest_measure_df["goal_gap_size"][1]>0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         o14=BNode() 
         event="positive"
@@ -28,7 +28,7 @@ def goal_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bnode
         input_graph.add((s14,p14,o14))
         input_graph=annotate_consecutive_goal_positive_gap(input_graph,o14,ac,av,number)
     if((latest_measure_df["goal_gap_size"][2]<0 and latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]<0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         event="negative"
         number=find_number(back_up_df,event)
@@ -49,14 +49,14 @@ def peer_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bnode
     goal_gap_size=latest_measure_df['peer_average_comparator']-latest_measure_df['Performance_Rate']
     latest_measure_df["goal_gap_size"]=goal_gap_size
     back_up_df=latest_measure_df
-    idx= latest_measure_df.groupby(['Measure_Name'])['Month'].nlargest(3) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(3) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
     # print(latest_measure_df)
     # print(latest_measure_df["goal_gap_size"][1])
     if((latest_measure_df["goal_gap_size"][2]>0 and latest_measure_df["goal_gap_size"][1]>0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         o14=BNode() 
         event="positive"
@@ -64,7 +64,7 @@ def peer_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bnode
         input_graph.add((s14,p14,o14))
         input_graph=annotate_consecutive_peer_positive_gap(input_graph,o14,ac,av,number)
     if((latest_measure_df["goal_gap_size"][2]<0 and latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]<0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         event="negative"
         number=find_number(back_up_df,event)
@@ -85,14 +85,14 @@ def top_10_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bno
     goal_gap_size=latest_measure_df['peer_90th_percentile_benchmark']-latest_measure_df['Performance_Rate']
     latest_measure_df["goal_gap_size"]=goal_gap_size
     back_up_df=latest_measure_df
-    idx= latest_measure_df.groupby(['Measure_Name'])['Month'].nlargest(3) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(3) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
     # print(latest_measure_df)
     # print(latest_measure_df["goal_gap_size"][1])
     if((latest_measure_df["goal_gap_size"][2]>0 and latest_measure_df["goal_gap_size"][1]>0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         o14=BNode() 
         event="positive"
@@ -100,7 +100,7 @@ def top_10_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bno
         input_graph.add((s14,p14,o14))
         input_graph=annotate_consecutive_peer_positive_gap(input_graph,o14,ac,av,number)
     if((latest_measure_df["goal_gap_size"][2]<0 and latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]<0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         event="negative"
         number=find_number(back_up_df,event)
@@ -120,14 +120,14 @@ def top_25_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bno
     goal_gap_size=latest_measure_df['peer_75th_percentile_benchmark']-latest_measure_df['Performance_Rate']
     latest_measure_df["goal_gap_size"]=goal_gap_size
     back_up_df=latest_measure_df
-    idx= latest_measure_df.groupby(['Measure_Name'])['Month'].nlargest(3) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(3) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
     # print(latest_measure_df)
     # print(latest_measure_df["goal_gap_size"][1])
     if((latest_measure_df["goal_gap_size"][2]>0 and latest_measure_df["goal_gap_size"][1]>0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         o14=BNode() 
         event="positive"
@@ -135,7 +135,7 @@ def top_25_consecutive_annotate(input_graph,s13,latest_measure_df,comparator_bno
         input_graph.add((s14,p14,o14))
         input_graph=annotate_consecutive_peer_positive_gap(input_graph,o14,ac,av,number)
     if((latest_measure_df["goal_gap_size"][2]<0 and latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]<0)==True):
-        ac=BNode(latest_measure_df["Measure_Name"][0])
+        ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
         event="negative"
         number=find_number(back_up_df,event)
