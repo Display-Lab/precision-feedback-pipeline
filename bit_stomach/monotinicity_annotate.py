@@ -9,7 +9,7 @@ def monotonic_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     s14=s13
     p14=URIRef('http://purl.obolibrary.org/obo/RO_0000091')
     latest_measure_df=latest_measure_df.reset_index(drop=True)
-    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(3) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['month'].nlargest(3) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)

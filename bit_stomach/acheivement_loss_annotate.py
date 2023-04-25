@@ -16,7 +16,7 @@ def goal_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator_b
     goal_gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['goal_comparison_value']
     latest_measure_df["goal_gap_size"]=goal_gap_size
     back_up_df=latest_measure_df
-    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(2) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['month'].nlargest(2) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
@@ -80,7 +80,7 @@ def peer_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator_b
     goal_gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_average_comparator']
     latest_measure_df["goal_gap_size"]=goal_gap_size
     back_up_df=latest_measure_df
-    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(2) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['month'].nlargest(2) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
@@ -118,7 +118,7 @@ def top_10_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator
     goal_gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_90th_percentile_benchmark']
     latest_measure_df["goal_gap_size"]=goal_gap_size
     back_up_df=latest_measure_df
-    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(2) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['month'].nlargest(2) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
@@ -155,7 +155,7 @@ def top_25_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator
     goal_gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_75th_percentile_benchmark']
     latest_measure_df["goal_gap_size"]=goal_gap_size
     back_up_df=latest_measure_df
-    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(2) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['month'].nlargest(2) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)

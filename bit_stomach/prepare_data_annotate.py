@@ -26,15 +26,15 @@ class Prepare_data_annotate:
         self.comparison_vaues=comparison_values
         performance_rate =[]
         for rowIndex, row in self.performance_data.iterrows():
-            if (row['Passed_Count']==0 and row['Denominator']==0):
+            if (row['passed_count']==0 and row['denominator']==0):
                 performance_rate.append(0.0)
             else:
-                performance_rate.append(row['Passed_Count']/row['Denominator'])
+                performance_rate.append(row['passed_count']/row['denominator'])
         self.performance_data['Performance_Rate']=performance_rate
         self.performance_data['peer_average_comparator']=self.performance_data['peer_average_comparator']/100
         self.performance_data['peer_90th_percentile_benchmark']=self.performance_data['peer_90th_percentile_benchmark']/100
         self.performance_data['peer_75th_percentile_benchmark']=self.performance_data['peer_75th_percentile_benchmark']/100
-        self.performance_data['Month'] = pd.to_datetime(self.performance_data['Month'])
+        self.performance_data['month'] = pd.to_datetime(self.performance_data['month'])
         self.performance_data[['measure']] = self.performance_data[['measure']].astype(str)
         self.comparison_vaues[['measure']] = self.comparison_vaues[['measure']].astype(str)
         
@@ -47,7 +47,7 @@ class Prepare_data_annotate:
         self.data[['peer_75th_percentile_benchmark']] = self.data[['peer_75th_percentile_benchmark']].astype(float)
         self.data[['Performance_Rate']] = self.data[['Performance_Rate']].astype(float)
         self.data[['goal_comparison_value']] = self.data[['goal_comparison_value']].astype(float)
-        idx= self.data.groupby(['measure'])['Month'].transform(max) == self.data['Month']
+        idx= self.data.groupby(['measure'])['month'].transform(max) == self.data['month']
         self.latest_measure = self.data[idx]
         
         

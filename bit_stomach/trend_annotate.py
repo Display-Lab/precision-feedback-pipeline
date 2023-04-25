@@ -16,7 +16,7 @@ def trend_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     s14=s13
     p14=URIRef('http://purl.obolibrary.org/obo/RO_0000091')
     latest_measure_df=latest_measure_df.reset_index(drop=True)
-    idx= latest_measure_df.groupby(['measure'])['Month'].nlargest(2) .reset_index()
+    idx= latest_measure_df.groupby(['measure'])['month'].nlargest(2) .reset_index()
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
@@ -33,10 +33,10 @@ def trend_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
         #input_graph=annotate_goal_negative_trend(input_graph,o14,ac,av)
         trend_sign1="negative"
         number=find_number(back_up_df,trend_sign1)
-        idx= back_up_df.groupby(['measure'])['Month'].nlargest(number) .reset_index()
+        idx= back_up_df.groupby(['measure'])['month'].nlargest(number) .reset_index()
         l=idx['level_1'].tolist()
         measure_df =  back_up_df[back_up_df.index.isin(l)]
-        out = latest_measure_df.groupby('measure').apply(theil_reg, xcol='Month', ycol='Performance_Rate')
+        out = latest_measure_df.groupby('measure').apply(theil_reg, xcol='month', ycol='Performance_Rate')
         df_1=out[0]
         df_1 = df_1.reset_index()
         df_1 = df_1.rename({0:"performance_trend_slope"}, axis=1)
@@ -56,10 +56,10 @@ def trend_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
         input_graph.add((s14,p14,o14))
         trend_sign1="positive"
         number=find_number(back_up_df,trend_sign1)
-        idx= back_up_df.groupby(['measure'])['Month'].nlargest(number) .reset_index()
+        idx= back_up_df.groupby(['measure'])['month'].nlargest(number) .reset_index()
         l=idx['level_1'].tolist()
         measure_df =  back_up_df[back_up_df.index.isin(l)]
-        out = latest_measure_df.groupby('measure').apply(theil_reg, xcol='Month', ycol='Performance_Rate')
+        out = latest_measure_df.groupby('measure').apply(theil_reg, xcol='month', ycol='Performance_Rate')
         df_1=out[0]
         df_1 = df_1.reset_index()
         df_1 = df_1.rename({0:"performance_trend_slope"}, axis=1)
