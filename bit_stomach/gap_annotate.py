@@ -226,6 +226,9 @@ def top_25_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
 
 def annotate_peer_comparator(a,s16,measure_Name,o16):
     p15=RDF.type
+    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000126')
+    a.add((s16,p15,o15))
+    p15=RDF.type
     o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000095')
     a.add((s16,p15,o15))
     p16=URIRef('http://example.com/slowmo#RegardingComparator')

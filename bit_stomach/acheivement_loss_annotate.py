@@ -20,7 +20,7 @@ def goal_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator_b
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
- 
+    
     if((latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
         ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
@@ -43,23 +43,32 @@ def goal_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator_b
     #print(latest_measure_df)
     return input_graph
 
-def annotate_loss(a,s16,measure_Name,o16,number):
-    p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/psdo_0000113')
-    a.add((s16,p15,o15))
-    p16=URIRef('http://example.com/slowmo#RegardingComparator')
-    a.add((s16,p16,o16))
-    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
-    o17=measure_Name
-    a.add((s16,p17,o17))
-    p18=URIRef('http://example.com/slowmo#TimeSinceLastAcheivement')
-    o18=Literal(number)
-    a.add((s16,p18,o18))
-    return a
+def annotate_loss(performer_graph,performance_content_node,measure_name_node,comparator_node,intervals):
+    
+    performer_graph.add(
+        (performance_content_node,
+        RDF.type,
+        URIRef('http://purl.obolibrary.org/obo/PSDO_0000113')))#loss content
+    
+    performer_graph.add(
+        (performance_content_node,
+         URIRef('http://example.com/slowmo#RegardingComparator'),
+         comparator_node))
+    
+    performer_graph.add(
+        (performance_content_node,
+         URIRef('http://example.com/slowmo#RegardingMeasure'),
+         measure_name_node))
+    
+    performer_graph.add(
+        (performance_content_node,
+         URIRef('http://example.com/slowmo#TimeSinceLastAcheivement'),
+         Literal(intervals)))
+    return performer_graph
 
 def annotate_acheivement(a,s16,measure_Name,o16,number):
     p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/psdao_0000112')
+    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000112')
     a.add((s16,p15,o15))
     p16=URIRef('http://example.com/slowmo#RegardingComparator')
     a.add((s16,p16,o16))
@@ -84,10 +93,10 @@ def peer_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator_b
     l=idx['level_1'].tolist()
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
-    
+   
     # print(latest_measure_df)
     if((latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
-        ac=BNode(latest_measure_df["measure"][0])
+        ac=BNode(latest_measure_df["measure"][0]) #measure name "FLUID_01"
         av=comparator_bnode
         o14=BNode() 
         event="loss"

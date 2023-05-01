@@ -274,7 +274,7 @@ class CandidateSmasher:
         # dfs.to_csv("dfs.csv")
         self.df_merged = pd.concat([dfs, self.goal_types], ignore_index=True, sort=False)
         self.df_merged =self.df_merged.fillna(0)
-        # self.df_merged.to_csv("df_merged.csv")
+        self.df_merged.to_csv("df_merged.csv")
         return self.df_merged
 
        
@@ -338,6 +338,8 @@ class CandidateSmasher:
         self.df_template_type_dicts  = self.df_template_type_dicts .rename({3:"template_type_dicts3"}, axis=1)
         if(4 in self.df_template_type_dicts.columns):
             self.df_template_type_dicts  = self.df_template_type_dicts .rename({4:"template_type_dicts4"}, axis=1)
+            self.df_template_type_dicts  = self.df_template_type_dicts .rename({5:"template_type_dicts5"}, axis=1)
+            self.df_template_type_dicts  = self.df_template_type_dicts .rename({6:"template_type_dicts6"}, axis=1)
         self.df=pd.concat([self.df_text,self.df_name_dicts,self.df_template_type_dicts], axis=1)
        
         # self.df = self.df.rename({1:"template_type_dicts1"}, axis=1)
@@ -356,7 +358,7 @@ class CandidateSmasher:
         #     self.df["template_type_dicts3"]=0
         # if "template_type_dicts4" in self.df.columns:
         #     self.df["template_type_dicts4"]=0
-        # self.df.to_csv("template.csv")
+        self.df.to_csv("template.csv")
     
         return self.df
    
@@ -372,7 +374,8 @@ class CandidateSmasher:
                 # print(row1["comparator_type"])
                 measure_name=row1["measure"]
                 # oxcv=BNode(row1["Comparator_Node"][0])
-        
+                # print(row)
+                # print(row1)
                 oq=BNode()
                 
         #print(row1)
@@ -395,6 +398,7 @@ class CandidateSmasher:
                         # self.a.add((oq,self.cp3,a26))
                         # self.a.add((oq,self.cp3,a261))
                         self.a.add((oq,RDF.type,self.cp28))
+                        
                         if(row["template_type_dicts"] != 0):
                             ov=BNode()
                             self.a.add((oq,self.cop4,ov))
@@ -417,6 +421,18 @@ class CandidateSmasher:
                         if "template_type_dicts4" in self.df.columns:
                             if (row["template_type_dicts4"] != 0):
                                 a32=URIRef(row["template_type_dicts4"])
+                                ov=BNode()
+                                self.a.add((oq,self.cop4,ov))
+                                self.a.add((ov,RDF.type,a32))
+                        if "template_type_dicts5" in self.df.columns:
+                            if (row["template_type_dicts5"] != 0):
+                                a32=URIRef(row["template_type_dicts5"])
+                                ov=BNode()
+                                self.a.add((oq,self.cop4,ov))
+                                self.a.add((ov,RDF.type,a32))
+                        if "template_type_dicts6" in self.df.columns:
+                            if (row["template_type_dicts6"] != 0):
+                                a32=URIRef(row["template_type_dicts6"])
                                 ov=BNode()
                                 self.a.add((oq,self.cop4,ov))
                                 self.a.add((ov,RDF.type,a32))

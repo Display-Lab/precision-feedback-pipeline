@@ -24,7 +24,7 @@ def process_causalpathways(causal_pathways):
     gap_comparator=[URIRef('http://purl.obolibrary.org/obo/PSDO_0000104'),URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')]
     caus_s=[]
     for s, p, o in causal_pathways.triples((None,  caus_p, None)):
-        # print(s)
+        print(s)
         caus_s.append(s)
     for x in range(len(caus_s)):
         s=caus_s[x]
@@ -47,7 +47,8 @@ def process_causalpathways(causal_pathways):
             if v[x] in  gap_comparator:
                 gap=v[x]
                 
-
+    # print(caus_type_dicts)
+    # print(gap)
     return caus_type_dicts,gap
 
 def process_spek(spek_cs,gap):
@@ -86,6 +87,8 @@ def process_spek(spek_cs,gap):
         comparator_dicts[s1]=BL
     # for k,v in comparator_dicts.items():
     #     print(k,v)
+    # print(spek_out_dicts)
+    # print(comparator_dicts)
     return spek_out_dicts,comparator_dicts
 
 def matching(caus_out_dict,spek_out_dicts,comparator_dicts):
@@ -101,6 +104,20 @@ def matching(caus_out_dict,spek_out_dicts,comparator_dicts):
     for i in range(len(fg)):
         for x in range(len (fr)):
             result =  all(elem in fr[x]  for elem in fg[i])
+            # print(fr[x])
+            # print(fg[i])
+            # result = False
+            # sdf=len(fg[i])
+            # dfg=0
+            # asd=0
+            # for asd in range(len(fr[x])):
+            #     if fr[x][asd] in fg[i]:
+            #         dfg=dfg+1
+            #     asd=asd+1
+            # if dfg==sdf:
+            #     result=True
+            # print(sdf) 
+            # print(dfg)       
             # print(result)
             if result == True:
                 for a in range(len(fz)):
@@ -111,6 +128,9 @@ def matching(caus_out_dict,spek_out_dicts,comparator_dicts):
                         for g in range(len(fz[a])):
                             if str(fr[x][f]) in comparator_list:
                                 if fr[x][f] == fz[a][g]:
+                                    # print(fr[x][f])
+                                    # print("\n")
+                                    # print(fz[a][g])
                                     result1=True
                                     
                                 if result1 == True:

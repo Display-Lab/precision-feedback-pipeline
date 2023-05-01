@@ -16,9 +16,10 @@ from requests_file import FileAdapter
 import os
 class Settings(BaseSettings):
     pathways: str = "file://"+os.path.abspath("startup/causal_pathways.json")
+    # pathways: str = "file://"+os.path.abspath("startup/social_loss.json")
     measures: str ="file://"+os.path.abspath("startup/measures.json")
+    #templates: str ="file://"+os.path.abspath("startup/lost_peer_average.json")
     templates: str ="file://"+os.path.abspath("startup/templates.json")
-   
 se =requests.Session()
 se.mount('file://',FileAdapter())
 settings = Settings()
@@ -64,7 +65,7 @@ async def createprecisionfeedback(info:Request):
     req_info1=req_info
     performance_data = req_info1["Performance_data"]
     debug=req_info1["debug"]
-    performance_data_df =pd.DataFrame (performance_data, columns = [ "Staff_Number","Measure_Name","Month","Passed_Count","Flagged_Count","Denominator","peer_average_comparator","peer_90th_percentile_benchmark","peer_75th_percentile_benchmark"])
+    performance_data_df =pd.DataFrame (performance_data, columns = [ "staff_number","Measure_Name","Month","Passed_Count","Flagged_Count","Denominator","peer_average_comparator","peer_90th_percentile_benchmark","peer_75th_percentile_benchmark"])
     performance_data_df.columns = performance_data_df.iloc[0]
     performance_data_df = performance_data_df[1:]
     
@@ -129,11 +130,11 @@ async def createprecisionfeedback(info:Request):
     
     # # print(selected_message)
     if selected_message["text"]!= "No message selected":
-    # #Runnning Pictoralist
+    # # #Runnning Pictoralist
         pc=Pictoralist(selected_message,performance_data_df)
         base64_image=pc.create_graph()
         selected_message["image"]=base64_image
-    # # '<img align="left" src="data:image/png;base64,%s">' %base64_image
+    # '<img align="left" src="data:image/png;base64,%s">' %base64_image
     ES=spek_es.serialize(format='json-ld', indent=4)
     if str(debug)=="yes":
         f = open("outputs/spek_es.json", "w")

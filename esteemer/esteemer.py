@@ -87,7 +87,7 @@ class Esteemer():
                     for s11,p11,o11 in self.spek_tp.triples((s10,p10,None)):
                         s_m["Title"]=o11
                 for s14,p14,o14 in self.spek_tp.triples((s6,RDF.type,None)):
-                    
+                    #print(o14)
                     if o14==p12:
                         s_m["Display"]="line graph"
                         sw=1

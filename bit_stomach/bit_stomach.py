@@ -24,7 +24,7 @@ class Bit_stomach:
         p=URIRef('http://example.com/slowmo#IsAboutMeasure')
         p1=URIRef("http://example.com/slowmo#WithComparator")
         p3=URIRef('http://schema.org/name')
-        o5=URIRef("http://purl.obolibrary.org/obo/PSDO_0000095")
+        o5=URIRef("http://purl.obolibrary.org/obo/PSDO_0000126")
         o55=URIRef("http://purl.obolibrary.org/obo/PSDO_0000128")
         o555=URIRef("http://purl.obolibrary.org/obo/PSDO_0000129")
         p5=RDF.type
