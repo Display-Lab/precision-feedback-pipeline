@@ -48,74 +48,21 @@
 "History":{
     "Month1": 
       {
-        "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-        "Display":"bar,line,text", 
-        "Text":"Your performance is getting worse for the measure [measure_details]",
-        "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
-        "comparison value":"0.9",
-        "Comparator Type":"goal",
-        "title":"Protective Tidal Volume, 8 mL/kg PBW",
-        "Measure Name":"PUL02"
-      },
-    "Month2":
-      {
-        "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-        "Display":"bar,line,text",
-        "Text":"Your performance is getting worse for the measure [measure_details]",
-        "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
-        "comparison value":null,
-        "Comparator Type":"peers",
-        "title":"PONV Prophylaxis: Pediatrics",
-        "Measure Name":"PONV04"
-      },
-      "Month3":
-      {
-        "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-        "Display":"bar,line,text",
-        "Text":"Your performance is getting worse for the measure [measure_details]",
-        "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
-        "causal_pathways1":null,
-        "comparison value":null,
-        "Comparator Type":"peers",
-        "title":"Minimizing Colloid Use (Cardiac)",
-        "Measure Name":"FLUID01C"
-      },
-      "Month4":
-      {
-        "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-        "Display":"bar,line,text",
-        "Text":"Your performance is getting worse for the measure [measure_details]",
-        "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
-        "causal_pathways1":null,
-        "comparison value":"0.9",
-        "Comparator Type":"goal",
-        "title":"PONV Prophylaxis: Pediatrics",
-        "Measure Name":"PONV04"
-      },
-        "Month5":
-      {
-        "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-        "Display":"bar,line,text",
-        "Text":"Your performance is getting worse for the measure [measure_details]",
-        "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
-        "causal_pathways1":null,
-        "comparison value":"0.9",
-        "Comparator Type":"goal",
-        "title":"Train of Four Taken",
-        "Measure Name":"NMB01"
-      },
-      "Month6":
-      {
-        "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-        "Display":"line",
-        "Text":"Your performance dropped consecutively below the goal",
-        "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
-        "causal_pathways01":null,
-        "comparison value":"0.9",
-        "Comparator Type":"goal",
-        "title":"Low Fresh Gas Flow",
-        "Measure Name":"AKI01"
-      }
+        "staff_number": 30
+        "selected_candidate": {
+           "message_template": "https://repo.metadatacenter.org/template-instances/33412958-7985-43c2-ba21-0c35b2b4ead1",
+            "has_disposition": ["positive gap content"]
+            "has_moderator": ["positive trend"]
+            "display": "line graph 12-month",
+            "measure": "SUS-04",
+            "acceptable_by": ["social gain", "social better"]
+            } 
+        "performance_month": "2023-03",
+        "message_generated_datetime": "2023-04-23 12:02:03",
+        "pfkb_version": "1.0.1",
+        "pfp_version": "1.2.2",
+        "email_text_html": "<p>Congratulations on your high performance for SUS-04: Fresh Gas Flow, less than or equal to 2L/min. Your performance was 96%, above the Top 10% peer benchmark of 94%.</p> <p>More details about how the measure SUS-04 is calculated <a href='[insert link here]'> are available here</a>. Details about your operative cases are available in your <a href='[insert link here]'> clinical quality dashboard</a>.</p>",
+       }
 },
 "Preferences":{
     "Utilities": {
