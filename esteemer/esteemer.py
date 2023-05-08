@@ -77,6 +77,7 @@ class Esteemer():
                 s_m["text"] = o2
             for s9,p9,o9 in self.spek_tp.triples((s,p8,None)):
                 s_m["Comparator Type"] = o9
+                
             
 
             for s5,p5,o5 in self.spek_tp.triples((s,p3,None)):

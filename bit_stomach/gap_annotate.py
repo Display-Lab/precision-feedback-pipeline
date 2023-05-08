@@ -113,6 +113,7 @@ def peer_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
         o14=BNode() 
         input_graph.add((s14,p14,o14))
         input_graph=annotate_peer_comparator(input_graph,o14,ac,av)
+        input_graph=annotate_peer_average_comparator(input_graph,o14,ac,av)
         o14=BNode() 
         input_graph.add((s14,p14,o14))
         input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
@@ -129,6 +130,8 @@ def peer_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     
 
     return input_graph
+
+
 
 def annotate_top_10_percentile(a,s16,measure_Name,o16):
     p15=RDF.type
@@ -160,12 +163,13 @@ def top_10_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
         o14=BNode() 
         input_graph.add((s14,p14,o14))
         input_graph=annotate_peer_comparator(input_graph,o14,ac,av)
+        input_graph=annotate_peer_average_comparator(input_graph,o14,ac,av)
         o14=BNode() 
         input_graph.add((s14,p14,o14))
         input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
         # o14=BNode()
         # input_graph.add((s14,p14,o14))
-        # input_graph=annotate_top_10_percentile(input_graph,o14,ac,av)
+        input_graph=annotate_top_10_percentile(input_graph,o14,ac,av)
         if(latest_measure_df['peer_90th_percentile_benchmark'][0]<=latest_measure_df['Performance_Rate'][0]):
             o14=BNode() 
             input_graph.add((s14,p14,o14))
@@ -204,12 +208,13 @@ def top_25_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
         o14=BNode() 
         input_graph.add((s14,p14,o14))
         input_graph=annotate_peer_comparator(input_graph,o14,ac,av)
+        input_graph=annotate_peer_average_comparator(input_graph,o14,ac,av)
         o14=BNode() 
         input_graph.add((s14,p14,o14))
         input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
         # o14=BNode()
         # input_graph.add((s14,p14,o14))
-        # input_graph=annotate_top_25_percentile(input_graph,o14,ac,av)
+        input_graph=annotate_top_25_percentile(input_graph,o14,ac,av)
         if(latest_measure_df['peer_75th_percentile_benchmark'][0]<=latest_measure_df['Performance_Rate'][0]):
             o14=BNode() 
             input_graph.add((s14,p14,o14))
@@ -226,10 +231,17 @@ def top_25_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
 
 def annotate_peer_comparator(a,s16,measure_Name,o16):
     p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000126')
-    a.add((s16,p15,o15))
-    p15=RDF.type
     o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000095')
+    a.add((s16,p15,o15))
+    p16=URIRef('http://example.com/slowmo#RegardingComparator')
+    a.add((s16,p16,o16))
+    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
+    o17=measure_Name
+    a.add((s16,p17,o17))
+    return a
+def annotate_peer_average_comparator(a,s16,measure_Name,o16):
+    p15=RDF.type
+    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000126')
     a.add((s16,p15,o15))
     p16=URIRef('http://example.com/slowmo#RegardingComparator')
     a.add((s16,p16,o16))

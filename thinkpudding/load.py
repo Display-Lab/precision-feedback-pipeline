@@ -98,7 +98,7 @@ def matching(caus_out_dict,spek_out_dicts,comparator_dicts):
     fz=list(comparator_dicts.values())
     accept_ids=[]
     bnodes=[]
-    comparator_list=["http://purl.obolibrary.org/obo/PSDO_0000128","http://purl.obolibrary.org/obo/PSDO_0000129"]
+    comparator_list=["http://purl.obolibrary.org/obo/PSDO_0000128","http://purl.obolibrary.org/obo/PSDO_0000129","http://purl.obolibrary.org/obo/PSDO_0000126"]
 
     
     for i in range(len(fg)):
@@ -128,10 +128,12 @@ def matching(caus_out_dict,spek_out_dicts,comparator_dicts):
                         for g in range(len(fz[a])):
                             if str(fr[x][f]) in comparator_list:
                                 if fr[x][f] == fz[a][g]:
+                                    ab= fr[x].count(fr[x][f])
+                                    if ab==2:
                                     # print(fr[x][f])
                                     # print("\n")
                                     # print(fz[a][g])
-                                    result1=True
+                                        result1=True
                                     
                                 if result1 == True:
                                     l=[k for k,v in spek_out_dicts.items() if v == fr[x]]

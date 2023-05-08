@@ -169,7 +169,7 @@ def top_25_acheivementloss_annotate(input_graph,s13,latest_measure_df,comparator
     latest_measure_df =  latest_measure_df[latest_measure_df.index.isin(l)]
     latest_measure_df = latest_measure_df.reset_index(drop=True)
     
-    # print(latest_measure_df)
+    #print(latest_measure_df)
     if((latest_measure_df["goal_gap_size"][1]<0 and latest_measure_df["goal_gap_size"][0]>=0)==True):
         ac=BNode(latest_measure_df["measure"][0])
         av=comparator_bnode
