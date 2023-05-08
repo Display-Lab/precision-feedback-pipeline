@@ -66,26 +66,23 @@
 },
 "Preferences":{
     "Utilities": {
-    "Message_Format": 
+    "Motivating_information": 
       {
-        "1": "0.0",
-        "2": "0.1",
-        "16": "7.5",
-        "24": "9.4",
-        "18": "11.3",
-        "11": "13.2",
-        "22": "15.1" ,
-        "14": "22.6" ,
-        "21": "62.3" ,
-        "5":"0.2",
-        "15":"4.0",
-        "4":"0.9"
+        "social_better": -5.97766,
+        "social_gain":	-2.92114,
+        "social_stayed_better":	-12.76936,
+        "social_worse":	-0.05277,
+        "social_approach":	-0.24384,
+        "social_loss":	2.72075,
+        "improving":	-0.26266,
+        "worsening":	1.06977,
+        "social_stayed_worse":	9.97743
       },
-    "Display_Format":
+    "Display_format":
       {
-        "short_sentence_with_no_chart": "0.0",
-        "bar": "37.0",
-        "line": "0.0"
+        "text-only": "0.0",
+        "bar_chart": "37.0",
+        "line_chart": "0.0"
       }    
   }
 },
