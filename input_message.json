@@ -18,72 +18,143 @@
     "has_part": "http://purl.obolibrary.org/obo/bfo#BFO_0000051",
     "has_disposition": "http://purl.obolibrary.org/obo/RO_0000091"
   },
+
 "Performance_data":[
-    ["staff_number","measure","month","passed_count","flagged_count","denominator","peer_average_comparator","peer_90th_percentile_benchmark","peer_75th_percentile_benchmark", "MPOG_goal"],
-    [1,"SUS04","2022-02-01",5,3,8,99,99,99,90],
-    [1,"SUS04","2022-03-01",8,2,10,90,95,93,90],
-    [1,"SUS04","2022-04-01",14,2,16,92,98,95,90],
-    [1,"SUS04","2022-05-01",7,2,9,93,99,96,90],
-    [1,"SUS04","2022-06-01",3,1,4,94,99,95,90],
-    [1,"SUS04","2022-07-01",11,3,14,95,100,97,90],
-    [1,"SUS04","2022-08-01",5,2,7,100,100,100,90],
-    [1,"SUS04","2022-09-01",12,3,15,98,97,96,90],
-    [1,"SUS04","2022-10-01",11,2,13,91,95,93,90],
-    [1,"SUS04","2022-11-01",39,1,40,94,96,95,90],
-    [1,"SUS04","2022-12-01",42,3,45,94,95,94,90],
-    [1,"SUS04","2023-01-01",35,0,35,90,99,96,90],
-    [1,"SUS01","2022-02-01",5,3,8,99,99,99,90],
-    [1,"SUS01","2022-03-01",8,2,10,90,95,93,90],
-    [1,"SUS01","2022-04-01",14,2,16,92,98,95,90],
-    [1,"SUS01","2022-05-01",7,2,9,93,99,96,90],
-    [1,"SUS01","2022-06-01",3,1,4,94,99,95,90],
-    [1,"SUS01","2022-07-01",11,3,14,95,100,97,90],
-    [1,"SUS01","2022-08-01",5,2,7,100,100,100,90],
-    [1,"SUS01","2022-09-01",12,3,15,98,97,96,90],
-    [1,"SUS01","2022-10-01",11,2,13,91,95,93,90],
-    [1,"SUS01","2022-11-01",39,1,40,94,96,95,90],
-    [1,"SUS01","2022-12-01",42,3,45,94,95,94,90],
-    [1,"SUS01","2023-01-01",35,0,35,90,99,96,90]
+    ["staff_number"	,"measure","month","passed_count",	"flagged_count","denominator","peer_average_comparator","peer_90th_percentile_benchmark","peer_75th_percentile_benchmark"],
+    [1,"SUS04","2022/02/01",5,3,8,99,99,99  ],
+    [1,"SUS04","2022/03/01",8,2,10,90,95,93  ],
+    [1,"SUS04","2022/04/01",14,2,16,92,98,95  ],
+    [1,"SUS04","2022/05/01",7,2,9,93,99,96  ],
+    [1,"SUS04","2022/06/01",3,1,4,94,99,95  ],
+    [1,"SUS04","2022/07/01",11,3,14,95,100,97 ],
+    [1,"SUS04","2022/08/01",5,2,7,100,100,100 ],
+    [1,"SUS04","2022/09/01",12,3,15,98,97,96  ],
+    [1,"SUS04","2022/10/01",11,2,13,91,95,93  ],
+    [1,"SUS04","2022/11/01",39,1,40,94,96, 95 ],
+    [1,"SUS04","2022/12/01",37,1,38,85,95,89 ],
+    [1,"SUS04","2023/01/01",14,1,15,87,96,93]
+    
   ],
 "History":{
     "Month1": 
       {
-        "staff_number": 30
-        "selected_candidate": {
-           "message_template": "https://repo.metadatacenter.org/template-instances/33412958-7985-43c2-ba21-0c35b2b4ead1",
-            "has_disposition": ["positive gap content"]
-            "has_moderator": ["positive trend"]
-            "display": "line graph 12-month",
-            "measure": "SUS-04",
-            "acceptable_by": ["social gain", "social better"]
-            } 
-        "performance_month": "2023-03",
-        "message_generated_datetime": "2023-04-23 12:02:03",
-        "pfkb_version": "1.0.1",
-        "pfp_version": "1.2.2",
-        "email_text_html": "<p>Congratulations on your high performance for SUS-04: Fresh Gas Flow, less than or equal to 2L/min. Your performance was 96%, above the Top 10% peer benchmark of 94%.</p> <p>More details about how the measure SUS-04 is calculated <a href='[insert link here]'> are available here</a>. Details about your operative cases are available in your <a href='[insert link here]'> clinical quality dashboard</a>.</p>",
-       }
+        
+        "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
+        "Display":"bar,line,text",
+        
+        "Text":"Your performance is getting worse for the measure [measure_details]",
+        "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
+        "comparison value":"0.9",
+        "Comparator Type":"goal",
+        "title":"Protective Tidal Volume, 8 mL/kg PBW",
+        "Measure Name":"PUL02"
+        
+      },
+    "Month2":
+      {
+          
+        "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
+        "Display":"bar,line,text",
+       
+        "Text":"Your performance is getting worse for the measure [measure_details]",
+        "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
+        "comparison value":null,
+        "Comparator Type":"peers",
+        "title":"PONV Prophylaxis: Pediatrics",
+        "Measure Name":"PONV04"
+      
+      },
+      "Month3":
+      {
+        
+        "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
+        "Display":"bar,line,text",
+        
+        "Text":"Your performance is getting worse for the measure [measure_details]",
+        "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
+        "causal_pathways1":null,
+        "comparison value":null,
+        "Comparator Type":"peers",
+        "title":"Minimizing Colloid Use (Cardiac)",
+        "Measure Name":"FLUID01C"
+        
+      },
+      "Month4":
+      {
+        "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
+        "Display":"bar,line,text",
+       
+        "Text":"Your performance is getting worse for the measure [measure_details]",
+        "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
+        "causal_pathways1":null,
+        "comparison value":"0.9",
+        "Comparator Type":"goal",
+        "title":"PONV Prophylaxis: Pediatrics",
+        "Measure Name":"PONV04"
+      },
+        "Month5":
+      {
+       
+        "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
+        "Display":"bar,line,text",
+        
+        "Text":"Your performance is getting worse for the measure [measure_details]",
+        "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
+        "causal_pathways1":null,
+        "comparison value":"0.9",
+        "Comparator Type":"goal",
+        "title":"Train of Four Taken",
+        "Measure Name":"NMB01"
+     
+      },
+      "Month6":
+      {
+        
+        "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
+        "Display":"line",
+        
+        "Text":"Your performance dropped consecutively below the goal",
+        "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
+        "causal_pathways01":null,
+        "comparison value":"0.9",
+        "Comparator Type":"goal",
+        "title":"Low Fresh Gas Flow",
+        "Measure Name":"AKI01"
+    
+      }
+  
+
 },
 "Preferences":{
     "Utilities": {
-    "Motivating_information": 
+    "Message_Format": 
       {
-        "social_better": -5.97766,
-        "social_gain":	-2.92114,
-        "social_stayed_better":	-12.76936,
-        "social_worse":	-0.05277,
-        "social_approach":	-0.24384,
-        "social_loss":	2.72075,
-        "improving":	-0.26266,
-        "worsening":	1.06977,
-        "social_stayed_worse":	9.97743
+        "1": "0.0",
+        "2": "0.1",
+        "16": "7.5",
+        "24": "9.4",
+        "18": "11.3",
+        "11": "13.2",
+        "22": "15.1" ,
+        "14": "22.6" ,
+        "21": "62.3" ,
+        "5":"0.2",
+        "15":"4.0",
+        "4":"0.9"
+        
+        
       },
-    "Display_format":
+    "Display_Format":
       {
-        "text-only": "0.0",
-        "bar_chart": "37.0",
-        "line_chart": "0.0"
-      }    
+        "short_sentence_with_no_chart": "0.0",
+        "bar": "37.0",
+        "line": "0.0"
+        
+
+      }
+      
   }
-}
+},
+
+"debug":"no"
 }
