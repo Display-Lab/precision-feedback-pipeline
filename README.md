@@ -38,7 +38,7 @@ To test the pipeline locally:
 
 
 
-To test the pipeline service hosted in Google cloud platform of the Michigan Medicine
+To test the pipeline service hosted in Google cloud platform of Michigan Medicine
 
 1. Login to your umich level 1 account
 2. Open google chrome  and try accessing anyone of the links below
@@ -58,8 +58,7 @@ To test the pipeline service hosted in Google cloud platform of the Michigan Med
         https://pfp.lab.app.med.umich.edu/,
         https://pfp.prod.app.med.umich.edu/
         
-        
-        and click sync cookies
+  and click sync cookies
 
 8. go to the new request of postman try any one of the following links
 
