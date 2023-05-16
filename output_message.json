@@ -2,8 +2,7 @@
   "staff_number": 30
   "selected_candidate": {
       "message_template": "https://repo.metadatacenter.org/template-instances/33412958-7985-43c2-ba21-0c35b2b4ead1",
-      "has_disposition": ["positive gap content"]
-      "has_moderator": ["positive trend"]
+      "has_moderator": ["positive_slope":"0.23","positive_gap":"0.432"]
       "display": "line graph 12-month",
       "measure": "SUS-04",
       "acceptable_by": ["social gain", "social better"]
