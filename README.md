@@ -35,32 +35,46 @@ To test the pipeline locally:
 
     Then use the command
     poetry uvicorn main:app --reload
+
+
+
 To test the pipeline service hosted in Google cloud platform of the Michigan Medicine
 
 1. Login to your umich level 1 account
 2. Open google chrome  and try accessing anyone of the links below
-    ``` https://pfp.test.app.med.umich.edu/, 
+    
+        https://pfp.test.app.med.umich.edu/, 
         https://pfp.lab.app.med.umich.edu/,
-        https://pfp.prod.app.med.umich.edu/```
+        https://pfp.prod.app.med.umich.edu/
+        
 3. If the request resulted in a failure message- reach out to Display lab administrator and request them to add you to displaylab-dev@umich.edu Mcommunity group
 4. If your request to above links were successful, download postman from the link "https://www.postman.com/downloads/" and install it in your computer.
 
 5. Open google chrome and install the postman interceptor plugin
 6. open the postman desktop app, at the bottom there is a satelite icon call capture requests and go to via interceptor and enable capture request there, alternatively you can capture request from the google chrome postman plugin
 7. Again at the bottom of the postman desktop app you should see a cookie icon. Click on the icon and select the sync cookies add "google.com" and 
-        ```https://pfp.test.app.med.umich.edu/, 
+
+        https://pfp.test.app.med.umich.edu/, 
         https://pfp.lab.app.med.umich.edu/,
-        https://pfp.prod.app.med.umich.edu/```
+        https://pfp.prod.app.med.umich.edu/
+        
+        
         and click sync cookies
 
 8. go to the new request of postman try any one of the following links
-- ``` https://pfp.test.app.med.umich.edu/, 
+
+
+        https://pfp.test.app.med.umich.edu/, 
         https://pfp.lab.app.med.umich.edu/,
-        https://pfp.prod.app.med.umich.edu/ ```
+        https://pfp.prod.app.med.umich.edu/ 
+        
+        
     You should see a succesful response
 9. Convert the request from Get to post, Add the contents of input message to the body part of the request and change the url to any one of the following links
- ```https://pfp.test.app.med.umich.edu/createprecisionfeedback, 
+
+
+        https://pfp.test.app.med.umich.edu/createprecisionfeedback, 
         https://pfp.lab.app.med.umich.edu/createprecisionfeedback, 
-        https://pfp.prod.app.med.umich.edu/createprecisionfeedback```
+        https://pfp.prod.app.med.umich.edu/createprecisionfeedback
 
 
