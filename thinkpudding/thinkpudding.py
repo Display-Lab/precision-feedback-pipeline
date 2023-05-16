@@ -31,13 +31,13 @@ class Thinkpudding:
 
     def process_spek(self):
         start_time = time.time()
-        self.spek_out_dicts,self.comparator_dicts=process_spek(self.spek_cs,self.gap)
+        self.spek_out_dicts,self.comparator_dicts,self.gap_comparator_dicts=process_spek(self.spek_cs,self.gap)
         logging.critical(" processing spek_cs--- %s seconds ---" % (time.time() - start_time))
     
     def matching(self):
         start_time = time.time()
         # matching(self.caus_out_dict,self.spek_out_dicts,self.comparator_dicts)
-        self.merged_list=matching(self.caus_out_dict,self.spek_out_dicts,self.comparator_dicts)
+        self.merged_list=matching(self.caus_out_dict,self.spek_out_dicts,self.comparator_dicts,self.gap_comparator_dicts)
         # for x in range(len(self.merged_list)):
         #     print(self.merged_list[x])
 

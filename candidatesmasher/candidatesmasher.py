@@ -274,7 +274,7 @@ class CandidateSmasher:
         # dfs.to_csv("dfs.csv")
         self.df_merged = pd.concat([dfs, self.goal_types], ignore_index=True, sort=False)
         self.df_merged =self.df_merged.fillna(0)
-        # self.df_merged.to_csv("df_merged.csv")
+        #self.df_merged.to_csv("df_merged.csv")
         return self.df_merged
 
        
@@ -358,7 +358,7 @@ class CandidateSmasher:
         #     self.df["template_type_dicts3"]=0
         # if "template_type_dicts4" in self.df.columns:
         #     self.df["template_type_dicts4"]=0
-        # self.df.to_csv("template.csv")
+        #self.df.to_csv("template.csv")
     
         return self.df
    

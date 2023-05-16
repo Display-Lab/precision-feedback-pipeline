@@ -19,12 +19,13 @@ def process_causalpathways(causal_pathways):
     causal_dicts={}
     caus_type_dicts={}
     caus_out_dict={}
+    gap_comparator=[URIRef('http://purl.obolibrary.org/obo/PSDO_0000104'),URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')]
     caus_p = URIRef("http://schema.org/name")
     precdn=URIRef("http://purl.bioontology.org/ontology/SNOMEDCT/has_precondition")
-    gap_comparator=[URIRef('http://purl.obolibrary.org/obo/PSDO_0000104'),URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')]
+    
     caus_s=[]
     for s, p, o in causal_pathways.triples((None,  caus_p, None)):
-        print(s)
+        # print(s)
         caus_s.append(s)
     for x in range(len(caus_s)):
         s=caus_s[x]
@@ -55,13 +56,16 @@ def process_spek(spek_cs,gap):
 
     spek_out_dicts={}
     comparator_dicts={}
+    gap_comparator_dicts={}
+    comparator_list=[]
+    
     #s=URIRef("http://example.com/app#mpog-aspire") 
     s=URIRef("http://example.com/app#display-lab")
     p=URIRef("http://example.com/slowmo#HasCandidate")
-    
+    pew1=URIRef("http://example.com/slowmo#RegardingComparator")
     p1=URIRef("http://purl.obolibrary.org/obo/RO_0000091")
     p2=URIRef("http://example.com/slowmo#RegardingComparator")
-
+    gap_comparator=[URIRef('http://purl.obolibrary.org/obo/PSDO_0000104'),URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')]
     i=0
     for s,p,o in spek_cs.triples( (s, p, None) ):
         s1= o
@@ -74,75 +78,113 @@ def process_spek(spek_cs,gap):
             for s,p,o in spek_cs.triples((s,RDF.type,None)):
                 
                 y[i]=o
+                comparator_gap_types=[]
+                if o in gap_comparator:
+                    y[i]=o
+                    al=[]
+                    for sew,pew,oew in spek_cs.triples((s,pew1,None)):
+                        #print(s)
+                        #print(oew)
+                        al.append(oew)
+                        
+                        # for sew2,pew2,oew2 in spek_cs.triples((sew1,RDF.type,None)):
+                        #     comparator_list.append(oew2)
+                    comparator_list=[]
+                    for asd in range(len(al)):
+                        sew2=al[asd]
+                        for sew2,pew2,oew2 in spek_cs.triples((sew2,RDF.type,None)):
+                            # print(al[asd])
+                            comparator_list.append(oew2)
+
+                    #print(*al)
+                    # print(o)
+                    comparator_gap_types.append(y[i])
+                    comparator_gap_types.append(comparator_list)
+                    
+                    # print(y[i])
+                    # print(*comparator_gap_types)
+                    
+                    gap_comparator_dicts[s]=comparator_gap_types
                 
+                # print("\n")
                 if o == gap:
                     
                     for s,p,o in spek_cs.triples((s,p2,None)):
                         s=o
                         for s,p,o in spek_cs.triples((s,RDF.type,None)):
-                            # print(o)
+                            
                             BL.append(o)
-        
+        # print("\n")
         spek_out_dicts[s1] = y
         comparator_dicts[s1]=BL
-    # for k,v in comparator_dicts.items():
+        
+    # for k,v in gap_comparator_dicts.items():
     #     print(k,v)
     # print(spek_out_dicts)
-    # print(comparator_dicts)
-    return spek_out_dicts,comparator_dicts
+    # print(*comparator_dicts)
+    return spek_out_dicts,comparator_dicts,gap_comparator_dicts
 
-def matching(caus_out_dict,spek_out_dicts,comparator_dicts):
+def matching(caus_out_dict,spek_out_dicts,comparator_dicts,gap_comparator_dicts):
     final_dict={}
     fg=list(caus_out_dict.values())
     fr=list(spek_out_dicts.values())
     fz=list(comparator_dicts.values())
+    fd=list(gap_comparator_dicts.values())
+    positive_gap_comparator=URIRef('http://purl.obolibrary.org/obo/PSDO_0000104')
+    negative_gap_comparator=URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')
+    fs=[]
+    fw=[]
+    for fgd in range(len(fd)):
+        for fgds in range(len(fd[fgd])):
+            if fd[fgd][fgds]== negative_gap_comparator:
+                # print(fd[fgd][fgds])
+                fs.append(fd[fgd][fgds+1])
+                # print(fd[fgd][fgds+1])
+            if fd[fgd][fgds] == positive_gap_comparator:
+                # print(fd[fgd][fgds])
+                fw.append(fd[fgd][fgds+1])
+                # print(fd[fgd][fgds+1])
+   
     accept_ids=[]
     bnodes=[]
-    comparator_list=["http://purl.obolibrary.org/obo/PSDO_0000128","http://purl.obolibrary.org/obo/PSDO_0000129","http://purl.obolibrary.org/obo/PSDO_0000126"]
-
+    ng_list=[]
+    p_list=[]
+    comparator_list=[URIRef('http://purl.obolibrary.org/obo/PSDO_0000128'),URIRef('http://purl.obolibrary.org/obo/PSDO_0000129'),URIRef('http://purl.obolibrary.org/obo/PSDO_0000126')]
+    for swd in range(len(fs)):
+        for swd1 in range(len(fs[swd])):
+            ng_list.append(fs[swd][swd1])
+    # print(*ng_list)
+    for swd2 in range(len(fw)):
+        for swd3 in range(len(fw[swd2])):
+            p_list.append(fw[swd2][swd3])
+    # print(*p_list)
     
     for i in range(len(fg)):
         for x in range(len (fr)):
             result =  all(elem in fr[x]  for elem in fg[i])
-            # print(fr[x])
-            # print(fg[i])
-            # result = False
-            # sdf=len(fg[i])
-            # dfg=0
-            # asd=0
-            # for asd in range(len(fr[x])):
-            #     if fr[x][asd] in fg[i]:
-            #         dfg=dfg+1
-            #     asd=asd+1
-            # if dfg==sdf:
-            #     result=True
-            # print(sdf) 
-            # print(dfg)       
-            # print(result)
             if result == True:
-                for a in range(len(fz)):
-
-                    result1 = False
-                    
+                result1 = False
+                if negative_gap_comparator in fg[i]:
+                   for f in range(len(fr[x])):
+                        if fr[x][f] in ng_list:
+                            aby = fr[x].count(fr[x][f])
+                            if aby == 2:
+                                result1=True
+                            if result1 == True:
+                                l=[k for k,v in spek_out_dicts.items() if v == fr[x]]
+                                bnodes.append(l)
+                                y=[k for k,v in caus_out_dict.items() if v == fg[i]]
+                                accept_ids.append(y)
+                if positive_gap_comparator in fg[i]:
                     for f in range(len(fr[x])):
-                        for g in range(len(fz[a])):
-                            if str(fr[x][f]) in comparator_list:
-                                if fr[x][f] == fz[a][g]:
-                                    ab= fr[x].count(fr[x][f])
-                                    if ab==2:
-                                    # print(fr[x][f])
-                                    # print("\n")
-                                    # print(fz[a][g])
-                                        result1=True
-                                    
-                                if result1 == True:
-                                    l=[k for k,v in spek_out_dicts.items() if v == fr[x]]
-                                    bnodes.append(l)
-                                    y=[k for k,v in caus_out_dict.items() if v == fg[i]]
-                                    accept_ids.append(y)
-                                
-                    
-                    
-                
+                        if fr[x][f] in p_list:
+                            aby = fr[x].count(fr[x][f])
+                            if aby == 2:
+                                result1=True
+                            if result1 == True:
+                                l=[k for k,v in spek_out_dicts.items() if v == fr[x]]
+                                bnodes.append(l)
+                                y=[k for k,v in caus_out_dict.items() if v == fg[i]]
+                                accept_ids.append(y)   
     merged_list = [(accept_ids[i], bnodes[i]) for i in range(0, len(accept_ids))]
     return merged_list
