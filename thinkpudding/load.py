@@ -22,16 +22,20 @@ def process_causalpathways(causal_pathways):
     gap_comparator=[URIRef('http://purl.obolibrary.org/obo/PSDO_0000104'),URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')]
     caus_p = URIRef("http://schema.org/name")
     precdn=URIRef("http://purl.bioontology.org/ontology/SNOMEDCT/has_precondition")
-    
+    name=URIRef("https://schema.metadatacenter.org/properties/4a88e066-a289-4a09-a0fc-a24c28c65215")
     caus_s=[]
-    for s, p, o in causal_pathways.triples((None,  caus_p, None)):
+    caus_n=[]
+    
+    for s, p, o in causal_pathways.triples((None, caus_p, None)):
         # print(s)
         caus_s.append(s)
+        for sqe,pqe,oqe in causal_pathways.triples((None,name,None)):
+            caus_n.append(oqe)
     for x in range(len(caus_s)):
         s=caus_s[x]
         p=precdn
         for s,p,o in causal_pathways.triples( (s, p, None) ):
-            causal_dicts[o]=s
+            causal_dicts[o]=caus_n[x]
     ids= list(causal_dicts.values())
     ids = [*set(ids)]
     types=[]
@@ -39,14 +43,19 @@ def process_causalpathways(causal_pathways):
         y=[k for k,v in causal_dicts.items() if v == ids[x] ]  
         for i in range(len(y)):
             s=y[i]
+            
             for s,p,o in causal_pathways.triples((s,RDF.type,None)):
                 y[i]=o
                 
         caus_type_dicts[ids[x]]=y  
     for k,v in caus_type_dicts.items():
+        # print(k,v)
         for x in range(len(v)):
             if v[x] in  gap_comparator:
                 gap=v[x]
+    # for x in range(len(caus_s)):
+    #     print(caus_s[x])
+            
                 
     # print(caus_type_dicts)
     # print(gap)

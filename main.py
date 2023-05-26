@@ -68,7 +68,7 @@ async def createprecisionfeedback(info:Request):
     performance_data_df =pd.DataFrame (performance_data, columns = [ "staff_number","Measure_Name","Month","Passed_Count","Flagged_Count","Denominator","peer_average_comparator","peer_90th_percentile_benchmark","peer_75th_percentile_benchmark"])
     performance_data_df.columns = performance_data_df.iloc[0]
     performance_data_df = performance_data_df[1:]
-    
+    p_df=req_info1["Performance_data"]
     del req_info1["Performance_data"]
     history=req_info1["History"]
     del req_info1["History"]
@@ -131,9 +131,11 @@ async def createprecisionfeedback(info:Request):
     # # print(selected_message)
     if selected_message["text"]!= "No message selected":
     # # #Runnning Pictoralist
-        pc=Pictoralist(selected_message,performance_data_df)
+        pc=Pictoralist(selected_message,p_df,performance_data_df)
         base64_image=pc.create_graph()
-        selected_message["image"]=base64_image
+        # selected_message["image"]=base64_image
+        
+        selcted_message1=pc.prepare_selected_message()
     # '<img align="left" src="data:image/png;base64,%s">' %base64_image
     ES=spek_es.serialize(format='json-ld', indent=4)
     if str(debug)=="yes":
@@ -142,11 +144,11 @@ async def createprecisionfeedback(info:Request):
         f.close()
     # print(vignette)
     
-    return {
+    return selcted_message1
         # "location":settings.location
-        "status":"Success",
-        "selected_message": selected_message
+       
+        # "selected_message": selected_message
         #   "selected_message": selected_message
-    }
+    
     
 

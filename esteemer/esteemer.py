@@ -61,6 +61,7 @@ class Esteemer():
         else:
             s=self.node
             p1=URIRef("psdo:PerformanceSummaryTextualEntity")
+            pwed=URIRef("slowmo:acceptable_by")
             p3=URIRef("http://purl.obolibrary.org/obo/RO_0000091")
             p4=URIRef("http://example.com/slowmo#RegardingMeasure")
             p8=URIRef("http://example.com/slowmo#name")
@@ -68,20 +69,31 @@ class Esteemer():
             p12=URIRef("http://purl.obolibrary.org/obo/IAO_0000573")
             p13=URIRef("http://purl.obolibrary.org/obo/STATO_0000166")
             p20=URIRef("http://example.com/slowmo#AncestorTemplate")
+            pqd=URIRef("http://example.com/slowmo#PerformanceGapSize")
+            pqw=URIRef("http://example.com/slowmo#PerformanceTrendSlope")
+
             sw=0
             
-            s_m["node"]=self.node
+            
             for s21,p21,o21 in self.spek_tp.triples((s,p20,None)):
                 s_m["Template ID"] = o21
             for s2,p2,o2 in self.spek_tp.triples((s,p1,None)):
                 s_m["text"] = o2
             for s9,p9,o9 in self.spek_tp.triples((s,p8,None)):
                 s_m["Comparator Type"] = o9
+            for s2we,p2we,o2we in self.spek_tp.triples((s,pwed,None)):
+                s_m["Acceptable By"] = o2we
+            
+            
+            
+
+            
                 
             
 
             for s5,p5,o5 in self.spek_tp.triples((s,p3,None)):
                 s6=o5
+                # print(o5)
                 for s7,p7,o7 in self.spek_tp.triples((s6,p4,None)):
                     s_m["Measure Name"]=o7
                     s10= BNode(o7)

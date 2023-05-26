@@ -460,6 +460,7 @@ class CandidateSmasher:
                             self.a.add((ov,RDF.type,a33))
                             for x in range(len(v)):
                                 self.a.add((ov,self.cp23,v[x]))
+                                #print(v[x])
                             self.a.add((ov,self.cp24,ag))
                         a35=BNode("-p1")
                         self.a.add((oq,self.cp26,a35))

@@ -3,23 +3,29 @@ import matplotlib.pyplot as plt
 import io
 import base64
 #from asyncore import read
-
+import numpy
 import pandas as pd
-
+import json
+import datetime
+# from json import JSONEncoder
+# import numpyencoder
+# from numpyencoder import NumpyEncoder
 
 
 
 
 class Pictoralist():
 
-    def __init__(self, selected_message, performance_data: pd.DataFrame=()):
+    def __init__(self, selected_message, p_df,performance_data_df: pd.DataFrame=()):
         self.selected_message_dict=selected_message
-        self.performance_data = performance_data
-
+        self.performance_data = performance_data_df
+        self.Performance_Data = performance_data_df
+        self.performance_Data=p_df
+        self.template= self.selected_message_dict["Template ID"]
         self.display_format = self.selected_message_dict["Display"]
         self.text= self.selected_message_dict["text"]
         self.measure_name= self.selected_message_dict["Measure Name"]
-    
+        self.acceptable_by = self.selected_message_dict["Acceptable By"]
         self.title=self.selected_message_dict["Title"]
         self.comparator=self.selected_message_dict["Comparator Type"]
         self.comparison_value=0.9
@@ -96,6 +102,7 @@ class Pictoralist():
             plt.savefig(s, format='png', bbox_inches="tight")
             plt.close()
             s = base64.b64encode(s.getvalue()).decode("utf-8").replace("\n", "")
+            self.selected_message_dict["image"]=s
             return  s
 
 
@@ -135,9 +142,71 @@ class Pictoralist():
             plt.savefig(s, format='png', bbox_inches="tight")
             plt.close()
             s = base64.b64encode(s.getvalue()).decode("utf-8").replace("\n", "")
+            
             return  s
+        
 
         #self.last_4_measure.to_csv("last4measure.csv")
+
+    def  prepare_selected_message(self):
+        candidate={}
+        message={}
+        candidate["message_template"]=self.template
+        candidate["display"]=self.display_format
+        candidate["measure"]=self.measure_name
+        candidate["acceptable_by"]=self.acceptable_by
+        message["text_message"]=self.text
+        message["measure"]=self.measure_name
+        message["title"]=self.title
+        message["comparison_value"]=0.9
+        # message["recipient_performance_level"]
+        #print(type(self.performance_Data))
+        self.Performance_Data=self.Performance_Data[self.Performance_Data['measure'] ==  self.measure_name]
+        print(self.Performance_Data)
+        staff_number= self.Performance_Data['staff_number'].iloc[0]
+        array = self.performance_Data
+        ar = numpy.array(self.performance_Data)
+        df2 = json.dumps(self.performance_Data)
+        df3= ','.join(str(x) for x in ar)
+        df4=df3.replace('\n', '')
+        performance_month = self.Performance_Data.iloc[-1]
+        #print(type(performance_month))
+        performance_month_1 = performance_month['month']
+        recipient_performance_level=performance_month['Performance_Rate']
         
+        message_generated_datetime= datetime.datetime.now()
+        pfkb_version="1.0.1"
+        pfp_version="1.2.2"
+        self.comparator=str(self.comparator)
+
+        # print(performance_month)
+        # print(self.comparator)
+        if self.comparator == "lost top 10 benchmark":
+            message["comparison_value"]=performance_month['peer_90th_percentile_benchmark']
+            # message["comparison_value"]=performance_month['peer_90th_percentile_benchmark']
+        if self.comparator == "Top 25 Performer":
+            message["comparison_value"]=performance_month['peer_75th_percentile_benchmark']
+        if self.comparator == "Top 10 Performer":
+            message["comparison_value"]=performance_month['peer_90th_percentile_benchmark']
+        if self.comparator == "Lost Peer Average":
+            message["comparison_value"]=performance_month['peer_average_comparator']
+        message["recipient_performance_level"]=recipient_performance_level*100
+        message["image"]=self.selected_message_dict["image"]
+        # message["image"]=self.selected_message_dict["image"]
+        #encodedNumpyData = json.dumps(array, cls=NumpyEncoder)
+        #print(encodedNumpyData)
+        # print(staff_number)
+        selected_message1={"staff_number":staff_number,
+                           "selected_candidate":candidate,
+                           "performance_data":df4,
+                           "performance_month":performance_month_1,
+                           "message_generated_datetime":message_generated_datetime,
+                           "pfkb_version":pfkb_version,
+                           "pfp_version":pfp_version,
+                           "Message":message
+                           }
+        
+        return selected_message1
+
 
         
