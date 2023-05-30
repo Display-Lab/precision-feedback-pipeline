@@ -48,15 +48,15 @@
 "History":{
     "Month1": 
       {
-        "staff_number": 30
+        "staff_number": 30,
         "selected_candidate": {
            "message_template": "https://repo.metadatacenter.org/template-instances/33412958-7985-43c2-ba21-0c35b2b4ead1",
-            "has_disposition": ["positive gap content"]
-            "has_moderator": ["positive trend"]
+            "has_disposition": ["positive gap content"],
+            "has_moderator": ["positive trend"],
             "display": "line graph 12-month",
             "measure": "SUS-04",
             "acceptable_by": ["social gain", "social better"]
-            } 
+            } ,
         "performance_month": "2023-03",
         "message_generated_datetime": "2023-04-23 12:02:03",
         "pfkb_version": "1.0.1",

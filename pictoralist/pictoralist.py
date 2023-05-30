@@ -162,9 +162,15 @@ class Pictoralist():
         # message["recipient_performance_level"]
         #print(type(self.performance_Data))
         self.Performance_Data=self.Performance_Data[self.Performance_Data['measure'] ==  self.measure_name]
-        print(self.Performance_Data)
+        #print(self.Performance_Data)
         staff_number= self.Performance_Data['staff_number'].iloc[0]
         array = self.performance_Data
+        ds=pd.DataFrame(self.performance_Data)
+        # print(ds)
+        ds.columns=ds. iloc[0]
+        
+        self.performance_Data=ds[ds['measure'] ==  self.measure_name]
+        self.performance_Data=self.performance_Data.values.tolist()
         ar = numpy.array(self.performance_Data)
         df2 = json.dumps(self.performance_Data)
         df3= ','.join(str(x) for x in ar)
