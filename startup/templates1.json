@@ -1,0 +1,11 @@
+ {
+  "@context": {
+    "IAO-IsAbout":                          "http://purl.obolibrary.org/obo/IAO_0000136",
+    "obo":                                  "http://purl.obolibrary.org/obo/",
+    "schema-name":                          "http://schema.org/name",
+    "slowmo":                               "http://example.com/slowmo#",
+    "@vocab":                               "http://schema.org/"
+  }
+
+}
+

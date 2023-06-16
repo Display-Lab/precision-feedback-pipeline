@@ -1,6 +1,6 @@
 from fastapi import FastAPI,Request
 from pydantic import BaseSettings
-from rdflib import Graph,ConjunctiveGraph ,Namespace,URIRef,RDFS,Literal
+from rdflib import Graph
 import pandas as pd
 from rdflib import Graph
 from graph_operations import read_graph, create_performer_graph
@@ -13,41 +13,21 @@ from pictoralist.pictoralist import Pictoralist
 import json
 import requests
 from requests_file import FileAdapter
-
 import os
 class Settings(BaseSettings):
-    pathways: str = "file://"+os.path.abspath("startup/causal_pathways.json")
+    pathways: str = os.path.abspath("startup/causal_pathways.json")
     #pathways: str = "file://"+os.path.abspath("startup/social_loss.json")
-    measures: str ="file://"+os.path.abspath("startup/measures.json")
+    measures: str = os.path.abspath("startup/measures.json")
     #templates: str ="file://"+os.path.abspath("startup/social_loss_templates.json")
-    templates: str ="file://"+os.path.abspath("startup/templates1.json")
-    des=templates
+    templates: str = os.path.abspath("startup/templates.json")
 se =requests.Session()
 se.mount('file://',FileAdapter())
 settings = Settings()
 app = FastAPI()
-asa=[]
-path="startup/causal_pathways"
-path1="startup/templates"
-asa=os.listdir(path)
-asaa=os.listdir(path1)
-list2 = (path+"/"+pd.Series(asa) ).tolist()
-list3 = (path1+"/"+pd.Series(asaa) ).tolist()
-graph = Graph()
-
-
-for sd in range(len(list2)):
-    adf="g"+str(sd)
-    adf=Graph()
-    adf.parse(list2[sd])
-    graph = graph + adf
-for sdf in range(len(list3)):
-    des=des+list3[sdf]
 
 measure_details=Graph()
-causal_pathways=graph
-templates=des
-
+causal_pathways=Graph()
+templates=Graph()
 
 
 
@@ -56,22 +36,35 @@ templates=des
 async def startup_event():
     try:
         
-      
         global measure_details,causal_pathways,templates,f3json
-        
+        '''
+        # Old code block - not happy on windows OS #
         
         f2json=se.get(settings.pathways).text
         f3json=se.get(settings.measures).text
         f4json=se.get(settings.templates).text
        
-        causal_pathways = causal_pathways
-        # causal_pathways=read_graph(f2json)
-        templates=read_graph(templates)
+     
+        causal_pathways=read_graph(f2json)
+        templates=read_graph(f4json)
+        '''
+    ### Updated code block
+        with open(settings.pathways, "r") as f:
+            f2json = json.load(f)
+            
+        with open(settings.measures, "r") as f:
+            f3json = json.load(f)
+            
+        with open(settings.templates, "r") as f:
+            f4json = json.load(f)
+            
+        causal_pathways = read_graph(json.dumps(f2json))
+        templates = read_graph(json.dumps(f4json))
+
         print("startup is complete")
     except Exception as e:
-        print("Looks like there is some problem in connection,see below traceback")
+        print("Ope, there's a problem with startup, see traceback:")
         raise e
-    
 
 @app.get("/")
 async def root():
@@ -84,7 +77,7 @@ async def createprecisionfeedback(info:Request):
     req_info1=req_info
     performance_data = req_info1["Performance_data"]
     debug=req_info1["debug"]
-    performance_data_df =pd.DataFrame (performance_data, columns = [ "staff_number","Measure_Name","Month","Passed_Count","Flagged_Count","Denominator","peer_average_comparator","peer_90th_percentile_benchmark","peer_75th_percentile_benchmark"])
+    performance_data_df =pd.DataFrame (performance_data, columns = [ "staff_number","Measure_Name","Month","Passed_Count","Flagged_Count","Denominator","peer_average_comparator","peer_90th_percentile_benchmark","peer_75th_percentile_benchmark","MPOG_goal"])
     performance_data_df.columns = performance_data_df.iloc[0]
     performance_data_df = performance_data_df[1:]
     p_df=req_info1["Performance_data"]
@@ -169,5 +162,3 @@ async def createprecisionfeedback(info:Request):
         # "selected_message": selected_message
         #   "selected_message": selected_message
     
-    
-
