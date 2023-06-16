@@ -20,8 +20,8 @@ class Settings(BaseSettings):
     #pathways: str = "file://"+os.path.abspath("startup/social_loss.json")
     measures: str ="file://"+os.path.abspath("startup/measures.json")
     #templates: str ="file://"+os.path.abspath("startup/social_loss_templates.json")
-    templates: str ="file://"+os.path.abspath("startup/templates1.json")
-    des=templates
+    templates: str ="file://"+os.path.abspath("startup/templates.json")
+    # des=templates
 se =requests.Session()
 se.mount('file://',FileAdapter())
 settings = Settings()
@@ -41,12 +41,12 @@ for sd in range(len(list2)):
     adf=Graph()
     adf.parse(list2[sd])
     graph = graph + adf
-for sdf in range(len(list3)):
-    des=des+list3[sdf]
+# for sdf in range(len(list3)):
+#     des=des+list3[sdf]
 
 measure_details=Graph()
 causal_pathways=graph
-templates=des
+# templates=des
 
 
 
@@ -66,7 +66,7 @@ async def startup_event():
        
         causal_pathways = causal_pathways
         # causal_pathways=read_graph(f2json)
-        templates=read_graph(templates)
+        templates=read_graph(f4json)
         print("startup is complete")
     except Exception as e:
         print("Looks like there is some problem in connection,see below traceback")
