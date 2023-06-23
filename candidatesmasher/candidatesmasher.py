@@ -22,6 +22,7 @@ class CandidateSmasher:
         self.goal_comparison_dicts={}
         self.annotate_dicts={}
         self.graph_type_list=[]
+        self.asd=[]
 
 
 
@@ -38,7 +39,7 @@ class CandidateSmasher:
         self.p22=URIRef("http://schema.org/name")
         self.o21=Literal("PEERS")
         self.o22=Literal("peers") 
-        self.p23=URIRef("http://schema.org/@templates")
+        self.p23=URIRef("http://schema.org/name")
         self.p24=URIRef("http://purl.obolibrary.org/obo/IAO_0000136")
         self.p25=RDF.type
         self.pq13=URIRef("psdo:PerformanceSummaryDisplay")
@@ -280,16 +281,23 @@ class CandidateSmasher:
        
 
     def get_template_data(self):
+        # for triple in self.b.triples((None,None,None)):
+        #     print(triple)
+    
         for s,p,o in self.b.triples((None,self.p23,None)):
             self.ac.append(str(o))
+        # print(*self.ac)
+        
+        for sq,pq,oq in self.b.triples((None,self.p3,None)):
+            self.asd.append(str(sq))
 
         # a25_dicts={}
         a26_dicts={}
         a27_dicts={}
         templatetype_dicts={}
-        for x in range(len(self.ac)):
-            s24=URIRef(self.ac[x])
-            # print(s24)
+        for x in range(len(self.asd)):
+            s24=URIRef(self.asd[x])
+            
             af=[]
             ab=[]
             # for s29,p29,o29 in self.b.triples((s24,self.display_format,None)):
@@ -300,6 +308,7 @@ class CandidateSmasher:
         #     for s30,p30,o30 in self.b.triples((s24,self.pq14,None)):
         #         a26_dicts[self.ac[x]]=str(o30)
             for s30,p30,o30 in self.b.triples((s24,self.message_text,None)):
+                print(str(o30))
                 a26_dicts[s24]=str(o30)
             for s31,p31,o31 in self.b.triples((s24,self.pq15,None)):
                 a27_dicts[s24]=str(o31)

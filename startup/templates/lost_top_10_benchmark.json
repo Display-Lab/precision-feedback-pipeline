@@ -80,7 +80,7 @@
     }
   ],
   "schema:isBasedOn": "https://repo.metadatacenter.org/templates/707d3573-8ac9-4e2c-b53b-2026a795308c",
-  "schema:name": "message template metadata",
+  "schema:name": "lost top 10 benchmark",
   "schema:description": "specification for a possible precision feedback message",
   "pav:createdOn": "2023-02-27T08:05:38-08:00",
   "pav:createdBy": "https://metadatacenter.org/users/626c7d49-cdfc-43d6-b254-36a7be904ea9",

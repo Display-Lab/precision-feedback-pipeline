@@ -16,37 +16,40 @@ from requests_file import FileAdapter
 
 import os
 class Settings(BaseSettings):
-    pathways: str = "file://"+os.path.abspath("startup/causal_pathways.json")
+    pathways: str = os.path.abspath("startup/causal_pathways/")
     #pathways: str = "file://"+os.path.abspath("startup/social_loss.json")
     measures: str ="file://"+os.path.abspath("startup/measures.json")
-    #templates: str ="file://"+os.path.abspath("startup/social_loss_templates.json")
-    templates: str ="file://"+os.path.abspath("startup/templates.json")
+    templates: str =os.path.abspath("startup/templates/")
+    #templates: str ="file://"+os.path.abspath("startup/templates.json")
     # des=templates
 se =requests.Session()
 se.mount('file://',FileAdapter())
 settings = Settings()
 app = FastAPI()
 asa=[]
-path="startup/causal_pathways"
-path1="startup/templates"
-asa=os.listdir(path)
-asaa=os.listdir(path1)
-list2 = (path+"/"+pd.Series(asa) ).tolist()
-list3 = (path1+"/"+pd.Series(asaa) ).tolist()
+# path="startup/causal_pathways"
+# path1="startup/templates"
+asa=os.listdir(pathways)
+asaa=os.listdir(templates)
+list2 = (pathways+"/"+pd.Series(asa) ).tolist()
+list3 = (templates+"/"+pd.Series(asaa) ).tolist()
 graph = Graph()
-
+graph1=Graph()
 
 for sd in range(len(list2)):
     adf="g"+str(sd)
     adf=Graph()
     adf.parse(list2[sd])
     graph = graph + adf
-# for sdf in range(len(list3)):
-#     des=des+list3[sdf]
+for sdf in range(len(list3)):
+    adfs="g"+str(sdf)
+    adfs=Graph()
+    adfs.parse(list3[sdf])
+    graph1 = graph1 + adfs
 
 measure_details=Graph()
 causal_pathways=graph
-# templates=des
+templates=graph1
 
 
 
@@ -60,13 +63,14 @@ async def startup_event():
         global measure_details,causal_pathways,templates,f3json
         
         
-        f2json=se.get(settings.pathways).text
+        #f2json=se.get(settings.pathways).text
         f3json=se.get(settings.measures).text
-        f4json=se.get(settings.templates).text
+        #f4json=se.get(settings.templates).text
        
         causal_pathways = causal_pathways
         # causal_pathways=read_graph(f2json)
-        templates=read_graph(f4json)
+        templates =templates
+       # templates=read_graph(f4json)
         print("startup is complete")
     except Exception as e:
         print("Looks like there is some problem in connection,see below traceback")
@@ -115,6 +119,7 @@ async def createprecisionfeedback(info:Request):
     cs=CandidateSmasher(BS,templates)
     df_graph=cs.get_graph_type()
     df_template=cs.get_template_data()
+ 
     CS=cs.create_candidates(df_graph,df_template)
     if str(debug)=="yes":
         op=CS.serialize(format='json-ld', indent=4)
@@ -141,11 +146,11 @@ async def createprecisionfeedback(info:Request):
     # # es.apply_history()
     node,spek_es=es.select()
     selected_message=es.get_selected_message()
-    # # # es.apply_history()
+    # # es.apply_history()
   
-    # selected_message=es.get_selected_message()
-    # for k,v in selected_message.items():
-    #     print(k,v)
+    selected_message=es.get_selected_message()
+    for k,v in selected_message.items():
+        print(k,v)
     
     # # print(selected_message)
     if selected_message["text"]!= "No message selected":
