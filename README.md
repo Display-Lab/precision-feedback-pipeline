@@ -25,13 +25,14 @@ To test the pipeline locally:
 6. If you are running the pipeline locally and want to see intermediate files have the debug="yes" in input_message.json 
 
 7. if you want to set export variable for the causal pathways in the pipeline, you can do so by using the   command
-    poetry export PATHWAYS='url'
+    poetry export PATHWAYS=https://github.com/Display-Lab/knowledge-base/tree/main/causal_pathways
+    poetry export measures=https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/measures.json
+    poetry export templates=https://github.com/Display-Lab/knowledge-base/tree/main/message_templates
     or
-    poetry export PATHWAYS='file//'
-    example:     
-    poetry export PATHWAYS=https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/causal_pathways/social_better.json
-
-    poetry export PATHWAYS= file:///Users/ayshjag/knowledge-base/causal_pathways/social_better.json
+    export PATHWAYS=/Users/username/knowledge-base/causal_pathways
+    export templates=/Users/username/knowledge-base/templates
+    export measures='file:///Users/username/knowledge-base/measures.json'
+    
 
     Then use the command
     poetry uvicorn main:app --reload

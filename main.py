@@ -14,25 +14,25 @@ import json
 import requests
 from requests_file import FileAdapter
 
+
 import os
+
 class Settings(BaseSettings):
-    pathways: str = os.path.abspath("startup/causal_pathways/")
+    global pathways,templates
+    pathways = os.path.dirname("startup/causal_pathways/")
     #pathways: str = "file://"+os.path.abspath("startup/social_loss.json")
     measures: str ="file://"+os.path.abspath("startup/measures.json")
-    templates: str =os.path.abspath("startup/templates/")
+    templates =os.path.dirname("startup/templates/")
     #templates: str ="file://"+os.path.abspath("startup/templates.json")
     # des=templates
-se =requests.Session()
-se.mount('file://',FileAdapter())
-settings = Settings()
-app = FastAPI()
-asa=[]
-# path="startup/causal_pathways"
-# path1="startup/templates"
+    asa=[]
+
 asa=os.listdir(pathways)
 asaa=os.listdir(templates)
-list2 = (pathways+"/"+pd.Series(asa) ).tolist()
-list3 = (templates+"/"+pd.Series(asaa) ).tolist()
+list2 = (pathways+"/"+pd.Series(asa)).tolist()
+
+list3 = (templates+"/"+pd.Series(asaa)).tolist()
+
 graph = Graph()
 graph1=Graph()
 
@@ -52,6 +52,12 @@ causal_pathways=graph
 templates=graph1
 
 
+se =requests.Session()
+se.mount('file://',FileAdapter())
+settings = Settings()
+app = FastAPI()
+
+
 
 
 
@@ -69,6 +75,7 @@ async def startup_event():
        
         causal_pathways = causal_pathways
         # causal_pathways=read_graph(f2json)
+        
         templates =templates
        # templates=read_graph(f4json)
         print("startup is complete")
@@ -149,15 +156,14 @@ async def createprecisionfeedback(info:Request):
     # # es.apply_history()
   
     selected_message=es.get_selected_message()
-    for k,v in selected_message.items():
-        print(k,v)
+    
     
     # # print(selected_message)
     if selected_message["text"]!= "No message selected":
     # # #Runnning Pictoralist
         pc=Pictoralist(selected_message,p_df,performance_data_df)
         base64_image=pc.create_graph()
-        # selected_message["image"]=base64_image
+        selected_message["image"]=base64_image
         
         selcted_message1=pc.prepare_selected_message()
     # '<img align="left" src="data:image/png;base64,%s">' %base64_image

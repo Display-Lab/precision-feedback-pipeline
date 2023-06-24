@@ -308,7 +308,7 @@ class CandidateSmasher:
         #     for s30,p30,o30 in self.b.triples((s24,self.pq14,None)):
         #         a26_dicts[self.ac[x]]=str(o30)
             for s30,p30,o30 in self.b.triples((s24,self.message_text,None)):
-                print(str(o30))
+                # print(str(o30))
                 a26_dicts[s24]=str(o30)
             for s31,p31,o31 in self.b.triples((s24,self.pq15,None)):
                 a27_dicts[s24]=str(o31)
