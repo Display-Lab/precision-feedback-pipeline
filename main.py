@@ -165,7 +165,7 @@ async def createprecisionfeedback(info:Request):
         base64_image=pc.create_graph()
         selected_message["image"]=base64_image
         
-        selcted_message1=pc.prepare_selected_message()
+        selected_message1=pc.prepare_selected_message()
     # '<img align="left" src="data:image/png;base64,%s">' %base64_image
     ES=spek_es.serialize(format='json-ld', indent=4)
     if str(debug)=="yes":
@@ -174,7 +174,7 @@ async def createprecisionfeedback(info:Request):
         f.close()
     # print(vignette)
     
-    return selcted_message1
+    return selected_message1
         # "location":settings.location
        
         # "selected_message": selected_message
