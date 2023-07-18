@@ -81,7 +81,7 @@ class Prepare_data_annotate:
         a.add((s13,p13,o13))
         return a,s13
     
-    def gaol_gap_annotate(self,measure_name:str,**goal_dicts):
+    def goal_gap_annotate(self,measure_name:str,**goal_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal_dicts)
         self.a,self.s13=self.insert_annotate(self.input_graph)
         a = goal_gap_annotate(self.a,self.s13,measure_data1,comparator_bnode)
