@@ -132,7 +132,7 @@ class Bit_stomach:
         
         for index, element in enumerate(measure_list):
             measure_name=element
-            a=pr.gaol_gap_annotate(measure_name,**self.goal_dicts)
+            a=pr.goal_gap_annotate(measure_name,**self.goal_dicts)
             a=pr.goal_trend_annotate(measure_name,**self.goal_dicts)
             a=pr.goal_acheivement_loss_annotate(measure_name, **self.goal_dicts)
             a=pr.goalconsecutive_annotate(measure_name,**self.goal_dicts)
