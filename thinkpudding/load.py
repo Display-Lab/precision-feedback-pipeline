@@ -18,6 +18,7 @@ def process_causalpathways(causal_pathways):
     start_time = time.time()
     causal_dicts={}
     caus_type_dicts={}
+    caus_type_dicts1={}
     caus_out_dict={}
     gap_comparator=[URIRef('http://purl.obolibrary.org/obo/PSDO_0000104'),URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')]
     caus_p = URIRef("http://schema.org/name")
@@ -40,6 +41,18 @@ def process_causalpathways(causal_pathways):
     ids = [*set(ids)]
     types=[]
     for x in range(len(ids)):
+        yw=[]
+        for s,p,o in causal_pathways.triples((s, p,None)):
+                # print(s)
+            #print(o)
+            yw.append(o)
+
+            # print("\n")
+           
+            if s == ids[x]:
+                caus_type_dicts1[ids[x]]=yw
+                # print(*yw)
+                yw=[]
         y=[k for k,v in causal_dicts.items() if v == ids[x] ]  
         for i in range(len(y)):
             s=y[i]
@@ -56,7 +69,7 @@ def process_causalpathways(causal_pathways):
     # for x in range(len(caus_s)):
     #     print(caus_s[x])
             
-                
+    # for k,v in caus_type_dicts.items():print(k, v)            
     # print(caus_type_dicts)
     # print(gap)
     return caus_type_dicts,gap
@@ -139,6 +152,7 @@ def matching(caus_out_dict,spek_out_dicts,comparator_dicts,gap_comparator_dicts)
     fr=list(spek_out_dicts.values())
     fz=list(comparator_dicts.values())
     fd=list(gap_comparator_dicts.values())
+    # for k,v in caus_out_dict.items():print(k, v)
     positive_gap_comparator=URIRef('http://purl.obolibrary.org/obo/PSDO_0000104')
     negative_gap_comparator=URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')
     fs=[]
@@ -167,7 +181,7 @@ def matching(caus_out_dict,spek_out_dicts,comparator_dicts,gap_comparator_dicts)
         for swd3 in range(len(fw[swd2])):
             p_list.append(fw[swd2][swd3])
     # print(*p_list)
-    
+    status_bit=False
     for i in range(len(fg)):
         for x in range(len (fr)):
             result =  all(elem in fr[x]  for elem in fg[i])
@@ -175,25 +189,28 @@ def matching(caus_out_dict,spek_out_dicts,comparator_dicts,gap_comparator_dicts)
                 result1 = False
                 if negative_gap_comparator in fg[i]:
                    for f in range(len(fr[x])):
-                        if fr[x][f] in ng_list:
+                        if fr[x][f] in ng_list and status_bit is False:
                             aby = fr[x].count(fr[x][f])
                             if aby == 2:
                                 result1=True
                             if result1 == True:
+                                status_bit=True
                                 l=[k for k,v in spek_out_dicts.items() if v == fr[x]]
                                 bnodes.append(l)
                                 y=[k for k,v in caus_out_dict.items() if v == fg[i]]
                                 accept_ids.append(y)
                 if positive_gap_comparator in fg[i]:
                     for f in range(len(fr[x])):
-                        if fr[x][f] in p_list:
+                        if fr[x][f] in p_list and status_bit is False:
                             aby = fr[x].count(fr[x][f])
                             if aby == 2:
                                 result1=True
                             if result1 == True:
+                                status_bit= True
                                 l=[k for k,v in spek_out_dicts.items() if v == fr[x]]
                                 bnodes.append(l)
                                 y=[k for k,v in caus_out_dict.items() if v == fg[i]]
-                                accept_ids.append(y)   
+                                accept_ids.append(y)  
+        status_bit=False 
     merged_list = [(accept_ids[i], bnodes[i]) for i in range(0, len(accept_ids))]
     return merged_list
