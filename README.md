@@ -1,14 +1,15 @@
 # Precision Feedback Pipeline
 This is the pipeline service that implements the Precision Feedback Pipeline.
-See the [wiki page](https://github.com/Display-Lab/precision-feedback-pipeline/wiki) to learn how to test the pipeline.
+Read through our [wiki pages](https://github.com/Display-Lab/precision-feedback-pipeline/wiki) to learn how to test the pipeline in a variety of implementations.
 
-Start [here](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Postman-Testing-Workflow) with Postman setup instructions
+- Postman Setup Instructions [here](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Postman-Testing-Workflow)
+- Local Testing instructions are complete:
+    - [MacOS users](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-Local-MacOS-Pipeline)
+    - [Windows users](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-Local-Windows-Pipeline)
 
-Local Testing instructions are complete for [MacOS](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-Local-MacOS-Pipeline) and [Windows](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-Local-Windows-Pipeline) users
+Testing with Heroku? See [this page](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-with-Heroku) for instructions.
 
-See [this page](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-with-Heroku) for instructions on using Postman to test the PFP in Heroku
-
-To test in Google Cloud, see the cloud testing wiki [here](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-with-Google-Cloud/_edit)
+Testing with Google Cloud? Make sure you have Google Chrome installed, and see the cloud testing wiki [here](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-with-Google-Cloud/_edit) to learn how to set up the cookie scraping needed to authorize your post requests.
 <!--
 To test the pipeline hosted in heroku:
 1. Download, postman app from ```https://www.postman.com/downloads/``` and install it.
