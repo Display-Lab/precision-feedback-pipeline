@@ -1,7 +1,15 @@
-# precision-feedback-pipeline
+# Precision Feedback Pipeline
+This is the pipeline service that implements the Precision Feedback Pipeline.
+See the [wiki page](https://github.com/Display-Lab/precision-feedback-pipeline/wiki) to learn how to test the pipeline.
 
-This is the pipeline service that implements Precision Feedback Pipeline.
+Start [here](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Postman-Testing-Workflow) with Postman setup instructions
 
+Local Testing instructions are complete for [MacOS](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-Local-MacOS-Pipeline) and [Windows](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-Local-Windows-Pipeline) users
+
+See [this page](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-with-Heroku) for instructions on using Postman to test the PFP in Heroku
+
+To test in Google Cloud, see the cloud testing wiki [here](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-with-Google-Cloud/_edit)
+<!--
 To test the pipeline hosted in heroku:
 1. Download, postman app from ```https://www.postman.com/downloads/``` and install it.
 
@@ -76,5 +84,4 @@ To test the pipeline service hosted in Google cloud platform of Michigan Medicin
         https://pfp.test.app.med.umich.edu/createprecisionfeedback, 
         https://pfp.lab.app.med.umich.edu/createprecisionfeedback, 
         https://pfp.prod.app.med.umich.edu/createprecisionfeedback
-
-
+-->
