@@ -7,9 +7,11 @@ Read through our [wiki pages](https://github.com/Display-Lab/precision-feedback-
     - [MacOS users](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-Local-MacOS-Pipeline)
     - [Windows users](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-Local-Windows-Pipeline)
 
-Testing with Heroku? See [this page](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-with-Heroku) for instructions.
+- Testing with Heroku? See [this page](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-with-Heroku) for instructions.
 
-Testing with Google Cloud? Make sure you have Google Chrome installed, and see the cloud testing wiki [here](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-with-Google-Cloud/_edit) to learn how to set up the cookie scraping needed to authorize your post requests.
+- Testing with Google Cloud? See [this page](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-with-Google-Cloud) for instructions.
+     - Make sure you have Google Chrome installed
+     - Check the wiki page for instructions on installing and using the Postman Interceptor plugin.
 <!--
 To test the pipeline hosted in heroku:
 1. Download, postman app from ```https://www.postman.com/downloads/``` and install it.
