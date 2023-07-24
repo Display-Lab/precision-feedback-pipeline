@@ -18,15 +18,18 @@ class Bit_stomach:
         self.goal_comparison_dicts={}
         self.top_10_dicts={}
         self.top_25_dicts={}
+        self.goal1_dicts={}
         self.performance_data_df=performance_data
         self.input_graph=input_graph
         s=URIRef("http://example.com/app#display-lab")
         p=URIRef('http://example.com/slowmo#IsAboutMeasure')
         p1=URIRef("http://example.com/slowmo#WithComparator")
         p3=URIRef('http://schema.org/name')
+
         o5=URIRef("http://purl.obolibrary.org/obo/PSDO_0000126")
         o55=URIRef("http://purl.obolibrary.org/obo/PSDO_0000128")
         o555=URIRef("http://purl.obolibrary.org/obo/PSDO_0000129")
+        o5555= URIRef("http://purl.obolibrary.org/obo/PSDO_0000094")
         p5=RDF.type
         p6=URIRef("http://example.com/slowmo#ComparisonValue")
         p21=URIRef("http://purl.org/dc/terms/title")
@@ -37,6 +40,8 @@ class Bit_stomach:
         o222=Literal("top_10") 
         o2122=Literal("TOP_25")
         o2222=Literal("top_25")
+        o21222=Literal("GOAL")
+        o22222=Literal("goal")
         self.input_graph=input_graph
         def remove_annotate(self):
             s12 = URIRef('http://example.com/app#display-lab')
@@ -76,6 +81,18 @@ class Bit_stomach:
                 self.input_graph.add((s11,p21,o21))
                 self.input_graph.add((s11,p22,o22))
         #get comparison values for goal from base graph and get Blank nodes for both goal and peer comparators
+        def insert_blank_nodes_goal(self):
+        #insert blank nodes for social comparators for each measure
+            for sw,pw,ow in self.input_graph.triples((s, p, None)):
+                s1=ow
+                o11=BNode()
+                self.input_graph.add((s1,p1,o11))  
+                s11=o11
+                self.input_graph.add((s11,p5,o5555))
+                self.input_graph.add((s11,p21,o21222))
+                self.input_graph.add((s11,p22,o22222))
+        
+        
         def check_rerunkey(self):
             rerunkey=0
             for sq,pq,oq in self.input_graph.triples((s, p, None)):
@@ -92,6 +109,7 @@ class Bit_stomach:
         insert_blank_nodes_top_10(self)
         insert_blank_nodes_top_25(self)
         insert_blank_nodes_peers(self)
+        insert_blank_nodes_goal(self)
         # if(self.rerunkey==1):
         #     remove_annotate(self)
            
@@ -107,23 +125,28 @@ class Bit_stomach:
                     if str(o4)=="top_25":
                         #print(o2)
                         self.top_25_dicts[s1]=o2
-
                     if str(o4)=="goal":
                         #print(o2)
-                        self.goal_dicts[s1]=o2
-                        for s8,p8,o8 in self.input_graph.triples((s3,p6,None)):
-                            self.goal_comparison_dicts[s1]=o8
+                        self.goal1_dicts[s1]=o2
+
+                    # if str(o4)=="goal":
+                    #     #print(o2)
+                    #     self.goal_dicts[s1]=o2
+                    #     for s8,p8,o8 in self.input_graph.triples((s3,p6,None)):
+                    #         self.goal_comparison_dicts[s1]=o8
+                        
         
 
     def annotate(self):
         a=self.input_graph
-        goaldf=pd.DataFrame(self.goal_comparison_dicts.items())
-        
+        # goaldf=pd.DataFrame(self.goal_comparison_dicts.items())
+        # for key,value in self.goal_comparison_dicts.items():
+	    #     print(key, ':', value)
 #socialdf=pd.DataFrame(social_comparison_dicts.items())
-        goaldf1=pd.DataFrame(self.goal_comparison_dicts.items())
-        goaldf1.columns =['measure', 'goal_comparison_value']
+        # goaldf1=pd.DataFrame(self.goal_comparison_dicts.items())
+        # goaldf1.columns =['measure', 'goal_comparison_value']
         
-        pr=Prepare_data_annotate(a,self.performance_data_df,goaldf1)
+        pr=Prepare_data_annotate(a,self.performance_data_df)
 
         measure_list=[]
         self.performance_data_df["measure"]=self.performance_data_df["measure"].str.decode(encoding="UTF-8")
@@ -132,11 +155,11 @@ class Bit_stomach:
         
         for index, element in enumerate(measure_list):
             measure_name=element
-            a=pr.goal_gap_annotate(measure_name,**self.goal_dicts)
-            a=pr.goal_trend_annotate(measure_name,**self.goal_dicts)
-            a=pr.goal_acheivement_loss_annotate(measure_name, **self.goal_dicts)
-            a=pr.goalconsecutive_annotate(measure_name,**self.goal_dicts)
-            a=pr.goal_monotonicity_annotate(measure_name,**self.goal_dicts) 
+            a=pr.goal_gap_annotate(measure_name,**self.goal1_dicts)
+            a=pr.goal_trend_annotate(measure_name,**self.goal1_dicts)
+            a=pr.goal_acheivement_loss_annotate(measure_name, **self.goal1_dicts)
+            a=pr.goalconsecutive_annotate(measure_name,**self.goal1_dicts)
+            a=pr.goal_monotonicity_annotate(measure_name,**self.goal1_dicts) 
             a=pr.peer_gap_annotate(measure_name,**self.measure_dicts)
             a=pr.peer_trend_annotate(measure_name,**self.measure_dicts)
             a=pr.peer_acheivement_loss_annotate(measure_name, **self.measure_dicts) 
