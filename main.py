@@ -87,6 +87,11 @@ async def startup_event():
 @app.get("/")
 async def root():
     return{"Hello":"Universe"}
+@app.get("/template/")
+async def template():
+    f = open('startup/input_message_demo.json')
+    data = json.load(f)
+    return data
 
 @app.post("/createprecisionfeedback/")
 async def createprecisionfeedback(info:Request):
