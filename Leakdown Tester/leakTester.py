@@ -7,7 +7,7 @@ global iniRow, finRow, numCol, reqNumber, perfPath, pfp
 ############### Configure the Following #################################################
 
 iniRow	= 0 		# First row of data to read (!! 0 INDEXED !!)
-finRow = 12			# Last row of data to read (Must be contiguous with initial row)
+finRow = 12		# Last row of data to read (Must be contiguous with initial row)
 numCol = 10 		# Columns to read in (only change if not using MPOG goals)
 reqNumber = 1		# Number of post requests to send the pipeline
 
