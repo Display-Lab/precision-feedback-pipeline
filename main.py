@@ -49,6 +49,7 @@ for sdf in range(len(list3)):
 
 measure_details=Graph()
 causal_pathways=graph
+
 templates=graph1
 
 
@@ -91,7 +92,6 @@ async def root():
 async def template():
     f = open('startup/input_message_demo.json')
     data = json.load(f)
-    
     return data
 
 @app.post("/createprecisionfeedback/")
