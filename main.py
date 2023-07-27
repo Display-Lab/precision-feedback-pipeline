@@ -91,6 +91,7 @@ async def root():
 async def template():
     f = open('startup/input_message_demo.json')
     data = json.load(f)
+    
     return data
 
 @app.post("/createprecisionfeedback/")
