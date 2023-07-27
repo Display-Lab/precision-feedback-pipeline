@@ -49,7 +49,6 @@ for sdf in range(len(list3)):
 
 measure_details=Graph()
 causal_pathways=graph
-
 templates=graph1
 
 
