@@ -12,7 +12,9 @@ from esteemer.esteemer import Esteemer
 from pictoralist.pictoralist import Pictoralist
 import json
 import requests
+import gitinfo
 from requests_file import FileAdapter
+
 
 
 import os
@@ -78,7 +80,9 @@ async def startup_event():
         
         templates =templates
        # templates=read_graph(f4json)
+        print(gitinfo.get_git_info())
         print("startup is complete")
+        
     except Exception as e:
         print("Looks like there is some problem in connection,see below traceback")
         raise e
