@@ -1,28 +1,48 @@
-#Version 1.0.0
+# Version 1.0.1
 import pandas as pd
 import json
 import requests
 import time
-global iniRow, finRow, numCol, reqNumber, perfPath, pfp
-############### Configure the Following #################################################
+import os
+import argparse
+import base64
+global iniRow,finRow,numCol,reqNumber,target,useGit,showResp,saveResp,perfPath,pfp
 
-iniRow	= 0 		# First row of data to read (!! 0 INDEXED !!)
-finRow = 12		# Last row of data to read (Must be contiguous with initial row)
-numCol = 10 		# Columns to read in (only change if not using MPOG goals)
-reqNumber = 1		# Number of post requests to send the pipeline
+## Initialize argparse, define command-line arguments
+parser = argparse.ArgumentParser(description="Leakdown Tester Script")
+parser.add_argument("--respond", action="store_true", help="Logical flag to print API responses. Default = True; use '--respond' to see responses.")
+parser.add_argument("--save", action="store_true", help="Logical flag to save API responses. Default = True; use '--save' to save outputs.")
+parser.add_argument("--RI", type=int, default=0, help="First row of data to read from CSV.")
+parser.add_argument("--RF", type=int, default=12, help="Last row of data to read from CSV.")
+parser.add_argument("--C", type=int, default=10, help="Number of columns to read.")
+parser.add_argument("--reqs", type=int, default=1, help="Number of post requests to send.")
+parser.add_argument("--target", choices=["local", "heroku", "cloud"], default="local", help="Target PFP environment: use 'local', 'heroku', or 'cloud'.")
+parser.add_argument("--useGit", type=str, default=None, help="Address of GitHub input message file to send pipeline.")
+parser.add_argument("--csv", type=str, default=None, help="Filepath to CSV file to read from.")
 
-## Networking Adjustments ###########
-perfPath = "C:\\Users\\galan\\.snakepit\\.Non-pipeline files\\Testing data\\MpogData_Real.csv"	# path to performance data
-pfp = "http://127.0.0.1:8000/createprecisionfeedback/"			#Local API endpoint
-#pfp = "https://pfpapi.herokuapp.com/createprecisionfeedback/"	#Heroku API endpoint
-#pfp = 	"https://pfp.test.app.med.umich.edu/createprecisionfeedback"# GCloud API endpoint in progress, OAuth2.0 protocol knowledge required to use...
+## Parse command-line arguments and pull in environmental variables
+args = parser.parse_args()
+iniRow =    args.RI         # Initial row read from CSV
+finRow =    args.RF         # Final row read from CSV
+numCol =    args.C          # Number of columns read
+reqNumber = args.reqs       # Number of Requests sent
+target =    args.target     # Flag: API endpoint target
+useGit =    args.useGit     # Flag: GitHub JSON source
+showResp =  args.respond    # Flag: Print API response to console
+saveResp =  args.save       # Flag: Save API response to file
+csvPath =   args.csv        # CSV file path (argument specified)
+perfPath =  os.environ.get("CSVPATH")
+pfp =       os.environ.get("PFP")
 
-#########################################################################################
-print("\n\n\t\tWelcome to the Leakdown Tester!")
-print("Listing out active configuration settings, please review the following:\n")
-print(f"Reading data from {perfPath}...")
-print(f"Reading in data with dimensions {numCol} by {finRow - iniRow}...")
-print(f"Sending {reqNumber} request(s) to {pfp}...\n")
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# Function to fetch JSON content from GitHub...
+def go_fetch(url):
+    bone = requests.get(url)
+    if bone.status_code == 200:
+        return bone.text
+    else:
+        raise ValueError(f"Failed to fetch JSON content from GitHub link: {url}")
 
 # Reading in CSV data from file...
 def warhead_assembly(path):
@@ -41,12 +61,10 @@ def warhead_assembly(path):
         jsonedData += current_line  # content addition
         if i < len(performance) - 1:
             jsonedData += ",\n\t"   # formatting
-
     return jsonedData
 
-# Making JSON Payload...
+# Create JSON Payload...
 def raytheon(warhead):
-    # Step 1: Wrap in header content...
     missile = '''{
       "@context": {
         "@vocab": "http://schema.org/",
@@ -70,9 +88,7 @@ def raytheon(warhead):
       "Performance_data":[
         ["staff_number","measure","month","passed_count","flagged_count","denominator","peer_average_comparator","peer_90th_percentile_benchmark","peer_75th_percentile_benchmark","MPOG_goal"],
         '''
-    # Step 2: Sneak in our little data package...
     missile += warhead
-    # Step 3: Wrap JSON footer around data package...
     missile += '''
         ],
         "History":{
@@ -118,7 +134,6 @@ def raytheon(warhead):
           }
         }
     }'''
-    # Return the final JSON payload
     return missile
 
 # Function to send the post request...
@@ -127,34 +142,112 @@ def bombs_away(pfp, missile):
 	response = requests.post(pfp, data=missile, headers=headers)
 	return response
 
-if __name__ == "__main__":
-    try:
-        # Single-function read/write with error checking
-        perfJSON = warhead_assembly(perfPath)
-        
-        # Make the data missile (JSON content of the request)
-        amraam = raytheon(perfJSON)
+# Output relevant JSON keys from API response...
+def text_back(radarReturn):
+    if "selected_candidate" in radarReturn:
+        selCan = radarReturn["selected_candidate"]
+        print("Selected Candidate Message Information:")
+        print(f"Display: {selCan.get('display')}")
+        print(f"Measure: {selCan.get('measure')}")
+        print(f"Acceptable By: {selCan.get('acceptable_by')}")
 
-        ###### Manual Message Review #############
-        #print("\nJSON missile content:")
-        #print(perfJSON)
-        #print("\nFull JSON message:")
-        #print(amraam)
-        ##########################################
+    if "Message" in radarReturn:
+        messDat = radarReturn["Message"]
+        print(f"Text Message: {messDat.get('text_message')}")
+        print(f"Comparison Value: {messDat.get('comparison_value')}\n")
+
+# Save PFP API responses for review...
+def log_return(radarReturn, outputName):
+    texName = outputName + ".json"
+    imgName = outputName + ".png"
+    with open(texName, "w") as file:
+        json.dump(radarReturn, file, indent=2)
+        print(f"PFP response text saved to '{texName}'")
+    with open(imgName, "wb") as imageFile:
+        imageFile.write(base64.b64decode(radarReturn["Message"]["image"]))
+        print(f"Pictoralist image saved to '{imgName}'.\n")
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+if __name__ == "__main__":
+    
+    # Argument-set API endpoint logic
+    if target == "local" and not pfp:
+        pfp = "http://127.0.0.1:8000/createprecisionfeedback/"
+    elif target == "heroku" and not pfp:
+        pfp = "https://pfpapi.herokuapp.com/createprecisionfeedback/"
+    elif target == "cloud" and not pfp:
+        pfp = "https://pfp.test.app.med.umich.edu/createprecisionfeedback"
+    else:
+        print("Warning: Target not declared. Continuing with local PFP target.")
+
+    # Argument-set CSV filepath (overrides Env Var)
+    if csvPath != None:
+        perfPath = csvPath
+
+    # Error handling - JSON content source
+    if perfPath == None and useGit == None:
+        raise ValueError("Please specify where to read JSON content from. See documentation at: ")
+    elif perfPath != None and useGit != None:
+        print("Warning: JSON payloads specified both via GitHub link and filepath!")
+        goOn = input("Do you want to use GitHub input_message as the payload? (y/n)\t")
+        if goOn == "n":
+            useGit = None
+            print("Continuing with CSV JSON payload...")
+        else:
+            perfPath = None
+            print("Continuing with GitHub payload...")
+
+    # Startup messaging
+    print("\n\t\tWelcome to the Leakdown Tester!")
+    print("Listing out current configuration settings, please review the following:\n")
+    if useGit != None:
+        print(f"Reading data from {useGit}...")
+    elif perfPath != None:
+        if csvPath == None:
+            print("Using CSV data specified by environmental variable...")
+        print(f"Reading data from {perfPath}...")
+        print(f"Reading in data with dimensions {numCol} by {finRow - iniRow}...")
+    print(f"Sending {reqNumber} request(s) to {pfp}...\n")
+
+    #### Main script function calls ####
+    try:
+        # GitHub JSON Payload implementation
+        if useGit != None:
+            perfJSON = go_fetch(useGit)    
+        # Building JSON from CSV
+        elif perfPath != None:
+            perfJSON = warhead_assembly(perfPath)   # I/O from CSV dataframe
+        else:
+            print("Error: No content provided for POST request.")
+            exit(1)
+        amraam = raytheon(perfJSON)             # Make JSON payload
 
         for i in range(reqNumber):
             # Send the POST request(s) to the PFP
-            print(f"Trying request {i+1} of {reqNumber}:")
+            print(f"Trying request {i + 1} of {reqNumber}:")
             airtime = time.time()
             fox3 = bombs_away(pfp, amraam)
 
-			# Check response(s)
+            # Check response(s)
             if fox3.status_code == 200:
                 print("Message delivered in {:.3f} seconds.\n".format(time.time() - airtime))
+                # Output response information (on request)
+                if showResp:
+                    print("\n\t\t The API has returned the following:")
+                    apiReturn = json.loads(fox3.text)    # response to JSON
+                    text_back(apiReturn)
+
+                # Save response data to files (on request)
+                if saveResp:
+                    respName = f"response_{i + 1}"
+                    log_return(apiReturn, respName)
+
             else:
                 print(f"Delivery failed. Returned status code {fox3.status_code}.")
                 print("The missile does not know where it is!\n")
-        print("Leakdown Test complete.")
+
+        print("\t\tLeakdown Test complete.\n")
 
     except ValueError as e:
         print(f"Error: {e}")
