@@ -1,4 +1,14 @@
 # Changelog for Leakdown Tester Script
+## Version 1.1.2
+Release 8/2/23
+- Updated useGit functionality
+	+ GitHub links now supercede CSV content without user input
+		* Changed warning print to INFO to reflect above
+	+ useGit now accepts raw and normal github page links
+- Updated startup messaging
+	+ Welcome message now predecates all print statements
+	+ Version number included in welcome message
+
 ## Version 1.1.1
 Released 8/2/23
 - Changed JSON content formatting for CSV-built messages
