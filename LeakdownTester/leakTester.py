@@ -1,4 +1,4 @@
-# Version 1.0.1
+# Version 1.1.0
 import pandas as pd
 import json
 import requests
@@ -36,16 +36,21 @@ pfp =       os.environ.get("PFP")
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Function to fetch JSON content from GitHub...
+# Function to fetch JSON content from GitHub... V8
 def go_fetch(url):
-    bone = requests.get(url)
+    header = {"Accept": "application/vnd.github.v3.raw"} # tell gitHub to send as raw, uncompressed
+    bone = requests.get(url, headers=header)
     if bone.status_code == 200:
-        return bone.text
+        try:
+            jasonBone = json.dumps(json.loads(bone.text), indent=4) # reconstruct as JSON with indentation
+            return jasonBone
+        except json.JSONDecodeError as e:
+            raise ValueError("Failed parsing JSON content.")
     else:
         raise ValueError(f"Failed to fetch JSON content from GitHub link: {url}")
 
 # Reading in CSV data from file...
-def warhead_assembly(path):
+def csv_trans_json(path):
     performance = pd.read_csv(path, header=None, usecols = range(numCol), nrows= finRow-iniRow)
     rowsRead, colsRead = performance.shape
     selectedRows = performance.iloc[iniRow : finRow]
@@ -64,7 +69,8 @@ def warhead_assembly(path):
     return jsonedData
 
 # Create JSON Payload...
-def raytheon(warhead):
+# think about ninjaing this (whatever that means? ask Peter)
+def assemble_payload(warhead):
     missile = '''{
       "@context": {
         "@vocab": "http://schema.org/",
@@ -137,34 +143,34 @@ def raytheon(warhead):
     return missile
 
 # Function to send the post request...
-def bombs_away(pfp, missile):
+def send_req(pfp, missile):
 	headers = {"Content-Type": "application/json"}
 	response = requests.post(pfp, data=missile, headers=headers)
 	return response
 
 # Output relevant JSON keys from API response...
-def text_back(radarReturn):
-    if "selected_candidate" in radarReturn:
-        selCan = radarReturn["selected_candidate"]
+def text_back(postReturn):
+    if "selected_candidate" in postReturn:
+        selCan = postReturn["selected_candidate"]
         print("Selected Candidate Message Information:")
         print(f"Display: {selCan.get('display')}")
         print(f"Measure: {selCan.get('measure')}")
         print(f"Acceptable By: {selCan.get('acceptable_by')}")
 
-    if "Message" in radarReturn:
-        messDat = radarReturn["Message"]
+    if "Message" in postReturn:
+        messDat = postReturn["Message"]
         print(f"Text Message: {messDat.get('text_message')}")
         print(f"Comparison Value: {messDat.get('comparison_value')}\n")
 
 # Save PFP API responses for review...
-def log_return(radarReturn, outputName):
+def log_return(postReturn, outputName):
     texName = outputName + ".json"
     imgName = outputName + ".png"
     with open(texName, "w") as file:
-        json.dump(radarReturn, file, indent=2)
+        json.dump(postReturn, file, indent=2)
         print(f"PFP response text saved to '{texName}'")
     with open(imgName, "wb") as imageFile:
-        imageFile.write(base64.b64decode(radarReturn["Message"]["image"]))
+        imageFile.write(base64.b64decode(postReturn["Message"]["image"]))
         print(f"Pictoralist image saved to '{imgName}'.\n")
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -200,7 +206,6 @@ if __name__ == "__main__":
 
     # Startup messaging
     print("\n\t\tWelcome to the Leakdown Tester!")
-    print("Listing out current configuration settings, please review the following:\n")
     if useGit != None:
         print(f"Reading data from {useGit}...")
     elif perfPath != None:
@@ -214,28 +219,28 @@ if __name__ == "__main__":
     try:
         # GitHub JSON Payload implementation
         if useGit != None:
-            perfJSON = go_fetch(useGit)    
+            fullMessage = go_fetch(useGit)    
         # Building JSON from CSV
         elif perfPath != None:
-            perfJSON = warhead_assembly(perfPath)   # I/O from CSV dataframe
+            perfJSON = csv_trans_json(perfPath)   # I/O from CSV dataframe
+            fullMessage = assemble_payload(perfJSON)    # Make JSON payload
         else:
             print("Error: No content provided for POST request.")
             exit(1)
-        amraam = raytheon(perfJSON)             # Make JSON payload
 
         for i in range(reqNumber):
             # Send the POST request(s) to the PFP
             print(f"Trying request {i + 1} of {reqNumber}:")
             airtime = time.time()
-            fox3 = bombs_away(pfp, amraam)
+            sentPost = send_req(pfp, fullMessage)
 
             # Check response(s)
-            if fox3.status_code == 200:
+            if sentPost.status_code == 200:
                 print("Message delivered in {:.3f} seconds.\n".format(time.time() - airtime))
                 # Output response information (on request)
                 if showResp:
                     print("\n\t\t The API has returned the following:")
-                    apiReturn = json.loads(fox3.text)    # response to JSON
+                    apiReturn = json.loads(sentPost.text)    # response to JSON
                     text_back(apiReturn)
 
                 # Save response data to files (on request)
@@ -244,8 +249,7 @@ if __name__ == "__main__":
                     log_return(apiReturn, respName)
 
             else:
-                print(f"Delivery failed. Returned status code {fox3.status_code}.")
-                print("The missile does not know where it is!\n")
+                print(f"Delivery failed. Returned status code {sentPost.status_code}.")
 
         print("\t\tLeakdown Test complete.\n")
 
