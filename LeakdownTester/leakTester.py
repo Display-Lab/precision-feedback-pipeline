@@ -1,4 +1,5 @@
-# Version 1.1.0
+# Version 1.1.1
+## Changed tail content of JSON body to new standard
 import pandas as pd
 import json
 import requests
@@ -69,7 +70,6 @@ def csv_trans_json(path):
     return jsonedData
 
 # Create JSON Payload...
-# think about ninjaing this (whatever that means? ask Peter)
 def assemble_payload(warhead):
     missile = '''{
       "@context": {
@@ -116,30 +116,33 @@ def assemble_payload(warhead):
                 "email_text_html": "<p>Congratulations on your high performance for SUS-04: Fresh Gas Flow, less than or equal to 2L/min. Your performance was 96%, above the Top 10% peer benchmark of 94%.</p> <p>More details about how the measure SUS-04 is calculated <a href='[insert link here]'> are available here</a>. Details about your operative cases are available in your <a href='[insert link here]'> clinical quality dashboard</a>.</p>"
                }
         },
-        "debug":"no",
         "Preferences":{
-            "Utilities": {
-            "Motivating_information": 
-              {
-                "social_better": -5.97766,
-                "social_gain":	-2.92114,
-                "social_stayed_better":	-12.76936,
-                "social_worse":	-0.05277,
-                "social_approach":	-0.24384,
-                "social_loss":	2.72075,
-                "improving":	-0.26266,
-                "worsening":	1.06977,
-                "social_stayed_worse":	9.97743
-              },
-            "Display_format":
-              {
-                "text-only": "0.0",
-                "bar_chart": "37.0",
-                "line_chart": "0.0"
-              }    
-          }
+          "Utilities": {
+          "Message_Format": 
+            {
+              "1": "0.0",
+              "2": "0.1",
+              "16": "7.5",
+              "24": "9.4",
+              "18": "11.3",
+              "11": "13.2",
+              "22": "15.1" ,
+              "14": "22.6" ,
+              "21": "62.3" ,
+              "5":"0.2",
+              "15":"4.0",
+              "4":"0.9"
+            },
+          "Display_Format":
+            {
+              "short_sentence_with_no_chart": "0.0",
+              "bar": "37.0",
+              "line": "0.0"
+            }
         }
-    }'''
+      },
+      "debug":"no"
+      }'''
     return missile
 
 # Function to send the post request...
