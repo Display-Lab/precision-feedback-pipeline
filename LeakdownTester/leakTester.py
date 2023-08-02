@@ -1,5 +1,3 @@
-# Version 1.1.1
-## Changed tail content of JSON body to new standard
 import pandas as pd
 import json
 import requests
@@ -7,7 +5,8 @@ import time
 import os
 import argparse
 import base64
-global iniRow,finRow,numCol,reqNumber,target,useGit,showResp,saveResp,perfPath,pfp
+global iniRow,finRow,numCol,reqNumber,target,useGit,showResp,saveResp,perfPath,pfp,vers
+vers = "1.1.2"
 
 ## Initialize argparse, define command-line arguments
 parser = argparse.ArgumentParser(description="Leakdown Tester Script")
@@ -37,10 +36,13 @@ pfp =       os.environ.get("PFP")
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Function to fetch JSON content from GitHub... V8
+# Function to fetch JSON content from GitHub... V9
 def go_fetch(url):
+    if "github.com" in url:
+        url = url.replace("github.com", "raw.githubusercontent.com").replace("/blob", "")
     header = {"Accept": "application/vnd.github.v3.raw"} # tell gitHub to send as raw, uncompressed
     bone = requests.get(url, headers=header)
+    
     if bone.status_code == 200:
         try:
             jasonBone = json.dumps(json.loads(bone.text), indent=4) # reconstruct as JSON with indentation
@@ -179,6 +181,7 @@ def log_return(postReturn, outputName):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 if __name__ == "__main__":
+    print(f"\n\t\tWelcome to the Leakdown Tester, Version {vers}!")
     
     # Argument-set API endpoint logic
     if target == "local" and not pfp:
@@ -196,21 +199,14 @@ if __name__ == "__main__":
 
     # Error handling - JSON content source
     if perfPath == None and useGit == None:
-        raise ValueError("Please specify where to read JSON content from. See documentation at: ")
+        raise ValueError("Please specify where to read JSON content from.")
     elif perfPath != None and useGit != None:
-        print("Warning: JSON payloads specified both via GitHub link and filepath!")
-        goOn = input("Do you want to use GitHub input_message as the payload? (y/n)\t")
-        if goOn == "n":
-            useGit = None
-            print("Continuing with CSV JSON payload...")
-        else:
-            perfPath = None
-            print("Continuing with GitHub payload...")
+        print("\tINFO: JSON payloads specified by both GitHub link and filepath.")
+        print("Continuing with GitHub payload...")
 
-    # Startup messaging
-    print("\n\t\tWelcome to the Leakdown Tester!")
+    # Startup config readback
     if useGit != None:
-        print(f"Reading data from {useGit}...")
+        print(f"Reading JSON data from {useGit}...")
     elif perfPath != None:
         if csvPath == None:
             print("Using CSV data specified by environmental variable...")
