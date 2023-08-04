@@ -10,6 +10,7 @@ Fun Facts:
 The script checks for this on startup, as some kind of JSON content for the POST request is required. You can specify this filepath with the csv argument, or you can set the env var and specify a different filepath with the csv argument which will override the environment variable. A filepath must be specified if not using the useGit argument.
 2) `PFP` - URL of the PFP API endpoint where the POST requests are sent.
 It is likely faster to use the `--target` argument to set the API endpoint rather than to set the environment variable here, however both methods are implemented. Use what works for you.
+3) `TARGET_AUDIENCE` - This target_audience variable is the target audience of the API,connect with the developer to get the details, as it depends on the security of the API.
 
 ## Arguments
 Below are the argument that can be used to run the script. Initializing with all default values will yield a single post request sent to a locally hosted PFP instance.
@@ -23,10 +24,12 @@ Format:
 - `--C` `X` : Integer, default 10. The number of columns of data to read from the CSV file. Only change when working with deprecated pipeline versions that do not accept MPOG Goal inclusion. 
 - `--reqs` `X` : Integer, default 1. Number of post requests sent by the script to the API endpoint.
 
+
 ### String Args
 - `--target` `local` : String which the script parses and uses to set the API endpoint for the POST requests. Use "local", "heroku", or "cloud".
 -  `--csv` `"filepath to CSV"` : Use double quotation marks around the filepath to your local copy of the MPOG-like test data CSV file. Note: it is better to set the filepath as an environmental variable, but this functionality is fully implemented.
 - `--useGit` `"link"` : Paste a link to a GitHub `input_message.JSON` file inside "" to pull that JSON file in and use the script to send copies of it to the chosen endpoint.
+-  `--service_account` `"filepath to service account"` : Use double quotation marks around the filepath to your local copy of the service_account. Note: it is better to set the filepath as an environmental variable, but this functionality is fully implemented.Connect with the developer to get the details, as it depends on the security of the API.
 
 ### Logical Args ("Store True")
 Adding these arguments to your initialization will change the output you recieve on a successful POST request.
