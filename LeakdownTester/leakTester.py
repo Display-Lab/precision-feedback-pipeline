@@ -5,6 +5,12 @@ import time
 import os
 import argparse
 import base64
+import certifi
+import google.auth.transport.requests
+import requests
+
+from google.auth import crypt
+from google.oauth2 import service_account
 global iniRow,finRow,numCol,reqNumber,target,useGit,showResp,saveResp,perfPath,pfp,vers
 vers = "1.1.2"
 
@@ -19,6 +25,7 @@ parser.add_argument("--reqs", type=int, default=1, help="Number of post requests
 parser.add_argument("--target", choices=["local", "heroku", "cloud"], default="local", help="Target PFP environment: use 'local', 'heroku', or 'cloud'.")
 parser.add_argument("--useGit", type=str, default=None, help="Address of GitHub input message file to send pipeline.")
 parser.add_argument("--csv", type=str, default=None, help="Filepath to CSV file to read from.")
+parser.add_argument("--service_account", type=str, default=None, help="Filepath to the service account file to read from" )
 
 ## Parse command-line arguments and pull in environmental variables
 args = parser.parse_args()
@@ -31,8 +38,11 @@ useGit =    args.useGit     # Flag: GitHub JSON source
 showResp =  args.respond    # Flag: Print API response to console
 saveResp =  args.save       # Flag: Save API response to file
 csvPath =   args.csv        # CSV file path (argument specified)
+serviceaccountPath = args.service_account #Service Account file path(argument specified)
 perfPath =  os.environ.get("CSVPATH")
 pfp =       os.environ.get("PFP")
+target_audience = os.environ.get("TARGET_AUDIENCE")
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -149,8 +159,8 @@ def assemble_payload(warhead):
 
 # Function to send the post request...
 def send_req(pfp, missile):
-	headers = {"Content-Type": "application/json"}
-	response = requests.post(pfp, data=missile, headers=headers)
+	headers1 = {"Content-Type": "application/json"}
+	response = requests.post(pfp, data=missile, headers=headers1)
 	return response
 
 # Output relevant JSON keys from API response...
@@ -180,6 +190,56 @@ def log_return(postReturn, outputName):
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+def make_iap_request(url,Fullmessage, method="POST", **kwargs):
+    """Makes a request to an application protected by Identity-Aware Proxy.
+
+    Args:
+      url: The Identity-Aware Proxy-protected URL to fetch.
+      method: The request method to use
+              ('GET', 'OPTIONS', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE')
+      **kwargs: Any of the parameters defined for the request function:
+                https://github.com/requests/requests/blob/master/requests/api.py
+                If no timeout is provided, it is set to 90 by default.
+
+    Returns:
+      The page body, or raises an exception if the page couldn't be retrieved.
+    """
+    # Set the default timeout, if missing
+    if "timeout" not in kwargs:
+        kwargs["timeout"] = 90
+
+    # True if the credentials have a token and the token is not expired. This
+    # obviates the need to track expiry times ourselves.
+    if oidc_token.valid != True:
+        
+        request = google.auth.transport.requests.Request()
+        oidc_token.refresh(request)
+
+    # Fetch the Identity-Aware Proxy-protected URL, including an
+    # Authorization header containing "Bearer " followed by a
+    # Google-issued OpenID Connect token for the service account.
+    Fullmessage=json.loads(Fullmessage)
+    resp = requests.post(
+       
+        url,
+        headers={"Authorization": "Bearer {}".format(oidc_token.token)},
+        json=Fullmessage,
+        
+    )
+    if resp.status_code == 403:
+        raise Exception(
+            "Service account does not have permission to "
+            "access the IAP-protected application."
+        )
+    elif resp.status_code != 200:
+        raise Exception(
+            "Bad response from application: {!r} / {!r} / {!r}".format(
+                resp.status_code, resp.headers, resp.text
+            )
+        )
+    else:
+        return resp
+
 if __name__ == "__main__":
     print(f"\n\t\tWelcome to the Leakdown Tester, Version {vers}!")
     
@@ -196,6 +256,11 @@ if __name__ == "__main__":
     # Argument-set CSV filepath (overrides Env Var)
     if csvPath != None:
         perfPath = csvPath
+    
+    oidc_token = service_account.IDTokenCredentials.from_service_account_file(
+    serviceaccountPath,
+    target_audience=target_audience,
+)
 
     # Error handling - JSON content source
     if perfPath == None and useGit == None:
@@ -231,8 +296,11 @@ if __name__ == "__main__":
             # Send the POST request(s) to the PFP
             print(f"Trying request {i + 1} of {reqNumber}:")
             airtime = time.time()
-            sentPost = send_req(pfp, fullMessage)
-
+            if target == "heroku" and target == "local":
+                sentPost = send_req(pfp, fullMessage)
+            elif target == "cloud":
+                sentPost = make_iap_request(pfp,fullMessage)
+                print(sentPost)
             # Check response(s)
             if sentPost.status_code == 200:
                 print("Message delivered in {:.3f} seconds.\n".format(time.time() - airtime))
