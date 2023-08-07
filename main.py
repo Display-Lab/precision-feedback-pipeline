@@ -11,9 +11,13 @@ from thinkpudding.thinkpudding import Thinkpudding
 from esteemer.esteemer import Esteemer
 from pictoralist.pictoralist import Pictoralist
 import json
+import webbrowser
 import requests
 import gitinfo
+
+
 from requests_file import FileAdapter
+
 
 
 
@@ -90,12 +94,13 @@ async def startup_event():
 
 @app.get("/")
 async def root():
+    
     return{"Hello":"Universe"}
+    
 @app.get("/template/")
 async def template():
-    f = open('startup/input_message_demo.json')
-    data = json.load(f)
-    return data
+    github_link ="https://raw.githubusercontent.com/Display-Lab/precision-feedback-pipeline/main/input_message.json"
+    return webbrowser.open(github_link)
 
 @app.post("/createprecisionfeedback/")
 async def createprecisionfeedback(info:Request):
