@@ -108,7 +108,7 @@ async def createprecisionfeedback(info:Request):
     req_info =await info.json()
     req_info1=req_info
     performance_data = req_info1["Performance_data"]
-    debug=req_info1["debug"]
+    # debug=req_info1["debug"]
     performance_data_df =pd.DataFrame (performance_data, columns = [ "staff_number","Measure_Name","Month","Passed_Count","Flagged_Count","Denominator","peer_average_comparator","peer_90th_percentile_benchmark","peer_75th_percentile_benchmark","MPOG_goal"])
     performance_data_df.columns = performance_data_df.iloc[0]
     performance_data_df = performance_data_df[1:]
@@ -130,11 +130,11 @@ async def createprecisionfeedback(info:Request):
     #BitStomach
     bs=Bit_stomach(performer_graph,performance_data_df)
     BS=bs.annotate()
-    op=BS.serialize(format='json-ld', indent=4)
-    if str(debug)=="yes":
-        f = open("outputs/spek_bs.json", "w")
-        f.write(op)
-        f.close()
+    # op=BS.serialize(format='json-ld', indent=4)
+    # if str(debug)=="yes":
+    #     f = open("outputs/spek_bs.json", "w")
+    #     f.write(op)
+    #     f.close()
     
     #CandidateSmasher
     cs=CandidateSmasher(BS,templates)
@@ -142,23 +142,23 @@ async def createprecisionfeedback(info:Request):
     df_template=cs.get_template_data()
  
     CS=cs.create_candidates(df_graph,df_template)
-    if str(debug)=="yes":
-        op=CS.serialize(format='json-ld', indent=4)
-        f = open("outputs/spek_cs.json", "w")
-        f.write(op)
-        f.close()
+    # if str(debug)=="yes":
+    #     op=CS.serialize(format='json-ld', indent=4)
+    #     f = open("outputs/spek_cs.json", "w")
+    #     f.write(op)
+    #     f.close()
     #Thinkpuddung
     tp=Thinkpudding(CS,causal_pathways)
     tp.process_causalpathways()
     tp.process_spek()
     tp.matching()
     spek_tp=tp.insert()
-    op=spek_tp.serialize(format='json-ld', indent=4)
-    if str(debug)=="yes":
-        op=spek_tp.serialize(format='json-ld', indent=4)
-        f = open("outputs/spek_tp.json", "w")
-        f.write(op)
-        f.close()
+    # op=spek_tp.serialize(format='json-ld', indent=4)
+    # if str(debug)=="yes":
+    #     op=spek_tp.serialize(format='json-ld', indent=4)
+    #     f = open("outputs/spek_tp.json", "w")
+    #     f.write(op)
+    #     f.close()
 
     # #Esteemer
     es=Esteemer(spek_tp,preferences,history)
@@ -181,11 +181,11 @@ async def createprecisionfeedback(info:Request):
         
         selected_message1=pc.prepare_selected_message()
     # '<img align="left" src="data:image/png;base64,%s">' %base64_image
-    ES=spek_es.serialize(format='json-ld', indent=4)
-    if str(debug)=="yes":
-        f = open("outputs/spek_es.json", "w")
-        f.write(ES)
-        f.close()
+    # ES=spek_es.serialize(format='json-ld', indent=4)
+    # if str(debug)=="yes":
+    #     f = open("outputs/spek_es.json", "w")
+    #     f.write(ES)
+    #     f.close()
     # print(vignette)
     
     return selected_message1

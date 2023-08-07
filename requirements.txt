@@ -17,4 +17,7 @@ watchgod==0.8.2
 websockets==10.3
 requests-file==1.5.1
 python-git-info==0.8.3
+web-browser==0.0.1
+
+
 
