@@ -29,7 +29,7 @@ Format:
 - `--target` `local` : String which the script parses and uses to set the API endpoint for the POST requests. Use "local", "heroku", or "cloud".
 -  `--csv` `"filepath to CSV"` : Use double quotation marks around the filepath to your local copy of the MPOG-like test data CSV file. Note: it is better to set the filepath as an environmental variable, but this functionality is fully implemented.
 - `--useGit` `"link"` : Paste a link to a GitHub `input_message.JSON` file inside "" to pull that JSON file in and use the script to send copies of it to the chosen endpoint.
--  `--service_account` `"filepath to service account"` : Use double quotation marks around the filepath to your local copy of the service_account. Note: it is better to set the filepath as an environmental variable, but argument declared functionality is implemented. Connect with the developer to get the details, as they are integral to the API's security.
+-  `--servAcc` `"filepath to service account"` : Use double quotation marks around the filepath to your local copy of the service_account. Note: it is better to set the filepath as an environmental variable, but argument declared functionality is implemented. Connect with the developer to get the details, as they are integral to the API's security.
 
 ### Logical Args ("Store True")
 Adding these arguments to your initialization will change the output you recieve on a successful POST request.
