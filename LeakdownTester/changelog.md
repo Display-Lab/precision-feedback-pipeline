@@ -4,7 +4,8 @@ Released 8/9/23
 - Added automated knowledgebase repo testing functionality
 	+ use `--repoTest` as arg to run
 - Refactored script for readability and cohesion
-	+ GCP functionality not verified online, releasing dev build as 1.3.0 to add tested GCP func. in patch (V 1.3.1)
+	+ GCP functionality not verified online
+	+ Planned: Verified GCP functionality, anticipated in next patch (V 1.3.1)
 - Reformatted CSV-JSON builder
 	+ Removed debug key
 	+ Updated exepected performance data headers
