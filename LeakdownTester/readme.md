@@ -1,16 +1,16 @@
 # Leakdown Tester Script User Manual
 ### Welcome to the user manual for the Leakdown Tester Script!
 Fun Facts:
-- The script is named after a testing protocol for testing engine blocks, the reverse of a compression test. Pressurized air is introduced to the engine block to check for leaking points - just like how this script can be used to check if the pipeline holds "water"!
+- The script is named after a testing protocol for testing engine blocks, the reverse of a compression test. Pressurized air is introduced to the engine block to check for leaking points - just like how this script can be used to check the pipeline for "leaks"!
 - Environment variables will save you time, especially if you make them persistent!
-- Nobody will read this!
+- On average, hedgehogs travel 2.5 miles a day, and average around 40,000 steps to do so! If you were to walk that much, you would travel over 16.5 miles a day!
 
 ## Environmental Variables
 1) `CSVPATH` - Filepath to a local CSV file. 
 The script checks for this on startup, as some kind of JSON content for the POST request is required. You can specify this filepath with the csv argument, or you can set the env var and specify a different filepath with the csv argument which will override the environment variable. A filepath must be specified if not using the useGit argument.
 2) `PFP` - URL of the PFP API endpoint where the POST requests are sent.
 It is likely faster to use the `--target` argument to set the API endpoint rather than to set the environment variable here, however both methods are implemented. Use what works for you.
-3) `TARGET_AUDIENCE` - This target_audience variable is the target audience of the API. Because it is a security concern to share this openly, request the developers to get details on how to set up this variable.
+3) `TARGET_AUDIENCE` - This target_audience variable is the target audience of the API, connect with the developer to get the details, as it depends on the security of the API.
 
 ## Arguments
 Below are the argument that can be used to run the script. Initializing with all default values will yield a single post request sent to a locally hosted PFP instance.
@@ -27,15 +27,16 @@ Format:
 
 ### String Args
 - `--target` `local` : String which the script parses and uses to set the API endpoint for the POST requests. Use "local", "heroku", or "cloud".
--  `--csv` `"filepath to CSV"` : Use double quotation marks around the filepath to your local copy of the MPOG-like test data CSV file. Note: it is better to set the filepath as an environmental variable, but this functionality is fully implemented.
 - `--useGit` `"link"` : Paste a link to a GitHub `input_message.JSON` file inside "" to pull that JSON file in and use the script to send copies of it to the chosen endpoint.
--  `--servAcc` `"filepath to service account"` : Use double quotation marks around the filepath to your local copy of the service_account. Note: it is better to set the filepath as an environmental variable, but argument declared functionality is implemented. Connect with the developer to get the details, as they are integral to the API's security.
+-  `--csv` `"filepath to CSV"` : Use double quotation marks around the filepath to your local copy of the MPOG-like test data CSV file. Note: it is better to set the filepath as an environmental variable, but this functionality is fully implemented.
+-  `--service_account` `"filepath to service account"` : Use double quotation marks around the filepath to your local copy of the service_account. Note: it is better to set the filepath as an environmental variable, but this functionality is fully implemented.Connect with the developer to get the details, as it depends on the security of the API.
 
 ### Logical Args ("Store True")
 Adding these arguments to your initialization will change the output you recieve on a successful POST request.
 
-- `--respond` : Logical T/F, default False. Adding to your initialization will have the script print a subset of the JSON data returned from a successful POST request to the pipeline.
-- `--save` : Logical T/F, default False. Adding to your initialization will have the script save the JSON content AND the pictoralist image of the output message to your machine, and will tell you what it has named the files.
+- `--respond` : Adding to your initialization will set to `True`, and have the script print a subset of the JSON data returned from a successful POST request to the pipeline.
+- `--save` : Adding to your initialization will set to `True`, and have the script save the JSON content AND the pictoralist image of the output message to your machine, and will tell you what it has named the files.
+- `--repoTest` : Adding to init will set to `True`, and test all 7 input_message.json files on the [knowledgebase repo](https://github.com/Display-Lab/knowledge-base/tree/main/vignettes/personas) against a chosen API endpoint.
 
 ## Setup
 1) Download the entire Leakdown Testing folder from the PFP github repository
