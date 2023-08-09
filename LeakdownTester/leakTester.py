@@ -12,7 +12,7 @@ import requests
 from google.auth import crypt
 from google.oauth2 import service_account
 global iniRow,finRow,numCol,reqNumber,target,useGit,showResp,saveResp,perfPath,pfp,vers
-vers = "1.1.2"
+vers = "1.2.0"
 
 ## Initialize argparse, define command-line arguments
 parser = argparse.ArgumentParser(description="Leakdown Tester Script")
