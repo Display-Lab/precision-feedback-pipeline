@@ -1,4 +1,9 @@
 # Changelog for Leakdown Tester Script
+## Version 1.2.0
+Released 8/7/23
+- Added Google Cloud Platform functionality
+	+ Thanks Ayshwarya!
+
 ## Version 1.1.2
 Release 8/2/23
 - Updated useGit functionality
