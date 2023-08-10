@@ -13,7 +13,7 @@ from google.auth import crypt
 from google.oauth2 import service_account
 
 global iniRow,finRow,numCol,reqNumber,target,useGit,showResp,saveResp,perfPath,pfp,audience,vers,chkPairs
-vers = "1.4.0"
+vers = "1.4.1"
 
 ## Initialize argparse, define command-line arguments
 parser = argparse.ArgumentParser(description="Leakdown Tester Script")
@@ -109,37 +109,40 @@ def startup_checklist():
 
 ## Print relevant JSON keys from API response...
 def text_back(postReturn):
-    if "selected_candidate" in postReturn:
-        selCan = postReturn["selected_candidate"]
-        print("\nSelected Candidate Message Information:")
-        print(f"Display Type:\t\t{selCan.get('display')}")
-        print(f"Measure:\t\t{selCan.get('measure')}")
-        print(f"Acceptable By:\t\t{selCan.get('acceptable_by')}")
-
-    if "Message" in postReturn:
-        messDat = postReturn["Message"]
-        print(f"Abbreviated Message:\t{messDat.get('text_message')[:50]}")
-        print(f"Comparison Value:\t{messDat.get('comparison_value')}\n")
+    assert "staff_number" in postReturn, "Key 'staff_number' not found in post response."
+    assert "selected_candidate" in postReturn, "Key 'selected_candidate' not found in post response."
+    assert "Message" in postReturn, "Key 'Message' not found in post response." 
+    
+    selCan = postReturn["selected_candidate"]
+    messDat = postReturn["Message"]
+    print("\nAPI response contains keys:")
+    print(f"Staff ID Number:\t{postReturn['staff_number']}")
+    print(f"Display Type:\t\t{selCan.get('display')}")
+    print(f"Measure:\t\t{selCan.get('measure')}")
+    print(f"Acceptable By:\t\t{selCan.get('acceptable_by')}")
+    print(f"Abbreviated Message:\t{messDat.get('text_message')[:50]}")
+    print(f"Comparison Value:\t{messDat.get('comparison_value')}\n")
 
 
 ## Check output message for known-good metadata pairs...
-def validate_output(apiReturn, persona):
+def validate_output(apiReturn, staffID):
     match = False
-    validPairs = vignAccPairs.get(persona)
-    chosenPair = {
+    validKeys = vignAccPairs.get(staffID)
+    chosenKeys = {
+        #"staff_number": apiReturn["staff_number"],
         "acceptable_by": apiReturn["selected_candidate"].get("acceptable_by").lower(),
         "measure": apiReturn["selected_candidate"].get("measure")
     }
     
-    # Iterate through pair dict, check for matches
-    for pair in validPairs:
-        if pair == chosenPair:
+    # Iterate through validation dict, check for matches
+    for n in validKeys:
+        if n == chosenKeys:
             match = True
             break
     if match:
-        print(f"VALIDATION:\tPASS\tOutput consistent with vignette.")
+        print(f"VALIDATION:\tPASS\nOutput consistent with vignette.")
     else:
-        print("VALIDATION:\tFAIL\tUnexpected message content found.")
+        print("VALIDATION:\tFAIL\nUnexpected message content found.")
     #assert match, f"INFO:\tOutput message is not vignette consistent for {persona}"
 
 
@@ -156,7 +159,7 @@ def log_return(postReturn, outputName):
 
 
 ## Handle API responses...
-def handle_response(response, requestNumber, persona):
+def handle_response(response, requestNumber, staffID):
     if response.status_code == 200:
         print("Message delivered in {:.3f} seconds.".format(response.elapsed.total_seconds()))
         apiReturn = json.loads(response.text)
@@ -165,7 +168,7 @@ def handle_response(response, requestNumber, persona):
             text_back(apiReturn)
 
         if chkPairs:    # Validate output if asked
-            validate_output(apiReturn, persona)
+            validate_output(apiReturn, staffID)
             
         if saveResp:    # Save output if asked
             respName = f"response_{requestNumber}"
@@ -262,9 +265,17 @@ def repo_test():
         try:
             jsonContent = go_fetch(url)
             response = send_req(pfp, jsonContent)
+            assert response.headers.get('content-type') == 'application/json', f"Bad response received for persona {persona.upper()}"
+            
+            respJson = response.json()
             print(f"\nTrying request {requestNumber} of {len(hitlist)}: Persona '{persona.upper()}'")
-            handle_response(response, requestNumber, persona)
+            handle_response(response, requestNumber, respJson["staff_number"])
         
+        except AssertionError as ae:
+            print(ae)
+            print(f"Continuing with next persona...\n")
+            continue
+
         except Exception as e:
             print(f"{e}")
 
@@ -304,12 +315,14 @@ if __name__ == "__main__":
             
             if target == "heroku" or target == "local":
                 sentPost = send_req(pfp, fullMessage)
-                handle_response(sentPost, i+1, None)    # Pass none persona
+                postJson = sentPost.json()
+                handle_response(sentPost, i+1, postJson["staff_number"])
                 #print(sentPost)
             
             elif target == "cloud":
                 sentPost = make_iap_request(pfp, fullMessage)
-                handle_response(sentPost, i+1, None)    # Pass none persona
+                postJson = sentPost.json()
+                handle_response(sentPost, i+1, postJson["staff_number"])
                 #print(sentPost)
         
         print("\t\tLeakdown test complete.\n")
