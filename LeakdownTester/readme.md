@@ -37,6 +37,7 @@ Adding these arguments to your initialization will change the output you recieve
 - `--respond` : Adding to your initialization will set to `True`, and have the script print a subset of the JSON data returned from a successful POST request to the pipeline.
 - `--save` : Adding to your initialization will set to `True`, and have the script save the JSON content AND the pictoralist image of the output message to your machine, and will tell you what it has named the files.
 - `--repoTest` : Adding to init will set to `True`, and test all 7 input_message.json files on the [knowledgebase repo](https://github.com/Display-Lab/knowledge-base/tree/main/vignettes/personas) against a chosen API endpoint.
+- `--validate` : Adding to init will set to `True`, and compare the `persona`, `acceptable_by`, and `measure` key values in the output message against a set of known valid pairings that are descirbed by the vignettes for each persona. Note: only functional in tandem with `--repoTest`.
 
 ## Setup
 1) Download the entire Leakdown Testing folder from the PFP github repository
