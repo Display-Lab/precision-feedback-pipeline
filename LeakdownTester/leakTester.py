@@ -8,11 +8,12 @@ import base64
 import certifi
 import google.auth.transport.requests
 import requests
+from LDT_Addendum import vignAccPairs, payloadHeader, payloadFooter
 from google.auth import crypt
 from google.oauth2 import service_account
 
-global iniRow,finRow,numCol,reqNumber,target,useGit,showResp,saveResp,perfPath,pfp,audience,vers
-vers = "1.3.0"
+global iniRow,finRow,numCol,reqNumber,target,useGit,showResp,saveResp,perfPath,pfp,audience,vers,chkPairs
+vers = "1.4.0"
 
 ## Initialize argparse, define command-line arguments
 parser = argparse.ArgumentParser(description="Leakdown Tester Script")
@@ -30,6 +31,7 @@ parser.add_argument("--servAcc", type=str, default=None, help="Filepath to the s
 parser.add_argument("--respond", action="store_true", help="Logical flag to print API responses. Default = True; use '--respond' to see responses.")
 parser.add_argument("--save", action="store_true", help="Logical flag to save API responses. Default = True; use '--save' to save outputs.")
 parser.add_argument("--repoTest", action="store_true", help="Logical flag to test knowledgebase repo files.")
+parser.add_argument("--validate", action="store_true", help="Logical flag to check output message against known good data library.")
 
 ## Parse command-line arguments and pull in environmental variables
 args = parser.parse_args()
@@ -44,6 +46,7 @@ servAccPath = args.servAcc  # Service Account file path(argument specified)
 showResp =  args.respond    # Flag: Print API response to console
 saveResp =  args.save       # Flag: Save API response to file
 repoTest =  args.repoTest   # Flag: Test knowledgebase repo files
+chkPairs =  args.validate   # Flag: Check output message against vignette data
 
 perfPath =  os.environ.get("CSVPATH")
 pfp =       os.environ.get("PFP")
@@ -52,7 +55,8 @@ audience = os.environ.get("TARGET_AUDIENCE")
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 #### Startup Functions ################################################
-# Configure API endpoint from argument...
+
+## Configure API endpoint from argument...
 def set_target():
     global pfp
     # Local API target:
@@ -66,29 +70,29 @@ def set_target():
     # GCP API target (ft. token retrieval):
     elif target == "cloud":
         pfp = "https://pfp.test.app.med.umich.edu/createprecisionfeedback"
-        oidc_token = service_account.IDTokenCredentials.from_service_account_file(
+        oidcToken = service_account.IDTokenCredentials.from_service_account_file(
         servAccPath,
-        target_audience=audience,
+        target_audience = audience,
         )
     else:
         print("Warning: Target not declared. Continuing with local PFP target.")
 
-# Handle JSON content pathing (& errors)...
+
+## Handle JSON content pathing (& errors)...
 def confirm_content():
     global perfPath
     # Override env var CSV filepath w/ arg
     if csvPath != None:
         perfPath = csvPath
 
-    if perfPath == None and useGit == None:
-        raise Exception("Please specify where to read JSON content from.")
+    assert perfPath != None or useGit != None, "No JSON content specified. Exiting..."
     
-    elif perfPath != None and useGit != None:
-        print("\tINFO: JSON payloads specified by both GitHub link and filepath.")
+    if perfPath != None and useGit != None:
+        print("\tINFO: Multiple JSON payloads specified.")
         print("Continuing with GitHub payload...")
 
 
-# Startup configuration setting readback...
+## Startup configuration setting readback...
 def startup_checklist():
     if useGit != None:
         print(f"Reading JSON data from {useGit}...")
@@ -98,25 +102,48 @@ def startup_checklist():
         print(f"Reading data from {perfPath}...")
         print(f"Reading in data with dimensions {numCol} by {finRow - iniRow}...")
     elif repoTest:
-            print("Running automated input_message tests...\n")
+            print("Running automated input_message tests...")
     print(f"Sending POST request(s) to {pfp}...\n")
 
-#### Print Statements and Response Saving ################################
-# Output relevant JSON keys from API response...
+#### Print Statements and Response Handling ################################
+
+## Print relevant JSON keys from API response...
 def text_back(postReturn):
     if "selected_candidate" in postReturn:
         selCan = postReturn["selected_candidate"]
-        print("Selected Candidate Message Information:")
-        print(f"Display: {selCan.get('display')}")
-        print(f"Measure: {selCan.get('measure')}")
-        print(f"Acceptable By: {selCan.get('acceptable_by')}")
+        print("\nSelected Candidate Message Information:")
+        print(f"Display Type:\t\t{selCan.get('display')}")
+        print(f"Measure:\t\t{selCan.get('measure')}")
+        print(f"Acceptable By:\t\t{selCan.get('acceptable_by')}")
 
     if "Message" in postReturn:
         messDat = postReturn["Message"]
-        print(f"Text Message: {messDat.get('text_message')}")
-        print(f"Comparison Value: {messDat.get('comparison_value')}\n\n")
+        print(f"Abbreviated Message:\t{messDat.get('text_message')[:50]}")
+        print(f"Comparison Value:\t{messDat.get('comparison_value')}\n")
 
-# Save PFP API responses for review...
+
+## Check output message for known-good metadata pairs...
+def validate_output(apiReturn, persona):
+    match = False
+    validPairs = vignAccPairs.get(persona)
+    chosenPair = {
+        "acceptable_by": apiReturn["selected_candidate"].get("acceptable_by").lower(),
+        "measure": apiReturn["selected_candidate"].get("measure")
+    }
+    
+    # Iterate through pair dict, check for matches
+    for pair in validPairs:
+        if pair == chosenPair:
+            match = True
+            break
+    if match:
+        print(f"VALIDATION:\tPASS\tOutput consistent with vignette.")
+    else:
+        print("VALIDATION:\tFAIL\tUnexpected message content found.")
+    #assert match, f"INFO:\tOutput message is not vignette consistent for {persona}"
+
+
+## Save PFP API responses for manual review...
 def log_return(postReturn, outputName):
     texName = outputName + ".json"
     imgName = outputName + ".png"
@@ -128,29 +155,34 @@ def log_return(postReturn, outputName):
         print(f"Pictoralist image saved to '{imgName}'.\n\n")
 
 
-# Handle API responses...
-def handle_response(response, request_number):
+## Handle API responses...
+def handle_response(response, requestNumber, persona):
     if response.status_code == 200:
-        print("Message delivered in {:.3f} seconds.\n".format(response.elapsed.total_seconds()))
-        api_return = json.loads(response.text)
+        print("Message delivered in {:.3f} seconds.".format(response.elapsed.total_seconds()))
+        apiReturn = json.loads(response.text)
         
-        if showResp:
-            text_back(api_return)
+        if showResp:    # Print output if asked
+            text_back(apiReturn)
 
-        if saveResp:
-            resp_name = f"response_{request_number}"
-            log_return(api_return, resp_name)
+        if chkPairs:    # Validate output if asked
+            validate_output(apiReturn, persona)
+            
+        if saveResp:    # Save output if asked
+            respName = f"response_{requestNumber}"
+            log_return(apiReturn, respName)
+
     else:
         if target == "cloud":
-            raise Exception("Bad response from target API:\nStatus Code: {!r}\nHeaders: {!r}\n{!r}".format(
+            raise Exception("Bad response from target API:\nStatus Code:\t{!r}\nHeaders: {!r}\n{!r}".format(
             response.status_code, response.headers, response.text))
         else:
-            raise Exception("Bad response from target API:\nStatus Code: {!r}\n{!r}\n".format(
+            raise Exception("Bad response from target API:\nStatus Code:\t{!r}\n{!r}\n".format(
             response.status_code, response.text))
 
 
 ##### JSON Content Functions ########################################
-# Fetch JSON content from GitHub... V9
+
+## Fetch JSON content from GitHub... (V9)
 def go_fetch(url):
     if "github.com" in url:
         url = url.replace("github.com", "raw.githubusercontent.com").replace("/blob", "")
@@ -167,8 +199,8 @@ def go_fetch(url):
         raise Exception(f"Failed to fetch JSON content from GitHub link: {url}")
 
 
-# Read in CSV data from file...
-def csv_trans_json(path):
+## Read in CSV data from file, convert to JSON...
+def csv_jsoner(path):
     performance = pd.read_csv(path, header=None, usecols = range(numCol), nrows= finRow-iniRow)
     rowsRead, colsRead = performance.shape
     selectedRows = performance.iloc[iniRow : finRow]
@@ -176,83 +208,27 @@ def csv_trans_json(path):
     
     # Integrated dimension error catcher:
     if colsRead != numCol or rowsRead != finRow - iniRow:
-        raise ValueError(f"Read error; expected {finRow - iniRow} rows and {numCol} columns. Actual data is {rowsRead} rows by {colsRead} columns.")
+        raise ValueError(f"Expected {finRow - iniRow} rows and {numCol} columns. Actual data is {rowsRead} rows by {colsRead} columns.")
 
     # Integrated Dataframe to JSON conversion (V.15)
     for i, row in selectedRows.iterrows():
-        current_line = json.dumps(row.to_list())
-        jsonedData += current_line  # content addition
+        currentLine = json.dumps(row.to_list())
+        jsonedData += currentLine  # content addition
         if i < len(performance) - 1:
             jsonedData += ",\n\t"   # formatting
     return jsonedData
 
 
-# Create JSON Payload (CSV data)...
-def assemble_payload(warhead):
-    missile = '''{
-      "@context": {
-        "@vocab": "http://schema.org/",
-        "slowmo": "http://example.com/slowmo#",
-        "csvw": "http://www.w3.org/ns/csvw#",
-        "dc": "http://purl.org/dc/terms/",
-        "psdo": "http://purl.obolibrary.org/obo/",
-        "slowmo:Measure": "http://example.com/slowmo#Measure",
-        "slowmo:IsAboutPerformer": "http://example.com/slowmo#IsAboutPerformer",
-        "slowmo:ColumnUse": "http://example.com/slowmo#ColumnUse",
-        "slowmo:IsAboutTemplate": "http://example.com/slowmo#IsAboutTemplate",
-        "slowmo:spek": "http://example.com/slowmo#spek",
-        "slowmo:IsAboutCausalPathway": "http://example.com/slowmo#IsAboutCausalPathway",
-        "slowmo:IsAboutOrganization": "http://example.com/slowmo#IsAboutOrganization",
-        "slowmo:IsAboutMeasure": "http://example.com/slowmo#IsAboutMeasure",
-        "slowmo:InputTable": "http://example.com/slowmo#InputTable",
-        "slowmo:WithComparator": "http://example.com/slowmo#WithComparator",
-        "has_part": "http://purl.obolibrary.org/obo/bfo#BFO_0000051",
-        "has_disposition": "http://purl.obolibrary.org/obo/RO_0000091"
-      },
-      "Performance_data":[
-        ["staff_number","measure","month","passed_count","flagged_count","denominator","peer_average_comparator","peer_90th_percentile_benchmark","peer_75th_percentile_benchmark","MPOG_goal"],
-        '''
-    missile += warhead
-    missile += '''
-        ],
-        "History":{
-        },
-        "Preferences":{
-          "Utilities": {
-          "Message_Format": 
-            {
-              "1": "0.0",
-              "2": "0.1",
-              "16": "7.5",
-              "24": "9.4",
-              "18": "11.3",
-              "11": "13.2",
-              "22": "15.1" ,
-              "14": "22.6" ,
-              "21": "62.3" ,
-              "5":"0.2",
-              "15":"4.0",
-              "4":"0.9"
-            },
-          "Display_Format":
-            {
-              "short_sentence_with_no_chart": "0.0",
-              "bar": "37.0",
-              "line": "0.0"
-            }
-        }
-      }
-    }'''
-    return missile
-
 #### POST Functions ##################################################
-# Send POST request to unprotected URLs...
+
+## Send POST request to unprotected URLs...
 def send_req(pfp, missile):
 	headers1 = {"Content-Type": "application/json"}
 	response = requests.post(pfp, data=missile, headers=headers1)
 	return response
 
-# Send POST to IAP protected URLs...
+
+## Send POST to IAP protected URLs...
 def make_iap_request(url, Fullmessage, method="POST", **kwargs):
 
     # Set the default timeout, if missing
@@ -260,9 +236,9 @@ def make_iap_request(url, Fullmessage, method="POST", **kwargs):
         kwargs["timeout"] = 90
 
     # Check if token valid, refresh expired token if not
-    if oidc_token.valid != True:
+    if oidcToken.valid != True:
         request = google.auth.transport.requests.Request()
-        oidc_token.refresh(request)
+        oidcToken.refresh(request)
 
     # Fetch the Identity-Aware Proxy-protected URL, including an
     # Authorization header containing "Bearer " followed by a
@@ -270,26 +246,27 @@ def make_iap_request(url, Fullmessage, method="POST", **kwargs):
     Fullmessage=json.loads(Fullmessage)
     resp = requests.post(
         url,
-        headers={"Authorization": "Bearer {}".format(oidc_token.token)},
+        headers={"Authorization": "Bearer {}".format(oidcToken.token)},
         json=Fullmessage,
     )
     return resp
 
-# Automated full-repo test of knowledgebase input_message files...
+
+## Automated full-repo test of knowledgebase input_message files...
 def repo_test():
     hitlist = ["alice", "bob", "chikondi", "deepa", "eugene", "fahad", "gaile"]
 
-    for request_number, persona in enumerate(hitlist, start=1):
+    for requestNumber, persona in enumerate(hitlist, start=1):
         url = f"https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/vignettes/personas/{persona}/input_message.json"
 
         try:
-            json_content = go_fetch(url)
-            response = send_req(pfp, json_content)
-            print(f"Trying request {request_number} of {len(hitlist)}, Persona '{persona}':")
-            handle_response(response, request_number)
+            jsonContent = go_fetch(url)
+            response = send_req(pfp, jsonContent)
+            print(f"\nTrying request {requestNumber} of {len(hitlist)}: Persona '{persona.upper()}'")
+            handle_response(response, requestNumber, persona)
         
         except Exception as e:
-            print(f"Error processing message; {e}")
+            print(f"{e}")
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -304,17 +281,19 @@ if __name__ == "__main__":
         # Call repo_test if requested
         if repoTest:
             repo_test()
-            print("\n\t\tLeakdown Test complete.\n")
-            exit(0)  # Exit the script
+            print("\n\t\tLeakdown test complete.\n")
+            exit(0)
 
         # Retrieve GitHub JSON Payload if requested
         if useGit != None:
             fullMessage = go_fetch(useGit)    
         
-        # Build JSON from CSV if requested / by default
+        # Build JSON from CSV (default/by request)
         elif perfPath != None:
-            perfJSON = csv_trans_json(perfPath)   # I/O from CSV dataframe
-            fullMessage = assemble_payload(perfJSON)    # Make JSON payload
+            perfJSON = csv_jsoner(perfPath)             # I/O from CSV dataframe
+            fullMessage = payloadHeader + perfJSON + payloadFooter    # Make JSON payload
+            #print(fullMessage)
+        
         else:
             print("Error: No content provided for POST request.")
             exit(1)
@@ -325,16 +304,17 @@ if __name__ == "__main__":
             
             if target == "heroku" or target == "local":
                 sentPost = send_req(pfp, fullMessage)
+                handle_response(sentPost, i+1, None)    # Pass none persona
                 #print(sentPost)
             
             elif target == "cloud":
                 sentPost = make_iap_request(pfp, fullMessage)
+                handle_response(sentPost, i+1, None)    # Pass none persona
                 #print(sentPost)
-            
-            # Check response(s)
-            handle_response(sentPost, reqNumber)
         
-        print("\t\tLeakdown Test complete.\n")
+        print("\t\tLeakdown test complete.\n")
+        exit(0)
 
     except ValueError as e:
-        print(f"Error: {e}")
+        print(f"{e}")
+        exit(1)
