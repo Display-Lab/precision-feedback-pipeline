@@ -1,33 +1,33 @@
 ## Dictionary of vignette-determined persona, measure, and causal pathway pairings:
 vignAccPairs = {
-    "alice": [
+    1: [
         {"acceptable_by": "social loss", "measure": "PONV05"},
         {"acceptable_by": "social better", "measure": "SUS04"},
         {"acceptable_by": "goal approach", "measure": "GLU03"}
     ],
-    "bob": [
+    2: [
         {"acceptable_by": "social loss", "measure": "PONV05"},
         {"acceptable_by": "social approach", "measure": "TOC02"}
     ],
-    "chikondi": [
+    3: [
         {"acceptable_by": "social gain", "measure": "PUL01"},
         {"acceptable_by": "goal approach", "measure": "GLU03"}
     ],
-    "deepa": [
+    4: [
         {"acceptable_by": "social worse", "measure": "GLU01"},
         {"acceptable_by": "social approach", "measure": "TOC02"},
         {"acceptable_by": "improving", "measure": "BP03"}
     ],
-    "eugene": [
+    5: [
         {"acceptable_by": "social worse", "measure": "GLU01"},
         {"acceptable_by": "goal gain", "measure": "TOC01"}
     ],
-    "fahad": [
+    6: [
         {"acceptable_by": "social gain", "measure": "PUL01"},
         {"acceptable_by": "worsening", "measure": "SUS02"},
         {"acceptable_by": "goal loss", "measure": "NMB03Peds"}
     ],
-    "gaile": [
+    7: [
         {"acceptable_by": "social better", "measure": "SUS04"},
         {"acceptable_by": "improving", "measure": "BP03"},
         {"acceptable_by": "worsening", "measure": "SUS02"},

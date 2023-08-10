@@ -1,6 +1,15 @@
 # Changelog for Leakdown Tester Script
+## Version 1.4.1
+Released 8/10/23
+- Changed `LDT_Addendum`
+	+ Changed from checking persona based keys to staff_number based keys
+	+ Allows for validation of any successful post request
+- Changed validation procedure to allow any post request to be validated
+	+ Implemented validation of any post request based on using staff_number to compare against keys vs. using personas
+	+ Tested functional with CSV and GitHub messages
+
 ## Version 1.4.0
-Relesed 8/9/23
+Released 8/9/23
 - Added `LDT_Addendum.py` to Leakdown Tester folder
 	+ Functions as a store for large text variables that may need to periodically change without impacting `leakTester.py`
 	+ Contains validation target values
