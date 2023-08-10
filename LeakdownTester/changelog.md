@@ -1,4 +1,16 @@
 # Changelog for Leakdown Tester Script
+## Version 1.4.0
+Relesed 8/9/23
+- Added `LDT_Addendum.py` to Leakdown Tester folder
+	+ Functions as a store for large text variables that may need to periodically change without impacting `leakTester.py`
+	+ Contains validation target values
+	+ Contains header and footer of input_message JSON content for CSV payload building
+- Removed function `assemble_payload`
+	+ Obsolete with LDT_Addendum addition	
+- Added `validate` functionality to `repoTest`
+	+ Compares against a seperate python dictionary file with desired output message value pairs determined by the vignettes.
+		* This file can be updated if vignette data changes without versioning Leakdown Tester
+
 ## Version 1.3.0
 Released 8/9/23
 - Added automated knowledgebase repo testing functionality
