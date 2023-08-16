@@ -1,7 +1,7 @@
 # Leakdown Tester Script User Manual
 ### Welcome to the user manual for the Leakdown Tester Script!
 Fun Facts:
-- The script is named after a testing protocol for testing engine blocks, the reverse of a compression test. Pressurized air is introduced to the engine block to check for leaking points - just like how this script can be used to check the pipeline for "leaks"!
+- The script is named after a protocol for testing engine blocks, the reverse of a compression test. Pressurized air is introduced to the engine block to check for leaking points - it's a metaphor!
 - Environment variables will save you time, especially if you make them persistent!
 - On average, hedgehogs travel 2.5 miles a day, and average around 40,000 steps to do so! If you were to walk that much, you would travel over 16.5 miles a day!
 
@@ -11,6 +11,7 @@ The script checks for this on startup, as some kind of JSON content for the POST
 2) `PFP` - URL of the PFP API endpoint where the POST requests are sent.
 It is likely faster to use the `--target` argument to set the API endpoint rather than to set the environment variable here, however both methods are implemented. Use what works for you.
 3) `TARGET_AUDIENCE` - This target_audience variable is the target audience of the API, connect with the developer to get the details, as it depends on the security of the API.
+4) `SAPATH` - Variable that sets path to your own Service Account JSON file for use in authorizing POSTs to the GCP PFP instance.
 
 ## Arguments
 Below are the argument that can be used to run the script. Initializing with all default values will yield a single post request sent to a locally hosted PFP instance.
@@ -28,6 +29,7 @@ Format:
 ### String Args
 - `--target` `local` : String which the script parses and uses to set the API endpoint for the POST requests. Use "local", "heroku", or "cloud".
 - `--useGit` `"link"` : Paste a link to a GitHub `input_message.JSON` file inside "" to pull that JSON file in and use the script to send copies of it to the chosen endpoint.
+- `--persona` `alice` : String representing a persona name from the knowledge base repo. Using this argument will send a single persona's input_message file directly from GitHub as a POST request. Use any of the persona names, in lowercase.
 -  `--csv` `"filepath to CSV"` : Use double quotation marks around the filepath to your local copy of the MPOG-like test data CSV file. Note: it is better to set the filepath as an environmental variable, but this functionality is fully implemented.
 -  `--service_account` `"filepath to service account"` : Use double quotation marks around the filepath to your local copy of the service_account. Note: it is better to set the filepath as an environmental variable, but this functionality is fully implemented.Connect with the developer to get the details, as it depends on the security of the API.
 
@@ -49,33 +51,33 @@ Env Var declaration is OS dependent, and can be rather annoying, especially for 
 For my windows warriors:
 - Use this to set a temporary env var in this command prompt instance only:
 ```shell
-set CSVPATH="[filepath to CSV]"
+set VARNAME="content"
 ```
-- With admin privs, you can set a persistant env var:
+- With admin privs, you can set a **persistant** env var:
 ```shell
-setx CSVPATH "[filepath to CSV]"
+setx VARNAME "content"
 ```
 Verify the changes took, which might require reloading your command prompt. Check with the following:
 ```shell
-echo $ENV:CSVPATH
+echo $ENV:VARNAME
 ```
 Verify that it reads back correctly.
 
 ---
 Mac users, you can do pretty much the same thing with less headache:
 ```bash
-export CSVPATH=/filepath to CSV.csv
+export VARNAME=/content/you/want
 ```
-There is a way to make it persist, though it requires changing the config of your shell, whoch should be somwhere like `/bin/bash`, etc. 
-Use 
+There is a way to make it persist, though it requires changing the config of your shell, which should be somwhere like `/bin/bash`, etc. 
+Use:
 ```bash
 echo $SHELL
 ```
-then open an IDE like nano or Vim, whatever you have:
+Then open an IDE like nano/Vim/Sublime/whatever, and use the following:
 ```bash
 nano ~/.bash_profile
+export export VARNAME=/content/you/want
 ```
-Then add a line like the export statement writen at the top of the Mac section. 
 Then reload your console, you can use a console prompt for that:
  ```bash
  source ~/.bash_profile
