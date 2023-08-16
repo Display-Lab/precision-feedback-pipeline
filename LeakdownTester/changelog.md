@@ -1,12 +1,29 @@
 # Changelog for Leakdown Tester Script
+## Version 1.4.2
+Released 8/16/23
+- Added env var "SAPATH"
+	+ Allows path to Service Account file for GCP testing to be set with env var
+- Added argument "persona"
+	+ Used to test single persona data from knowledgebase input_message files
+		* Will be helpful for debugging individual errors down the line (eg Fahad, Gaile bugs currently being encountered)
+- Reworked argument and env var declaration and conflict handling
+	+ in-line assignment of args and env vars - decreases number of vars used overall
+	+ Removed if statements from `confirm_target` to support above
+- Worked on GCP testing functionality
+	+ Assert statements added to ensure requisite info present before POSTing to GCP
+- Re-worked vignette validation functionality
+	+ Clarified language returned by LDT to tell user validation is only against expected vignette content pairings, not validating overall message in some way.
+- Refactored repo_test function
+	+ Removed repeat code blocks to allow for implementation of single repo test function
+
 ## Version 1.4.1
 Released 8/10/23
 - Changed `LDT_Addendum`
 	+ Changed from checking persona based keys to staff_number based keys
 	+ Allows for validation of any successful post request
 - Changed validation procedure to allow any post request to be validated
-	+ Implemented validation of any post request based on using staff_number to compare against keys vs. using personas
-	+ Tested functional with CSV and GitHub messages
+	+ Implemented validation of post request(s) based on using staff_number to compare against keys vs. using personas
+	+ Successfully tested functionality with both CSV and GitHub input messages
 
 ## Version 1.4.0
 Released 8/9/23
@@ -17,7 +34,7 @@ Released 8/9/23
 - Removed function `assemble_payload`
 	+ Obsolete with LDT_Addendum addition	
 - Added `validate` functionality to `repoTest`
-	+ Compares against a seperate python dictionary file with desired output message value pairs determined by the vignettes.
+	+ Compares against a seperate python dictionary file with desired output message value pairs determined by the vignettes. Note: Only works alongside `repoTest`.
 		* This file can be updated if vignette data changes without versioning Leakdown Tester
 
 ## Version 1.3.0
