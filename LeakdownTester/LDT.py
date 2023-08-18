@@ -12,8 +12,8 @@ from LDT_Addendum import vignAccPairs, payloadHeader, payloadFooter
 from google.auth import crypt
 from google.oauth2 import service_account
 
-global iniRow,finRow,numCol,reqNumber,target,useGit,showResp,saveResp,perfPath,pfp,audience,vers,chkPairs
-vers = "1.4.2"
+global iniRow,finRow,numCol,numTests,target,useGit,showResp,saveResp,perfPath,pfp,audience,vers,chkPairs
+vers = "1.4.3"
 
 ## Initialize argparse, define command-line arguments
 ap = argparse.ArgumentParser(description="Leakdown Tester Script")
@@ -21,7 +21,7 @@ ap = argparse.ArgumentParser(description="Leakdown Tester Script")
 ap.add_argument("--RI", type=int, default=0, help="First row of data to read from CSV.")
 ap.add_argument("--RF", type=int, default=12, help="Last row of data to read from CSV.")
 ap.add_argument("--C", type=int, default=10, help="Number of columns to read.")
-ap.add_argument("--reqs", type=int, default=1, help="Number of post requests to send.")
+ap.add_argument("--tests", type=int, default=1, help="Number of Leakdown Tests to perform.")
 # String Args
 ap.add_argument("--target", choices=["local", "heroku", "cloud"], default="local", help="Target PFP environment: use 'local', 'heroku', or 'cloud'.")
 ap.add_argument("--useGit", type=str, default=None, help="Address of GitHub input message file to send pipeline.")
@@ -43,21 +43,57 @@ args = ap.parse_args()
 perfPath =    args.csv      if args.csv != None else os.environ.get("CSVPATH")      # Path to performance CSV data
 servAccPath = args.servAcc  if args.servAcc != None else os.environ.get("SAPATH")   # Path to service account file
 
-iniRow =    args.RI         # Initial row read from CSV
-finRow =    args.RF         # Final row read from CSV
-numCol =    args.C          # Number of columns read
-reqNumber = args.reqs       # Number of Requests sent
-target =    args.target     # API endpoint target
-useGit =    args.useGit     # GitHub JSON source
-usePers =   args.persona    # Use GitHub single persona to test alone
-showResp =  args.respond    # Prints API response(s) to console
-saveResp =  args.save       # Saves API response(s) to file
-repoTest =  args.repoTest   # Tests knowledgebase repo files
-chkPairs =  args.validate   # Checks output message(s) against vignette data
+iniRow =     args.RI         # Initial row read from CSV
+finRow =     args.RF         # Final row read from CSV
+numCol =     args.C          # Number of columns read
+numTests =   args.tests      # Number of tests to perform
+target =     args.target     # API endpoint target
+useGit =     args.useGit     # GitHub JSON source
+usePers =    args.persona    # Use GitHub single persona to test alone
+showResp =   args.respond    # Prints API response(s) to console
+saveResp =   args.save       # Saves API response(s) to file
+repoTest =   args.repoTest   # Tests knowledgebase repo files
+chkPairs =   args.validate   # Checks output message(s) against vignette data
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-#### Startup Functions ########################################################
+##### Startup Functions #######################################################
+### Handle API endpoint, script behavior, and number of requests to send.
+### V 1.4.3+ has integrated readback as configurations are set.
+
+## Set script behavior for JSON content source (+ error handling and readback)...
+def set_behavior():
+    global perfPath
+    
+    # Error catcher for multiple JSON payload specification
+    if perfPath != None and useGit != None:
+        print("INFO: Multiple JSON payloads specified.\n\tContinuing with GitHub payload...\n")
+    
+    # Set behavior to use GitHub content (1st priority)
+    if useGit != None:      
+        print(f"Reading JSON data from GitHub file at {useGit}...")
+        return "github"
+    
+    # Set behavior to run single persona test
+    elif usePers != None:
+        print("Reading single input_message file from knowledgebase branch 'Main'...")
+        return "oneRepo"
+    
+    # Set behavior to run full-repo tests
+    elif repoTest:          
+        print("Reading all input_message.json files from knowledgebase branch 'Main'...")
+        return "fullRepo"
+    
+    # Set behavior to use CSV content (last priority)
+    elif perfPath != None:
+        print(f"Reading data from CSV file at '{perfPath}'...")
+        print(f"Reading in data with dimensions {numCol} by {finRow - iniRow}...")
+        return "CSV"
+    
+    else:
+        print("Error: Behavior could not be set. No content specified for POST request.")
+        exit(1)
+
 
 ## Configure API endpoint from argument...
 def set_target():
@@ -84,32 +120,22 @@ def set_target():
     
     else:
         print("Warning: Target not declared. Continuing with local PFP target.")
-
-
-## Handle JSON content pathing (& errors)...
-def confirm_content():
-    global perfPath
-    assert perfPath != None or useGit != None, "No JSON content specified. Exiting..."
     
-    if perfPath != None and useGit != None:
-        print("\tINFO: Multiple JSON payloads specified.")
-        print("\tContinuing with GitHub payload...")
+    # Readback endpoint target when successfull
+    print(f"Sending POST request(s) to API at '{pfp}'...")
 
 
-## Startup configuration setting readback...
-def startup_checklist():
-    if useGit != None:
-        print(f"Reading JSON data from {useGit}...")
-    
-    elif repoTest or usePers:
-            print("Running automated input_message test(s)...")
+## Calculate total number of POST requests script will try to send...
+def calc_total_reqs(behavior, numberOfTests):
+    if behavior == "fullRepo":
+        totalRequests = numberOfTests * 7
     else:
-        print(f"Reading data from {perfPath}...")
-        print(f"Reading in data with dimensions {numCol} by {finRow - iniRow}...")
-    
-    print(f"Sending POST request(s) to {pfp}...\n")
+        totalRequests = numberOfTests
+    print(f"Sending a total of {totalRequests} POST requests...\n")
+    return totalRequests
 
-#### Print Statements and Response Handling ################################
+
+#### API Response Handling #########################################################
 
 ## Print relevant JSON keys from API response...
 def text_back(postReturn):
@@ -129,7 +155,7 @@ def text_back(postReturn):
 
 
 ## Check output message for known-good metadata pairs...
-def validate_output(apiReturn, staffID):
+def response_vign_validate(apiReturn, staffID):
     match = False
     validKeys = vignAccPairs.get(staffID)
     chosenKeys = {
@@ -146,7 +172,6 @@ def validate_output(apiReturn, staffID):
         print(f"VIGNETTE VALIDATION:\tPASS\n\tOutput matches vignette expectations.")
     else:
         print("VIGNETTE VALIDATION:\tFAIL\n\tUnexpected message content.")
-    #assert match, f"INFO:\tOutput message is not vignette consistent for {persona}"
 
 
 ## Save PFP API responses for manual review...
@@ -164,16 +189,17 @@ def log_return(postReturn, outputName):
 
 
 ## Handle API responses...
-def handle_response(response, requestNumber, staffID):
+def handle_response(response, requestNumber):
     if response.status_code == 200:
-        print("Message delivered in {:.3f} seconds.".format(response.elapsed.total_seconds()))
+        print("Response recieved in {:.3f} seconds.".format(response.elapsed.total_seconds()))
         apiReturn = json.loads(response.text)
+        staffID = apiReturn["staff_number"]
         
         if showResp:    # Print output if asked
             text_back(apiReturn)
 
         if chkPairs:    # Validate output if asked
-            validate_output(apiReturn, staffID)
+            response_vign_validate(apiReturn, staffID)
             
         if saveResp:    # Save output if asked
             respName = f"response_{requestNumber}"
@@ -232,13 +258,13 @@ def csv_jsoner(path):
 
 ## Send POST request to unprotected URLs...
 def send_req(pfp, missile):
-	header = {"Content-Type": "application/json"}
-	response = requests.post(pfp, data=missile, headers=header)
-	return response
+    header = {"Content-Type": "application/json"}
+    response = requests.post(pfp, data=missile, headers=header)
+    return response
 
 
-## Send POST to IAP protected URLs...
-def make_iap_request(url, Fullmessage, method="POST", **kwargs):
+## Send POST request to IAP protected URLs...
+def send_iap_req(url, Fullmessage, method="POST", **kwargs):
 
     # Set the default timeout, if missing
     if "timeout" not in kwargs:
@@ -261,21 +287,20 @@ def make_iap_request(url, Fullmessage, method="POST", **kwargs):
     return resp
 
 ## Test a knowledgebase repo input_message.json file...
-def test_persona(persona, requestNumber, sigmaReqs):
+def test_persona(persona, requestNumber):
     url = f"https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/vignettes/personas/{persona}/input_message.json"
     
     try:
-        print(f"\t\nTrying request {requestNumber} of {sigmaReqs}: Persona '{persona.upper()}'")
-        jsonContent = go_fetch(url)
-        response = send_req(pfp, jsonContent)
-        assert response.headers.get('content-type') == 'application/json', f"Bad response - Non-JSON content returned"
-        respJson = response.json()
-        handle_response(response, requestNumber, respJson["staff_number"])
+        print(f"\nTesting input_message file for persona '{persona.upper()}'")
+        jsonContent = go_fetch(url)     # retrieve github json content
+        
+        if target != "cloud":
+            response = send_req(pfp, jsonContent)   # send unprotected POST
+    
+        else:
+            response = send_iap_req(pfp, jsonContent) # send protected POST
 
-    except AssertionError as ae:
-        print(ae)
-        #print(f"Continuing with test...\n")
-        #continue
+        handle_response(response, requestNumber)
 
     except Exception as e:
         print(f"{e}")
@@ -284,62 +309,61 @@ def test_persona(persona, requestNumber, sigmaReqs):
 def repo_test():
     hitlist = ["alice", "bob", "chikondi", "deepa", "eugene", "fahad", "gaile"]
     for requestNumber, persona in enumerate(hitlist, start=1):
-        test_persona(persona, requestNumber, len(hitlist))
-    print("\nFinished automated full-repo test.\n")
+        test_persona(persona, requestNumber)
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 ########### Main Script Body ################################
-if __name__ == "__main__":
+def main():
     print(f"\n\t\tWelcome to the Leakdown Tester, Version {vers}!")
-    set_target()
-    confirm_content()
-    startup_checklist()
-
     try:
-        # Call single persona repo test
-        if usePers is not None:
-            test_persona(usePers, 1, reqNumber)
-            print("\n\t\tLeakdown test complete.\n")
-            exit(0)
-
-        # Call repo_test if requested
-        if repoTest:
-            repo_test()
-            print("\n\t\tLeakdown test complete.\n")
-            exit(0)
+        behavior = set_behavior()   #Set script behavior, readback content source
+        set_target()    #Set API endpoint, readback target
+        sigmaReqs = calc_total_reqs(behavior, numTests)
 
         # Retrieve GitHub JSON Payload if requested
-        if useGit is not None:
+        if behavior == "github":
             fullMessage = go_fetch(useGit)    
         
         # Build JSON from CSV (default/by request)
-        elif perfPath != None:
-            perfJSON = csv_jsoner(perfPath)             # I/O from CSV dataframe
+        elif behavior == "CSV":
+            perfJSON = csv_jsoner(perfPath)     # I/O from CSV dataframe
             fullMessage = payloadHeader + perfJSON + payloadFooter    # Make JSON payload
-        
-        else:
-            print("Error: No content provided for POST request.")
-            exit(1)
+
 
         # Send POST request(s)
-        for i in range(reqNumber):
-            print(f"Trying request {i + 1} of {reqNumber}:")
+        for i in range(numTests):
+            print(f"\nRunning test {i+1} of {numTests}:")
             
-            if target == "heroku" or target == "local":
-                sentPost = send_req(pfp, fullMessage)
-                postJson = sentPost.json()
-                handle_response(sentPost, i+1, postJson["staff_number"])
+            # Send single-persona repo test
+            if behavior == "oneRepo":
+                test_persona(usePers, i+1)
             
-            elif target == "cloud":
-                sentPost = make_iap_request(pfp, fullMessage)
-                postJson = sentPost.json()
-                handle_response(sentPost, i+1, postJson["staff_number"])
-                print(sentPost)
+            # Send full-repo persona tests
+            elif behavior == "fullRepo":
+                repo_test()
+            
+            # Send POST requests for GitHub or CSV content types
+            else:
+                if target != "cloud":
+                    sentPost = send_req(pfp, fullMessage)
+                    postJson = sentPost.json()
+                    handle_response(sentPost, i+1)
+            
+                elif target == "cloud":
+                    sentPost = send_iap_req(pfp, fullMessage)
+                    postJson = sentPost.json()
+                    handle_response(sentPost, i+1)
         
-        print("\t\tLeakdown test complete.\n")
+        print("\n\t\tLeakdown test complete.\n")
         exit(0)
+
 
     except ValueError as e:
         print(f"{e}")
         exit(1)
+
+
+if __name__ == "__main__":
+    main()

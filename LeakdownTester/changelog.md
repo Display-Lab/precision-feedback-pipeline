@@ -1,4 +1,32 @@
 # Changelog for Leakdown Tester Script
+## Version 1.4.3
+Resleased 8/18/23
+- Updated handle_response() function
+	+ Refactored code to check first for 200 status code response, THEN to pull JSON keys for vignette validation
+	+ Allows for increased description of bad API responses
+	+ Refactoring into handle_response eliminates 8 lines of code from script
+- Updated test_persona() function
+	+ Allow function to send requests to GCP API
+	+ Altered print statement to remove unnecesary request # reporting
+	+ Removed total request argument as now unnecessary
+- Changed arg `--reqs` to `--tests`
+	+ Reflects that some test modes can send upward of one request
+	+ Changed codebase to reflect naming convention change
+	+ Changed readback statements to show which test loop is running
+- Renamed function `confirm_content` to `set_behavior`
+	+ Function now determines what kind of test for the script to run with logicals, as well as handle the errors of the old function
+- Removed function `startup_checklist`
+	+ Going forward, startup functions will now print a readback statement to the user as they set configuration details for the script
+	+ This cuts down on the amount of logical processes done by the script, but does decrease readability somewhat
+- Added function `calc_total_reqs`
+	+ Function calculates the total number of POST requests the script will send for each initialization of the script
+	+ Will become more important as multithreading is implemented
+- Renamed `validate_output` to `response_vign_validate`
+	+ Changed to better reflect what the function is accomplishing (increased clarity)
+- Updated `main`
+	+ With inclusion of "set_behavior", can now much more clearly follow how Post requests are being sent differently based on the test behavior desired
+	+ Included all function calls that send a POST in the "Send POST requests" loop
+
 ## Version 1.4.2
 Released 8/16/23
 - Added env var "SAPATH"
