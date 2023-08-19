@@ -22,6 +22,7 @@ Format:
 
 ### Integer Args
 - `--tests` `X` : Integer, default 1. Number of Leakdown tests run by the script. To send multiple post requests from CSV or Github sources, increment this accordingly.
+- `--threads` `X` : Integer, default 1. Number of threads to run concurrent Leakdown Tests on against the same PFP API endpoint.
 - `--RI` `X` : Integer, default 0. The first row of data read from the specified CSV file.
 - `--RF` `X` : Integer, default 12. The last row of data read from the specified CSV file. Change this in multiples of 12 to include full "years" of data from the CSV file.
 - `--C` `X` : Integer, default 10. The number of columns of data to read from the CSV file. Only change when working with deprecated pipeline versions that do not accept MPOG Goal inclusion. 

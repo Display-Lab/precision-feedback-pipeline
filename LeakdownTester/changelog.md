@@ -1,4 +1,17 @@
 # Changelog for Leakdown Tester Script
+## Version 1.5.0
+Released 8/19/23
+- Added multithreading capability to the script
+	+ use `--threads X` to start multiple threads to run requests simultaneously against the pipeline.
+	+ Changed request naming convention, allow save_resp to work properly
+	+ Many structural changes to support multithreading
+
+- Renamed `send_req` and `send_iap_req` to `..._post`
+	+ Renamed to more precisely describe their functions
+- Added function `post_and_respond`
+	+ Refactored the logic for determining which kind of post request to send based on target to this function
+	+ Included call to handle_response here so that responses can still be logged, printed, or validated against vignette values
+
 ## Version 1.4.3
 Resleased 8/18/23
 - Updated handle_response() function
@@ -13,7 +26,7 @@ Resleased 8/18/23
 	+ Reflects that some test modes can send upward of one request
 	+ Changed codebase to reflect naming convention change
 	+ Changed readback statements to show which test loop is running
-- Renamed function `confirm_content` to `set_behavior`
+- Renamed/reworked function `confirm_content`, now `set_behavior`
 	+ Function now determines what kind of test for the script to run with logicals, as well as handle the errors of the old function
 - Removed function `startup_checklist`
 	+ Going forward, startup functions will now print a readback statement to the user as they set configuration details for the script
