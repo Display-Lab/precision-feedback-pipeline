@@ -35,7 +35,7 @@ class Pictoralist():
         self.performance_data['month']= pd.to_datetime(self.performance_data['month'], errors='coerce')
         self.display_format=str(self.display_format)
         self.measure_name=str(self.measure_name)
-        if self.display_format == "line graph,bar chart":
+        if self.display_format == "Text-only, bar chart, line chart":
             self.display_format = "bar chart"
             # print(self.display_format)
         if self.display_format == "bar chart":
