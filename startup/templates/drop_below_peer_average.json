@@ -48,6 +48,10 @@
       "rdfs:label": "negative performance gap set"
     },
     {
+      "@id": "http://purl.obolibrary.org/obo/PSDO_0000045",
+      "rdfs:label": "social comparator element"
+    },
+    {
       "@id": "http://purl.obolibrary.org/obo/PSDO_0000119",
       "rdfs:label": "negative performance trend set"
     },
@@ -56,31 +60,32 @@
       "rdfs:label": "loss set"
     },
     {
-      "@id": "http://purl.obolibrary.org/obo/PSDO_0000045",
-      "rdfs:label": "social comparator element"
-    },
-    {
-      "@id": "http://purl.obolibrary.org/obo/PSDO_0000129",
-      "rdfs:label": "peer 90th percentile benchmark"
+      "@id": "http://purl.obolibrary.org/obo/PSDO_0000126",
+      "rdfs:label": "peer average comparator"
     }
   ],
   "Name": {
-    "@value": "lost top 10 benchmark"
+    "@value": "Drop Below Peer Average"
   },
   "Message text": [
     {
-      "@value": "You are no longer a top performer for the measure [measure name]"
+      "@value": "Your performance dropped below the peer average this month for the measure [Measure name]."
     }
   ],
   "Display compatibility": {
     "@value": "Text-only, bar chart, line chart"
   },
   "schema:isBasedOn": "https://repo.metadatacenter.org/templates/707d3573-8ac9-4e2c-b53b-2026a795308c",
-  "schema:name": "lost top 10 benchmark",
+  "schema:name": "Drop Below Peer Average",
   "schema:description": "specification for a possible precision feedback message",
-  "pav:createdOn": "2023-02-27T08:05:38-08:00",
-  "pav:createdBy": "https://metadatacenter.org/users/626c7d49-cdfc-43d6-b254-36a7be904ea9",
-  "pav:lastUpdatedOn": "2023-02-27T08:05:38-08:00",
-  "oslc:modifiedBy": "https://metadatacenter.org/users/626c7d49-cdfc-43d6-b254-36a7be904ea9",
-  "@id": "https://repo.metadatacenter.org/template-instances/ed7892fa-5540-4576-bf1f-8a867c28ed10"
+  "pav:createdOn": "2023-04-26T14:59:17-07:00",
+  "pav:createdBy": "https://metadatacenter.org/users/da882240-ad9e-42ea-a48b-215e54161ad3",
+  "pav:lastUpdatedOn": "2023-04-26T14:59:45-07:00",
+  "oslc:modifiedBy": "https://metadatacenter.org/users/da882240-ad9e-42ea-a48b-215e54161ad3",
+  "@id": "https://repo.metadatacenter.org/template-instances/35903316-d0cc-4a53-ba3f-a9d796e78985",
+ 
+  "Short message ID": {
+    "@value": "8",
+    "@type": "xsd:decimal"
+  }
 }

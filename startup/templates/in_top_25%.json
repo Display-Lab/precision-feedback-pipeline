@@ -44,43 +44,41 @@
   "@type": "http://data.bioontology.org/ontologies/PSDO/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FPSDO_0000002",
   "is_about": [
     {
-      "@id": "http://purl.obolibrary.org/obo/PSDO_0000116",
-      "rdfs:label": "negative performance gap set"
-    },
-    {
-      "@id": "http://purl.obolibrary.org/obo/PSDO_0000119",
-      "rdfs:label": "negative performance trend set"
-    },
-    {
-      "@id": "http://purl.obolibrary.org/obo/PSDO_0000122",
-      "rdfs:label": "loss set"
+      "@id": "http://purl.obolibrary.org/obo/PSDO_0000117",
+      "rdfs:label": "positive performance gap set"
     },
     {
       "@id": "http://purl.obolibrary.org/obo/PSDO_0000045",
       "rdfs:label": "social comparator element"
     },
     {
-      "@id": "http://purl.obolibrary.org/obo/PSDO_0000129",
-      "rdfs:label": "peer 90th percentile benchmark"
+      "@id": "http://purl.obolibrary.org/obo/PSDO_0000128",
+      "rdfs:label": "peer 75th percentile benchmark"
     }
   ],
   "Name": {
-    "@value": "lost top 10 benchmark"
+    "@value": "In Top 25%"
   },
   "Message text": [
     {
-      "@value": "You are no longer a top performer for the measure [measure name]"
+      "@value": "You are in the top 25% of providers for the measure [Measure name]. Your performance was [recipient performance level as percentage (with numerator and denominator)], above the top 25% peer benchmark, which was X% this month."
     }
   ],
   "Display compatibility": {
     "@value": "Text-only, bar chart, line chart"
   },
   "schema:isBasedOn": "https://repo.metadatacenter.org/templates/707d3573-8ac9-4e2c-b53b-2026a795308c",
-  "schema:name": "lost top 10 benchmark",
+  "schema:name": "In Top 25%",
   "schema:description": "specification for a possible precision feedback message",
-  "pav:createdOn": "2023-02-27T08:05:38-08:00",
-  "pav:createdBy": "https://metadatacenter.org/users/626c7d49-cdfc-43d6-b254-36a7be904ea9",
-  "pav:lastUpdatedOn": "2023-02-27T08:05:38-08:00",
-  "oslc:modifiedBy": "https://metadatacenter.org/users/626c7d49-cdfc-43d6-b254-36a7be904ea9",
-  "@id": "https://repo.metadatacenter.org/template-instances/ed7892fa-5540-4576-bf1f-8a867c28ed10"
+  "pav:createdOn": "2023-06-28T12:28:07-07:00",
+  "pav:createdBy": "https://metadatacenter.org/users/da882240-ad9e-42ea-a48b-215e54161ad3",
+  "pav:lastUpdatedOn": "2023-06-28T12:34:33-07:00",
+  "oslc:modifiedBy": "https://metadatacenter.org/users/da882240-ad9e-42ea-a48b-215e54161ad3",
+  "pav:derivedFrom": "https://repo.metadatacenter.org/template-instances/b7685a3f-5b7b-4291-b194-92e410c99e8d",
+
+  "Short message ID": {
+    "@value": "24",
+    "@type": "xsd:decimal"
+  },
+  "@id": "https://repo.metadatacenter.org/template-instances/96a74b9d-8781-4b04-bf00-d999830237bc"
 }

@@ -38,7 +38,8 @@
     },
     "is_about": "http://purl.obolibrary.org/obo/IAO_0000136",
     "Name": "https://schema.metadatacenter.org/properties/26450fa6-bb2c-4126-8229-79efda7f863a",
-    "Message text": "https://schema.metadatacenter.org/properties/6b9dfdf9-9c8a-4d85-8684-a24bee4b85a8"
+    "Message text": "https://schema.metadatacenter.org/properties/6b9dfdf9-9c8a-4d85-8684-a24bee4b85a8",
+    "Display compatibility": "https://schema.metadatacenter.org/properties/6b9dfdf9-9c8a-4d85-8684-a24bee4b85a8123"
   },
   "@type": "http://data.bioontology.org/ontologies/PSDO/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FPSDO_0000002",
   "is_about": [
@@ -53,15 +54,7 @@
     {
       "@id": "http://purl.obolibrary.org/obo/PSDO_0000128",
       "rdfs:label": "peer 75th percentile benchmark"
-    },
-    {
-      "@id": "http://purl.obolibrary.org/obo/IAO_0000573",
-      "rdfs:label": "line graph"
-    },
-    {
-      "@id": "http://purl.obolibrary.org/obo/STATO_0000166",
-      "rdfs:label": "bar chart"
-    } 
+    }
   ],
   "Name": {
     "@value": "Top 25 Performer"
@@ -71,6 +64,9 @@
       "@value": "Congrats on your high performance for the measure [performance measure name]! Your performance was [recipient performance level], above the 75th percentile benchmark [Top 25% Benchmark performance level] of your peers."
     }
   ],
+  "Display compatibility": {
+    "@value": "Text-only, bar chart, line chart"
+  },
   "schema:isBasedOn": "https://repo.metadatacenter.org/templates/707d3573-8ac9-4e2c-b53b-2026a795308c",
   "schema:name": "Top 25 Performer",
   "schema:description": "specification for a possible precision feedback message",

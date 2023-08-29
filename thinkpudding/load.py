@@ -20,18 +20,32 @@ def process_causalpathways(causal_pathways):
     caus_type_dicts={}
     caus_type_dicts1={}
     caus_out_dict={}
+    caus_type_dicts_final={}
     gap_comparator=[URIRef('http://purl.obolibrary.org/obo/PSDO_0000104'),URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')]
     caus_p = URIRef("http://schema.org/name")
     precdn=URIRef("http://purl.bioontology.org/ontology/SNOMEDCT/has_precondition")
     name=URIRef("https://schema.metadatacenter.org/properties/4a88e066-a289-4a09-a0fc-a24c28c65215")
     caus_s=[]
     caus_n=[]
+    for s,p,o in causal_pathways.triples((None,caus_p,None)):
+        # print(s)
+        pre_list=[]
+        for s,p,o in causal_pathways.triples((s,precdn,None)):
+            pre_list.append(o)
+            # print(o)
+        # print(*pre_list)
+        caus_type_dicts_final[s]=pre_list
+
+    
+    
+    
     
     for s, p, o in causal_pathways.triples((None, caus_p, None)):
-        # print(s)
+        #print(s)
         caus_s.append(s)
         for sqe,pqe,oqe in causal_pathways.triples((None,name,None)):
             caus_n.append(oqe)
+            # print(oqe)
     for x in range(len(caus_s)):
         s=caus_s[x]
         p=precdn
@@ -43,7 +57,7 @@ def process_causalpathways(causal_pathways):
     for x in range(len(ids)):
         yw=[]
         for s,p,o in causal_pathways.triples((s, p,None)):
-                # print(s)
+            #print(s)
             #print(o)
             yw.append(o)
 
@@ -68,13 +82,13 @@ def process_causalpathways(causal_pathways):
                 gap=v[x]
     # for x in range(len(caus_s)):
     #     print(caus_s[x])
-            
-    # for k,v in caus_type_dicts.items():print(k, v)            
+    # print(gap)        
+    # for k,v in caus_type_dicts_final.items():print(k, v)            
     # print(caus_type_dicts)
-    # print(gap)
-    return caus_type_dicts,gap
+    
+    return caus_type_dicts,caus_type_dicts_final
 
-def process_spek(spek_cs,gap):
+def process_spek(spek_cs):
 
     spek_out_dicts={}
     comparator_dicts={}
@@ -129,13 +143,13 @@ def process_spek(spek_cs,gap):
                     gap_comparator_dicts[s]=comparator_gap_types
                 
                 # print("\n")
-                if o == gap:
+                # if o == gap:
                     
-                    for s,p,o in spek_cs.triples((s,p2,None)):
-                        s=o
-                        for s,p,o in spek_cs.triples((s,RDF.type,None)):
+                #     for s,p,o in spek_cs.triples((s,p2,None)):
+                #         s=o
+                #         for s,p,o in spek_cs.triples((s,RDF.type,None)):
                             
-                            BL.append(o)
+                #             BL.append(o)
         # print("\n")
         spek_out_dicts[s1] = y
         comparator_dicts[s1]=BL
@@ -146,13 +160,13 @@ def process_spek(spek_cs,gap):
     # print(*comparator_dicts)
     return spek_out_dicts,comparator_dicts,gap_comparator_dicts
 
-def matching(caus_out_dict,spek_out_dicts,comparator_dicts,gap_comparator_dicts):
+def matching(caus_out_dict,spek_out_dicts,comparator_dicts,gap_comparator_dicts,caus_out_dict_final):
     final_dict={}
-    fg=list(caus_out_dict.values())
+    fg=list(caus_out_dict_final.values())
     fr=list(spek_out_dicts.values())
     fz=list(comparator_dicts.values())
     fd=list(gap_comparator_dicts.values())
-    # for k,v in caus_out_dict.items():print(k, v)
+    # for k,v in caus_out_dict_final.items():print(k, v)
     positive_gap_comparator=URIRef('http://purl.obolibrary.org/obo/PSDO_0000104')
     negative_gap_comparator=URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')
     fs=[]
@@ -172,45 +186,37 @@ def matching(caus_out_dict,spek_out_dicts,comparator_dicts,gap_comparator_dicts)
     bnodes=[]
     ng_list=[]
     p_list=[]
+    sjs=[]
+    pjs=[]
+    ysd=[]
     comparator_list=[URIRef('http://purl.obolibrary.org/obo/PSDO_0000128'),URIRef('http://purl.obolibrary.org/obo/PSDO_0000129'),URIRef('http://purl.obolibrary.org/obo/PSDO_0000126')]
     for swd in range(len(fs)):
         for swd1 in range(len(fs[swd])):
             ng_list.append(fs[swd][swd1])
-    # print(*ng_list)
+    
     for swd2 in range(len(fw)):
         for swd3 in range(len(fw[swd2])):
             p_list.append(fw[swd2][swd3])
-    # print(*p_list)
+    
     status_bit=False
+   
+    
     for i in range(len(fg)):
         for x in range(len (fr)):
             result =  all(elem in fr[x]  for elem in fg[i])
-            if result == True:
-                result1 = False
-                if negative_gap_comparator in fg[i]:
-                   for f in range(len(fr[x])):
-                        if fr[x][f] in ng_list and status_bit is False:
-                            aby = fr[x].count(fr[x][f])
-                            if aby == 2:
-                                result1=True
-                            if result1 == True:
-                                status_bit=True
-                                l=[k for k,v in spek_out_dicts.items() if v == fr[x]]
-                                bnodes.append(l)
-                                y=[k for k,v in caus_out_dict.items() if v == fg[i]]
-                                accept_ids.append(y)
-                if positive_gap_comparator in fg[i]:
-                    for f in range(len(fr[x])):
-                        if fr[x][f] in p_list and status_bit is False:
-                            aby = fr[x].count(fr[x][f])
-                            if aby == 2:
-                                result1=True
-                            if result1 == True:
-                                status_bit= True
-                                l=[k for k,v in spek_out_dicts.items() if v == fr[x]]
-                                bnodes.append(l)
-                                y=[k for k,v in caus_out_dict.items() if v == fg[i]]
-                                accept_ids.append(y)  
-        status_bit=False 
-    merged_list = [(accept_ids[i], bnodes[i]) for i in range(0, len(accept_ids))]
-    return merged_list
+            if result == True :
+                l=[k for k,v in spek_out_dicts.items() if v == fr[x]]
+                # print(l)
+                y=[k for k,v in caus_out_dict_final.items() if v == fg[i]]
+                # print(y)
+                sjs.append(y)
+                pjs.append(l)
+               
+                
+                
+    
+    ysd=[(sjs[i], pjs[i]) for i in range(0, len(pjs))]
+    res = []
+    [res.append(x) for x in ysd if x not in res]
+    # print(*res)
+    return res

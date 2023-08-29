@@ -45,12 +45,13 @@ graph1=Graph()
 for sd in range(len(list2)):
     adf="g"+str(sd)
     adf=Graph()
+    
     adf.parse(list2[sd])
     graph = graph + adf
 for sdf in range(len(list3)):
     adfs="g"+str(sdf)
     adfs=Graph()
-    adfs.parse(list3[sdf])
+    adfs.parse(list3[sdf], format="json-ld")
     graph1 = graph1 + adfs
 
 measure_details=Graph()
@@ -130,7 +131,7 @@ async def createprecisionfeedback(info:Request):
     #BitStomach
     bs=Bit_stomach(performer_graph,performance_data_df)
     BS=bs.annotate()
-    # op=BS.serialize(format='json-ld', indent=4)
+    op=BS.serialize(format='json-ld', indent=4)
     # if str(debug)=="yes":
     #     f = open("outputs/spek_bs.json", "w")
     #     f.write(op)
@@ -153,7 +154,7 @@ async def createprecisionfeedback(info:Request):
     tp.process_spek()
     tp.matching()
     spek_tp=tp.insert()
-    # op=spek_tp.serialize(format='json-ld', indent=4)
+    op=spek_tp.serialize(format='json-ld', indent=4)
     # if str(debug)=="yes":
     #     op=spek_tp.serialize(format='json-ld', indent=4)
     #     f = open("outputs/spek_tp.json", "w")
@@ -172,23 +173,23 @@ async def createprecisionfeedback(info:Request):
     selected_message=es.get_selected_message()
     
     
-    # # print(selected_message)
-    if selected_message["text"]!= "No message selected":
-    # # #Runnning Pictoralist
-        pc=Pictoralist(selected_message,p_df,performance_data_df)
-        base64_image=pc.create_graph()
-        selected_message["image"]=base64_image
+    # # # print(selected_message)
+    # if selected_message["text"]!= "No message selected":
+    # # # #Runnning Pictoralist
+    #     pc=Pictoralist(selected_message,p_df,performance_data_df)
+    #     base64_image=pc.create_graph()
+    #     selected_message["image"]=base64_image
         
-        selected_message1=pc.prepare_selected_message()
-    # '<img align="left" src="data:image/png;base64,%s">' %base64_image
-    # ES=spek_es.serialize(format='json-ld', indent=4)
-    # if str(debug)=="yes":
-    #     f = open("outputs/spek_es.json", "w")
-    #     f.write(ES)
-    #     f.close()
-    # print(vignette)
+    #     selected_message1=pc.prepare_selected_message()
+    # # '<img align="left" src="data:image/png;base64,%s">' %base64_image
+    # # ES=spek_es.serialize(format='json-ld', indent=4)
+    # # if str(debug)=="yes":
+    # #     f = open("outputs/spek_es.json", "w")
+    # #     f.write(ES)
+    # #     f.close()
+    # # print(vignette)
     
-    return selected_message1
+    return selected_message
         # "location":settings.location
        
         # "selected_message": selected_message

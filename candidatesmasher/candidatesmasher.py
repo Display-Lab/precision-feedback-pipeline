@@ -45,6 +45,7 @@ class CandidateSmasher:
         self.pq13=URIRef("psdo:PerformanceSummaryDisplay")
         self.pq14=URIRef("psdo:PerformanceSummaryTextualEntity")
         self.pq15=URIRef("http://schema.org/name")
+        self.pf234=URIRef("Display compatibility")
 
         self.cp=RDF.type
         self.co=URIRef("http://purl.obolibrary.org/obo/cpo_0000053")
@@ -60,6 +61,7 @@ class CandidateSmasher:
         self.cp27=URIRef("http://example.com/slowmo#AncestorTemplate")
         self.cp28=URIRef("http://example.com/slowmo#Candidate")
         self.message_text=URIRef("https://schema.metadatacenter.org/properties/6b9dfdf9-9c8a-4d85-8684-a24bee4b85a8")
+        self.display=URIRef("https://schema.metadatacenter.org/properties/6b9dfdf9-9c8a-4d85-8684-a24bee4b85a8123")
         self.bar_chart=URIRef("http://purl.obolibrary.org/obo/STATO_0000166")
         self.line_graph=URIRef("http://purl.obolibrary.org/obo/IAO_0000573")
         self.display_format=URIRef("https://schema.metadatacenter.org/properties/08244d65-5f32-4ef5-829f-5075a936234f")
@@ -71,7 +73,7 @@ class CandidateSmasher:
         self.ab=[]
         self.text_dicts={}
         self.name_dicts={}
-        # self.display_dicts={}
+        self.display_dicts={}
         self.template_type_dicts={}
         self.candidate_id_dicts={}
         self.goal_dicts={}
@@ -294,6 +296,7 @@ class CandidateSmasher:
         # a25_dicts={}
         a26_dicts={}
         a27_dicts={}
+        a278_dicts={}
         templatetype_dicts={}
         for x in range(len(self.asd)):
             s24=URIRef(self.asd[x])
@@ -312,6 +315,8 @@ class CandidateSmasher:
                 a26_dicts[s24]=str(o30)
             for s31,p31,o31 in self.b.triples((s24,self.pq15,None)):
                 a27_dicts[s24]=str(o31)
+            for s322,p322,o322 in self.b.triples((s24,self.display,None)):
+                a278_dicts[s24]=str(o322)
 
             for s,p,o in self.b.triples((s24,self.p24,None)):
                 templatetype=str(o)
@@ -330,26 +335,28 @@ class CandidateSmasher:
         # display_dicts=a25_dicts
         text_dicts=a26_dicts
         name_dicts=a27_dicts
+        display_dicts=a278_dicts
         template_type_dicts=templatetype_dicts
         # for k,v in text_dicts.items():
         #     print(k,v)
         self.df_text = pd.DataFrame.from_dict(text_dicts,orient='index')
         self.df_text = self.df_text.rename({0:"text"}, axis=1)
-        # self.df_display_dicts=pd.DataFrame.from_dict(display_dicts,orient='index')
-        # self.df_display_dicts = self.df_display_dicts.rename({0:"display1"}, axis=1)
+        self.df_display_dicts=pd.DataFrame.from_dict(display_dicts,orient='index')
+        self.df_display_dicts = self.df_display_dicts.rename({0:"display"}, axis=1)
         # self.df_display_dicts = self.df_display_dicts.rename({1:"display2"}, axis=1)
         self.df_name_dicts=pd.DataFrame.from_dict(name_dicts,orient='index')
         self.df_name_dicts = self.df_name_dicts.rename({0:"name"}, axis=1)
         self.df_template_type_dicts=pd.DataFrame.from_dict(template_type_dicts,orient='index')
         self.df_template_type_dicts = self.df_template_type_dicts.rename({0:"template_type_dicts"}, axis=1)
-        self.df_template_type_dicts  = self.df_template_type_dicts .rename({1:"template_type_dicts1"}, axis=1)
-        self.df_template_type_dicts  = self.df_template_type_dicts .rename({2:"template_type_dicts2"}, axis=1)
-        self.df_template_type_dicts  = self.df_template_type_dicts .rename({3:"template_type_dicts3"}, axis=1)
+        if(1 in self.df_template_type_dicts.columns):
+            self.df_template_type_dicts  = self.df_template_type_dicts .rename({1:"template_type_dicts1"}, axis=1)
+            self.df_template_type_dicts  = self.df_template_type_dicts .rename({2:"template_type_dicts2"}, axis=1)
+            self.df_template_type_dicts  = self.df_template_type_dicts .rename({3:"template_type_dicts3"}, axis=1)
         if(4 in self.df_template_type_dicts.columns):
             self.df_template_type_dicts  = self.df_template_type_dicts .rename({4:"template_type_dicts4"}, axis=1)
             self.df_template_type_dicts  = self.df_template_type_dicts .rename({5:"template_type_dicts5"}, axis=1)
             self.df_template_type_dicts  = self.df_template_type_dicts .rename({6:"template_type_dicts6"}, axis=1)
-        self.df=pd.concat([self.df_text,self.df_name_dicts,self.df_template_type_dicts], axis=1)
+        self.df=pd.concat([self.df_text,self.df_name_dicts,self.df_display_dicts,self.df_template_type_dicts], axis=1)
        
         # self.df = self.df.rename({1:"template_type_dicts1"}, axis=1)
         # self.df = self.df.rename({2:"template_type_dicts2"}, axis=1)
@@ -398,35 +405,42 @@ class CandidateSmasher:
                         self.a.add((oq,self.cp,self.co))
                         a25=Literal(row["text"])
                         a27=Literal(row["name"])
-                    
-                        a28=URIRef(row["template_type_dicts"])
-                        a29=URIRef(row["template_type_dicts1"])
+                        a288= Literal(row["display"])
+                        if "template_type_dicts" in self.df.columns:
+                            if(row["template_type_dicts"] != 0):
+                                a28=URIRef(row["template_type_dicts"])
+                        if "template_type_dicts1" in self.df.columns:
+                            if(row["template_type_dicts1"] != 0):
+                                a29=URIRef(row["template_type_dicts1"])
                 
                         self.a.add((oq,self.cp2,a25))
                         self.a.add((oq,self.cp1,a27))
+                        self.a.add((oq,self.cp3,a288))
                         # self.a.add((oq,self.cp3,a26))
                         # self.a.add((oq,self.cp3,a261))
                         self.a.add((oq,RDF.type,self.cp28))
-                        
-                        if(row["template_type_dicts"] != 0):
-                            ov=BNode()
-                            self.a.add((oq,self.cop4,ov))
-                            self.a.add((ov,RDF.type,a28))
-                        if(row["template_type_dicts1"] != 0):
-                            ov=BNode()
-                            self.a.add((oq,self.cop4,ov))
-                            self.a.add((ov,RDF.type,a29))
-                        if (row["template_type_dicts2"] != 0):
-                            a30=URIRef(row["template_type_dicts2"])
-                            ov=BNode()
-                            self.a.add((oq,self.cop4,ov))
-                            self.a.add((ov,RDF.type,a30))
-                        
-                        if (row["template_type_dicts3"] != 0):
-                            a31=URIRef(row["template_type_dicts3"])
-                            ov=BNode()
-                            self.a.add((oq,self.cop4,ov))
-                            self.a.add((ov,RDF.type,a31))
+                        if "template_type_dicts" in self.df.columns:
+                            if(row["template_type_dicts"] != 0):
+                                ov=BNode()
+                                self.a.add((oq,self.cop4,ov))
+                                self.a.add((ov,RDF.type,a28))
+                        if "template_type_dicts1" in self.df.columns:
+                            if(row["template_type_dicts1"] != 0):
+                                ov=BNode()
+                                self.a.add((oq,self.cop4,ov))
+                                self.a.add((ov,RDF.type,a29))
+                        if "template_type_dicts2" in self.df.columns:
+                            if (row["template_type_dicts2"] != 0):
+                                a30=URIRef(row["template_type_dicts2"])
+                                ov=BNode()
+                                self.a.add((oq,self.cop4,ov))
+                                self.a.add((ov,RDF.type,a30))
+                        if "template_type_dicts3" in self.df.columns:
+                            if (row["template_type_dicts3"] != 0):
+                                a31=URIRef(row["template_type_dicts3"])
+                                ov=BNode()
+                                self.a.add((oq,self.cop4,ov))
+                                self.a.add((ov,RDF.type,a31))
                         if "template_type_dicts4" in self.df.columns:
                             if (row["template_type_dicts4"] != 0):
                                 a32=URIRef(row["template_type_dicts4"])
