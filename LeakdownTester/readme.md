@@ -31,7 +31,9 @@ Format:
 ### String Args
 - `--target` `local` : String which the script parses and uses to set the API endpoint for the POST requests. Use "local", "heroku", or "cloud".
 - `--useGit` `"link"` : Paste a link to a GitHub `input_message.JSON` file inside "" to pull that JSON file in and use the script to send copies of it to the chosen endpoint.
-- `--persona` `alice` : String representing a persona name from the [knowledge base repo](https://github.com/Display-Lab/knowledge-base/tree/main/vignettes/personas). Using this argument will send a single persona's input_message file directly from GitHub as a POST request. Use any of the persona names, in lowercase.
+- `--persona` `alice` : String representing a persona name from the Knowledge-base's [personas folder](https://github.com/Display-Lab/knowledge-base/tree/main/vignettes/personas). Using this argument will send a single persona's input_message file directly from GitHub as a POST request. Use any of the persona names, in lowercase.
+- `--pathway` `social_loss` : String representing a causal pathway from the Knowledge-base's [causal pathway testing suite](https://github.com/Display-Lab/knowledge-base/blob/main/vignettes/dev_templates/causal_pathway_test_suite). Using this argument will send a single causal-pathway input_message file directly from GitHub as a POST request. Use any of the ten implemented causal pathways, in lowercase, with underscores where needed.
+
 -  `--csv` `"filepath to CSV"` : Use double quotation marks around the filepath to your local copy of the MPOG-like test data CSV file. Note: it is better to set the filepath as an environmental variable, but this functionality is fully implemented.
 -  `--service_account` `"filepath to service account"` : Use double quotation marks around the filepath to your local copy of the service account file. Note: it is better to set the filepath as an environmental variable, but this functionality is fully implemented. Access to the service account file details are controlled, connect with the developers to get access.
 
@@ -40,8 +42,10 @@ Adding these arguments to your initialization will change the output you recieve
 
 - `--respond` : Adding to your initialization will set to `True`, and have the script print a subset of the JSON data returned from a successful POST request to the pipeline.
 - `--save` : Adding to your initialization will set to `True`, and have the script save the JSON content AND the pictoralist image of the output message to your machine, and will tell you what it has named the files.
-- `--repoTest` : Adding to init will set to `True`, and test all 7 input_message.json files on the [knowledge base repo](https://github.com/Display-Lab/knowledge-base/tree/main/vignettes/personas) against a chosen API endpoint.
-- `--validate` : Adding to init will set to `True`, and compare the `staff_number`, `acceptable_by`, and `measure` key values in the output message against a set of known valid pairings that are described by the vignettes for each persona.
+- `--allPersonas` : Adding to init will set to `True`, and test all 7  persona-based input_message.json files in the Knowledge-base's [personas folder](https://github.com/Display-Lab/knowledge-base/tree/main/vignettes/personas) against a chosen API endpoint.
+- `--allCPs`: Adding as an arg will test the ten causal pathway-based JSON files in the Knowledge-base's [causal pathway testing suite](https://github.com/Display-Lab/knowledge-base/blob/main/vignettes/dev_templates/causal_pathway_test_suite) against the selected API endpoint.
+- `--vignVal` : Adding to init will set to `True`, and compare the `staff_number`, `acceptable_by`, and `measure` key values in the output message against a set of known valid pairings that are described by the vignettes for each persona.
+- `--cpVal` : Adding to init alongside either --pathway or --allCPs will compare the causal pathway selected by the API in the response message against the user-specified causal pathway. Only for use with the causal pathway testing suite.
 
 ## Setup
 1) Download the entire Leakdown Testing folder from the PFP github repository

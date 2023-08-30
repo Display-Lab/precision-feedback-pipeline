@@ -1,8 +1,32 @@
 # Changelog for Leakdown Tester Script
+## Version 1.6.0
+Released 8/30/23
+- **Feature:** Added ability to test 'causal pathway test suite' input files
+	- Added arg `--allCPs`
+		- Tests all causal-pathway-specific input messages
+	- Added arg `--useCPath`
+		- Causal pathway equivalent of `--usePers`
+		- See readme, accepts lowercase name of causal pathway (with underscores)	
+	- Added modality to test_persona(), restructured to support this
+		- Added "mode" variable argument, sets URL for github content retrieval
+		- Restructured to handle multiple URL paths based on new "mode" variable
+	- Renamed `--repoTest` to `--allPersonas`
+		- Reflects function better than old name
+	- Renamed numerous arguments to more accurately reflect function, no user changes
+	- Changed active print statements to de-clutter console when running LDT
+
+- **Improvement:** refactored versioning, 'hitlists' to addendum file
+	+ Increases cohesion of main script file
+	+ Allows all files to update on GitHub when new versions are released
+	+ Moves long/cluttered dicts to addendum file out of sight
+- **Improvement:** reworked `--vignVal` (formerly --validate)
+	- Reformatted prints to print valid pairs of maeasures and causal pathways, then the measure/CP pair returned by the PFP API
+		- Drastically improved usefulness of script's console statements when sharing bug reports
+
 ## Version 1.5.0
 Released 8/19/23
 - Added multithreading capability to the script
-	+ use `--threads X` to start multiple threads to run requests simultaneously against the pipeline.
+	+ Use `--threads X` to start multiple threads to run requests simultaneously against the pipeline.
 	+ Changed request naming convention, allow save_resp to work properly
 	+ Many structural changes to support multithreading
 
