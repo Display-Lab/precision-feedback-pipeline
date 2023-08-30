@@ -1,3 +1,6 @@
+## Version of the Leakdown Tester
+ldtVersion = "1.6.0"
+
 ## Dictionary of vignette-determined persona, measure, and causal pathway pairings:
 vignAccPairs = {
     1: [
@@ -35,6 +38,7 @@ vignAccPairs = {
         {"acceptable_by": "goal gain", "measure": "TOC01"}
     ]
 }
+
 ## Extracted JSON content for CSV file read-in and posting:
 payloadHeader = '''
 {
@@ -92,3 +96,18 @@ payloadFooter = '''
 }
 }
 '''
+
+## Repo Testing dictionaries:
+hitlistIM = ["alice", "bob", "chikondi", "deepa", "eugene", "fahad", "gaile"]
+
+hitlistCP = ["goal_approach",
+"goal_gain",
+"goal_loss",
+"improving",
+"social_approach",
+"social_better",
+"social_gain",
+"social_loss",
+"social_worse",
+"worsening"
+]
