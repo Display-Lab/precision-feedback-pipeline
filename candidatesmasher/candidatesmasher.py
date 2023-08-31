@@ -73,7 +73,7 @@ class CandidateSmasher:
         self.ab=[]
         self.text_dicts={}
         self.name_dicts={}
-        self.display_dicts={}
+        # self.display_dicts={}
         self.template_type_dicts={}
         self.candidate_id_dicts={}
         self.goal_dicts={}
@@ -335,14 +335,14 @@ class CandidateSmasher:
         # display_dicts=a25_dicts
         text_dicts=a26_dicts
         name_dicts=a27_dicts
-        display_dicts=a278_dicts
+        # display_dicts=a278_dicts
         template_type_dicts=templatetype_dicts
         # for k,v in text_dicts.items():
         #     print(k,v)
         self.df_text = pd.DataFrame.from_dict(text_dicts,orient='index')
         self.df_text = self.df_text.rename({0:"text"}, axis=1)
-        self.df_display_dicts=pd.DataFrame.from_dict(display_dicts,orient='index')
-        self.df_display_dicts = self.df_display_dicts.rename({0:"display"}, axis=1)
+        # self.df_display_dicts=pd.DataFrame.from_dict(display_dicts,orient='index')
+        # self.df_display_dicts = self.df_display_dicts.rename({0:"display"}, axis=1)
         # self.df_display_dicts = self.df_display_dicts.rename({1:"display2"}, axis=1)
         self.df_name_dicts=pd.DataFrame.from_dict(name_dicts,orient='index')
         self.df_name_dicts = self.df_name_dicts.rename({0:"name"}, axis=1)
@@ -356,7 +356,7 @@ class CandidateSmasher:
             self.df_template_type_dicts  = self.df_template_type_dicts .rename({4:"template_type_dicts4"}, axis=1)
             self.df_template_type_dicts  = self.df_template_type_dicts .rename({5:"template_type_dicts5"}, axis=1)
             self.df_template_type_dicts  = self.df_template_type_dicts .rename({6:"template_type_dicts6"}, axis=1)
-        self.df=pd.concat([self.df_text,self.df_name_dicts,self.df_display_dicts,self.df_template_type_dicts], axis=1)
+        self.df=pd.concat([self.df_text,self.df_name_dicts,self.df_template_type_dicts], axis=1)
        
         # self.df = self.df.rename({1:"template_type_dicts1"}, axis=1)
         # self.df = self.df.rename({2:"template_type_dicts2"}, axis=1)
@@ -374,7 +374,7 @@ class CandidateSmasher:
         #     self.df["template_type_dicts3"]=0
         # if "template_type_dicts4" in self.df.columns:
         #     self.df["template_type_dicts4"]=0
-        #self.df.to_csv("template.csv")
+        self.df.to_csv("template.csv")
     
         return self.df
    
@@ -405,7 +405,7 @@ class CandidateSmasher:
                         self.a.add((oq,self.cp,self.co))
                         a25=Literal(row["text"])
                         a27=Literal(row["name"])
-                        a288= Literal(row["display"])
+                        # a288= Literal(row["display"])
                         if "template_type_dicts" in self.df.columns:
                             if(row["template_type_dicts"] != 0):
                                 a28=URIRef(row["template_type_dicts"])
@@ -415,7 +415,7 @@ class CandidateSmasher:
                 
                         self.a.add((oq,self.cp2,a25))
                         self.a.add((oq,self.cp1,a27))
-                        self.a.add((oq,self.cp3,a288))
+                        # self.a.add((oq,self.cp3,a288))
                         # self.a.add((oq,self.cp3,a26))
                         # self.a.add((oq,self.cp3,a261))
                         self.a.add((oq,RDF.type,self.cp28))

@@ -38,8 +38,7 @@
     },
     "is_about": "http://purl.obolibrary.org/obo/IAO_0000136",
     "Name": "https://schema.metadatacenter.org/properties/26450fa6-bb2c-4126-8229-79efda7f863a",
-    "Message text": "https://schema.metadatacenter.org/properties/6b9dfdf9-9c8a-4d85-8684-a24bee4b85a8",
-    "Display compatibility": "https://schema.metadatacenter.org/properties/6b9dfdf9-9c8a-4d85-8684-a24bee4b85a8123"
+    "Message text": "https://schema.metadatacenter.org/properties/6b9dfdf9-9c8a-4d85-8684-a24bee4b85a8"
   },
   "@type": "http://data.bioontology.org/ontologies/PSDO/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FPSDO_0000002",
   "is_about": [
@@ -64,9 +63,6 @@
       "@value": "You are in the top 25% of providers for the measure [Measure name]. Your performance was [recipient performance level as percentage (with numerator and denominator)], above the top 25% peer benchmark, which was X% this month."
     }
   ],
-  "Display compatibility": {
-    "@value": "Text-only, bar chart, line chart"
-  },
   "schema:isBasedOn": "https://repo.metadatacenter.org/templates/707d3573-8ac9-4e2c-b53b-2026a795308c",
   "schema:name": "In Top 25%",
   "schema:description": "specification for a possible precision feedback message",
@@ -75,7 +71,9 @@
   "pav:lastUpdatedOn": "2023-06-28T12:34:33-07:00",
   "oslc:modifiedBy": "https://metadatacenter.org/users/da882240-ad9e-42ea-a48b-215e54161ad3",
   "pav:derivedFrom": "https://repo.metadatacenter.org/template-instances/b7685a3f-5b7b-4291-b194-92e410c99e8d",
-
+  "Display compatibility": {
+    "@value": "Text-only, bar chart, line chart"
+  },
   "Short message ID": {
     "@value": "24",
     "@type": "xsd:decimal"

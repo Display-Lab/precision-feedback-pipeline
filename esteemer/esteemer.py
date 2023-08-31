@@ -72,21 +72,25 @@ class Esteemer():
             pqd=URIRef("http://example.com/slowmo#PerformanceGapSize")
             pqw=URIRef("http://example.com/slowmo#PerformanceTrendSlope")
             p232= URIRef("psdo:PerformanceSummaryDisplay")
-
+            Display=["Text-only", "bar chart", "line graph"]
             sw=0
+            o2wea=[]
             
             
             for s21,p21,o21 in self.spek_tp.triples((s,p20,None)):
                 s_m["Template ID"] = o21
             for s2,p2,o2 in self.spek_tp.triples((s,p1,None)):
                 s_m["text"] = o2
-            for s212,p212,o212 in self.spek_tp.triples((s,p232,None)):
+            # for s212,p212,o212 in self.spek_tp.triples((s,p232,None)):
                
-                s_m["Display"]=o212
+            s_m["Display"]=random.choice(Display)
             for s9,p9,o9 in self.spek_tp.triples((s,p8,None)):
                 s_m["Comparator Type"] = o9
             for s2we,p2we,o2we in self.spek_tp.triples((s,pwed,None)):
-                s_m["Acceptable By"] = o2we
+                o2wea.append(o2we)
+            # print(*o2wea)
+            s_m["Acceptable By"] = o2wea
+
             
             
             
