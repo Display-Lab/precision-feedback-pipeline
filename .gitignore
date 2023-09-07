@@ -26,5 +26,5 @@ cache/cached1.png
 .DS_Store
 cache/cached1.png
 venv/
-PFPvenv/
+PFPenv/
 *.pyc
