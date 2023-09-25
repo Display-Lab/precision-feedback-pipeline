@@ -15,6 +15,7 @@ measures =  os.environ.get("measures")
 ## Pathing Setup
 this_dir = os.path.dirname(__file__)
 display_lab_dir = os.path.abspath(os.path.join(this_dir, os.pardir))
+print("Parent directory set as:", display_lab_dir)
 
 # Function to report current environmental variable settings
 def report_vars():
@@ -63,28 +64,28 @@ def create_main_window():
     ttk.Label(root, text="Enter message template file to restrict to:", style='main.TLabel').pack(pady=10)
     message_temp_entry = ttk.Entry(root)
     # INSERT A DEFAULT VALUE BELOW
-    message_temp_entry.insert(0, "/Users/mack/Code/Display-Lab/knowledge-base/message_templates")  # Default value
+    message_temp_entry.insert(0, f"{display_lab_dir}/knowledge-base/message_templates")  # Default value
     message_temp_entry.pack(pady=10)
 
     ttk.Label(root, text="Enter causal pathway file to restrict to:", style='main.TLabel').pack(pady=10)
     causal_path_entry = ttk.Entry(root)
-    causal_path_entry.insert(0, "/Users/mack/Code/Display-Lab/knowledge-base/causal_pathways")  # Default value
+    causal_path_entry.insert(0, f"{display_lab_dir}/knowledge-base/causal_pathways")  # Default value
     causal_path_entry.pack(pady=10)
 
     ttk.Label(root, text="Enter measures file to restrict to:", style='main.TLabel').pack(pady=10)
     measure_entry = ttk.Entry(root)
-    measure_entry.insert(0, "/Users/mack/Code/Display-Lab/knowledge-base/measures.json")  # Default value
+    measure_entry.insert(0, f"{display_lab_dir}/knowledge-base/measures.json")  # Default value
     measure_entry.pack(pady=10)
 
     # Entry fields for virtual environment and FastAPI app location
     ttk.Label(root, text="Virtual Environment Path:").pack()
     venv_entry = ttk.Entry(root)
-    venv_entry.insert(0, "/Users/mack/Code/Display-Lab/precision-feedback-pipeline/PFPenv")  # Default value
+    venv_entry.insert(0, f"{display_lab_dir}/precision-feedback-pipeline/PFPenv")  # Default value
     venv_entry.pack()
 
     ttk.Label(root, text="FastAPI App Location:").pack()
     app_entry = ttk.Entry(root)
-    app_entry.insert(0, "/Users/mack/Code/Display-Lab/precision-feedback-pipeline")  # Default value    
+    app_entry.insert(0, f"{display_lab_dir}/precision-feedback-pipeline")  # Default value    
     app_entry.pack()
     
     # Function to set environmental variables
