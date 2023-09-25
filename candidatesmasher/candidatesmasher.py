@@ -77,6 +77,7 @@ class CandidateSmasher:
         self.template_type_dicts={}
         self.candidate_id_dicts={}
         self.goal_dicts={}
+        self.peer_dicts={}
         self.top_10_dicts={}
         self.top_25_dicts={}
         self.graph_type_list=[]
@@ -98,6 +99,8 @@ class CandidateSmasher:
                 node_type.append(o2)
                 for s4,p4,o4 in self.a.triples((s3,self.p3,None)):
                         #print(o4)
+                        if str(o4)=="peers":
+                            self.peer_dicts[s1]=o2
                         if str(o4)=="goal":
                             self.goal_dicts[s1]=o2
                         if str(o4)=="top_10":
@@ -113,6 +116,8 @@ class CandidateSmasher:
                 #     for s2,p2,o212 in self.a.triples((s1,self.p1,None)):
                 #         print(o212)
                 # self.a.add((s1,self.p1,o2))
+            # 
+            
             for  s81,p81,o81 in self.a.triples((None, None,o2)):
                 for s82,p82,o82 in self.a.triples((s81,RDF.type,None)):
                     if str(o82) != self.cp25:
@@ -127,8 +132,32 @@ class CandidateSmasher:
             node_type_tuple=tuple(node_type)
         
             self.graph_type_list.append(node_type_tuple)
-       
-        
+        # print(*self.graph_type_list)
+        anew = pd.DataFrame.from_dict(self.peer_dicts, orient ='index')
+        anew= anew.reset_index()
+        anew = anew.rename({"index":"measure"}, axis=1)
+        anew = anew.rename({0:"Comparator_Node"}, axis=1)
+        self.peer_types=[]
+        for rowIndex, row in anew.iterrows(): 
+            s1=row["measure"]
+            o2=row["Comparator_Node"]
+            node_type122=[]
+            for  s81,p81,o81 in self.a.triples((None, None,o2)):
+                for s82,p82,o82 in self.a.triples((s81,RDF.type,None)):
+                    if s1 not in node_type122:
+                        node_type122.append(s1)
+                    if o2 not in node_type122:
+                        node_type122.append(o2)
+                    if str(o82) != self.cp25:
+                        node=[]
+                        node.append(o2)
+                        node.append(str(o82))
+                        node_tuple=tuple(node)
+                        node_type122.append(node_tuple)
+            node_type_tuple122=tuple(node_type122)
+            node_type_tuple122=node_type_tuple122
+            self.peer_types.append(node_type_tuple122)
+        # print(*self.peer_types)
         new = pd.DataFrame.from_dict(self.goal_dicts, orient ='index')
         new= new.reset_index()
         new = new.rename({"index":"measure"}, axis=1)
@@ -153,7 +182,7 @@ class CandidateSmasher:
             node_type_tuple1=tuple(node_type1)
             node_type_tuple1=node_type_tuple1
             self.goal_types.append(node_type_tuple1)
-
+        # print(*self.goal_types)
         new1 = pd.DataFrame.from_dict(self.top_10_dicts, orient ='index')
         new1= new1.reset_index()
         new1 = new1.rename({"index":"measure"}, axis=1)
@@ -179,7 +208,7 @@ class CandidateSmasher:
             node_type_tuple2=tuple(node_type2)
             node_type_tuple2=node_type_tuple2
             self.top_10_types.append(node_type_tuple2)
-        
+        # print(*self.top_10_types)
         new2 = pd.DataFrame.from_dict(self.top_25_dicts, orient ='index')
         new2= new2.reset_index()
         new2 = new2.rename({"index":"measure"}, axis=1)
@@ -207,18 +236,26 @@ class CandidateSmasher:
             node_type_tuple3=node_type_tuple3
             self.top_25_types.append(node_type_tuple3)
         
-        self.df_graph = pd.DataFrame(self.graph_type_list)
+        self.df_graph = pd.DataFrame(self.peer_types)
+        # self.peer_graph = pd.DataFrame(self.peer_types)
+        # self.df_graph.to_csv("peer_types.csv")
         self.goal_types=pd.DataFrame(self.goal_types)
         self.top_10_types=pd.DataFrame(self.top_10_types)
         self.top_25_types=pd.DataFrame(self.top_25_types)
         self.df_graph = self.df_graph.rename({0:"measure"}, axis=1)
         self.df_graph = self.df_graph.rename({1:"Comparator_Node1"}, axis=1)
-        self.df_graph = self.df_graph.rename({2:"graph_type1"}, axis=1)
-        self.df_graph = self.df_graph.rename({3:"graph_type2"}, axis=1)
-        self.df_graph = self.df_graph.rename({4:"graph_type3"}, axis=1)
-        self.df_graph = self.df_graph.rename({5:"graph_type4"}, axis=1)
-        self.df_graph = self.df_graph.rename({6:"graph_type5"}, axis=1)
-        self.df_graph = self.df_graph.rename({7:"graph_type6"}, axis=1)
+        if 2 in self.df_graph:
+            self.df_graph = self.df_graph.rename({2:"graph_type1"}, axis=1)
+        if 3 in self.df_graph:
+            self.df_graph = self.df_graph.rename({3:"graph_type2"}, axis=1)
+        if 4 in self.df_graph:
+            self.df_graph = self.df_graph.rename({4:"graph_type3"}, axis=1)
+        if 5 in self.df_graph:
+            self.df_graph = self.df_graph.rename({5:"graph_type4"}, axis=1)
+        if 6 in self.df_graph:    
+            self.df_graph = self.df_graph.rename({6:"graph_type5"}, axis=1)
+        if 7 in self.df_graph:
+            self.df_graph = self.df_graph.rename({7:"graph_type6"}, axis=1)
         self.df_graph = self.df_graph.fillna(0)
         self.df_graph["comparator_type1"]="peers"
         self.df_graph=self.df_graph.reset_index(drop=True)
@@ -277,7 +314,7 @@ class CandidateSmasher:
         # dfs.to_csv("dfs.csv")
         self.df_merged = pd.concat([dfs, self.goal_types], ignore_index=True, sort=False)
         self.df_merged =self.df_merged.fillna(0)
-        #self.df_merged.to_csv("df_merged.csv")
+        # self.df_merged.to_csv("df_merged.csv")
         return self.df_merged
 
        

@@ -14,6 +14,7 @@ from bit_stomach.prepare_data_annotate import Prepare_data_annotate
 class Bit_stomach:
     def __init__(self,input_graph:Graph,performance_data:pd.DataFrame):
         self.measure_dicts={}
+        self.peer_dicts={}
         self.goal_dicts={}
         self.goal_comparison_dicts={}
         self.top_10_dicts={}
@@ -25,7 +26,7 @@ class Bit_stomach:
         p=URIRef('http://example.com/slowmo#IsAboutMeasure')
         p1=URIRef("http://example.com/slowmo#WithComparator")
         p3=URIRef('http://schema.org/name')
-
+        o5s= URIRef("http://purl.obolibrary.org/obo/PSDO_0000095")
         o5=URIRef("http://purl.obolibrary.org/obo/PSDO_0000126")
         o55=URIRef("http://purl.obolibrary.org/obo/PSDO_0000128")
         o555=URIRef("http://purl.obolibrary.org/obo/PSDO_0000129")
@@ -56,6 +57,7 @@ class Bit_stomach:
                 o11=BNode()
                 self.input_graph.add((s1,p1,o11))  
                 s11=o11
+                self.input_graph.add((s11,p5,o5s))
                 self.input_graph.add((s11,p5,o55))
                 self.input_graph.add((s11,p21,o2122))
                 self.input_graph.add((s11,p22,o2222))
@@ -66,6 +68,7 @@ class Bit_stomach:
                 o11=BNode()
                 self.input_graph.add((s1,p1,o11))  
                 s11=o11
+                self.input_graph.add((s11,p5,o5s))
                 self.input_graph.add((s11,p5,o555))
                 self.input_graph.add((s11,p21,o212))
                 self.input_graph.add((s11,p22,o222))    
@@ -77,6 +80,7 @@ class Bit_stomach:
                 o11=BNode()
                 self.input_graph.add((s1,p1,o11))  
                 s11=o11
+                self.input_graph.add((s11,p5,o5s))
                 self.input_graph.add((s11,p5,o5))
                 self.input_graph.add((s11,p21,o21))
                 self.input_graph.add((s11,p22,o22))
@@ -128,6 +132,9 @@ class Bit_stomach:
                     if str(o4)=="goal":
                         #print(o2)
                         self.goal1_dicts[s1]=o2
+                    if str(o4)=="peers":
+                        #print(o2)
+                        self.peer_dicts[s1]=o2
 
                     # if str(o4)=="goal":
                     #     #print(o2)
@@ -155,16 +162,17 @@ class Bit_stomach:
         
         for index, element in enumerate(measure_list):
             measure_name=element
+
             a=pr.goal_gap_annotate(measure_name,**self.goal1_dicts)
             a=pr.goal_trend_annotate(measure_name,**self.goal1_dicts)
             a=pr.goal_acheivement_loss_annotate(measure_name, **self.goal1_dicts)
             a=pr.goalconsecutive_annotate(measure_name,**self.goal1_dicts)
             a=pr.goal_monotonicity_annotate(measure_name,**self.goal1_dicts) 
-            a=pr.peer_gap_annotate(measure_name,**self.measure_dicts)
-            a=pr.peer_trend_annotate(measure_name,**self.measure_dicts)
-            a=pr.peer_acheivement_loss_annotate(measure_name, **self.measure_dicts) 
-            a=pr.peerconsecutive_annotate(measure_name,**self.measure_dicts)
-            a=pr.peer_monotonicity_annotate(measure_name,**self.measure_dicts)
+            a=pr.peer_gap_annotate(measure_name,**self.peer_dicts)
+            a=pr.peer_trend_annotate(measure_name,**self.peer_dicts)
+            a=pr.peer_acheivement_loss_annotate(measure_name, **self.peer_dicts) 
+            a=pr.peerconsecutive_annotate(measure_name,**self.peer_dicts)
+            a=pr.peer_monotonicity_annotate(measure_name,**self.peer_dicts)
             a=pr.top_10_gap_annotate(measure_name,**self.top_10_dicts)
             a=pr.top_10_trend_annotate(measure_name,**self.top_10_dicts)
             a=pr.top_10_acheivement_loss_annotate(measure_name,**self.top_10_dicts)
