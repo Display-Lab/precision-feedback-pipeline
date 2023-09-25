@@ -28,3 +28,4 @@ cache/cached1.png
 venv/
 PFPenv/
 *.pyc
+.vscode
