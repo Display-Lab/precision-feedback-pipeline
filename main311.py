@@ -1,8 +1,7 @@
 from fastapi import FastAPI,Request
 from pydantic import BaseSettings
-from rdflib import Graph,ConjunctiveGraph ,Namespace,URIRef,RDFS,Literal
+from rdflib import Graph, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
 import pandas as pd
-from rdflib import Graph
 from graph_operations import read_graph, create_performer_graph
 from bit_stomach.bit_stomach import Bit_stomach
 from candidatesmasher.candidatesmasher import CandidateSmasher
@@ -12,85 +11,119 @@ from pictoralist.pictoralist import Pictoralist
 import json
 import webbrowser
 import requests
-
-
 from requests_file import FileAdapter
-
-
-
-
 import os
+from dotenv import load_dotenv
+
+
+global templates, pathways, measures
+load_dotenv()
 
 class Settings(BaseSettings):
-    global pathways,templates
-    pathways = os.path.dirname("startup/causal_pathways/")
-    measures: str ="file://"+os.path.abspath("startup/measures.json")
-    templates =os.path.dirname("startup/templates/")
+    # Set values to env var, when undeclared default to abspath
+    templates: str = os.environ.get('templates', 'file://'+os.path.abspath('startup/templates/'))
+    pathways: str = os.environ.get('pathways', 'file://'+os.path.abspath('startup/causal_pathways/'))
+    measures: str = os.environ.get('measures', 'file://'+os.path.abspath('startup/measures.json'))
+settings = Settings()   # Instance the class now for use below
 
-    asa=[]
+# DEBUG: Report initial settings
+#print(f'\nInitial Settings\nTemplates:\t{settings.templates}\nPathways:\t{settings.pathways}\nMeasures:\t{settings.measures}')
 
-asa=os.listdir(pathways)
-asaa=os.listdir(templates)
-list2 = (pathways+"/"+pd.Series(asa)).tolist()
 
-list3 = (templates+"/"+pd.Series(asaa)).tolist()
-
-graph = Graph()
-graph1=Graph()
-
-for sd in range(len(list2)):
-    adf="g"+str(sd)
-    adf=Graph()
+### Create RDFlib graph from locally saved json files
+def local_to_graph(thisSetting, thisGraph):
+    # Scrape directory, filter to only JSON files, build list of paths to the files
+    print(f'Starting dir-to-list transform...')
+    directory = os.listdir(thisSetting)
+    json_only = [file for file in directory if file.endswith('.json')]
+    thisList = [os.path.join(thisSetting, file) for file in json_only]
     
-    adf.parse(list2[sd])
-    graph = graph + adf
-for sdf in range(len(list3)):
-    adfs="g"+str(sdf)
-    adfs=Graph()
-    adfs.parse(list3[sdf], format="json-ld")
-    graph1 = graph1 + adfs
-
-measure_details=Graph()
-causal_pathways=graph
-templates=graph1
+    # Iterate through list, parsing list information into RDFlib graph object
+    print(f'Starting graphing process...')
+    for n in range(len(thisList)):
+        #temp_graph = "g" + str(n)   # Adds "gX" unique identifier to each item while indexing through
+        temp_graph = Graph()        # creates empty RDFlib graph, overwriting the above line? Need clarification here...
+        temp_graph.parse(thisList[n], format='json-ld')  # Parse list data in JSON format
+        thisGraph = thisGraph + temp_graph              # Add parsed data to graph object
+    return thisGraph
 
 
-se =requests.Session()
+### Create RDFlib graph from remote knowledgebase JSON files
+def remote_to_graph(contentURL, thisGraph):
+    # Fetch JSON content from URL (directory)
+    response = requests.get(contentURL)
+
+    if response.status_code == 200:
+        try:
+            contents = response.json()
+            for item in contents:
+                file_name = item["name"]
+                if file_name.endswith(".json"):  # Check if the file has a .json extension
+                    file_content = requests.get(item["download_url"]).content
+                    file_jsoned = json.loads(file_content)
+                    temp_graph = Graph().parse(data=json.dumps(file_jsoned), format='json-ld')
+                    print(f'Graphed file {file_name}')
+                    thisGraph = thisGraph + temp_graph
+                else:
+                    print(f"Skipped non-JSON file: {file_name}")
+        except json.JSONDecodeError as e:
+            raise Exception("Failed parsing JSON content.")
+    else:
+        raise Exception(f"Failed to fetch JSON content from GitHub URL: {contentURL}")
+    return thisGraph
+
+
+
+
+
+### Create empty RDFlib graphs to store resource description triples
+pathway_graph   = Graph()
+template_graph  = Graph()
+measure_details = Graph()   # Empty, unused, and re-declared elsewhere...
+
+### Build graphs from knowledgebase repo files 
+causal_pathways = remote_to_graph(settings.pathways, pathway_graph)
+templates       = remote_to_graph(settings.templates, template_graph)
+
+
+# Set up request session as se, config to handle file URIs with FileAdapter
+print("Starting session handler...")
+se = requests.Session()
+print(se)
 se.mount('file://',FileAdapter())
-settings = Settings()
 app = FastAPI()
-
-
 
 
 
 @app.on_event("startup")
 async def startup_event():
     try:
-        
-      
         global measure_details,causal_pathways,templates,f3json
         
         f3json=se.get(settings.measures).text
         causal_pathways = causal_pathways        
         templates =templates
-        #print(gitinfo.get_git_info())
-        print("startup is complete")
+        #print("Startup complete") Redundant d/t fastAPI logging
         
     except Exception as e:
-        print("Looks like there is some problem in connection,see below traceback")
+        print("Startup aborted, see traceback:")
         raise e
     
+
 
 @app.get("/")
 async def root():
     
     return{"Hello":"Universe"}
-    
+
+
+
 @app.get("/template/")
 async def template():
     github_link ="https://raw.githubusercontent.com/Display-Lab/precision-feedback-pipeline/main/input_message.json"
     return webbrowser.open(github_link)
+
+
 
 @app.post("/createprecisionfeedback/")
 async def createprecisionfeedback(info:Request):
