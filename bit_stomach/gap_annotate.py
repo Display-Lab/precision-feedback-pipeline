@@ -98,6 +98,7 @@ def annotate_negative_goal_gap(a,s16,measure_Name,o16,goal_gap_size):
 
 def peer_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     s14=s13
+    # print(comparator_bnode)
     p14=URIRef('http://purl.obolibrary.org/obo/RO_0000091')
     latest_measure_df=latest_measure_df.reset_index(drop=True)
     #a=insert_annotate(input_graph)
