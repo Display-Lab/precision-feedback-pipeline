@@ -17,7 +17,7 @@ import gitinfo
 
 
 from requests_file import FileAdapter
-
+from io import BytesIO
 
 
 
@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     #pathways: str = "file://"+os.path.abspath("startup/social_loss.json")
     measures: str ="file://"+os.path.abspath("startup/measures.json")
     templates =os.path.dirname("startup/templates/")
+    mpm: str ="file://"+os.path.abspath("startup/motivational_potential_model.csv")
     #templates: str ="file://"+os.path.abspath("startup/templates.json")
     # des=templates
     asa=[]
@@ -73,13 +74,13 @@ async def startup_event():
     try:
         
       
-        global measure_details,causal_pathways,templates,f3json
+        global measure_details,causal_pathways,templates,f3json,f5json
         
         
         #f2json=se.get(settings.pathways).text
         f3json=se.get(settings.measures).text
         #f4json=se.get(settings.templates).text
-       
+        f5json=se.get(settings.mpm).content
         causal_pathways = causal_pathways
         # causal_pathways=read_graph(f2json)
         
@@ -109,7 +110,8 @@ async def createprecisionfeedback(info:Request):
     req_info =await info.json()
     req_info1=req_info
     performance_data = req_info1["Performance_data"]
-    # debug=req_info1["debug"]
+    debug=req_info1["debug"]
+    
     performance_data_df =pd.DataFrame (performance_data, columns = [ "staff_number","Measure_Name","Month","Passed_Count","Flagged_Count","Denominator","peer_average_comparator","peer_90th_percentile_benchmark","peer_75th_percentile_benchmark","MPOG_goal"])
     performance_data_df.columns = performance_data_df.iloc[0]
     performance_data_df = performance_data_df[1:]
@@ -126,16 +128,20 @@ async def createprecisionfeedback(info:Request):
         measure_details.remove((s,p,o))
     
     measure_details=read_graph(f3json)
+    mpm=f5json
+    print(type(mpm))
+    mpm_df=pd.read_csv(BytesIO(mpm))
+    # print(df1)
     performer_graph=create_performer_graph(measure_details)
     
     #BitStomach
     bs=Bit_stomach(performer_graph,performance_data_df)
     BS=bs.annotate()
     op=BS.serialize(format='json-ld', indent=4)
-    # if str(debug)=="yes":
-    #     f = open("outputs/spek_bs.json", "w")
-    #     f.write(op)
-    #     f.close()
+    if str(debug)=="yes":
+        f = open("outputs/spek_bs.json", "w")
+        f.write(op)
+        f.close()
     
     #CandidateSmasher
     cs=CandidateSmasher(BS,templates)
@@ -143,11 +149,11 @@ async def createprecisionfeedback(info:Request):
     df_template=cs.get_template_data()
  
     CS=cs.create_candidates(df_graph,df_template)
-    # if str(debug)=="yes":
-    #     op=CS.serialize(format='json-ld', indent=4)
-    #     f = open("outputs/spek_cs.json", "w")
-    #     f.write(op)
-    #     f.close()
+    if str(debug)=="yes":
+        op=CS.serialize(format='json-ld', indent=4)
+        f = open("outputs/spek_cs.json", "w")
+        f.write(op)
+        f.close()
     #Thinkpuddung
     tp=Thinkpudding(CS,causal_pathways)
     tp.process_causalpathways()
@@ -155,22 +161,26 @@ async def createprecisionfeedback(info:Request):
     tp.matching()
     spek_tp=tp.insert()
     op=spek_tp.serialize(format='json-ld', indent=4)
-    # if str(debug)=="yes":
-    #     op=spek_tp.serialize(format='json-ld', indent=4)
-    #     f = open("outputs/spek_tp.json", "w")
-    #     f.write(op)
-    #     f.close()
+    if str(debug)=="yes":
+        op=spek_tp.serialize(format='json-ld', indent=4)
+        f = open("outputs/spek_tp.json", "w")
+        f.write(op)
+        f.close()
 
     # #Esteemer
-    es=Esteemer(spek_tp,preferences,history)
+    measure_list=performance_data_df["measure"].drop_duplicates()
+    # print(*measure_list)
+    es=Esteemer(spek_tp,measure_list,preferences,history,mpm_df)
     
     # # es.apply_preferences()
     # # es.apply_history()
+    es.process_spek()
+    es.process_history()
     node,spek_es=es.select()
     selected_message=es.get_selected_message()
     # # es.apply_history()
   
-    selected_message=es.get_selected_message()
+    # selected_message=es.get_selected_message()
     
     
     # # # print(selected_message)
