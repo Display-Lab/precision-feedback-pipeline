@@ -48,6 +48,7 @@ class Esteemer():
         sh=BNode("p1")
         ph=URIRef("http://purl.obolibrary.org/obo/RO_0000091")
         p4=URIRef("http://example.com/slowmo#RegardingMeasure")
+        p5=URIRef("http://example.com/slowmo#RegardingComparator")
         ph33=URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
         ph3=URIRef("http://purl.obolibrary.org/obo/PSDO_0000099")
         ph4=URIRef("http://purl.obolibrary.org/obo/PSDO_0000100")
@@ -60,119 +61,94 @@ class Esteemer():
         ph11=URIRef("http://example.com/slowmo#TimeSinceLastLoss")
         ph12=URIRef("http://example.com/slowmo#TimeSinceLastAcheivement")
         loss=[]
-        loss.append("loss")
+        # loss.append("loss")
         acheivement=[]
-        acheivement.append("acheivement")
+        # acheivement.append("acheivement")
         gaps=[]
-        gaps.append("gaps")
+        
         trend_slope=[]
-        trend_slope.append("slopes")
+        measure_gap_list=[]
+        measure_gap_list.append("gaps")
+        measure_trend_list=[]
+        measure_trend_list.append("slopes")
+        measure_acheivement_list=[]
+        measure_acheivement_list.append("acheivement")
+        measure_loss_list=[]
+        measure_loss_list.append("loss")
         Measure4=None
         Measure =None
         Measure1=None
         Measure2=None
         Measure3=None
-        # measure_list=self.performance_data_df["measure"].drop_duplicates()
-        # print
         for x in self.measure_list:
-            Measure=x
+            Measure =x
             for ss,ps,os in self.spek_tp.triples((sh,ph,None)):
                 s6=os
-                # print(s6)
-                # for s122,p122,o122 in self.spek_tp.triples((s6,p4,None)):
-                #     print(o122)
-                #     print("\n")
                 for s123,p123,o123 in self.spek_tp.triples((s6,ph33,None)):
-                    #print(o123)
-                    # print("\n")
-                    if o123 == ph5 or o123 == ph6 :
+                    if o123 == ph5 or o123 == ph6:
                         for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
-                            
-                            # Measure=o124
-                            # print(o124)
-                            if o124 == Measure:
-                                for s125,p125,o125 in self.spek_tp.triples((s6,ph9,None)):
-                                    gaps.append(o125)
-                            # self.gap_dicts[o124]=o125
-                            # print(o125)
-            
-
-
-                for s1234,p1234,o1234 in self.spek_tp.triples((s6,ph33,None)):
-                    # print(o1234)
-                    # print("\n")
-                    if o1234 == ph3 or o1234 == ph4 :
-                        for s127,p127,o127 in self.spek_tp.triples((s6,p4,None)):
-                            
-                            # print(o1234)
-                            # print(o127)
-                            
-                            if o127 == Measure:
-                                for s1254,p1254,o1254 in self.spek_tp.triples((s6,ph10,None)):
-                                    # print(o1254)
-                                    trend_slope.append(o1254)
-                #                 # self.gap_dicts[o124]=o125
-                #                 print(o1254)
-                for s12345,p12345,o12345 in self.spek_tp.triples((s6,ph33,None)):
-                    #print(o12345)
-                    # print("\n")
-                    if o12345 == ph8 :
-                        for s129,p129,o129 in self.spek_tp.triples((s6,p4,None)):
-                            
-            #                 # print(o1234)
-                            # print(o129)
-                            # Measure=o129
-                            if o129 ==Measure:
-                                for s12546,p12546,o12546 in self.spek_tp.triples((s6,ph11,None)):
-                                    # print(o12546)
-                                    loss.append(o12546)
-                # #                 # self.gap_dicts[o124]=o125
-            # # 
-                            # print(o1254)
-                for s123456,p123456,o123456 in self.spek_tp.triples((s6,ph33,None)):
-                    # print(o123456)
-                    # print("\n")
-                    if o123456 == ph7 :
-                        for s130,p130,o130 in self.spek_tp.triples((s6,p4,None)):
-                            
-            # #                 # print(o1234)
-                            #print(o130)
-                            # Measure4=o130
-                            if o130==Measure:
-                                for s125467,p125467,o125467 in self.spek_tp.triples((s6,ph12,None)):
-                                    # print(o12546)
-                                    acheivement.append(o125467)
-            
-            if Measure is not None :
-                # acheivement.append("acheivement")
-                acheivement = list(set(acheivement))
-                # acheivement.append("acheivement")
-                self.acheivements[Measure]=acheivement
-                for k,v in self.acheivements.items():print(k, v)
-            if Measure is not None :
-                # loss.append("loss")
-                loss = list(set(loss))
-                self.losses[Measure]=loss
-                for k,v in self.losses.items():print(k, v)
-            if Measure is not None :
-                # trend_slope.append("slope")
-                trend_slope = list(set(trend_slope))
-                self.trend_slopes[Measure]=trend_slope   
-                for k,v in self.trend_slopes.items():print(k, v)
-            
-            if Measure is not None :
-                # gaps.append("gaps")
-                gaps = list(set(gaps))
-                self.gap_dicts[Measure]=gaps   
-                for k,v in self.gap_dicts.items():print(k, v)             
+                            o124=str(o124)
+                            if o124 ==Measure:
+                                # print(Measure)
+                                gaps.clear()
+                                for s1234,p1234,o1234 in self.spek_tp.triples((s6,p5,None)):
+                                    # print(o1234)
+                                    for s125,p125,o125 in self.spek_tp.triples((s6,ph9,None)):
+                                        # print(str(o125))
+                                        gaps.append(str(o1234))
+                                        gaps.append(Measure)
+                                        gaps.append(str(o125))
+                                        gaps_tuples=tuple(gaps)
+                                        measure_gap_list.append(gaps_tuples)
+                    if o123 == ph3 or o123 ==ph4:
+                        for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
+                            o124=str(o124)
+                            if o124 ==Measure:
+                                trend_slope.clear() 
+                                for s1234,p1234,o1234 in self.spek_tp.triples((s6,p5,None)):
+                                    for s125,p125,o125 in self.spek_tp.triples((s6,ph10,None)):
+                                        # print(str(o125))
+                                        trend_slope.append(str(o1234))
+                                        trend_slope.append(Measure)
+                                        trend_slope.append(str(o125))
+                                        trend_tuples=tuple(trend_slope)
+                                        measure_trend_list.append(trend_tuples)
+                    if o123 == ph7 :
+                        for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
+                            o124=str(o124)
+                            if o124 ==Measure:
+                                acheivement.clear() 
+                                for s1234,p1234,o1234 in self.spek_tp.triples((s6,p5,None)):
+                                    for s125,p125,o125 in self.spek_tp.triples((s6,ph12,None)):
+                                        # print(str(o125))
+                                        acheivement.append(str(o1234))
+                                        acheivement.append(Measure)
+                                        acheivement.append(str(o125))
+                                        acheivement_tuples=tuple(acheivement)
+                                        measure_acheivement_list.append(acheivement_tuples)
                     
-            
-                
-                
-            # f = open("outputs/triple.txt", "a")
-            # f.write(ss + "," + ps + "," + os)
-            # f.write("\n") 
-            
+                    if o123 == ph8 :
+                        for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
+                            o124=str(o124)
+                            if o124 ==Measure:
+                                loss.clear() 
+                                for s1234,p1234,o1234 in self.spek_tp.triples((s6,p5,None)):
+                                    for s125,p125,o125 in self.spek_tp.triples((s6,ph11,None)):
+                                        # print(str(o125))
+                                        loss.append(str(o1234))
+                                        loss.append(Measure)
+                                        loss.append(str(o125))
+                                        loss_tuples=tuple(loss)
+                                        measure_loss_list.append(loss_tuples)
+        measure_loss_list = list(set(measure_loss_list))
+        print(*measure_loss_list)
+        measure_acheivement_list = list(set(measure_acheivement_list))
+        print(*measure_acheivement_list) 
+        measure_trend_list = list(set(measure_trend_list))
+        print(*measure_trend_list)                 
+        measure_gap_list = list(set(measure_gap_list))
+        print(*measure_gap_list)                        
+                           
     def process_history(self):
         def extract(a):
     #recursive algorithm for extracting items from a list of lists and items
