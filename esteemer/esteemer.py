@@ -37,6 +37,22 @@ class Esteemer():
         self.losses={}
         self.acheivements={}
         self.measure_list=measure_list
+        self.measure_gap_list=[]
+        self.measure_gap_list.append("gaps")
+        self.measure_trend_list=[]
+        self.measure_trend_list.append("slopes")
+        self.measure_acheivement_list=[]
+        self.measure_acheivement_list.append("acheivement")
+        self.measure_loss_list=[]
+        self.measure_loss_list.append("loss")
+        self.gap_dict={}
+        self.trend_dict={}
+        self.acheivement_dict={}
+        self.loss_dict={}
+        self.message_recency={}
+        self.message_received_count={}
+        self.measure_recency={}
+        self.preferences={}
         for s,p,o in self.spek_tp.triples( (self.s, self.p, None) ):
             s1= o
             for s,p,o in self.spek_tp.triples((s1,self.p1,None)):
@@ -67,14 +83,15 @@ class Esteemer():
         gaps=[]
         
         trend_slope=[]
-        measure_gap_list=[]
-        measure_gap_list.append("gaps")
-        measure_trend_list=[]
-        measure_trend_list.append("slopes")
-        measure_acheivement_list=[]
-        measure_acheivement_list.append("acheivement")
-        measure_loss_list=[]
-        measure_loss_list.append("loss")
+        self.measure_gap_list=[]
+        self.measure_gap_list.append("gaps")
+        self.measure_trend_list=[]
+        self.measure_trend_list.append("slopes")
+        self.measure_acheivement_list=[]
+        self.measure_acheivement_list.append("acheivement")
+        self.measure_loss_list=[]
+        self.measure_loss_list.append("loss")
+        
         Measure4=None
         Measure =None
         Measure1=None
@@ -99,7 +116,7 @@ class Esteemer():
                                         gaps.append(Measure)
                                         gaps.append(str(o125))
                                         gaps_tuples=tuple(gaps)
-                                        measure_gap_list.append(gaps_tuples)
+                                        self.measure_gap_list.append(gaps_tuples)
                     if o123 == ph3 or o123 ==ph4:
                         for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
                             o124=str(o124)
@@ -112,7 +129,7 @@ class Esteemer():
                                         trend_slope.append(Measure)
                                         trend_slope.append(str(o125))
                                         trend_tuples=tuple(trend_slope)
-                                        measure_trend_list.append(trend_tuples)
+                                        self.measure_trend_list.append(trend_tuples)
                     if o123 == ph7 :
                         for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
                             o124=str(o124)
@@ -125,7 +142,7 @@ class Esteemer():
                                         acheivement.append(Measure)
                                         acheivement.append(str(o125))
                                         acheivement_tuples=tuple(acheivement)
-                                        measure_acheivement_list.append(acheivement_tuples)
+                                        self.measure_acheivement_list.append(acheivement_tuples)
                     
                     if o123 == ph8 :
                         for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
@@ -139,15 +156,15 @@ class Esteemer():
                                         loss.append(Measure)
                                         loss.append(str(o125))
                                         loss_tuples=tuple(loss)
-                                        measure_loss_list.append(loss_tuples)
-        measure_loss_list = list(set(measure_loss_list))
-        print(*measure_loss_list)
-        measure_acheivement_list = list(set(measure_acheivement_list))
-        print(*measure_acheivement_list) 
-        measure_trend_list = list(set(measure_trend_list))
-        print(*measure_trend_list)                 
-        measure_gap_list = list(set(measure_gap_list))
-        print(*measure_gap_list)                        
+                                        self.measure_loss_list.append(loss_tuples)
+        self.measure_loss_list = list(set(self.measure_loss_list))
+        # print(*self.measure_loss_list)
+        self.measure_acheivement_list = list(set(self.measure_acheivement_list))
+        # print(*self.measure_acheivement_list) 
+        self.measure_trend_list = list(set(self.measure_trend_list))
+        # print(*self.measure_trend_list)                 
+        self.measure_gap_list = list(set(self.measure_gap_list))
+        # print(*self.measure_gap_list)                        
                            
     def process_history(self):
         def extract(a):
@@ -198,6 +215,66 @@ class Esteemer():
 
         
         # f.close()
+    
+    def process_mpm(self):
+        for col in self.mpm_df:
+            print(col)
+        self.gap_dict = dict(zip(self.mpm_df.Causal_pathway, self.mpm_df.Comparison_size))
+        # for k,v in self.gap_dict.items():print(k, v)
+        self.trend_dict = dict(zip(self.mpm_df.Causal_pathway, self.mpm_df.Trend_slope))
+        # for k,v in self.gap_dict.items():print(k, v)
+        self.acheivement_dict = dict(zip(self.mpm_df.Causal_pathway, self.mpm_df.Measure_achievement_recency))
+        # for k,v in self.acheivement_dict.items():print(k, v)
+        self.loss_dict=dict(zip(self.mpm_df.Causal_pathway, self.mpm_df.Loss_recency))
+        # for k,v in self.loss_dict.items():print(k, v)
+        self.message_recency=dict(zip(self.mpm_df.Causal_pathway, self.mpm_df.Message_recency))
+        # for k,v in self.message_recency.items():print(k, v)
+        self.measure_recency=dict(zip(self.mpm_df.Causal_pathway, self.mpm_df.Measure_recency))
+        # for k,v in self.measure_recency.items():print(k, v)
+    
+    def score(self):
+        # print(*self.measure_gap_list) 
+       
+        for i in self.y:
+            # print(i)
+            s = i
+            pwed = URIRef("slowmo:acceptable_by")
+            p3=URIRef("http://purl.obolibrary.org/obo/RO_0000091")
+            ph33=URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+            ph5=URIRef("http://purl.obolibrary.org/obo/PSDO_0000105")
+            ph6=URIRef("http://purl.obolibrary.org/obo/PSDO_0000104")
+            ph3=URIRef("http://purl.obolibrary.org/obo/PSDO_0000099")
+            ph4=URIRef("http://purl.obolibrary.org/obo/PSDO_0000100")
+            p4=URIRef("http://example.com/slowmo#RegardingComparator")
+            ph7=URIRef("http://purl.obolibrary.org/obo/PSDO_0000113")
+            ph8=URIRef("http://purl.obolibrary.org/obo/PSDO_0000112")
+
+            for s2we,p2we,o2we in self.spek_tp.triples((s,pwed,None)):
+                print(o2we)
+                # o2wea.append(o2we)
+            for s5,p5,o5 in self.spek_tp.triples((s,p3,None)):
+                # print(o5)
+                s6=o5
+                # for s8,p8,o8 in self.spek_tp.triples((s6,p5,None)):
+                #             print(s6)
+                for s7,p7,o7 in self.spek_tp.triples((s6,ph33,None)):
+                    if o7==ph5 or o7==ph6:
+                        for s7,p7,o7 in self.spek_tp.triples((s6,p4,None)):
+                            a=[item for item in self.measure_gap_list if str(o7) in item]
+                            # print(*a)
+                    if o7==ph3 or o7==ph4:    
+                        for s8,p8,o8 in self.spek_tp.triples((s6,p4,None)):
+                            b=[item for item in self.measure_trend_list if str(o8) in item]
+                            # print(*b)
+                    if o7==ph7:    
+                        for s8,p8,o8 in self.spek_tp.triples((s6,p4,None)):
+                            c=[item for item in self.measure_gap_list if str(o8) in item]
+                            # print(*c)
+                    if o7==ph8:    
+                        for s8,p8,o8 in self.spek_tp.triples((s6,p4,None)):
+                            c=[item for item in self.measure_gap_list if str(o8) in item]
+            # print("\n")
+
     def select(self):
         self.scores=[]
         nodes=[]
