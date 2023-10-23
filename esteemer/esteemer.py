@@ -135,7 +135,7 @@ class Esteemer():
                                         trend_slope.append(float(o125))
                                         trend_tuples=tuple(trend_slope)
                                         self.measure_trend_list.append(trend_tuples)
-                    if o123 == ph7 :
+                    if o123 == ph8 :
                         for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
                             o124=str(o124)
                             if o124 ==Measure:
@@ -149,7 +149,7 @@ class Esteemer():
                                         acheivement_tuples=tuple(acheivement)
                                         self.measure_acheivement_list.append(acheivement_tuples)
                     
-                    if o123 == ph8 :
+                    if o123 == ph7 :
                         for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
                             o124=str(o124)
                             if o124 ==Measure:
@@ -228,7 +228,7 @@ class Esteemer():
         my_dict = {i:causal_pathways1.count(i) for i in causal_pathways1}
         
         
-        # for k2,v2 in message_recency.items():
+        # for k2,v2 in my_dict.items():
         #     print(k2,v2)
 
 
@@ -282,8 +282,12 @@ class Esteemer():
                         o2we="Better"
                     if "Worse" in str(o2we):
                         o2we="Worse"
+                    if "loss" in str(o2we):
+                        o2we="Loss"
+                    if "Approach" in str(o2we):
+                        o2we="Approach"
                 # print(o5)
-                    print(o2we)
+                    
                     s6=o5
                     # for s8,p8,o8 in self.spek_tp.triples((s6,p5,None)):
                     #             print(s6)
@@ -299,6 +303,8 @@ class Esteemer():
                                                 v=0
                                             v= float(v)
                                             j[2]=j[2]*v
+                                            j.append(i)
+                                # print(*a)
                         #trend multiplication
                         if o7==ph3 or o7==ph4:    
                             for s8,p8,o8 in self.spek_tp.triples((s6,p4,None)):
@@ -312,29 +318,53 @@ class Esteemer():
                                                 v=0
                                             v= float(v)
                                             j[2]=j[2]*v
+                                            j.append(i)
                                 # print(*b)
-                        if o7==ph7:
-                            # print(o2we)    
-                            for s8,p8,o8 in self.spek_tp.triples((s6,p4,None)):
-                                c=[item for item in self.measure_acheivement_list_new if str(o8) in item]
+                        # print(o2we)
+                        if o7==ph8:
+                            # print(o7)
+                            # print(ph7)
+                            # # print(ph7)
+                            # print(o2we)   
+                            for s9,p9,o9 in self.spek_tp.triples((s6,p4,None)):
+                                c=[item for item in self.measure_acheivement_list_new if str(o9) in item]
                                 # print(*c)
                                 # print("multiplication")
                                 for k,v in self.acheivement_dict.items():
                                     # print(o2we)
-                                    if "Achievement" == o2we:
+                                    # print(k)
+                                    # print(o2we)
+                                    if k == o2we:
+                                        # print(k)
+                                        # print(o2we)
                                         # print(o2we)
                                         for j in c:
                                             # print(*j)
                                             if v == "--":
                                                 v=0
                                             v= float(v)
-                                            j[2]=Decimal(j[2])*Decimal(v)
+                                            j[2]=j[2]*v
+                                            j.append(i)
                                 # print(*c)
                                 # print("\n")
-                        if o7==ph8:    
-                            for s8,p8,o8 in self.spek_tp.triples((s6,p4,None)):
-                                d=[item for item in self.measure_gap_list if str(o8) in item]
-                                #print(*d)
+                        if o7==ph7:
+                            # print(o2we)    
+                            for s10,p10,o10 in self.spek_tp.triples((s6,p4,None)):
+                                d=[item for item in self.measure_loss_list_new if str(o10) in item]
+                                # print(*d)
+                                for k,v in self.loss_dict.items():
+                                    if k == o2we:
+                                        # print(k)
+                                        # print(o2we)
+                                        # print(o2we)
+                                        for j in d:
+                                            # print(*j)
+                                            if v == "--":
+                                                v=0
+                                            v= float(v)
+                                            j[2]=j[2]*v
+                                            j.append(i)
+                                # print(*d)
                 # print("\n")
 
     def select(self):
