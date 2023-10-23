@@ -1,6 +1,10 @@
-## Version X.X.X
-10/9/23
-**Improvement:** Added changelog file
+# PFP Changelog
+
+## Version 0.0.1
+10/9/23  
+**Improvement:** Added changelog file  
+- Allows tracking changes going forward in pre-release development  
+- Compliance rules
 
 **Improvement:** Revised startup behavior; data imports, setup operations of knowledge graphs, environmental variables
 
@@ -20,5 +24,8 @@
     - main_windows.py obsolete, removed from repo
 
 - Regenerated dependencies in requirements.txt and poetry toml, lock, requirements files
+
+**Improvement:** Enabled pipeline to create precision fieedback without generatign images (Pictoraless functionality)  
+- Enable with environmental variable "pictoraless", boolean logical
 
 **Patch:** Added all used measures to PFKB measures.json file

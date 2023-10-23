@@ -191,7 +191,7 @@ async def createprecisionfeedback(info:Request):
     
     
     # # # print(selected_message)
-    if selected_message["text"]!= "No message selected":
+    if selected_message["text"]!= "No message selected" and os.environ.get(pictoraless):
     # # #Runnning Pictoralist
         pc=Pictoralist(selected_message,p_df,performance_data_df)
         base64_image=pc.create_graph()
