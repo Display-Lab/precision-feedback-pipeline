@@ -70,7 +70,7 @@ def remote_to_graph(contentURL, thisGraph):
 ### Create empty RDFlib graphs to store resource description triples
 pathway_graph   = Graph()
 template_graph  = Graph()
-measure_details = Graph()   # Empty, unused, and re-declared elsewhere...
+#measure_details = Graph()   # Empty, unused, and re-declared elsewhere...
 
 ### Changes loading strategy depending on the source of PFKB content
 if not settings.pathways.startswith('http'):
@@ -191,13 +191,17 @@ async def createprecisionfeedback(info:Request):
     
     
     # # # print(selected_message)
-    if selected_message["text"]!= "No message selected" and os.environ.get(pictoraless):
+    if selected_message["text"]!= "No message selected":
     # # #Runnning Pictoralist
-        pc=Pictoralist(selected_message,p_df,performance_data_df)
+
+        ## Set init flag for image generation based on value of env var
+        generate_image = not (os.environ.get("pictoraless") == "true")
+        pc=Pictoralist(selected_message, p_df, generate_image, performance_data_df)
+        ## Process env var declaration (must be string) to determine if image generation happens
         base64_image=pc.create_graph()
         selected_message["image"]=base64_image
-        
         selected_message1=pc.prepare_selected_message()
+
     # '<img align="left" src="data:image/png;base64,%s">' %base64_image
     # ES=spek_es.serialize(format='json-ld', indent=4)
     # if str(debug)=="yes":
