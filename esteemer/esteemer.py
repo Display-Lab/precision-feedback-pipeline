@@ -129,7 +129,7 @@ class Esteemer():
                                 trend_slope.clear() 
                                 for s1234,p1234,o1234 in self.spek_tp.triples((s6,p5,None)):
                                     for s125,p125,o125 in self.spek_tp.triples((s6,ph10,None)):
-                                        # print(str(o125))
+                                        
                                         trend_slope.append(str(o1234))
                                         trend_slope.append(Measure)
                                         trend_slope.append(float(o125))
@@ -140,9 +140,10 @@ class Esteemer():
                             o124=str(o124)
                             if o124 ==Measure:
                                 acheivement.clear() 
+                                # print(Measure)
                                 for s1234,p1234,o1234 in self.spek_tp.triples((s6,p5,None)):
                                     for s125,p125,o125 in self.spek_tp.triples((s6,ph12,None)):
-                                        # print(str(o125))
+                                        # print(str(o1234))
                                         acheivement.append(str(o1234))
                                         acheivement.append(Measure)
                                         acheivement.append(float(o125))
@@ -171,7 +172,7 @@ class Esteemer():
         self.measure_acheivement_list = list(set(self.measure_acheivement_list))
         for x in self.measure_acheivement_list:
             x=list(x)
-            self.measure_acheivement_list_new.append(x)
+            # self.measure_acheivement_list_new.append(x)
         # print(*self.measure_acheivement_list_new)
         # print(*self.measure_acheivement_list) 
         self.measure_trend_list = list(set(self.measure_trend_list))
@@ -286,7 +287,7 @@ class Esteemer():
                         o2we="Loss"
                     if "Approach" in str(o2we):
                         o2we="Approach"
-                # print(o5)
+                    # print(o5)
                     
                     s6=o5
                     # for s8,p8,o8 in self.spek_tp.triples((s6,p5,None)):
@@ -296,6 +297,8 @@ class Esteemer():
                         if o7==ph5 or o7==ph6:
                             for s7,p7,o7 in self.spek_tp.triples((s6,p4,None)):
                                 a=[item for item in self.measure_gap_list_new if str(o7) in item]
+                                # print(*a)
+                                # print("cal")
                                 for k,v in self.gap_dict.items():
                                     if k == o2we:
                                         for j in a:
@@ -303,8 +306,9 @@ class Esteemer():
                                                 v=0
                                             v= float(v)
                                             j[2]=j[2]*v
-                                            j.append(i)
-                                # print(*a)
+                                a.append(i)
+                                print(*a)
+                                # print("\n")
                         #trend multiplication
                         if o7==ph3 or o7==ph4:    
                             for s8,p8,o8 in self.spek_tp.triples((s6,p4,None)):
@@ -318,8 +322,10 @@ class Esteemer():
                                                 v=0
                                             v= float(v)
                                             j[2]=j[2]*v
-                                            j.append(i)
-                                # print(*b)
+                                            # j.append(i)
+                                b.append(i)
+                                print(*b)
+                                # print("\n")
                         # print(o2we)
                         if o7==ph8:
                             # print(o7)
@@ -344,7 +350,8 @@ class Esteemer():
                                                 v=0
                                             v= float(v)
                                             j[2]=j[2]*v
-                                            j.append(i)
+                                            # j.append(i)
+                                c.append(i)
                                 # print(*c)
                                 # print("\n")
                         if o7==ph7:
@@ -363,7 +370,10 @@ class Esteemer():
                                                 v=0
                                             v= float(v)
                                             j[2]=j[2]*v
-                                            j.append(i)
+                                            # j.append(i)
+                                d.append(i)
+                                # print(*d)
+                                # print("\n")
                                 # print(*d)
                 # print("\n")
 
