@@ -1,10 +1,8 @@
-from fastapi import FastAPI,Request
+from fastapi import FastAPI, Request
 from pydantic import BaseSettings
-from rdflib import Graph,ConjunctiveGraph ,Namespace,URIRef,RDFS,Literal
+from rdflib import Graph, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
 import pandas as pd
-from rdflib import Graph
 from graph_operations import read_graph, create_performer_graph
-#import bit_stomach.bit_stomach as bit_stomach
 from bit_stomach.bit_stomach import Bit_stomach
 from candidatesmasher.candidatesmasher import CandidateSmasher
 from thinkpudding.thinkpudding import Thinkpudding
@@ -13,95 +11,114 @@ from pictoralist.pictoralist import Pictoralist
 import json
 import webbrowser
 import requests
-import gitinfo
-
-
 from requests_file import FileAdapter
-
-
-
-
 import os
+from dotenv import load_dotenv
 
+
+global templates, pathways, measures
+load_dotenv()
 class Settings(BaseSettings):
-    global pathways,templates
-    pathways = os.path.dirname("startup/causal_pathways/")
-    #pathways: str = "file://"+os.path.abspath("startup/social_loss.json")
-    measures: str ="file://"+os.path.abspath("startup/measures.json")
-    templates =os.path.dirname("startup/templates/")
-    #templates: str ="file://"+os.path.abspath("startup/templates.json")
-    # des=templates
-    asa=[]
+    # Set values to env var, when undeclared default to PFKB repo
+    templates: str = os.environ.get('templates',    'https://api.github.com/repos/Display-Lab/knowledge-base/contents/message_templates')
+    pathways: str = os.environ.get('pathways',      'https://api.github.com/repos/Display-Lab/knowledge-base/contents/causal_pathways')
+    measures: str = os.environ.get('measures',      'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/measures.json')
+settings = Settings()   # Instance the class now for use below
 
-asa=os.listdir(pathways)
-asaa=os.listdir(templates)
-list2 = (pathways+"/"+pd.Series(asa)).tolist()
 
-list3 = (templates+"/"+pd.Series(asaa)).tolist()
-
-graph = Graph()
-graph1=Graph()
-
-for sd in range(len(list2)):
-    adf="g"+str(sd)
-    adf=Graph()
+### Create RDFlib graph from locally saved json files
+def local_to_graph(thisSetting, thisGraph):
+    # Scrape directory, filter to only JSON files, build list of paths to the files
+    print(f'Starting dir-to-list transform...')
+    directory = os.listdir(thisSetting)
+    json_only = [file for file in directory if file.endswith('.json')]
+    thisList = [os.path.join(thisSetting, file) for file in json_only]
     
-    adf.parse(list2[sd])
-    graph = graph + adf
-for sdf in range(len(list3)):
-    adfs="g"+str(sdf)
-    adfs=Graph()
-    adfs.parse(list3[sdf], format="json-ld")
-    graph1 = graph1 + adfs
-
-measure_details=Graph()
-causal_pathways=graph
-templates=graph1
+    # Iterate through list, parsing list information into RDFlib graph object
+    print(f'Starting graphing process...')
+    for n in range(len(thisList)):
+        temp_graph = Graph()                            # Creates empty RDFlib graph
+        temp_graph.parse(thisList[n], format='json-ld') # Parse list data in JSON format
+        thisGraph = thisGraph + temp_graph              # Add parsed data to graph object
+    return thisGraph
 
 
-se =requests.Session()
+### Create RDFlib graph from remote knowledgebase JSON files
+def remote_to_graph(contentURL, thisGraph):
+    # Fetch JSON content from URL (directory)
+    response = requests.get(contentURL)
+    if response.status_code != 200:
+        raise Exception(f"Failed to fetch JSON content from URL: {contentURL}")
+    
+    try:
+        contents = response.json()
+        for item in contents:
+            file_name = item["name"]
+            if file_name.endswith(".json"):  # Check if the file has a .json extension
+                file_jsoned = json.loads(requests.get(item["download_url"]).content)        # Download content, store as JSON
+                temp_graph = Graph().parse(data=json.dumps(file_jsoned), format='json-ld')  # Parse JSON, store as graph
+                print(f'Graphed file {file_name}')
+                thisGraph += temp_graph
+            else:
+                print(f"Skipped non-JSON file: {file_name}")
+    except json.JSONDecodeError as e:
+        raise Exception("Failed parsing JSON content.")
+        
+    return thisGraph
+
+
+### Create empty RDFlib graphs to store resource description triples
+pathway_graph   = Graph()
+template_graph  = Graph()
+#measure_details = Graph()   # Empty, unused, and re-declared elsewhere...
+
+### Changes loading strategy depending on the source of PFKB content
+if not settings.pathways.startswith('http'):
+    # Build graphs with local os.dirname method if using file URI
+    causal_pathways = local_to_graph(settings.pathways, pathway_graph)
+    templates       = local_to_graph(settings.templates, template_graph)
+else:
+    # Build graphs from remote resource if using URLs
+    causal_pathways = remote_to_graph(settings.pathways, pathway_graph)
+    templates       = remote_to_graph(settings.templates, template_graph)
+
+# Set up request session as se, config to handle file URIs with FileAdapter
+print("Starting session handler...")
+se = requests.Session()
+print(se)
 se.mount('file://',FileAdapter())
-settings = Settings()
 app = FastAPI()
-
-
 
 
 
 @app.on_event("startup")
 async def startup_event():
     try:
-        
-      
         global measure_details,causal_pathways,templates,f3json
         
-        
-        #f2json=se.get(settings.pathways).text
         f3json=se.get(settings.measures).text
-        #f4json=se.get(settings.templates).text
-       
-        causal_pathways = causal_pathways
-        # causal_pathways=read_graph(f2json)
-        
+        causal_pathways = causal_pathways        
         templates =templates
-       # templates=read_graph(f4json)
-        print(gitinfo.get_git_info())
-        print("startup is complete")
         
     except Exception as e:
-        print("Looks like there is some problem in connection,see below traceback")
+        print("Startup aborted, see traceback:")
         raise e
     
+
 
 @app.get("/")
 async def root():
     
     return{"Hello":"Universe"}
-    
+
+
+
 @app.get("/template/")
 async def template():
     github_link ="https://raw.githubusercontent.com/Display-Lab/precision-feedback-pipeline/main/input_message.json"
     return webbrowser.open(github_link)
+
+
 
 @app.post("/createprecisionfeedback/")
 async def createprecisionfeedback(info:Request):
@@ -176,11 +193,15 @@ async def createprecisionfeedback(info:Request):
     # # # print(selected_message)
     if selected_message["text"]!= "No message selected":
     # # #Runnning Pictoralist
-        pc=Pictoralist(selected_message,p_df,performance_data_df)
+
+        ## Set init flag for image generation based on value of env var
+        generate_image = not (os.environ.get("pictoraless") == "true")
+        pc=Pictoralist(selected_message, p_df, generate_image, performance_data_df)
+        ## Process env var declaration (must be string) to determine if image generation happens
         base64_image=pc.create_graph()
         selected_message["image"]=base64_image
-        
         selected_message1=pc.prepare_selected_message()
+
     # '<img align="left" src="data:image/png;base64,%s">' %base64_image
     # ES=spek_es.serialize(format='json-ld', indent=4)
     # if str(debug)=="yes":
@@ -190,10 +211,3 @@ async def createprecisionfeedback(info:Request):
     # print(vignette)
     
     return selected_message1
-        # "location":settings.location
-       
-        # "selected_message": selected_message
-        #   "selected_message": selected_message
-    
-    
-
