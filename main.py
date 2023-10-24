@@ -177,8 +177,8 @@ async def createprecisionfeedback(info:Request):
     es.process_spek()
     es.process_history()
     es.process_mpm()
-    es.score()
-    node,spek_es=es.select()
+    node,spek_es=es.score()
+    # node,spek_es=es.select()
     selected_message=es.get_selected_message()
     # # es.apply_history()
   

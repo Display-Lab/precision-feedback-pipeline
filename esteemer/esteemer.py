@@ -3,11 +3,13 @@ import time
 import logging
 import random
 import io
+import pandas as pd
 #from asyncore import read
 from io import StringIO
 from rdflib import Literal, URIRef, BNode
 from rdflib.namespace import RDF
 from decimal import *
+
 
 
 
@@ -256,7 +258,10 @@ class Esteemer():
         # print(*self.measure_gap_list) 
         j_new=()
         a_new=[]
+        score_dict={}
         for i in self.y:
+            a_full_list=[]
+            b_full_list=[]
             # print(i)
             s = i
             pwed = URIRef("slowmo:acceptable_by")
@@ -306,9 +311,20 @@ class Esteemer():
                                                 v=0
                                             v= float(v)
                                             j[2]=j[2]*v
-                                a.append(i)
-                                print(*a)
+                                # a.append(i)
+                                a_full_list.append(a)
+                                # print(*a)
+                            # print(*a_full_list)
+                            # print("\n")
+                                # df_a= pd.DataFrame(a, columns = ['measure', 'node'])
+                                # print(df_a)
                                 # print("\n")
+                                # size = len(a)
+                                # print(size)
+                        #     a_full_list.append(a)
+                        # a_full_list = list(set(a_full_list))
+                        # print(*a_full_list)
+                        # print(len(a_full_list))
                         #trend multiplication
                         if o7==ph3 or o7==ph4:    
                             for s8,p8,o8 in self.spek_tp.triples((s6,p4,None)):
@@ -323,8 +339,9 @@ class Esteemer():
                                             v= float(v)
                                             j[2]=j[2]*v
                                             # j.append(i)
-                                b.append(i)
-                                print(*b)
+                                # b.append(i)
+                                b_full_list.append(b)
+                                # print(*b)
                                 # print("\n")
                         # print(o2we)
                         if o7==ph8:
@@ -375,23 +392,43 @@ class Esteemer():
                                 # print(*d)
                                 # print("\n")
                                 # print(*d)
-                # print("\n")
+                       
+            # print("outer loop")
+            # print(*a_full_list)
+            df_a = pd.DataFrame(a_full_list, columns=['Gaps'])
+            # print(df_a)
+            df_b =pd.DataFrame(b_full_list,columns=['Trends'])
+            # print(df_b)
+            df_a_new=pd.DataFrame(df_a["Gaps"].to_list(), columns=['comp_node', 'Measure','Gaps'])
+            df_b_new =pd.DataFrame(df_b["Trends"].to_list(),columns=['comp_node','Measure','Trends'])
+            # print(df_a_new)
+            # print(df_b_new)
+            df_merged=pd.merge(df_a_new, df_b_new, on='comp_node')
+            df_merged["score"] = df_merged['Gaps'] + df_merged['Trends'] 
+            score_list = df_merged['score'].tolist()
+            score_max = max(score_list)
+            score_dict[i]=score_max
+            # print(df_merged)
+            # print("\n")
+        Keymax = max(zip(score_dict.values(), score_dict.keys()))[1]
+        self.node=Keymax
+        return self.node,self.spek_tp
+        # for k,v in score_dict.items():print(k, v)
+    # # def select(self):
+    #     self.scores=[]
+    #     nodes=[]
+    #     # print(*self.y)
+    #     if len(self.y)!=0:
+    #         self.node=random.choice(self.y)
+    #     else:
+    #         self.node="No message selected"
 
-    def select(self):
-        self.scores=[]
-        nodes=[]
-        # print(*self.y)
-        if len(self.y)!=0:
-            self.node=random.choice(self.y)
-        else:
-            self.node="No message selected"
-
-        if self.node== "No message selected":
-            return self.node,self.spek_tp
-        else:
-            o2=URIRef("http://example.com/slowmo#selected")
-            self.spek_tp.add((self.node,RDF.type,o2))
-            return self.node,self.spek_tp
+    #     if self.node== "No message selected":
+    #         return self.node,self.spek_tp
+    #     else:
+    #         o2=URIRef("http://example.com/slowmo#selected")
+    #         self.spek_tp.add((self.node,RDF.type,o2))
+    #         return self.node,self.spek_tp
 
     def get_selected_message(self):
         s_m={}
