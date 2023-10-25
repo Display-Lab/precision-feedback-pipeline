@@ -97,7 +97,6 @@ async def startup_event():
     try:
         global measure_details,causal_pathways,templates,f3json,f5json
 
-        
         f3json=se.get(settings.measures).text
         f5json=se.get(settings.mpm).content
         causal_pathways = causal_pathways        

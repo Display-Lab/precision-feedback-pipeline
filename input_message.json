@@ -61,100 +61,72 @@
       [1,"GLU03","2023-12-01",89,11,100,90,96,92,90]
     ],
   "History":{
-      "Month1": 
+      "2023-12-01": 
         {
-          "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-          "Display":"bar,line,text",
-          "Text":"Your performance is getting worse for the measure [measure_details]",
-          "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
-          "comparison value":"0.9",
-          "Comparator Type":"goal",
-          "title":"Protective Tidal Volume, 8 mL/kg PBW",
-          "Measure Name":"PUL02"
+          "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
+          "message_generated_datetime": "2023-10-09T1850.426262",
+          "measure":"PUL02"
+          "message_instance_id":(format TBD)
           
         },
-      "Month2":
+      "2023-11-01":
         {   
-          "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-          "Display":"bar,line,text",
-          "Text":"Your performance is getting worse for the measure [measure_details]",
-          "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
-          "comparison value":null,
-          "Comparator Type":"peers",
-          "title":"PONV Prophylaxis: Pediatrics",
-          "Measure Name":"PONV04"
+         "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
+          "message_generated_datetime": "2023-10-09T1850.426262",
+          "measure":"NMB02"
+          "message_instance_id":(format TBD)
         },
-        "Month3":
+        "2023-10-01":
         {
-          "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-          "Display":"bar,line,text",
-          "Text":"Your performance is getting worse for the measure [measure_details]",
-          "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
-          "causal_pathways1":null,
-          "comparison value":null,
-          "Comparator Type":"peers",
-          "title":"Minimizing Colloid Use (Cardiac)",
-          "Measure Name":"FLUID01C"
+         "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
+          "message_generated_datetime": "2023-10-09T1850.426262",
+          "measure":"PONV04"
+          "message_instance_id":(format TBD)
         },
-        "Month4":
+        "2023-09-01":
         {
-          "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-          "Display":"bar,line,text",
-          "Text":"Your performance is getting worse for the measure [measure_details]",
-          "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
-          "causal_pathways1":null,
-          "comparison value":"0.9",
-          "Comparator Type":"goal",
-          "title":"PONV Prophylaxis: Pediatrics",
-          "Measure Name":"PONV04"
+           "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
+          "message_generated_datetime": "2023-10-09T1850.426262",
+          "measure":"NMB04"
+          "message_instance_id":(format TBD)
         },
-          "Month5":
+          "2023-08-01":
         {
-          "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-          "Display":"bar,line,text",
-          "Text":"Your performance is getting worse for the measure [measure_details]",
-          "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
-          "causal_pathways1":null,
-          "comparison value":"0.9",
-          "Comparator Type":"goal",
-          "title":"Train of Four Taken",
-          "Measure Name":"NMB01"
+           "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
+          "message_generated_datetime": "2023-10-09T1850.426262",
+          "measure":"PUL02"
+          "message_instance_id":(format TBD)
         },
-        "Month6":
+        "2023-07-01":
         {
-          "Template":"http://feedbacktailor.org/ftkb#PerformanceWorseningBar",
-          "Display":"line",
-          "Text":"Your performance dropped consecutively below the goal",
-          "causal_pathways0":"http://feedbacktailor.org/ftkb#Worsening",
-          "causal_pathways01":null,
-          "comparison value":"0.9",
-          "Comparator Type":"goal",
-          "title":"Low Fresh Gas Flow",
-          "Measure Name":"AKI01"
+          "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
+          "message_generated_datetime": "2023-10-09T1850.426262",
+          "measure":"PONV03"
+          "message_instance_id":(format TBD)
         }
   },
   "Preferences":{
       "Utilities": {
       "Message_Format": 
         {
-          "1": "0.0",
-          "2": "0.1",
-          "16": "7.5",
-          "24": "9.4",
-          "18": "11.3",
-          "11": "13.2",
-          "22": "15.1" ,
-          "14": "22.6" ,
-          "21": "62.3" ,
-          "5":"0.2",
-          "15":"4.0",
-          "4":"0.9"
+          "Social gain":"12.9773039154073",
+          "Social stayed better":"6.16437763767096",
+          "Worsening":"-22.2302388558724",
+          "Improving":"3.32588337712841",
+          "Social loss":"9.9561277682732",
+          "Social stayed worse":"-7.71048464732243",
+          "Social better":"-1.61124311975164",
+          "Social worse":"-14.8679453275023",
+          "Social approach":"13.9962122952887",
+          "Goal gain":"12.9773039154073",
+          "Goal approach":"13.9962122952887"
         },
       "Display_Format":
         {
-          "short_sentence_with_no_chart": "0.0",
-          "bar": "37.0",
-          "line": "0.0"
+          "Bar chart": "1",
+          "Line chart": "0",
+          "Text-only": "0",
+          "System-generated":"0"
         }
     }
   }
