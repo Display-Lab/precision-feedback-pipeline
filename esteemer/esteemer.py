@@ -237,7 +237,7 @@ class Esteemer():
 
         
         # f.close()
-    
+### Processes MPM dict     
     def process_mpm(self):
         # for col in self.mpm_df:
         #     print(col)
@@ -254,11 +254,13 @@ class Esteemer():
         self.measure_recency=dict(zip(self.mpm_df.Causal_pathway, self.mpm_df.Measure_recency))
         # for k,v in self.measure_recency.items():print(k, v)
     
+### Score individual candidates
     def score(self):
         # print(*self.measure_gap_list) 
         j_new=()
         a_new=[]
         score_dict={}
+        ## Starts creating list of candidates, looping through candidates (WIP on description lol)
         for i in self.y:
             a_full_list=[]
             b_full_list=[]
@@ -406,14 +408,18 @@ class Esteemer():
             df_merged=pd.merge(df_a_new, df_b_new, on='comp_node')
             df_merged["score"] = df_merged['Gaps'] + df_merged['Trends'] 
             score_list = df_merged['score'].tolist()
-            score_max = max(score_list)
-            score_dict[i]=score_max
+            score_max = max(score_list)            # Take maximum value of list of score values
+            score_dict[i]=score_max                # Close scoring loop for a single candidate
+            for s,p,o in self.spek_tp.triples((i,URIRef("http://example.com/slowmo#name"),None)):      # serialize a node as triples by identifier i, 
+                print(f"{p}\t\t{o} \t\t Score_max value: {score_max}")
+            print("")
             # print(df_merged)
             # print("\n")
         Keymax = max(zip(score_dict.values(), score_dict.keys()))[1]
         self.node=Keymax
+        for k,v in score_dict.items():print(k, v)
         return self.node,self.spek_tp
-        # for k,v in score_dict.items():print(k, v)
+        # 
     # # def select(self):
     #     self.scores=[]
     #     nodes=[]
@@ -429,7 +435,7 @@ class Esteemer():
     #         o2=URIRef("http://example.com/slowmo#selected")
     #         self.spek_tp.add((self.node,RDF.type,o2))
     #         return self.node,self.spek_tp
-
+### Process to 
     def get_selected_message(self):
         s_m={}
         if self.node== "No message selected":
