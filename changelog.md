@@ -1,4 +1,8 @@
 # PFP Changelog
+## Version 0.1.0
+**Feature:** Esteemer implemented (initial version)
+- Updated files to spec from latest main branch
+- Retroactive documentation under development for the new script and its processes  
 
 ## Version 0.0.1
 10/9/23  

@@ -12,6 +12,7 @@ import json
 import webbrowser
 import requests
 from requests_file import FileAdapter
+from io import BytesIO
 import os
 from dotenv import load_dotenv
 
@@ -23,6 +24,7 @@ class Settings(BaseSettings):
     templates: str = os.environ.get('templates',    'https://api.github.com/repos/Display-Lab/knowledge-base/contents/message_templates')
     pathways: str = os.environ.get('pathways',      'https://api.github.com/repos/Display-Lab/knowledge-base/contents/causal_pathways')
     measures: str = os.environ.get('measures',      'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/measures.json')
+    mpm: str ="file://"+os.path.abspath("startup/motivational_potential_model.csv")
 settings = Settings()   # Instance the class now for use below
 
 
@@ -70,7 +72,6 @@ def remote_to_graph(contentURL, thisGraph):
 ### Create empty RDFlib graphs to store resource description triples
 pathway_graph   = Graph()
 template_graph  = Graph()
-#measure_details = Graph()   # Empty, unused, and re-declared elsewhere...
 
 ### Changes loading strategy depending on the source of PFKB content
 if not settings.pathways.startswith('http'):
@@ -94,9 +95,10 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     try:
-        global measure_details,causal_pathways,templates,f3json
-        
+        global measure_details,causal_pathways,templates,f3json,f5json
+
         f3json=se.get(settings.measures).text
+        f5json=se.get(settings.mpm).content
         causal_pathways = causal_pathways        
         templates =templates
         
@@ -126,7 +128,7 @@ async def createprecisionfeedback(info:Request):
     req_info =await info.json()
     req_info1=req_info
     performance_data = req_info1["Performance_data"]
-    # debug=req_info1["debug"]
+    
     performance_data_df =pd.DataFrame (performance_data, columns = [ "staff_number","Measure_Name","Month","Passed_Count","Flagged_Count","Denominator","peer_average_comparator","peer_90th_percentile_benchmark","peer_75th_percentile_benchmark","MPOG_goal"])
     performance_data_df.columns = performance_data_df.iloc[0]
     performance_data_df = performance_data_df[1:]
@@ -143,16 +145,16 @@ async def createprecisionfeedback(info:Request):
         measure_details.remove((s,p,o))
     
     measure_details=read_graph(f3json)
+    mpm=f5json
+    print(type(mpm))
+    mpm_df=pd.read_csv(BytesIO(mpm))
+    # print(df1)
     performer_graph=create_performer_graph(measure_details)
     
     #BitStomach
     bs=Bit_stomach(performer_graph,performance_data_df)
     BS=bs.annotate()
     op=BS.serialize(format='json-ld', indent=4)
-    # if str(debug)=="yes":
-    #     f = open("outputs/spek_bs.json", "w")
-    #     f.write(op)
-    #     f.close()
     
     #CandidateSmasher
     cs=CandidateSmasher(BS,templates)
@@ -160,11 +162,7 @@ async def createprecisionfeedback(info:Request):
     df_template=cs.get_template_data()
  
     CS=cs.create_candidates(df_graph,df_template)
-    # if str(debug)=="yes":
-    #     op=CS.serialize(format='json-ld', indent=4)
-    #     f = open("outputs/spek_cs.json", "w")
-    #     f.write(op)
-    #     f.close()
+    
     #Thinkpuddung
     tp=Thinkpudding(CS,causal_pathways)
     tp.process_causalpathways()
@@ -172,22 +170,24 @@ async def createprecisionfeedback(info:Request):
     tp.matching()
     spek_tp=tp.insert()
     op=spek_tp.serialize(format='json-ld', indent=4)
-    # if str(debug)=="yes":
-    #     op=spek_tp.serialize(format='json-ld', indent=4)
-    #     f = open("outputs/spek_tp.json", "w")
-    #     f.write(op)
-    #     f.close()
+
 
     # #Esteemer
-    es=Esteemer(spek_tp,preferences,history)
+    measure_list=performance_data_df["measure"].drop_duplicates()
+    # print(*measure_list)
+    es=Esteemer(spek_tp,measure_list,preferences,history,mpm_df)
     
     # # es.apply_preferences()
     # # es.apply_history()
-    node,spek_es=es.select()
+    es.process_spek()
+    es.process_history()
+    es.process_mpm()
+    node,spek_es=es.score()
+    # node,spek_es=es.select()
     selected_message=es.get_selected_message()
     # # es.apply_history()
   
-    selected_message=es.get_selected_message()
+    # selected_message=es.get_selected_message()
     
     
     # # # print(selected_message)
