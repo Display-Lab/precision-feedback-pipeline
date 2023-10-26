@@ -257,10 +257,10 @@ class CandidateSmasher:
         if 7 in self.df_graph:
             self.df_graph = self.df_graph.rename({7:"graph_type6"}, axis=1)
         self.df_graph = self.df_graph.fillna(0)
-        self.df_graph["comparator_type1"]="peers"
+        self.df_graph["comparator_type"]="peers"
         self.df_graph=self.df_graph.reset_index(drop=True)
         self.df_graph = self.df_graph.drop('Comparator_Node1', axis=1)
-        self.df_graph = self.df_graph.drop('comparator_type1', axis=1)
+        # self.df_graph = self.df_graph.drop('comparator_type', axis=1)
         # self.df_graph.to_csv("graph_df.csv")
         # self.df_graph1=pd.DataFrame(self.graph_type_list1)
         self.goal_types = self.goal_types.rename({0:"measure"}, axis=1)
@@ -279,42 +279,43 @@ class CandidateSmasher:
 
 
         self.top_10_types = self.top_10_types.rename({0:"measure"}, axis=1)
-        self.top_10_types = self.top_10_types.rename({1:"Comparator_Node111"}, axis=1)
-        self.top_10_types = self.top_10_types.rename({2:"graph_type111"}, axis=1)
-        self.top_10_types = self.top_10_types.rename({3:"graph_type211"}, axis=1)
-        self.top_10_types = self.top_10_types.rename({4:"graph_type311"}, axis=1)
-        self.top_10_types = self.top_10_types.rename({5:"graph_type411"}, axis=1)
-        self.top_10_types = self.top_10_types.rename({6:"graph_type511"}, axis=1)
-        self.top_10_types = self.top_10_types.rename({7:"graph_type611"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({1:"Comparator_Node"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({2:"graph_type1"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({3:"graph_type2"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({4:"graph_type3"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({5:"graph_type4"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({6:"graph_type5"}, axis=1)
+        self.top_10_types = self.top_10_types.rename({7:"graph_type6"}, axis=1)
         self.top_10_types = self.top_10_types.fillna(0)
-        self.top_10_types["comparator_type111"]="peers"
+        self.top_10_types["comparator_type"]="top10_types"
         self.top_10_types=self.top_10_types.reset_index(drop=True)
-        self.top_10_types= self.top_10_types.drop('Comparator_Node111', axis=1)
-        self.top_10_types = self.top_10_types.drop('comparator_type111', axis=1)
+        self.top_10_types= self.top_10_types.drop('Comparator_Node', axis=1)
+        # self.top_10_types = self.top_10_types.drop('comparator_type', axis=1)
         # self.top_10_types.to_csv("top_10_types.csv")
 
         self.top_25_types = self.top_25_types.rename({0:"measure"}, axis=1)
-        self.top_25_types = self.top_25_types.rename({1:"Comparator_Node11"}, axis=1)
-        self.top_25_types = self.top_25_types.rename({2:"graph_type11"}, axis=1)
-        self.top_25_types = self.top_25_types.rename({3:"graph_type21"}, axis=1)
-        self.top_25_types = self.top_25_types.rename({4:"graph_type31"}, axis=1)
-        self.top_25_types = self.top_25_types.rename({5:"graph_type41"}, axis=1)
-        self.top_25_types = self.top_25_types.rename({6:"graph_type51"}, axis=1)
-        self.top_25_types = self.top_25_types.rename({7:"graph_type61"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({1:"Comparator_Node"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({2:"graph_type1"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({3:"graph_type2"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({4:"graph_type3"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({5:"graph_type4"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({6:"graph_type5"}, axis=1)
+        self.top_25_types = self.top_25_types.rename({7:"graph_type6"}, axis=1)
         self.top_25_types = self.top_25_types.fillna(0)
-        self.top_25_types["comparator_type11"]="peers"
+        self.top_25_types["comparator_type"]="top25_types"
         self.top_25_types=self.top_25_types.reset_index(drop=True)
-        self.top_25_types= self.top_25_types.drop('Comparator_Node11', axis=1)
-        self.top_25_types = self.top_25_types.drop('comparator_type11', axis=1)
+        self.top_25_types= self.top_25_types.drop('Comparator_Node', axis=1)
+        # self.top_25_types = self.top_25_types.drop('comparator_type', axis=1)
         # self.top_25_types.to_csv("top_25_types.csv")
 
-        # dfs = [self.df_graph, self.top_10_types, self.top_25_types]
+        # dfs1 = [self.df_graph, self.top_10_types, self.top_25_types]
+        self.df_merged = pd.concat([self.goal_types,self.df_graph,self.top_10_types,self.top_25_types], ignore_index=True, sort=False)
         dfs=self.df_graph.merge(self.top_10_types,on='measure').merge(self.top_25_types,on='measure')
-        dfs["comparator_type"]="peers"
-        # dfs.to_csv("dfs.csv")
-        self.df_merged = pd.concat([dfs, self.goal_types], ignore_index=True, sort=False)
-        self.df_merged =self.df_merged.fillna(0)
-        # self.df_merged.to_csv("df_merged.csv")
+        # dfs["comparator_type"]="peers"
+        # self.df_merged.to_csv("dfs1.csv")
+        # self.df_merged = pd.concat([dfs, self.goal_types], ignore_index=True, sort=False)
+        # self.df_merged =self.df_merged.fillna(0)
+        self.df_merged.to_csv("df_merged.csv")
         return self.df_merged
 
        
