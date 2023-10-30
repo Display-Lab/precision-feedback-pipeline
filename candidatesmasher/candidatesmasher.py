@@ -315,8 +315,9 @@ class CandidateSmasher:
         # self.df_merged.to_csv("dfs1.csv")
         # self.df_merged = pd.concat([dfs, self.goal_types], ignore_index=True, sort=False)
         # self.df_merged =self.df_merged.fillna(0)
+        
         self.df_merged.to_csv("df_merged.csv")
-        return self.df_merged
+        return self.df_merged,self.goal_types,self.df_graph,self.top_10_types,self.top_25_types
 
        
 
@@ -412,18 +413,68 @@ class CandidateSmasher:
         #     self.df["template_type_dicts3"]=0
         # if "template_type_dicts4" in self.df.columns:
         #     self.df["template_type_dicts4"]=0
-        self.df.to_csv("template.csv")
+        self.df1=self.df.loc[self.df['template_type_dicts'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
+        self.df2=self.df.loc[self.df['template_type_dicts1'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
+        self.df3=self.df.loc[self.df['template_type_dicts2'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
+        self.df4=self.df.loc[self.df['template_type_dicts3'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
+        self.df5=self.df.loc[self.df['template_type_dicts4'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
+        # self.df6=self.df.loc[self.df['template_type_dicts5'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
+        # self.df7=self.df.loc[self.df['template_type_dicts6'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
+        self.df_1 = pd.concat([self.df1,self.df2,self.df3,self.df4,self.df5], ignore_index=True, sort=False)
+        self.df6=self.df.loc[self.df['template_type_dicts'] == "http://purl.obolibrary.org/obo/PSDO_0000128"]
+        self.df7=self.df.loc[self.df['template_type_dicts1'] == "http://purl.obolibrary.org/obo/PSDO_0000128"]
+        self.df8=self.df.loc[self.df['template_type_dicts2'] == "http://purl.obolibrary.org/obo/PSDO_0000128"]
+        self.df9=self.df.loc[self.df['template_type_dicts3'] == "http://purl.obolibrary.org/obo/PSDO_0000128"]
+        self.df10=self.df.loc[self.df['template_type_dicts4'] == "http://purl.obolibrary.org/obo/PSDO_0000128"]
+        # self.df2=self.df.loc[self.df['template_type_dicts1'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
+        self.df_2 = pd.concat([self.df6,self.df7,self.df8,self.df9,self.df10], ignore_index=True, sort=False)
+       
+        self.df11=self.df.loc[self.df['template_type_dicts'] == "http://purl.obolibrary.org/obo/PSDO_0000126"]
+        self.df12=self.df.loc[self.df['template_type_dicts1'] == "http://purl.obolibrary.org/obo/PSDO_0000126"]
+        self.df13=self.df.loc[self.df['template_type_dicts2'] == "http://purl.obolibrary.org/obo/PSDO_0000126"]
+        self.df14=self.df.loc[self.df['template_type_dicts3'] == "http://purl.obolibrary.org/obo/PSDO_0000126"]
+        self.df15=self.df.loc[self.df['template_type_dicts4'] == "http://purl.obolibrary.org/obo/PSDO_0000126"]
+        # self.df2=self.df.loc[self.df['template_type_dicts1'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
+        self.df_3 = pd.concat([self.df11,self.df12,self.df13,self.df14,self.df15], ignore_index=True, sort=False)
+
+        self.df16=self.df.loc[(self.df.template_type_dicts != "http://purl.obolibrary.org/obo/PSDO_0000129") & (self.df.template_type_dicts != "http://purl.obolibrary.org/obo/PSDO_0000128")& (self.df.template_type_dicts != "http://purl.obolibrary.org/obo/PSDO_0000126")
+        & (self.df.template_type_dicts1 != "http://purl.obolibrary.org/obo/PSDO_0000129") & (self.df.template_type_dicts1 != "http://purl.obolibrary.org/obo/PSDO_0000128") & (self.df.template_type_dicts1 != "http://purl.obolibrary.org/obo/PSDO_0000126")&
+        (self.df.template_type_dicts2 != "http://purl.obolibrary.org/obo/PSDO_0000129")&(self.df.template_type_dicts2 != "http://purl.obolibrary.org/obo/PSDO_0000128")&(self.df.template_type_dicts2 != "http://purl.obolibrary.org/obo/PSDO_0000126")&
+        (self.df.template_type_dicts3 != "http://purl.obolibrary.org/obo/PSDO_0000129")&(self.df.template_type_dicts3 != "http://purl.obolibrary.org/obo/PSDO_0000128")&(self.df.template_type_dicts3 != "http://purl.obolibrary.org/obo/PSDO_0000126")&
+        (self.df.template_type_dicts4 != "http://purl.obolibrary.org/obo/PSDO_0000129")&(self.df.template_type_dicts4 != "http://purl.obolibrary.org/obo/PSDO_0000128")&(self.df.template_type_dicts4 != "http://purl.obolibrary.org/obo/PSDO_0000126")]
+        # self.df17=self.df.loc[(self.df.template_type_dicts2 != "http://purl.obolibrary.org/obo/PSDO_0000129") & (self.df.template_type_dicts1 != "http://purl.obolibrary.org/obo/PSDO_0000128")& (self.df.template_type_dicts1 != "http://purl.obolibrary.org/obo/PSDO_0000126")
+        # ]
+        # self.df18=self.df.loc[(self.df.template_type_dicts2 != "http://purl.obolibrary.org/obo/PSDO_0000129") & (self.df.template_type_dicts2 != "http://purl.obolibrary.org/obo/PSDO_0000128")& (self.df.template_type_dicts2 != "http://purl.obolibrary.org/obo/PSDO_0000126")
+        # ]
+        # self.df19=self.df.loc[(self.df.template_type_dicts3 != "http://purl.obolibrary.org/obo/PSDO_0000129") & (self.df.template_type_dicts3 != "http://purl.obolibrary.org/obo/PSDO_0000128")& (self.df.template_type_dicts3 != "http://purl.obolibrary.org/obo/PSDO_0000126")
+        # ]
+        # self.df20=self.df.loc[(self.df.template_type_dicts4 != "http://purl.obolibrary.org/obo/PSDO_0000129") & (self.df.template_type_dicts4 != "http://purl.obolibrary.org/obo/PSDO_0000128")& (self.df.template_type_dicts4 != "http://purl.obolibrary.org/obo/PSDO_0000126")
+        # ]
+        # self.asd = pd.concat([self.df16,self.df17,self.df18,self.df19,self.df20], ignore_index=True, sort=False)
+        # self.df12=self.df.loc[self.df['template_type_dicts1'] == "http://purl.obolibrary.org/obo/PSDO_0000126"]
+        # self.df13=self.df.loc[self.df['template_type_dicts2'] == "http://purl.obolibrary.org/obo/PSDO_0000126"]
+        # self.df14=self.df.loc[self.df['template_type_dicts3'] == "http://purl.obolibrary.org/obo/PSDO_0000126"]
+        # self.df15=self.df.loc[self.df['template_type_dicts4'] == "http://purl.obolibrary.org/obo/PSDO_0000126"]
+        
+        
+        # self.df16.to_csv("asd.csv")
+        # self.df_1.to_csv("a129.csv")
+        # self.df_2.to_csv("a128.csv")
+        # self.df_3.to_csv("a126.csv")
+        # self.df.to_csv("template.csv")
     
-        return self.df
+        return self.df,self.df_1,self.df_2,self.df_3,self.df16
    
-    def create_candidates(self,df,df_graph):
-        #self.df_graph.to_csv("df_graph_final.csv")
+    def create_candidates(self,df_spek,df_template):
+        # df_template.to_csv("template_final.csv")
+        # df_spek.to_csv("df_test.csv")
+        # self.df_merged.to_csv("as.csv")
         count=0
         
         
-        for rowIndex,row in self.df.iterrows():
+        for rowIndex,row in df_template.iterrows():
             # print(row)
-            for rowIndex1, row1 in self.df_merged.iterrows():
+            for rowIndex1, row1 in df_spek.iterrows():
                 # print(row1)
                 # print(row1["comparator_type"])
                 measure_name=row1["measure"]
@@ -434,7 +485,7 @@ class CandidateSmasher:
                 
         #print(row1)
                 # ah=BNode(row1["Comparator_Node"])
-                if "graph_type1" in self.df_graph.columns:
+                if "graph_type1" in df_spek.columns:
                     if (row1["graph_type1"] != 0):
                         count=count+1
                         # print(row1["graph_type1"])
@@ -444,10 +495,10 @@ class CandidateSmasher:
                         a25=Literal(row["text"])
                         a27=Literal(row["name"])
                         # a288= Literal(row["display"])
-                        if "template_type_dicts" in self.df.columns:
+                        if "template_type_dicts" in df_template.columns:
                             if(row["template_type_dicts"] != 0):
                                 a28=URIRef(row["template_type_dicts"])
-                        if "template_type_dicts1" in self.df.columns:
+                        if "template_type_dicts1" in df_template.columns:
                             if(row["template_type_dicts1"] != 0):
                                 a29=URIRef(row["template_type_dicts1"])
                 
@@ -457,49 +508,49 @@ class CandidateSmasher:
                         # self.a.add((oq,self.cp3,a26))
                         # self.a.add((oq,self.cp3,a261))
                         self.a.add((oq,RDF.type,self.cp28))
-                        if "template_type_dicts" in self.df.columns:
+                        if "template_type_dicts" in df_template.columns:
                             if(row["template_type_dicts"] != 0):
                                 ov=BNode()
                                 self.a.add((oq,self.cop4,ov))
                                 self.a.add((ov,RDF.type,a28))
-                        if "template_type_dicts1" in self.df.columns:
+                        if "template_type_dicts1" in df_template.columns:
                             if(row["template_type_dicts1"] != 0):
                                 ov=BNode()
                                 self.a.add((oq,self.cop4,ov))
                                 self.a.add((ov,RDF.type,a29))
-                        if "template_type_dicts2" in self.df.columns:
+                        if "template_type_dicts2" in df_template.columns:
                             if (row["template_type_dicts2"] != 0):
                                 a30=URIRef(row["template_type_dicts2"])
                                 ov=BNode()
                                 self.a.add((oq,self.cop4,ov))
                                 self.a.add((ov,RDF.type,a30))
-                        if "template_type_dicts3" in self.df.columns:
+                        if "template_type_dicts3" in df_template.columns:
                             if (row["template_type_dicts3"] != 0):
                                 a31=URIRef(row["template_type_dicts3"])
                                 ov=BNode()
                                 self.a.add((oq,self.cop4,ov))
                                 self.a.add((ov,RDF.type,a31))
-                        if "template_type_dicts4" in self.df.columns:
+                        if "template_type_dicts4" in df_template.columns:
                             if (row["template_type_dicts4"] != 0):
                                 a32=URIRef(row["template_type_dicts4"])
                                 ov=BNode()
                                 self.a.add((oq,self.cop4,ov))
                                 self.a.add((ov,RDF.type,a32))
-                        if "template_type_dicts5" in self.df.columns:
+                        if "template_type_dicts5" in df_template.columns:
                             if (row["template_type_dicts5"] != 0):
                                 a32=URIRef(row["template_type_dicts5"])
                                 ov=BNode()
                                 self.a.add((oq,self.cop4,ov))
                                 self.a.add((ov,RDF.type,a32))
-                        if "template_type_dicts6" in self.df.columns:
+                        if "template_type_dicts6" in df_template.columns:
                             if (row["template_type_dicts6"] != 0):
                                 a32=URIRef(row["template_type_dicts6"])
                                 ov=BNode()
                                 self.a.add((oq,self.cop4,ov))
                                 self.a.add((ov,RDF.type,a32))
                 
-                        idx=self.df_merged[self.df_merged["graph_type1"]==row1["graph_type1"]].index.values
-                        row_list = self.df_merged.loc[idx, :].values.flatten().tolist()
+                        idx=df_spek[df_spek["graph_type1"]==row1["graph_type1"]].index.values
+                        row_list = df_spek.loc[idx, :].values.flatten().tolist()
                         # row_list = [item for item in row_list if not item.isdigit()]
                         row_list1=[]
                         for x in range(len(row_list)):

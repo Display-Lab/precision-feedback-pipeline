@@ -156,10 +156,16 @@ async def createprecisionfeedback(info:Request):
     
     #CandidateSmasher
     cs=CandidateSmasher(BS,templates)
-    df_graph=cs.get_graph_type()
-    df_template=cs.get_template_data()
- 
-    CS=cs.create_candidates(df_graph,df_template)
+    df_graph,goal_types,df_graph,top_10_types,top_25_types=cs.get_graph_type()
+    df_template,df_1,df_2,df_3,df16=cs.get_template_data()
+    #create top_10
+    CS=cs.create_candidates(top_10_types,df_1)
+    # #create top_25
+    CS=cs.create_candidates(top_25_types,df_2)
+    # #creat peers
+    CS=cs.create_candidates(df_graph,df_3)
+    #create goal
+    CS=cs.create_candidates(goal_types,df16)
     
     #Thinkpuddung
     tp=Thinkpudding(CS,causal_pathways)
