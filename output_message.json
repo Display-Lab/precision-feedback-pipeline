@@ -24,6 +24,7 @@
     ]
   "performance_month": "2023-03",
   "message_generated_datetime": "2023-04-23 12:02:03",
+  "message_instance_id": [GUID],
   "pfkb_version": "1.0.1",
   "pfp_version": "1.2.2",
    Message:{
