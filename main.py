@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     templates: str = os.environ.get('templates',    'https://api.github.com/repos/Display-Lab/knowledge-base/contents/message_templates')
     pathways: str = os.environ.get('pathways',      'https://api.github.com/repos/Display-Lab/knowledge-base/contents/causal_pathways')
     measures: str = os.environ.get('measures',      'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/measures.json')
-    mpm: str ="file://"+os.path.abspath("startup/motivational_potential_model.csv")
+    mpm: str =os.environ.get('mpm',      'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/motivational_potential_model.csv')
 settings = Settings()   # Instance the class now for use below
 
 
