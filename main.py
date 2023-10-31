@@ -156,6 +156,7 @@ async def createprecisionfeedback(info:Request):
     BS=bs.annotate()
     op=BS.serialize(format='json-ld', indent=4)
     
+    
     #CandidateSmasher
     cs=CandidateSmasher(BS,templates)
     df_graph,goal_types,df_graph,top_10_types,top_25_types=cs.get_graph_type()
