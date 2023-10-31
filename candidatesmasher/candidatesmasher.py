@@ -316,7 +316,7 @@ class CandidateSmasher:
         # self.df_merged = pd.concat([dfs, self.goal_types], ignore_index=True, sort=False)
         # self.df_merged =self.df_merged.fillna(0)
         
-        self.df_merged.to_csv("df_merged.csv")
+        # self.df_merged.to_csv("df_merged.csv")
         return self.df_merged,self.goal_types,self.df_graph,self.top_10_types,self.top_25_types
 
        
