@@ -29,13 +29,11 @@ settings = Settings()   # Instance the class now for use below
 
 
 ### Create RDFlib graph from locally saved json files
-def local_to_graph(thisSetting, thisGraph):
-    # Scrape directory, filter to only JSON files, build list of paths to the files
+def local_to_graph(thisDirectory, thisGraph):
+    # Scrape directory, filter to only JSON files, build list of paths to the files (V2)
     print(f'Starting dir-to-list transform...')
-    directory = os.listdir(thisSetting)
-    json_only = [file for file in directory if file.endswith('.json')]
-    thisList = [os.path.join(thisSetting, file) for file in json_only]
-    
+    json_only = [entry.path for entry in os.scandir(thisDirectory) if entry.name.endswith('.json')]
+
     # Iterate through list, parsing list information into RDFlib graph object
     print(f'Starting graphing process...')
     for n in range(len(thisList)):

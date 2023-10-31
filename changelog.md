@@ -1,4 +1,14 @@
 # PFP Changelog
+## Version 0.1.1
+**Patch:** Improvements to local file startup infrastructure
+- Switched from os.listdir to os.scandir for increased effciency
+- Note: when specifying local directories for causal pathways and message templates, .env requires the path to be specified without the 'file://' prefix for correct functionality
+
+**Improvement (Development only):** Added comprehensive test suite of input messages
+- Added test_cases: /pathway_specific and /personas directories
+    - Readmes denote structural information about the test cases, as well as expected acceptable candidates and selected candidates by measure for each input message
+- CPtests and persona tests can be automatically verified for correctness of overall output using Leakdown Tester
+
 ## Version 0.1.0
 **Feature:** Esteemer implemented (initial version)
 - Updated files to spec from latest main branch
