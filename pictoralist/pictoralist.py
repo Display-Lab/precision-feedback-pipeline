@@ -9,14 +9,18 @@ import datetime
 
 
 
-
+## Pictoralist Mk II
 class Pictoralist():
 
     def __init__(self, selected_message, p_df, generate_image, performance_data_df: pd.DataFrame=()):
-        self.selected_message_dict=selected_message
+        ## Esteemer output, Selected Message
+        self.selected_message_dict=selected_message # try to print this to better understand the architecture
+        print(self.selected_message_dict)
         self.performance_data = performance_data_df
-        self.Performance_Data = performance_data_df
+        self.Performance_Data = performance_data_df     # duplicate, in use still though lol
         self.performance_Data=p_df
+        print(f"\n\n\n\np_df is\n\n{p_df}\n\n\nperf data df is:\n\n{performance_data_df}")
+        
         self.template= self.selected_message_dict["Template ID"]
         self.display_format = self.selected_message_dict["Display"]
         self.text= self.selected_message_dict["text"]

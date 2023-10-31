@@ -9,6 +9,12 @@
     - Readmes denote structural information about the test cases, as well as expected acceptable candidates and selected candidates by measure for each input message
 - CPtests and persona tests can be automatically verified for correctness of overall output using Leakdown Tester
 
+**Improvement:** Refactor and rework Pictoralist
+- Add ability to replace template populated fields in text message return with the correct variables for each person
+- Remove hardcode values where possible
+- Refactor
+
+
 ## Version 0.1.0
 **Feature:** Esteemer implemented (initial version)
 - Updated files to spec from latest main branch
