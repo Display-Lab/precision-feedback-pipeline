@@ -404,15 +404,15 @@ class CandidateSmasher:
         self.df = self.df.fillna(0)
         self.df = self.df.reset_index()
         
-        # if "template_type_dicts3" not in self.df.columns:
-        #     self.df['template_type_dicts3'] = 0
-        # if "template_type_dicts4" not in self.df.columns:
-        #     self.df['template_type_dicts4'] = 0
+        if "template_type_dicts3" not in self.df.columns:
+            self.df['template_type_dicts3'] = 0
+        if "template_type_dicts4" not in self.df.columns:
+            self.df['template_type_dicts4'] = 0
             
-        # if "template_type_dicts3" in self.df.columns:
-        #     self.df["template_type_dicts3"]=0
-        # if "template_type_dicts4" in self.df.columns:
-        #     self.df["template_type_dicts4"]=0
+        if "template_type_dicts3" in self.df.columns:
+            self.df["template_type_dicts3"]=0
+        if "template_type_dicts4" in self.df.columns:
+            self.df["template_type_dicts4"]=0
         self.df1=self.df.loc[self.df['template_type_dicts'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
         self.df2=self.df.loc[self.df['template_type_dicts1'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
         self.df3=self.df.loc[self.df['template_type_dicts2'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
