@@ -48,8 +48,8 @@ def process_spek(spek_cs):
             s=y[i]
             for s,p,o in spek_cs.triples((s,RDF.type,None)):
                 a.append(o)
-                # y[i]=o
-        spek_out_dicts[s1] = a
+                y[i]=o
+        spek_out_dicts[s1] = y
     return spek_out_dicts
 
 def matching(spek_out_dicts,caus_out_dict_final):
