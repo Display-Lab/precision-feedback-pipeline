@@ -18,7 +18,7 @@
       "has_part": "http://purl.obolibrary.org/obo/bfo#BFO_0000051",
       "has_disposition": "http://purl.obolibrary.org/obo/RO_0000091"
     },
- "Message_Instance_Id":"12345678",
+ "message_instance_id":[GUID],
   "Performance_data":[
       ["staff_number","measure","month","passed_count","flagged_count","denominator","peer_average_comparator","peer_75th_percentile_benchmark","peer_90th_percentile_benchmark", "MPOG_goal"],
       [1,"PONV05","2023-01-01",90,10,100,90,92,96,90],
