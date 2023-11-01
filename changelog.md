@@ -1,4 +1,8 @@
 # PFP Changelog
+## Version 0.1.2
+**Improvement:**
+- Added input messages to the test case folder orginating from MPOG data flow
+
 ## Version 0.1.1
 **Patch:** Improvements to local file startup infrastructure
 - Switched from os.listdir to os.scandir for increased effciency
