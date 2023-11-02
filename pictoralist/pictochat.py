@@ -8,6 +8,8 @@ import pandas as pd
 # if there is < 3 months of data, force to text only display type and stop image generation
 # Line charts need to have option to add in goal lines selectively
 # Keep attention to issue 94, handle values as floats at all times when possible
+#
+# Need to change all of these json keys to snake_case once the pipeline does so, my lord is it tedious to check cases
 
 
 class Pictochat():
@@ -17,11 +19,10 @@ class Pictochat():
     self.selected_measure   = str(selected_message["Measure Name"])             # Name of selected measure
     self.sel_measure_title  = str(selected_message["Title"])
     self.template_name      = str(selected_message["message_template_name"])     # Template text name
-    ## Perhaps unnecessary below, will find replace once pictoralist and templates (re)written and stable
     self.display_format     = str(selected_message["Display"])
     self.message_text       = str(selected_message["text"])
     #self.comparator         = str(selected_message["about_comparator"]) #need team to implement still
-    self.comparator         = str()
+    self.comparator         = str(selected_message["Comparator_Type"])  # Outdated once issue 112 resolved
         # NOTE: self.comparator needs to match the column headers in perf_dataframe
         # Insert code to achieve this here if not done in resolution of Issue #112 work
 
@@ -47,7 +48,7 @@ class Pictochat():
     ### Fill any gaps in the dataset
     def fill_missing_months(self):
         ### Debug:
-        # print(self.performance_data)
+        #print(self.performance_data)
 
         # Insert <3 months of data error catcher here?, stop this process and set generate_image to false?
         # Could also catch error in main script
@@ -70,7 +71,7 @@ class Pictochat():
         self.performance_data['MPOG_goal'].fillna(method='ffill', inplace=True)
 
         ### Debug:
-        # print(self.performance_data)
+        #print(self.performance_data)
 
 
 
@@ -100,6 +101,24 @@ class Pictochat():
 
 
 
-    ## Function to generate the graph
+    ### Logic to set display timeframe for graph generation
+    def set_timeframe(self):
+        # NOTE: fill_missing_months is set up to only fill months BETWEEN extant data, so . Will set up a control variable
+        #  here that can control this window size and truncate further by request. Will have to leave the particulars
+        #  on exactly what conditions set this logic to the team to decide on.
+        self.display_timeframe = len.(self.performance_data)    # Should return an integer of the size of the dataframe
+        print(f"Display timeframe starts at {self.display_timeframe} months")
+        
+        ## Error catcher for windows <3 months
+        if self.display_timeframe < 3:
+            self.generate_image ==  "false"     # Turn off image generation
+            self.display_format == "text-only"  # Set to text-only display type
+            print("Display format forced to text-only by func set_timeframe")       #Debug help
+            raise Exception(f"Display Timeframe too small!\nSomehow Esteemer has chosen a measure with only one month of data for message delivery\n\tHow did you do that?")
+
+
+
+
+    ### Function to generate the graph
     def generate_graphs(self):
         if enable_image:        # Image generation set by flag (pictoraless)

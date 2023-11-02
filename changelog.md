@@ -4,7 +4,7 @@
 - Maintain class-based architecture, but operate procedurally
 - Implemented data cleanup function to simplify dataframe for use in pictoralist
 - Implemented gap filling function
-    - See issue [#110](https://github.com/Display-Lab/precision-feedback-pipeline/issues/110)
+    - See issue [#110](https://github.com/Display-Lab/precision-feedback-pipeline/issues/110)  
     - Still thinking about best way to check error about < 3 months of data, could implement here and assert data length, could also implement in main.py 
     - Above is contingent on that bug still being present in the new script, can't tell until we have 'about_comparator' and 'message_template_name' key changes made and we enter testing phase (resolve issue [#112](https://github.com/Display-Lab/precision-feedback-pipeline/issues/112) first)
 
@@ -12,6 +12,10 @@
     - Can use this function (finalize_text) to add links to MPOG spec and dashboard, however should probably be done on MPOG side after recieving the PFP response
         - Need to have access to dashboard link for provider, probably impossible to do in a de-identified way
         - Need to link back to measures.json, pull the spec ID number from the key values and append to the human-accessible link as done in the vignettes (aka not fun or efficient to do this way)
+
+- Implemented control logic for setting display timeframe
+    - Currently just reports how long the window is set to display by default, and stops image generation if the data shows less than three months
+    - Think that this resolves most of [#63](https://github.com/Display-Lab/precision-feedback-pipeline/issues/63)
 
 
 ## Version 0.1.1
