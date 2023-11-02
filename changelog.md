@@ -8,7 +8,10 @@
     - Still thinking about best way to check error about < 3 months of data, could implement here and assert data length, could also implement in main.py 
     - Above is contingent on that bug still being present in the new script, can't tell until we have 'about_comparator' and 'message_template_name' key changes made and we enter testing phase (resolve issue [#112](https://github.com/Display-Lab/precision-feedback-pipeline/issues/112) first)
 
-- Adding generative text replacement functionality (Issue [#107](https://github.com/Display-Lab/precision-feedback-pipeline/issues/107))
+- Implemented generative text replacement functionality (Issue [#107](https://github.com/Display-Lab/precision-feedback-pipeline/issues/107))
+    - Can use this function (finalize_text) to add links to MPOG spec and dashboard, however should probably be done on MPOG side after recieving the PFP response
+        - Need to have access to dashboard link for provider, probably impossible to do in a de-identified way
+        - Need to link back to measures.json, pull the spec ID number from the key values and append to the human-accessible link as done in the vignettes (aka not fun or efficient to do this way)
 
 
 ## Version 0.1.1

@@ -15,13 +15,15 @@ class Pictochat():
     ## Setup variables to process selected message
     self.performance_data   = performance_dataframe                          # Dataframe of recipient perf data (performance_data_df)
     self.selected_measure   = str(selected_message["Measure Name"])             # Name of selected measure
+    self.sel_measure_title  = str(selected_message["Title"])
     self.template_name      = str(selected_message["message_template_name"])     # Template text name
     ## Perhaps unnecessary below, will find replace once pictoralist and templates (re)written and stable
     self.display_format     = str(selected_message["Display"])
     self.message_text       = str(selected_message["text"])
-    self.message_title      = str(selected_message["Title"])
-    self.comparator         = str(selected_message["about_comparator"]) #need team to implement still
+    #self.comparator         = str(selected_message["about_comparator"]) #need team to implement still
+    self.comparator         = str()
         # NOTE: self.comparator needs to match the column headers in perf_dataframe
+        # Insert code to achieve this here if not done in resolution of Issue #112 work
 
 
 
@@ -48,7 +50,7 @@ class Pictochat():
         # print(self.performance_data)
 
         # Insert <3 months of data error catcher here?, stop this process and set generate_image to false?
-        # Could also catch error in main script if 
+        # Could also catch error in main script
 
 
         # Sort the DataFrame by the 'month' column
@@ -71,8 +73,30 @@ class Pictochat():
         # print(self.performance_data)
 
 
-    def finalize_text(self):
 
+    ### Fill template text with details for this month's precision feedback message
+    def finalize_text(self):
+        ## Pull the most recent month's data for generating text feedback:
+        current_comparator_percent  = self.performance_data[self.comparator].iloc[-1] *100
+        current_perf_percent        = self.performance_data["Performance_Rate"].iloc[-1] *100
+        current_perf_passed         = self.performance_data["passed_count"].iloc[-1]
+        current_perf_total_cases    = self.performance_data["denominator"].iloc[-1]
+
+
+        ## Replace placeholders in the template with actual values
+        # Format "[measure name]":
+        self.message_text = self.message_text.replace("[measure name]",
+        f"{self.selected_measure}: {self.sel_measure_title}"
+        )
+        # Format "[recipient performance level]":
+        self.message_text = self.message_text.replace("[recipient performance level]",
+        f"{current_perf_percent}% ({current_perf_passed}/{current_perf_total_cases} cases)"
+        )
+        # Format "[comparator performance level]":
+        self.message_text = self.message_text.replace("[comparator performance level]", 
+        f"{current_comparator_percent}%"
+        )
+        ## Insert framework for linking to MPOG measure spec and dashboard link here if task ownership changes
 
 
 
