@@ -1,4 +1,16 @@
 # PFP Changelog
+## Version 0.2.0 (indev)
+**Improvement:** Rework Pictoralist (pictochat.py for dev work)
+- Maintain class-based architecture, but operate procedurally
+- Implemented data cleanup function to simplify dataframe for use in pictoralist
+- Implemented gap filling function
+    - See issue [#110](https://github.com/Display-Lab/precision-feedback-pipeline/issues/110)
+    - Still thinking about best way to check error about < 3 months of data, could implement here and assert data length, could also implement in main.py 
+    - Above is contingent on that bug still being present in the new script, can't tell until we have 'about_comparator' and 'message_template_name' key changes made and we enter testing phase (resolve issue [#112](https://github.com/Display-Lab/precision-feedback-pipeline/issues/112) first)
+
+- Adding generative text replacement functionality (Issue [#107](https://github.com/Display-Lab/precision-feedback-pipeline/issues/107))
+
+
 ## Version 0.1.1
 **Patch:** Improvements to local file startup infrastructure
 - Switched from os.listdir to os.scandir for increased effciency
@@ -8,11 +20,6 @@
 - Added test_cases: /pathway_specific and /personas directories
     - Readmes denote structural information about the test cases, as well as expected acceptable candidates and selected candidates by measure for each input message
 - CPtests and persona tests can be automatically verified for correctness of overall output using Leakdown Tester
-
-**Improvement:** Refactor and rework Pictoralist
-- Add ability to replace template populated fields in text message return with the correct variables for each person
-- Remove hardcode values where possible
-- Refactor
 
 
 ## Version 0.1.0
