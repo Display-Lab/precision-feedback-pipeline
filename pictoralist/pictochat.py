@@ -1,14 +1,11 @@
-import json
 import matplotlib.pyplot as plot
 import pandas as pd
+import datetime
+import base64
+import numpy
+import io
 
 ## Notes:
-# Need to have logic statement that fills in data gaps
-# before that statement, need to check and verify that there is more than three months of data
-# if there is < 3 months of data, force to text only display type and stop image generation
-# Line charts need to have option to add in goal lines selectively
-# Keep attention to issue 94, handle values as floats at all times when possible
-#
 # Need to change all of these json keys to snake_case once the pipeline does so, my lord is it tedious to check cases
 
 
@@ -21,6 +18,9 @@ class Pictochat():
     self.template_name      = str(selected_message["message_template_name"])     # Template text name
     self.display_format     = str(selected_message["Display"])
     self.message_text       = str(selected_message["text"])
+    self.staff_ID           = float(performance_dataframe["staff_number"].iloc[0])  # Preserve one instance of staff number
+
+    self.acceptable_by      = str(selected_message["Acceptable By"])
 
     ## IMPLEMENTATION NEEDED ##
     self.include_goal_line  = True   
@@ -104,7 +104,7 @@ class Pictochat():
     ### Fill template text with details for this month's precision feedback message
     def finalize_text(self):
         ## Pull the most recent month's data for generating text feedback:
-        current_comparator_percent  = self.performance_data["comparator_level"].iloc[-1] *100
+        current_comparator_percent  = self.performance_data["comparator_level"].iloc[-1]
         current_perf_percent        = self.performance_data["Performance_Rate"].iloc[-1]
         current_perf_passed         = self.performance_data["passed_count"].iloc[-1]
         current_perf_total_cases    = self.performance_data["denominator"].iloc[-1]
@@ -149,7 +149,7 @@ class Pictochat():
     ### Modular text alteration of graph elements for social vs goal comparisons:
     def comparator_switch(self):
         # Set text for series name based on if using goal comparator
-        if comparator_type == "goal"
+        if comparator_type == "goal comparator element"
             self.comparator_series_label = "Goal Value"
         # Default to social comparator if anything but goal specified above, set labels by comparator 
         else:
@@ -167,19 +167,20 @@ class Pictochat():
     # NOTE: this may be a touchy boy, SHOULD scope properly if following matlab rules, however if we 
     # make changes that ALTER the plt object's global definition, it will anger the machine spirit
     def plot_and_save():
-        # Show legend
-        plt.legend()
-
-        # Show the graph
-        plt.grid()
+        plt.legend()    # Show legend
+        plt.grid()      # Show the graph
         plt.tight_layout()
+
         plt.show()  # Allow for spot-check of graph locally (not for production)
+
         plt.savefig("cache/cached1.png")            # Save figure locally (redirect if saving images as part of the study I guess?)
         s = io.BytesIO()
         plt.savefig(s, format='png', bbox_inches="tight")
         plt.close()
         s = base64.b64encode(s.getvalue()).decode("utf-8").replace("\n", "")
         return s
+
+
 
 
     ### Function to generate line chart 
@@ -196,6 +197,12 @@ class Pictochat():
 
         # Create the plot
         plt.figure(figsize=(10, 6))
+        
+        # Add vertical lines for each month
+        for x in x_values:
+            plt.axvline(x=x, color='gray', linewidth=0.3)
+        
+        # Plot series 1 and 2
         plt.plot(x_values, self.performance_level, label="You", marker='o')
         plt.plot(x_values, self.comparator_level, label=self.comparator_series_label, linestyle='--', marker='x')
         plt.xticks(rotation=45)
@@ -204,51 +211,75 @@ class Pictochat():
         plt.yticks(y_values, y_labels)
         plt.ylabel("Performance Level")
         plt.xlabel("Time")
-        plt.title(f"Performance Over Time for Measure {self.comparator_name}")
+        plt.title(f"Performance Over Time for Measure {self.selected_measure}")
 
-        # Add vertical lines for each month
-        for x in x_values:
-            plt.axvline(x=x, color='gray', linewidth=0.5)
-
-        # Add data labels for the last three months of performance levels as integer-ized floats
+        # Add data labels for the last three months of performance levels as 2 precision floats
         last_three_months = x_values[-3:]
         last_three_performance = self.performance_level[-3:]
         for x, y in zip(last_three_months, last_three_performance):
             plt.annotate(f'{y:.2f}%', (x, y), textcoords="offset points", xytext=(0, 10), ha='center', fontsize=8)
-
-        # Code below has been modularized, only remove string literals if testing fails d/t scoping
-        '''
-        # Show legend
-        plt.legend()
-
-        # Show the graph
-        plt.grid()
-        plt.tight_layout()
-        plt.show()  #debug only
-        # Save figure locally (redirect for )
-        plt.savefig("cache/cached1.png")
-        s = io.BytesIO()
-        plt.savefig(s, format='png', bbox_inches="tight")
-        plt.close()
-        s = base64.b64encode(s.getvalue()).decode("utf-8").replace("\n", "")
-        '''
-        # Delete above string literal code when passes testing if modularity working
         
-        # Previously, had this func returning the graph to store as a key in main, doesn't get used otherwise?
-        # We can just throw it in as a key in this class and return it with the rest of the content at the end of the script now
+        # Save and display the graph
         self.base64_image = plot_and_save()
 
  
+
+
+    ### Function to create bar chart for feedback message:
+    def generate_barchart(self):
+        comparator_switch(self)
+
+        # Define the Y-axis data
+        y_values = np.arange(0, 101, 20)
+        y_labels = [str(val) + '%' for val in y_values]
+
+        # Define the X-axis data (months) and labels
+        x_values = self.performance_data['month'].dt.strftime("%b '%y")
+        x_labels = x_values.tolist()
+
+        # Create the plot
+        plt.figure(figsize=(10, 6))
+
+        # Set axes labels
+        plt.ylabel("Performance Level")
+        plt.yticks(y_values, y_labels)
+        plt.xlabel("Time")
+        plt.xticks(rotation=45)
+        plt.title(f"Performance Over Time for Measure {self.selected_measure}")
+
+        # Create bars for the timeframe specified by set_timeframe()
+        last_x_months = x_values[-self.display_timeframe:]
+        series_1_data = self.performance_level[-self.display_timeframe:]
+        series_2_data = self.comparator_level[-self.display_timeframe:]
+
+        # Plot the bars for series 1 and 2
+        plt.bar(last_x_months, series_1_data, label="You")
+        plt.bar(last_x_months, series_2_data, label=self.comparator_series_label)
+
+        # Add data labels for each bar in series 1
+        for i in range(len(last_x_months)):
+            label_text = f"{self.performance_dataframe['Performance_Rate'].iloc[-self.display_timeframe + i]:.2f}% " \
+                         f"({self.performance_dataframe['passed_count'].iloc[-self.display_timeframe + i]}/" \
+                         f"{self.performance_dataframe['denominator'].iloc[-self.display_timeframe + i]})"
+            plt.text(last_x_months[i], series_1_data[i] + 5, label_text, ha='center', va='bottom')
+
+        # Add data labels for each bar in series 2
+        for i in range(len(last_x_months)):
+            plt.text(last_x_months[i], series_2_data[i] + 5, f"{series_2_data[i]:.2f}", ha='center', va='bottom')
+
+        # If include_goal_line is True, plot the goal line
+        if self.include_goal_line:
+            goal_data = self.performance_data['MPOG_goal'][-self.display_timeframe:]
+            plt.plot(last_x_months, goal_data, linestyle='--', color='gray', label="Goal")
+
+        # Save and display the graph
+        self.base64_image = plot_and_save()
 
 
 
 
     ### Graphing function control logic (modularized to allow for changes and extra display formats in the future):
     def graph_controller(self):
-        if self.comparator_type == "goal":
-            # Change the vars controlling what comparator is being graphed from benchmark to goal line
-            # Change var titling series in the graph generation
-
         if self.display_format == "line graph":
             print(f"Generating line graph from performance data...")
             generate_linegraph(self)
@@ -259,3 +290,34 @@ class Pictochat():
         
         else:
             print(f"Generating text only feedback message...")
+
+
+
+
+    ### Prepare selected message as done previously for LDT continuity:
+    def prepare_selected_message(self):
+        candidate={}
+        message={}
+        candidate["message_template"]=self.template_name
+        candidate["display"]=self.display_format
+        candidate["measure"]=self.measure_name
+        candidate["acceptable_by"]=self.acceptable_by
+        message["text_message"]=self.message_text
+        message["measure"]=self.measure_name
+        message["measure_full_title"]=self.sel_measure_title
+        message["image"]=self.base64_image
+
+        message_generated_datetime= datetime.datetime.now()
+
+        full_message = {
+            "staff_number":self.staff_ID,
+            "selected_candidate":candidate,
+            #"performance_data":df4,  Need to re-implement still, tired....
+            "performance_month":performance_dataframe["month"].iloc[-1],
+            "message_generated_datetime":message_generated_datetime,
+            "pfkb_version":'0.0.0',     # Need to soft code in the morning...
+            "pfp_version":'0.2.0 indev',    # Ditto
+            "Message":message
+        }
+
+        return full_message

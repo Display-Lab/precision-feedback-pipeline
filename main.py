@@ -7,7 +7,8 @@ from bit_stomach.bit_stomach import Bit_stomach
 from candidatesmasher.candidatesmasher import CandidateSmasher
 from thinkpudding.thinkpudding import Thinkpudding
 from esteemer.esteemer import Esteemer
-from pictoralist.pictoralist import Pictoralist
+#from pictoralist.pictoralist import Pictoralist
+from pictochat.pictochat import Pictochat
 import json
 import webbrowser
 import requests
@@ -195,23 +196,21 @@ async def createprecisionfeedback(info:Request):
     
     
     # # # print(selected_message)
+   
+   
+   ## Pictoralist 2, now on the Nintendo DS:
     if selected_message["text"]!= "No message selected":
-    # # #Runnning Pictoralist
+    # # #Runnning Pictoralist  (Pictochat version for testing/dev)
 
         ## Set init flag for image generation based on value of env var
         generate_image = not (os.environ.get("pictoraless") == "true")
-        pc=Pictoralist(selected_message, p_df, generate_image, performance_data_df)
-        ## Process env var declaration (must be string) to determine if image generation happens
-        base64_image=pc.create_graph()
-        selected_message["image"]=base64_image
-        selected_message1=pc.prepare_selected_message()
-
-    # '<img align="left" src="data:image/png;base64,%s">' %base64_image
-    # ES=spek_es.serialize(format='json-ld', indent=4)
-    # if str(debug)=="yes":
-    #     f = open("outputs/spek_es.json", "w")
-    #     f.write(ES)
-    #     f.close()
-    # print(vignette)
+        
+        pc=Pictochat(performance_data_df, selected_message, generate_image) #initialize
+        pc.performance_data_cleanup()
+        pc.fill_missing_months()
+        pc.finalize_text()
+        pc.set_timeframe()
+        pc.graph_controller()
+        full_selected_message   = pc.prepare_selected_message()
     
-    return selected_message1
+    return full_selected_message

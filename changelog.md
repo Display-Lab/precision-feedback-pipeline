@@ -17,6 +17,17 @@
     - Currently just reports how long the window is set to display by default, and stops image generation if the data shows less than three months
     - Think that this resolves most of [#63](https://github.com/Display-Lab/precision-feedback-pipeline/issues/63)
 
+- Implemented logic to control display detials based on the type of comparator the message is about (goal/social)
+    - Requires modifications to data flowing into pictoralist, issue [#112](https://github.com/Display-Lab/precision-feedback-pipeline/issues/112) stuff
+
+- Implemented functions to graph data
+    - Needs fairly extensive testing and some further cosmetic modifications, bug fixes highly likely
+    - Documented as best as possible at 4am, may be incomplete in this commit
+
+- Implemented message output from old pictoralist
+
+- Implemented calls in main to execute successful pictoralist functionality (untested)
+
 
 ## Version 0.1.1
 **Patch:** Improvements to local file startup infrastructure
