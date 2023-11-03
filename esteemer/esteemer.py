@@ -121,9 +121,11 @@ class Esteemer():
                                         # print(str(o125))
                                         gaps.append(str(o1234))
                                         gaps.append(Measure)
-                                        gaps.append(float(o125))
+                                        # print(float((o125)))
+                                        gaps.append(float(abs(o125)))
                                         gaps_tuples=tuple(gaps)
                                         self.measure_gap_list.append(gaps_tuples)
+                                    # print(*self.measure_gap_list)
                     if o123 == ph3 or o123 ==ph4:
                         for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
                             o124=str(o124)

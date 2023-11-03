@@ -136,6 +136,7 @@ async def createprecisionfeedback(info:Request):
     del req_info1["History"]
     preferences=req_info1["Preferences"]
     del req_info1["Preferences"]
+    debug=req_info1["debug"]
     input_message=read_graph(req_info1)
     measure_details= Graph()
     
@@ -144,7 +145,7 @@ async def createprecisionfeedback(info:Request):
     
     measure_details=read_graph(f3json)
     mpm=f5json
-    print(type(mpm))
+    # print(type(mpm))
     mpm_df=pd.read_csv(BytesIO(mpm))
     # print(df1)
     performer_graph=create_performer_graph(measure_details)
@@ -153,7 +154,10 @@ async def createprecisionfeedback(info:Request):
     bs=Bit_stomach(performer_graph,performance_data_df)
     BS=bs.annotate()
     op=BS.serialize(format='json-ld', indent=4)
-    
+    if str(debug)=="yes":
+        f = open("outputs/spek_bs.json", "w")
+        f.write(op)
+        f.close()
     
     #CandidateSmasher
     cs=CandidateSmasher(BS,templates)
@@ -167,6 +171,11 @@ async def createprecisionfeedback(info:Request):
     CS=cs.create_candidates(df_graph,df_3)
     #create goal
     CS=cs.create_candidates(goal_types,df16)
+    op=CS.serialize(format='json-ld', indent=4)
+    if str(debug)=="yes":
+        f = open("outputs/spek_cs.json", "w")
+        f.write(op)
+        f.close()
     
     #Thinkpuddung
     tp=Thinkpudding(CS,causal_pathways)
@@ -175,7 +184,10 @@ async def createprecisionfeedback(info:Request):
     tp.matching()
     spek_tp=tp.insert()
     op=spek_tp.serialize(format='json-ld', indent=4)
-
+    if str(debug)=="yes":
+        f = open("outputs/spek_tp.json", "w")
+        f.write(op)
+        f.close()
 
     # #Esteemer
     measure_list=performance_data_df["measure"].drop_duplicates()
