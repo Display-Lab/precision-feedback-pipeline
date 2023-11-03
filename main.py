@@ -196,7 +196,7 @@ async def createprecisionfeedback(info:Request):
     
     
     # # # print(selected_message)
-    if selected_message["text"]!= "No message selected":
+    if selected_message["message_text"]!= "No message selected":
     # # #Runnning Pictoralist
 
         ## Set init flag for image generation based on value of env var
