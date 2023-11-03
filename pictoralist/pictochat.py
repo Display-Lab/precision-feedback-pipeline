@@ -50,18 +50,20 @@ class Pictochat():
         ## Only keep rows that contain the measure of interest for this message:
         self.performance_data = self.performance_data[self.performance_data['measure'] == self.selected_message['Measure Name']]
 
-
-        ## Clean columns based on what pathway flavor is in use:
-        # Define the common columns to keep
-        columns_to_keep = ['measure', 'month', 'passed_count', 'denominator', 'MPOG_goal', 'Performance_Rate']
-
-        # Append comparator levels if pathway is social comp reliant
-        if self.comparator_type == "social comparator element":
-            columns_to_keep.append(self.about_comparator.lower().replace(' ', '_'))
-
-        # Filter the dataframe to keep only the specified columns
-        self.performance_data = self.performance_data[columns_to_keep]
-
+        ## Define relevant column to keep, rename to just "comparator_level":
+        self.performance_data["comparator_level"] = 0.0     # initialize column as float
+        
+        if self.about_comparator == "peer average benchmark":
+            self.performance_data["comparator_level"] = self.performance_data["peer_average_benchmark"]*100
+        elif self.about_comparator == "peer 75th percentile benchmark":
+            self.performance_data["comparator_level"] = self.performance_data["peer_75th_percentile_benchmark"]*100
+        elif self.about_comparator == "peer 90th percentile benchmark":
+            self.performance_data["comparator_level"] = self.performance_data["peer_90th_percentile_benchmark"]*100
+        else:
+            self.performance_data["comparator_level"] = self.performance_data["MPOG_goal"] #redundant, but allows modularity increase
+        
+        # Drop columns 7-9 of current dataframe (peer average through MPOG goal)
+        self.performance_data = self.performance_data.drop(self.performance_data.columns[7:10], axis=1)
 
         ## Convert month column to datetime format for further processing:
         self.performance_data['month'] = pd.to_datetime(self.performance_data['month'])
@@ -69,11 +71,8 @@ class Pictochat():
         ## Convert performance ratio to percentage for whole column:
         self.performance_level = self.performance_data["Performance_Rate"]*100
 
-        ## Define comparator level changes for graphing:
-        self.comparator_level = self.performance_data[self.is_about_comp]*100
-
         ## Final dataframe shape:
-        # measure, month, passed_count, denominator, [X_comparator,] MPOG_goal, Performance_Rate
+        # measure, month, passed_count, denominator, MPOG_goal, Performance_Rate, comparator_level
 
 
 
@@ -81,10 +80,6 @@ class Pictochat():
     def fill_missing_months(self):
         ### Debug:
         print(f"Starting fill_missing_months...\n{self.performance_data}")
-
-        # Insert <3 months of data error catcher here?, stop this process and set generate_image to false?
-        # Could also catch error in main script
-
 
         # Sort the DataFrame by the 'month' column
         self.performance_data = self.performance_data.sort_values(by='month')
@@ -95,7 +90,7 @@ class Pictochat():
         all_months = pd.date_range(start_date, end_date, freq='MS')
 
         # Reindex the DataFrame with all months and fill missing values
-        self.performance_data = self.performance_data.set_index('month').reindex(all_months, method='ffill', fill_value=0).reset_index()
+        self.performance_data = self.performance_data.set_index('month').reindex(all_months, fill_value='0.0').reset_index()
 
         # Forward fill 'measure' and 'MPOG_goal' columns with the previous valid values
         self.performance_data['measure'].fillna(method='ffill', inplace=True)
@@ -109,7 +104,7 @@ class Pictochat():
     ### Fill template text with details for this month's precision feedback message
     def finalize_text(self):
         ## Pull the most recent month's data for generating text feedback:
-        current_comparator_percent  = self.performance_data[self.is_about_comp].iloc[-1] *100
+        current_comparator_percent  = self.performance_data["comparator_level"].iloc[-1] *100
         current_perf_percent        = self.performance_data["Performance_Rate"].iloc[-1]
         current_perf_passed         = self.performance_data["passed_count"].iloc[-1]
         current_perf_total_cases    = self.performance_data["denominator"].iloc[-1]
