@@ -1,6 +1,6 @@
 # PFP Changelog
 ## Version 0.2.0 (indev)
-**Improvement:** Rework Pictoralist (pictochat.py for dev work)
+**Improvement:** Rework Pictoralist (older version of pictoralist retained as pictoralist_V1 for testing/V&V)
 - Maintain class-based architecture, but operate procedurally
 - Implemented data cleanup function to simplify dataframe for use in pictoralist
 - Implemented gap filling function
@@ -22,11 +22,10 @@
 
 - Implemented functions to graph data
     - Needs fairly extensive testing and some further cosmetic modifications, bug fixes highly likely
-    - Documented as best as possible at 4am, may be incomplete in this commit
 
-- Implemented message output from old pictoralist
+- Implemented selected_message output building from old pictoralist, minor changes to reflect new variables
 
-- Implemented calls in main to execute successful pictoralist functionality (untested)
+- Implemented calls in main to execute successful pictoralist functionality
 
 
 ## Version 0.1.1
