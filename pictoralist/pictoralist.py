@@ -5,28 +5,27 @@ import base64
 import numpy
 import io
 
-## Notes:
-# Need to change all of these json keys to snake_case once the pipeline does so, my lord is it tedious to check cases
-
 ### All functions live inside pictoralist class (Mk II, Pictochat: text and display generator)
 class Pictoralist():
     def __init__(self, performance_dataframe, serialized_perf_df, selected_candidate, generate_image):
         ## Setup variables to process selected message
-        self.performance_data   = performance_dataframe                          # Dataframe of recipient perf data (performance_data_df)
-        self.performance_block  = str(serialized_perf_df)   # Pull un-altered performance (serialized JSON) data to append output messsage with
-        self.selected_measure   = str(selected_candidate["Measure Name"])#["measure_name"])             # Name of selected measure
-        self.sel_measure_title  = str(selected_candidate["Title"])#["title"])
-        self.template_name      = "Placeholder Template Name"#str(selected_candidate["message_template_name"])     # Template text name
-        self.display_format     = str(selected_candidate["Display"]) #["display"])
-        self.message_text       = str(selected_candidate["text"])
-        self.comparator_type    = str(selected_candidate["Comparator_Type"])#["comparator_type"])   # ["Top 25", "Top 10", "Peers", "Goal"] (Peers is peer average I believe)
-        self.acceptable_by      = str(selected_candidate["Acceptable By"])#["acceptable_by"])
-        self.staff_ID           = float(performance_dataframe["staff_number"].iloc[0])  # Preserve one instance of staff number
+        self.performance_data   = performance_dataframe                             # Dataframe of recipient perf data (performance_data_df)
+        self.performance_block  = str(serialized_perf_df)                           # Pull un-altered performance (serialized JSON) data to append output messsage with
+        self.selected_measure   = str(selected_candidate["measure_name"])           # Name of selected measure
+        self.sel_measure_title  = str(selected_candidate["measure_title"])          # Formal name of measure
+        self.template_id        = str(selected_candidate["template_id"])            # Message template ID of selected candidate message
+        self.display_format     = str(selected_candidate["display"])                # Selected display type
+        self.message_text       = str(selected_candidate["message_text"])           # Raw message template fulltext
+        self.comparator_type    = str(selected_candidate["comparator_type"])        # ["Top 25", "Top 10", "Peers", "Goal"] (Peers is peer average I believe)
+        self.acceptable_by      = str(selected_candidate["acceptable_by"])          # Causal pathway determined to be acceptible by
+        self.staff_ID           = float(performance_dataframe["staff_number"].iloc[0])  # Preserve one instance of staff number before data cleanup
+        
         ## IMPLEMENTATION NEEDED ##
+        #self.template_name      = str(selected_candidate["template_name"])  # Template text name
+            # Semantic name of message template, would be best to implement much earlier in the pipeline, carry it forward
         self.include_goal_line  = True   
             # Controllable logic flag for including goal line - declare with user preferences? (Todo)
 
-    
 
 
     # # # # # # # # # # # # Data Setup and Manipulations # # # # # # # # # # # # #
@@ -37,7 +36,7 @@ class Pictoralist():
         # staff_number, measure, month, passed_count, flagged_count, denominator, peer comparators (x3), MPOG_goal, Performance_Rate, comparator_level
 
         # Only keep rows that contain the measure of interest for this message:
-        self.performance_data = self.performance_data[self.performance_data['measure'] == self.selected_candidate['Measure Name']]
+        self.performance_data = self.performance_data[self.performance_data['measure'] == self.selected_measure]
         
         # Initialize new column of data to store only this feedback's crucial comparator levels for graphing as a float:
         self.performance_data["comparator_level"] = 0.0     # initialize column as float
@@ -273,24 +272,25 @@ class Pictoralist():
     def prepare_selected_message(self):
         candidate={}
         message={}
-        candidate["message_template"]=self.template_name
-        candidate["display"]=self.display_format
-        candidate["measure"]=self.measure_name
-        candidate["acceptable_by"]=self.acceptable_by
-        message["text_message"]=self.message_text
-        message["measure"]=self.measure_name
-        message["measure_full_title"]=self.sel_measure_title
-        message["image"]=self.base64_image
+        candidate["message_template_id"]    =self.template_id
+        #candidate["message_template_name"]  =self.template_name
+        candidate["display"]                =self.display_format
+        candidate["measure"]                =self.measure_name
+        candidate["acceptable_by"]          =self.acceptable_by
+        message["text_message"]             =self.message_text
+        message["measure"]                  =self.measure_name
+        message["measure_full_title"]       =self.sel_measure_title
+        message["image"]                    =self.base64_image
 
         full_message = {
+            "pfkb_version":'0.0.0',     # Need to soft code this
+            "pfp_version":'0.2.0 indev',    # Ditto
             "staff_number":self.staff_ID,
             "selected_candidate":candidate,
-            "performance_data":self.performance_block,
             "performance_month":performance_dataframe["month"].iloc[-1],
+            "performance_data":self.performance_block,
             "message_generated_datetime":datetime.datetime.now(),
-            "pfkb_version":'0.0.0',     # Need to soft code in the morning...
-            "pfp_version":'0.2.0 indev',    # Ditto
-            "Message":message
+            "message":message
         }
 
         return full_message

@@ -27,6 +27,11 @@
 
 - Implemented calls in main to execute successful pictoralist functionality
 
+- Changed Esteemer, Main, Pictoralist to all use snake_case in key values when necessary
+    - See pull request #122, commit hash [ffd411f](https://github.com/Display-Lab/precision-feedback-pipeline/commit/ffd411fc35ea4be24cd395dc90661260132cedd8)
+
+- Rebasing re-write to more updated Esteemer branch (development active still)
+
 
 ## Version 0.1.1
 **Patch:** Improvements to local file startup infrastructure

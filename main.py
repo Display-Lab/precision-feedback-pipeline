@@ -7,8 +7,7 @@ from bit_stomach.bit_stomach import Bit_stomach
 from candidatesmasher.candidatesmasher import CandidateSmasher
 from thinkpudding.thinkpudding import Thinkpudding
 from esteemer.esteemer import Esteemer
-#from pictoralist.pictoralist import Pictoralist
-from pictochat.pictochat import Pictochat
+from pictoralist.pictoralist import Pictoralist
 import json
 import webbrowser
 import requests
@@ -181,7 +180,7 @@ async def createprecisionfeedback(info:Request):
     measure_list=performance_data_df["measure"].drop_duplicates()
     # print(*measure_list)
     es=Esteemer(spek_tp,measure_list,preferences,history,mpm_df)
-    
+
     # # es.apply_preferences()
     # # es.apply_history()
     es.process_spek()
@@ -198,15 +197,14 @@ async def createprecisionfeedback(info:Request):
     # # # print(selected_message)
    
    
-   ## Pictoralist 2, now on the Nintendo DS:
-    if selected_message["text"]!= "No message selected":
-    # # #Runnning Pictoralist  (Pictochat version for testing/dev)
-
-        ## Set init flag for image generation based on value of env var
+    ### Pictoralist 2, now on the Nintendo DS: ###
+    if selected_message["message_text"]!= "No message selected":
+        # Set init flag for image generation based on value of env var
         generate_image = not (os.environ.get("pictoraless") == "true")
         
-        pc=Pictochat(performance_data_df, selected_message, generate_image) #initialize
-        pc.performance_data_cleanup()
+        ## Initialize and run pictoralist functions:
+        pc=Pictoralist(performance_data_df, p_df, selected_message, generate_image)
+        pc.prep_data_for_graphing()
         pc.fill_missing_months()
         pc.finalize_text()
         pc.set_timeframe()
