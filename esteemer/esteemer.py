@@ -437,7 +437,7 @@ class Esteemer():
     def get_selected_message(self):
         s_m={}
         if self.node== "No message selected":
-            s_m["text"]="No message selected"
+            s_m["message_text"]="No message selected"
             return s_m 
         else:
             s=self.node
@@ -477,20 +477,20 @@ class Esteemer():
             #             y[i]=o
             #     spek_out_dicts[s1] = y
             
-            
+            ## Format selected_candidate to return for pictoralist-ing
             for s21,p21,o21 in self.spek_tp.triples((s,p20,None)):
-                s_m["Template ID"] = o21
+                s_m["template_id"] = o21
             for s2,p2,o2 in self.spek_tp.triples((s,p1,None)):
-                s_m["text"] = o2
+                s_m["message_text"] = o2
             # for s212,p212,o212 in self.spek_tp.triples((s,p232,None)):
                
-            s_m["Display"]=random.choice(Display)
+            s_m["display"]=random.choice(Display)
             # for s9,p9,o9 in self.spek_tp.triples((s,p8,None)):
             #     s_m["Comparator Type"] = o9
             for s2we,p2we,o2we in self.spek_tp.triples((s,pwed,None)):
                 o2wea.append(o2we)
             # print(*o2wea)
-            s_m["Acceptable By"] = o2wea
+            s_m["acceptable_by"] = o2wea
 
             
             
@@ -504,27 +504,22 @@ class Esteemer():
                 s6=o5
                 print(o5)
                 for s7,p7,o7 in self.spek_tp.triples((s6,p4,None)):
-                    s_m["Measure Name"]=o7
+                    s_m["measure_name"]=o7
                     s10= BNode(o7)
                     for s11,p11,o11 in self.spek_tp.triples((s10,p10,None)):
-                        s_m["Title"]=o11
+                        s_m["measure_title"]=o11
                 for s14,p14,o14 in self.spek_tp.triples((s6,RDF.type,None)):
                     print(o14)
                     if o14==p12:
-                        s_m["Comparator_Type"]="Top 25"
+                        s_m["comparator_type"]="Top 25"
                         
                     if o14==p13:
-                        s_m["Comparator_Type"]="Top 10"
+                        s_m["comparator_type"]="Top 10"
                     if o14==p14:
-                        s_m["Comparator_Type"]="Peers"
+                        s_m["comparator_type"]="Peers"
                     if o14==p15:
-                        s_m["Comparator_Type"]="Goal"
-                
-
-            
-                  
-
-            
+                        s_m["comparator_type"]="Goal"
+                        
             return s_m
     
 # logging.critical("--score and select %s seconds ---" % (time.time() - start_time1))
