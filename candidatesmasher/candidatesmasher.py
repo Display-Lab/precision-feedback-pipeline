@@ -316,7 +316,7 @@ class CandidateSmasher:
         # self.df_merged = pd.concat([dfs, self.goal_types], ignore_index=True, sort=False)
         # self.df_merged =self.df_merged.fillna(0)
         
-        self.df_merged.to_csv("df_merged.csv")
+        # self.df_merged.to_csv("df_merged.csv")
         return self.df_merged,self.goal_types,self.df_graph,self.top_10_types,self.top_25_types
 
        
@@ -404,15 +404,15 @@ class CandidateSmasher:
         self.df = self.df.fillna(0)
         self.df = self.df.reset_index()
         
-        # if "template_type_dicts3" not in self.df.columns:
-        #     self.df['template_type_dicts3'] = 0
-        # if "template_type_dicts4" not in self.df.columns:
-        #     self.df['template_type_dicts4'] = 0
+        if "template_type_dicts3" not in self.df.columns:
+            self.df['template_type_dicts3'] = 0
+        if "template_type_dicts4" not in self.df.columns:
+            self.df['template_type_dicts4'] = 0
             
-        # if "template_type_dicts3" in self.df.columns:
-        #     self.df["template_type_dicts3"]=0
-        # if "template_type_dicts4" in self.df.columns:
-        #     self.df["template_type_dicts4"]=0
+        if "template_type_dicts3" in self.df.columns:
+            self.df["template_type_dicts3"]=0
+        if "template_type_dicts4" in self.df.columns:
+            self.df["template_type_dicts4"]=0
         self.df1=self.df.loc[self.df['template_type_dicts'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
         self.df2=self.df.loc[self.df['template_type_dicts1'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
         self.df3=self.df.loc[self.df['template_type_dicts2'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]

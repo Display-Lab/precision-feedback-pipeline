@@ -237,7 +237,8 @@ class Esteemer():
 
         
         # f.close()
-### Process MPM dict    
+
+    ### Process MPM dict    
     def process_mpm(self):
         # for col in self.mpm_df:
         #     print(col)
@@ -254,12 +255,14 @@ class Esteemer():
         self.measure_recency=dict(zip(self.mpm_df.Causal_pathway, self.mpm_df.Measure_recency))
         # for k,v in self.measure_recency.items():print(k, v)
     
+
     ### Score candidates individually
     def score(self):
         # print(*self.measure_gap_list) 
         j_new=()
         a_new=[]
         score_dict={}
+
         ## Makes candidate list, iterates through candidates
         for i in self.y:
             a_full_list=[]
