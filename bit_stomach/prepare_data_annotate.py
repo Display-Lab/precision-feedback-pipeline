@@ -111,99 +111,147 @@ class Prepare_data_annotate:
 
     def goal_trend_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = trend_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = trend_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a
+        else:
+            return self.input_graph
 
     def peer_trend_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = trend_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = trend_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a
+        else:
+            return self.input_graph
     
     def top_10_trend_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = trend_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = trend_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a
+        else:
+            return self.input_graph
 
     def top_25_trend_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = trend_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a
-
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = trend_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a
+        else:
+            return self.input_graph
     
     
     def goal_acheivement_loss_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = goal_acheivementloss_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = goal_acheivementloss_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a
+        else:
+            return self.input_graph
 
     def peer_acheivement_loss_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = peer_acheivementloss_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a  
-
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = peer_acheivementloss_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a  
+        else:
+            return self.input_graph
+        
     def top_10_acheivement_loss_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = top_10_acheivementloss_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a
-    
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = top_10_acheivementloss_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a
+        else:
+            return self.input_graph
+        
+
     def top_25_acheivement_loss_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = top_25_acheivementloss_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = top_25_acheivementloss_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a
+        else:
+            return self.input_graph
 
 
     def goalconsecutive_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = goal_consecutive_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a   
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = goal_consecutive_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a 
+        else:
+            return self.input_graph  
 
     def peerconsecutive_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = peer_consecutive_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = peer_consecutive_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a
+        else:
+            return self.input_graph
 
     def top_10consecutive_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = top_10_consecutive_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a 
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = top_10_consecutive_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a
+        else:
+            return self.input_graph 
+        
     def top_25consecutive_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = top_25_consecutive_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a 
-
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = top_25_consecutive_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a 
+        else:
+            return self.input_graph
     def goal_monotonicity_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = monotonic_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a  
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = monotonic_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a
+        else:
+            return self.input_graph  
     def peer_monotonicity_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = monotonic_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = monotonic_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a
+        else:
+            return self.input_graph
     def top_10_monotonicity_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = monotonic_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-    
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = monotonic_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a
+        else:
+            return self.input_graph
+        
     def top_25_monotonicity_annotate(self,measure_name:str,**goal1_dicts):
         measure_data1,measure_data2,comparator_bnode=self.prepare_data_measure_name(measure_name,**goal1_dicts)
-        self.a,self.s13=self.insert_annotate(self.input_graph)
-        a = monotonic_annotate(self.a,self.s13,measure_data2,comparator_bnode)
-        return a
-
+        if measure_data2.shape[0]>3:
+            self.a,self.s13=self.insert_annotate(self.input_graph)
+            a = monotonic_annotate(self.a,self.s13,measure_data2,comparator_bnode)
+            return a
+        else:
+            return self.input_graph
 
 
 
