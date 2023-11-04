@@ -237,7 +237,7 @@ class Esteemer():
 
         
         # f.close()
-### Processes MPM dict     
+### Process MPM dict    
     def process_mpm(self):
         # for col in self.mpm_df:
         #     print(col)
@@ -254,13 +254,13 @@ class Esteemer():
         self.measure_recency=dict(zip(self.mpm_df.Causal_pathway, self.mpm_df.Measure_recency))
         # for k,v in self.measure_recency.items():print(k, v)
     
-### Score individual candidates
+    ### Score candidates individually
     def score(self):
         # print(*self.measure_gap_list) 
         j_new=()
         a_new=[]
         score_dict={}
-        ## Starts creating list of candidates, looping through candidates (WIP on description lol)
+        ## Makes candidate list, iterates through candidates
         for i in self.y:
             a_full_list=[]
             b_full_list=[]
@@ -405,21 +405,21 @@ class Esteemer():
             df_b_new =pd.DataFrame(df_b["Trends"].to_list(),columns=['comp_node','Measure','Trends'])
             # print(df_a_new)
             # print(df_b_new)
-            df_merged=pd.merge(df_a_new, df_b_new, on='comp_node')
-            df_merged["score"] = df_merged['Gaps'] + df_merged['Trends'] 
+            if df_b_new.empty:
+                df_merged=df_a_new
+                df_merged["score"] = df_merged['Gaps']
+            else:
+                df_merged=pd.merge(df_a_new, df_b_new, on='comp_node')
+                df_merged["score"] = df_merged['Gaps'] + df_merged['Trends'] 
             score_list = df_merged['score'].tolist()
-            score_max = max(score_list)            # Take maximum value of list of score values
-            score_dict[i]=score_max                # Close scoring loop for a single candidate
-            for s,p,o in self.spek_tp.triples((i,URIRef("http://example.com/slowmo#name"),None)):      # serialize a node as triples by identifier i, 
-                print(f"{p}\t\t{o} \t\t Score_max value: {score_max}")
-            print("")
+            score_max = max(score_list)
+            score_dict[i]=score_max
             # print(df_merged)
             # print("\n")
         Keymax = max(zip(score_dict.values(), score_dict.keys()))[1]
         self.node=Keymax
-        for k,v in score_dict.items():print(k, v)
         return self.node,self.spek_tp
-        # 
+        # for k,v in score_dict.items():print(k, v)
     # # def select(self):
     #     self.scores=[]
     #     nodes=[]
@@ -435,11 +435,11 @@ class Esteemer():
     #         o2=URIRef("http://example.com/slowmo#selected")
     #         self.spek_tp.add((self.node,RDF.type,o2))
     #         return self.node,self.spek_tp
-### Process to 
+
     def get_selected_message(self):
         s_m={}
         if self.node== "No message selected":
-            s_m["text"]="No message selected"
+            s_m["message_text"]="No message selected"
             return s_m 
         else:
             s=self.node
@@ -449,30 +449,50 @@ class Esteemer():
             p4=URIRef("http://example.com/slowmo#RegardingMeasure")
             p8=URIRef("http://example.com/slowmo#name")
             p10= URIRef("http://purl.org/dc/terms/title")
-            p12=URIRef("http://purl.obolibrary.org/obo/IAO_0000573")
-            p13=URIRef("http://purl.obolibrary.org/obo/STATO_0000166")
+            p12=URIRef("http://purl.obolibrary.org/obo/PSDO_0000128")
+            p13=URIRef("http://purl.obolibrary.org/obo/PSDO_0000129")
+            p14=URIRef("http://purl.obolibrary.org/obo/PSDO_0000126")
+            p15=URIRef("http://purl.obolibrary.org/obo/PSDO_0000094")
             p20=URIRef("http://example.com/slowmo#AncestorTemplate")
             pqd=URIRef("http://example.com/slowmo#PerformanceGapSize")
             pqw=URIRef("http://example.com/slowmo#PerformanceTrendSlope")
+
             p232= URIRef("psdo:PerformanceSummaryDisplay")
             Display=["Text-only", "bar chart", "line graph"]
+            comparator_types=["Top 25","Top 10","Peers","Goal"]
             sw=0
             o2wea=[]
+            # spek_out_dicts={}
+            # s=URIRef("http://example.com/app#display-lab")
+            # p=URIRef("http://example.com/slowmo#HasCandidate")
+            # p1=URIRef("http://purl.obolibrary.org/obo/RO_0000091")
+            # i=0
+            # a=[]
+            # for s,p,o in spek_tp.triples( (s, p, None) ):
+            #     s1= o
+            #     y=[o for s,p,o in spek_tp.triples((s1,p1,None))]
+            #     # print(*y)
+            #     for i in range(len(y)):
+            #         s=y[i]
+            #         for s,p,o in spek_cs.triples((s,RDF.type,None)):
+            #             a.append(o)
+            #             y[i]=o
+            #     spek_out_dicts[s1] = y
             
-            
+            ## Format selected_candidate to return for pictoralist-ing
             for s21,p21,o21 in self.spek_tp.triples((s,p20,None)):
-                s_m["Template ID"] = o21
+                s_m["template_id"] = o21
             for s2,p2,o2 in self.spek_tp.triples((s,p1,None)):
-                s_m["text"] = o2
+                s_m["message_text"] = o2
             # for s212,p212,o212 in self.spek_tp.triples((s,p232,None)):
                
-            s_m["Display"]=random.choice(Display)
-            for s9,p9,o9 in self.spek_tp.triples((s,p8,None)):
-                s_m["Comparator Type"] = o9
+            s_m["display"]=random.choice(Display)
+            # for s9,p9,o9 in self.spek_tp.triples((s,p8,None)):
+            #     s_m["Comparator Type"] = o9
             for s2we,p2we,o2we in self.spek_tp.triples((s,pwed,None)):
                 o2wea.append(o2we)
             # print(*o2wea)
-            s_m["Acceptable By"] = o2wea
+            s_m["acceptable_by"] = o2wea
 
             
             
@@ -484,27 +504,24 @@ class Esteemer():
 
             for s5,p5,o5 in self.spek_tp.triples((s,p3,None)):
                 s6=o5
-                # print(o5)
+                print(o5)
                 for s7,p7,o7 in self.spek_tp.triples((s6,p4,None)):
-                    s_m["Measure Name"]=o7
+                    s_m["measure_name"]=o7
                     s10= BNode(o7)
                     for s11,p11,o11 in self.spek_tp.triples((s10,p10,None)):
-                        s_m["Title"]=o11
+                        s_m["measure_title"]=o11
                 for s14,p14,o14 in self.spek_tp.triples((s6,RDF.type,None)):
-                    #print(o14)
+                    print(o14)
                     if o14==p12:
-                        s_m["Display"]="line graph"
-                        sw=1
+                        s_m["comparator_type"]="Top 25"
+                        
                     if o14==p13:
-                        s_m["Display"]="bar chart"
-                        if sw==1:
-                            s_m["Display"]= "line graph,bar chart"
-                
+                        s_m["comparator_type"]="Top 10"
+                    if o14==p14:
+                        s_m["comparator_type"]="Peers"
+                    if o14==p15:
+                        s_m["comparator_type"]="Goal"
 
-            
-                  
-
-            
             return s_m
     
 # logging.critical("--score and select %s seconds ---" % (time.time() - start_time1))
