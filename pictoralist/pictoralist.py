@@ -104,6 +104,8 @@ class Pictoralist():
         current_perf_percent        = self.performance_data["performance_level"].iloc[-1]
         current_perf_passed         = self.performance_data["passed_count"].iloc[-1]
         current_perf_total_cases    = self.performance_data["denominator"].iloc[-1]
+        self.init_time              = datetime.datetime.now()                           # Log time when text gen starts
+
 
 
         ## Replace placeholders in the template with actual values
@@ -159,7 +161,7 @@ class Pictoralist():
     def plot_and_save(self):
         plt.tight_layout()
         #plt.show()  # Allow for spot-check of graph locally (not for production)
-        plt.savefig("cache/lastMessageDisplay.png")            # Save figure locally (redirect if saving images as part of the study I guess?)
+        plt.savefig(f"cache/display_{self.init_time}.png")            # Save figure locally (redirect if saving images as part of the study I guess?)
         s = io.BytesIO()
         plt.savefig(s, format='png', bbox_inches="tight")
         plt.close()
@@ -212,7 +214,7 @@ class Pictoralist():
         self.base64_image = self.plot_and_save()
 
  
- 
+
     ### Function to generate bar chart
     def generate_barchart(self):
         plt.figure(figsize=(10, 6))  # Create figure instance
@@ -313,7 +315,7 @@ class Pictoralist():
             "selected_candidate":candidate,
             "performance_month":self.performance_data["month"].iloc[-1],
             "performance_data":self.performance_block,
-            "message_generated_datetime":datetime.datetime.now(),
+            "message_generated_datetime":self.init_time,
             "message":message
         }
 
