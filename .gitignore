@@ -24,8 +24,6 @@ python/.vscode/settings.json
 ES.json
 cached_env_configs.zsh
 cache/cached1.png
-.DS_Store
-.DS_Store
 venv/
 PFPenv/
 *.pyc

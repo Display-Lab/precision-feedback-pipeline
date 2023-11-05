@@ -121,6 +121,14 @@ class Pictoralist():
         )
         ## Insert framework for linking to MPOG measure spec and dashboard link here if task ownership changes
 
+        ### Not for production
+        # hotfix for message templates not yet being updated to snake_case universally:
+        self.message_text = self.message_text.replace("[Measure name]",
+        f"{self.selected_measure}: {self.sel_measure_title}"
+        )
+        ### Not for production
+        #print(f"Finalized text:\n{self.message_text}")
+
 
 
     ### Logic to set display timeframe for graph generation
@@ -128,20 +136,20 @@ class Pictoralist():
         # TODO: Set up a control variable here that can control this window size and truncate further by request. 
         # Will have to leave the particulars on exactly what conditions set this logic to the team to decide on.
         self.display_timeframe = len(self.performance_data)    # Should return an integer of the size of the dataframe
-        print(f"After gap filling, dataframe has {self.display_timeframe} months to graph")
+        print(f"After gap filling, dataframe has {self.display_timeframe} months to graph") # Would love to log INFO or DEBUG level
         
         ## Error catcher for windows <3 months
         if self.display_timeframe < 3:
             self.generate_image ==  "false"     # Turn off image generation
             self.display_format == "text-only"  # Set to text-only display type
             print("Display format forced to text-only by func set_timeframe")       #Debug help
-            raise Exception(f"Display Timeframe too small!\nSomehow Esteemer has chosen a measure with only one month of data for message delivery\n\tHow did you do that?")
+            raise Exception(f"Display Timeframe too small!\nEsteemer has chosen a measure with only one month of data for message delivery\n\tHow did you do that?")
 
         ## Hardcoding a policy where bar charts should only show the last 4 months of data:
         if self.display_format == "bar chart":
             self.display_timeframe = 4
 
-        print(f"Graphing with window of {self.display_timeframe} months")
+        print(f"Graphing with window of {self.display_timeframe} months")   # Log @ DEBUG once logging handler sorted out
 
 
 
@@ -149,13 +157,9 @@ class Pictoralist():
 
     ### Modularized plotting and saving shared code for both visual display types:
     def plot_and_save(self):
-        plt.legend()    # Show legend
-        plt.grid()      # Show the graph
         plt.tight_layout()
-
-        plt.show()  # Allow for spot-check of graph locally (not for production)
-
-        plt.savefig("cache/cached1.png")            # Save figure locally (redirect if saving images as part of the study I guess?)
+        #plt.show()  # Allow for spot-check of graph locally (not for production)
+        plt.savefig("cache/lastMessageDisplay.png")            # Save figure locally (redirect if saving images as part of the study I guess?)
         s = io.BytesIO()
         plt.savefig(s, format='png', bbox_inches="tight")
         plt.close()
@@ -201,10 +205,13 @@ class Pictoralist():
             plt.annotate(f'{y:.2f}%', (x, y), textcoords="offset points",
                 xytext=(0, 10), ha='center', fontsize=8, color="#212121"
             )
+
+        plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.3), ncol=2)
         
         # Save and display the graph
         self.base64_image = self.plot_and_save()
 
+ 
  
     ### Function to generate bar chart
     def generate_barchart(self):
@@ -259,11 +266,8 @@ class Pictoralist():
         plt.xticks(x1 + bar_width / 2, last_x_months, rotation=45)
         plt.ylim(0, 100)
        
-
-        # Move the legend outside, center, and at the bottom (not working?)
+        # Format legend and grid
         plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.3), ncol=2)
-
-        # Remove the grid (also not working?)
         plt.grid(False)
 
         # Save and display the graph
@@ -293,7 +297,7 @@ class Pictoralist():
         candidate={}
         message={}
         candidate["message_template_id"]    =self.template_id
-        #candidate["message_template_name"]  =self.template_name
+        #candidate["message_template_name"]  =self.template_name        # Left for future implementation
         candidate["display"]                =self.display_format
         candidate["measure"]                =self.selected_measure
         candidate["acceptable_by"]          =self.acceptable_by
@@ -303,7 +307,7 @@ class Pictoralist():
         message["image"]                    =self.base64_image
 
         full_message = {
-            "pfkb_version":'0.0.0',     # Need to soft code this
+            "pfkb_version":'0.0.0',     # Need to soft code this so it is accurate
             "pfp_version":'0.2.0 indev',    # Ditto
             "staff_number":self.staff_ID,
             "selected_candidate":candidate,
