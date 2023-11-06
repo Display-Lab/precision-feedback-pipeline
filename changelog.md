@@ -1,6 +1,20 @@
 # PFP Changelog
-## Version 0.2.0 (indev)
-**Improvement:** Rework Pictoralist (older version of pictoralist retained as pictoralist_V1 for testing/V&V)
+This project follows [semantic versioning](https://semver.org/spec/v2.0.0.html)!
+This changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), conforming as well as possible to the guiding principles.
+
+## Version 0.2.0 [unreleased, no link]
+### Release date: (not yet)
+**Improvement:** Visual display tweaks to pictoralist ([#127](https://github.com/Display-Lab/precision-feedback-pipeline/issues/127))
+- Changed output to 1 precision float in text message
+
+**Changed:** Basesettings and environment variable infrastructure
+- Moved env vars to basesettings class of pydantic when appropriate
+    - Allows conversion of strings in dotenv to other data types like int or bool that can be passed along by basesettings class easily
+- Added args to dotenv for controlling display configuration
+
+**Removed:** Debug prints from esteemer node graph of message candidates (to comment)
+
+**Improvement:** Rework Pictoralist
 - Maintain class-based architecture, but operate procedurally
 - Implemented data cleanup function to simplify dataframe for use in pictoralist
 - Implemented gap filling function
