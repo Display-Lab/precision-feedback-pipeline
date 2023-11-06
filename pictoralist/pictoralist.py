@@ -2,12 +2,15 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import datetime
+import logging
 import base64
+import os
 import io
+## Debugging print module
+#import pprint
 
-### All functions live inside pictoralist class (Mk II, Pictochat: text and display generator)
 class Pictoralist():
-    def __init__(self, performance_dataframe, serialized_perf_df, selected_candidate, generate_image):
+    def __init__(self, performance_dataframe, serialized_perf_df, selected_candidate, settings):
         ## Setup variables to process selected message
         self.performance_data   = performance_dataframe                             # Dataframe of recipient perf data (performance_data_df)
         self.performance_block  = str(serialized_perf_df)                           # Pull un-altered performance (serialized JSON) data to append output messsage with
@@ -20,12 +23,16 @@ class Pictoralist():
         self.acceptable_by      = str(selected_candidate["acceptable_by"])          # Causal pathway determined to be acceptible by
         self.base64_image       = []                                                # Initialize as empty key to later fill image into
         self.staff_ID           = float(performance_dataframe["staff_number"].iloc[0])  # Preserve one instance of staff number before data cleanup
+
+        # Config settings from main basesettings class
+        #self.info_level         = settings.info_level
+        self.generate_image     = settings.pictoraless
+        self.display_timeframe  = settings.display_window
+        self.plot_goal_line     = settings.goal_line
         
         ## IMPLEMENTATION NEEDED ##
         #self.template_name      = str(selected_candidate["template_name"])  # Template text name
             # Semantic name of message template, would be best to implement much earlier in the pipeline, carry it forward
-        self.include_goal_line  = True   
-            # Controllable logic flag for including goal line - declare with user preferences? (Todo)
 
 
 
@@ -89,7 +96,7 @@ class Pictoralist():
 
         # Reindex the DataFrame with all months and fill missing values
         self.performance_data = self.performance_data.set_index('month').reindex(all_months, fill_value=None).reset_index()
-        self.performance_data = self.performance_data.rename(columns={'index': 'month'})    # reset col name from index to month
+        self.performance_data = self.performance_data.rename(columns={'index': 'month'})  # reset col name from index to month
 
         # Forward fill 'measure' and percent-scale version of 'MPOG_goal' columns with the previous valid values
         self.performance_data['measure'].fillna(method='ffill', inplace=True)
@@ -115,11 +122,11 @@ class Pictoralist():
         )
         # Format "[recipient performance level]":
         self.message_text = self.message_text.replace("[recipient performance level]",
-        f"{current_perf_percent}% ({current_perf_passed}/{current_perf_total_cases} cases)"
+        f"{current_perf_percent:.1f}% ({current_perf_passed}/{current_perf_total_cases} cases)"
         )
         # Format "[comparator performance level]":
         self.message_text = self.message_text.replace("[comparator performance level]", 
-        f"{current_comparator_percent}%"
+        f"{current_comparator_percent:.1f}%"
         )
         ## Insert framework for linking to MPOG measure spec and dashboard link here if task ownership changes
 
@@ -247,7 +254,7 @@ class Pictoralist():
 
 
         # If include_goal_line is True, plot the goal line
-        if self.include_goal_line:
+        if self.plot_goal_line:
             plt.hlines(y=self.performance_data['goal_percent'][-self.display_timeframe:].values, 
                xmin=0, xmax=len(last_x_months)-1, linestyle='--', color='gray', label="Goal"
             )

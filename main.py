@@ -20,12 +20,19 @@ from dotenv import load_dotenv
 global templates, pathways, measures
 load_dotenv()
 class Settings(BaseSettings):
-    # Set values to env var, when undeclared default to PFKB repo
+    # Knowledge to load on startup:                   vvv Default values below (when .env not readable or extant) vvvvvvvvvvvvvvvv
     templates: str = os.environ.get('templates',    'https://api.github.com/repos/Display-Lab/knowledge-base/contents/message_templates')
     pathways: str = os.environ.get('pathways',      'https://api.github.com/repos/Display-Lab/knowledge-base/contents/causal_pathways')
     measures: str = os.environ.get('measures',      'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/measures.json')
-    mpm: str =os.environ.get('mpm',                 'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/motivational_potential_model.csv')
-settings = Settings()   # Instance the class now for use below
+    mpm: str = os.environ.get('mpm',                'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/motivational_potential_model.csv')
+    
+    # Configuration settings
+    info_level:     str = os.environ.get('info_level', 'INFO')              # Logging level of pipeline instance (info, debug)
+    display_window: int = int(os.environ.get('display_window', '12'))       # Months to show in display
+    pictoraless:   bool = bool(int(os.environ.get('pictoraless', '0')))     # Prevent image generation when true
+    goal_line:     bool = bool(int(os.environ.get('plot_goal_line', '1')))  # Plots goal line in image if true
+
+settings = Settings()
 
 
 ### Create RDFlib graph from locally saved json files
@@ -33,6 +40,7 @@ def local_to_graph(thisDirectory, thisGraph):
     # Scrape directory, filter to only JSON files, build list of paths to the files (V2)
     print(f'Starting dir-to-list transform...')
     json_only = [entry.path for entry in os.scandir(thisDirectory) if entry.name.endswith('.json')]
+    ## inject logging statement (Info lvl) here to track what files loaded visually for testers
 
     # Iterate through list, parsing list information into RDFlib graph object
     print(f'Starting graphing process...')
@@ -191,12 +199,9 @@ async def createprecisionfeedback(info:Request):
     # # es.apply_history()
     
     ### Pictoralist 2, now on the Nintendo DS: ###
-    if selected_message["message_text"]!= "No message selected":
-        # Set init flag for image generation based on value of env var
-        generate_image = not (os.environ.get("pictoraless") == "true")
-        
-        ## Initialize and run pictoralist functions:
-        pc=Pictoralist(performance_data_df, p_df, selected_message, generate_image)
+    if selected_message["message_text"]!= "No message selected":        
+        ## Initialize and run message and display generation:
+        pc=Pictoralist(performance_data_df, p_df, selected_message, settings)
         pc.prep_data_for_graphing()
         pc.fill_missing_months()
         pc.finalize_text()

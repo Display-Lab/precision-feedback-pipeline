@@ -507,14 +507,14 @@ class Esteemer():
 
             for s5,p5,o5 in self.spek_tp.triples((s,p3,None)):
                 s6=o5
-                print(o5)
+                #print(o5)
                 for s7,p7,o7 in self.spek_tp.triples((s6,p4,None)):
                     s_m["measure_name"]=o7
                     s10= BNode(o7)
                     for s11,p11,o11 in self.spek_tp.triples((s10,p10,None)):
                         s_m["measure_title"]=o11
                 for s14,p14,o14 in self.spek_tp.triples((s6,RDF.type,None)):
-                    print(o14)
+                    #print(o14)
                     if o14==p12:
                         s_m["comparator_type"]="Top 25"
                         
