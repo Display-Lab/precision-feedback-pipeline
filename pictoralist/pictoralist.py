@@ -15,7 +15,7 @@ class Pictoralist():
         self.sel_measure_title  = str(selected_candidate["measure_title"])          # Formal name of measure
         self.template_id        = str(selected_candidate["template_id"])            # Message template ID of selected candidate message
         self.display_format     = str(selected_candidate["display"])                # Selected display type
-        self.message_text       = str(selected_candidate["message_text"])           # Raw message template fulltext
+        self.message_text       = str(selected_candidate["message_text"])           # Raw message template fulltext (sans 'Additional message text' (changed 11/6))
         self.comparator_type    = str(selected_candidate["comparator_type"])        # ["Top 25", "Top 10", "Peers", "Goal"] (Peers is peer average I believe)
         self.acceptable_by      = str(selected_candidate["acceptable_by"])          # Causal pathway determined to be acceptible by
         self.base64_image       = []                                                # Initialize as empty key to later fill image into
@@ -60,7 +60,7 @@ class Pictoralist():
             self.performance_data["comparator_level"] = self.performance_data["peer_90th_percentile_benchmark"]*100
             self.comparator_series_label = "Peer Top 10%"
 
-        # Same as above, but for goal comparator-based causal pathway messages
+        # Same as above, but for goal comparator messages
         else:
             self.performance_data["comparator_level"] = self.performance_data["MPOG_goal"]*100.0
             self.comparator_series_label = "Goal Value"
@@ -306,6 +306,7 @@ class Pictoralist():
         message["text_message"]             =self.message_text
         message["measure"]                  =self.selected_measure
         message["measure_full_title"]       =self.sel_measure_title
+        #message["message_addtl_text"]       =self.template_addtl_text  # Ditto
         message["image"]                    =self.base64_image
 
         full_message = {

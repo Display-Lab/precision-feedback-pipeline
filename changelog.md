@@ -11,7 +11,7 @@
 - Implemented generative text replacement functionality (Issue [#107](https://github.com/Display-Lab/precision-feedback-pipeline/issues/107))
     - Can use this function (finalize_text) to add links to MPOG spec and dashboard, however should probably be done on MPOG side after recieving the PFP response
         - Need to have access to dashboard link for provider, probably impossible to do in a de-identified way
-        - Need to link back to measures.json, pull the spec ID number from the key values and append to the human-accessible link as done in the vignettes (aka not fun or efficient to do this way)
+    - Have hotfixes in the pull request as of 11/5, waiting on approved merge of PFKB template patch for removal of hotfix from pictoralist
 
 - Implemented control logic for setting display timeframe
     - Currently just reports how long the window is set to display by default, and stops image generation if the data shows less than three months
@@ -27,7 +27,7 @@
 
 - Implemented calls in main to execute successful pictoralist functionality
 
-- Changed Esteemer, Main, Pictoralist to all use snake_case in key values when necessary
+- Changed Esteemer, Main, Pictoralist to all use snake_case in key values related to communicating between the three
     - See pull request #122, commit hash [ffd411f](https://github.com/Display-Lab/precision-feedback-pipeline/commit/ffd411fc35ea4be24cd395dc90661260132cedd8)
 
 ## Version 0.1.2
