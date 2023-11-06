@@ -6,10 +6,9 @@ import logging
 import base64
 import os
 import io
+## Debugging print module
+#import pprint
 
-import pprint
-
-### All functions live inside pictoralist class (Mk II, Pictochat: text and display generator)
 class Pictoralist():
     def __init__(self, performance_dataframe, serialized_perf_df, selected_candidate, settings):
         ## Setup variables to process selected message
@@ -102,18 +101,6 @@ class Pictoralist():
         # Forward fill 'measure' and percent-scale version of 'MPOG_goal' columns with the previous valid values
         self.performance_data['measure'].fillna(method='ffill', inplace=True)
         self.performance_data['goal_percent'].fillna(method='ffill', inplace=True)
-
-        # Create a new DataFrame for the series with missing months
-        missing_months = all_months.difference(self.performance_data['month'])
-        perf_projection = pd.DataFrame({'month': missing_months})
-
-        # Append the new series to your existing DataFrame
-        self.performance_data = self.performance_data.append(perf_projection, ignore_index=True)
-
-        # Sort the DataFrame by the 'month' column once again
-        self.performance_data = self.performance_data.sort_values(by='month')
-        print(f"After backfill, dataframe is:")
-        pprint.pprint(self.performance_data)
 
 
 
