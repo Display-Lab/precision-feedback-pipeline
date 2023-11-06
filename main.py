@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     mpm: str = os.environ.get('mpm',                'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/motivational_potential_model.csv')
     
     # Configuration settings
-    info_level:     str = os.environ.get('info_level', 'INFO')              # Logging level of pipeline instance (info, debug)
+    log_level:      str = os.environ.get('log_level', 'INFO')              # Logging level of pipeline instance (info, debug)
     display_window: int = int(os.environ.get('display_window', '12'))       # Months to show in display
     pictoraless:   bool = bool(int(os.environ.get('pictoraless', '0')))     # Prevent image generation when true
     goal_line:     bool = bool(int(os.environ.get('plot_goal_line', '1')))  # Plots goal line in image if true
