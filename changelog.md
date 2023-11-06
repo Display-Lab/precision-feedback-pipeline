@@ -12,6 +12,7 @@
     - Can use this function (finalize_text) to add links to MPOG spec and dashboard, however should probably be done on MPOG side after recieving the PFP response
         - Need to have access to dashboard link for provider, probably impossible to do in a de-identified way
     - Have hotfixes in the pull request as of 11/5, waiting on approved merge of PFKB template patch for removal of hotfix from pictoralist
+        - Tested successfully with update to PFKB files, hotfix removed and committed
 
 - Implemented control logic for setting display timeframe
     - Currently just reports how long the window is set to display by default, and stops image generation if the data shows less than three months

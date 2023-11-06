@@ -123,14 +123,6 @@ class Pictoralist():
         )
         ## Insert framework for linking to MPOG measure spec and dashboard link here if task ownership changes
 
-        ### Not for production
-        # hotfix for message templates not yet being updated to snake_case universally:
-        self.message_text = self.message_text.replace("[Measure name]",
-        f"{self.selected_measure}: {self.sel_measure_title}"
-        )
-        ### Not for production
-        #print(f"Finalized text:\n{self.message_text}")
-
 
 
     ### Logic to set display timeframe for graph generation
