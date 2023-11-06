@@ -5,7 +5,11 @@
       "has_moderator": ["positive_slope":"0.23","positive_gap":"0.432"]
       "display": "line graph 12-month",
       "measure": "SUS-04",
-      "acceptable_by": ["social gain", "social better"]
+      "acceptable_by": ["social gain", "social better"],
+      "comparator": {
+        "type": ["social comparator content", "peer 90th percentile benchmark"],
+        "performance_level_content": "99"
+      }
       } 
   "performance_data":[
     ["staff_number","measure","month","passed_count","flagged_count","denominator","peer_average_comparator","peer_90th_percentile_benchmark","peer_75th_percentile_benchmark", "MPOG_goal"],

@@ -1,4 +1,36 @@
 # PFP Changelog
+## Version 0.2.0 (indev)
+**Improvement:** Rework Pictoralist (older version of pictoralist retained as pictoralist_V1 for testing/V&V)
+- Maintain class-based architecture, but operate procedurally
+- Implemented data cleanup function to simplify dataframe for use in pictoralist
+- Implemented gap filling function
+    - See issue [#110](https://github.com/Display-Lab/precision-feedback-pipeline/issues/110)  
+    - Still thinking about best way to check error about < 3 months of data, could implement here and assert data length, could also implement in main.py 
+    - Above is contingent on that bug still being present in the new script, can't tell until we have 'about_comparator' and 'message_template_name' key changes made and we enter testing phase (resolve issue [#112](https://github.com/Display-Lab/precision-feedback-pipeline/issues/112) first)
+
+- Implemented generative text replacement functionality (Issue [#107](https://github.com/Display-Lab/precision-feedback-pipeline/issues/107))
+    - Can use this function (finalize_text) to add links to MPOG spec and dashboard, however should probably be done on MPOG side after recieving the PFP response
+        - Need to have access to dashboard link for provider, probably impossible to do in a de-identified way
+    - Have hotfixes in the pull request as of 11/5, waiting on approved merge of PFKB template patch for removal of hotfix from pictoralist
+        - Tested successfully with update to PFKB files, hotfix removed and committed
+
+- Implemented control logic for setting display timeframe
+    - Currently just reports how long the window is set to display by default, and stops image generation if the data shows less than three months
+    - Think that this resolves most of [#63](https://github.com/Display-Lab/precision-feedback-pipeline/issues/63)
+
+- Implemented logic to control display detials based on the type of comparator the message is about (goal/social)
+    - Requires modifications to data flowing into pictoralist, issue [#112](https://github.com/Display-Lab/precision-feedback-pipeline/issues/112) stuff
+
+- Implemented functions to graph data
+    - Needs fairly extensive testing and some further cosmetic modifications, bug fixes highly likely
+
+- Implemented selected_message output building from old pictoralist, minor changes to reflect new variables
+
+- Implemented calls in main to execute successful pictoralist functionality
+
+- Changed Esteemer, Main, Pictoralist to all use snake_case in key values related to communicating between the three
+    - See pull request #122, commit hash [ffd411f](https://github.com/Display-Lab/precision-feedback-pipeline/commit/ffd411fc35ea4be24cd395dc90661260132cedd8)
+
 ## Version 0.1.2
 **Improvement:**
 - Added input messages to the test case folder orginating from MPOG data flow
@@ -12,6 +44,7 @@
 - Added test_cases: /pathway_specific and /personas directories
     - Readmes denote structural information about the test cases, as well as expected acceptable candidates and selected candidates by measure for each input message
 - CPtests and persona tests can be automatically verified for correctness of overall output using Leakdown Tester
+
 
 ## Version 0.1.0
 **Feature:** Esteemer implemented (initial version)

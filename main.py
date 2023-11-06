@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     templates: str = os.environ.get('templates',    'https://api.github.com/repos/Display-Lab/knowledge-base/contents/message_templates')
     pathways: str = os.environ.get('pathways',      'https://api.github.com/repos/Display-Lab/knowledge-base/contents/causal_pathways')
     measures: str = os.environ.get('measures',      'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/measures.json')
-    mpm: str =os.environ.get('mpm',      'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/motivational_potential_model.csv')
+    mpm: str =os.environ.get('mpm',                 'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/motivational_potential_model.csv')
 settings = Settings()   # Instance the class now for use below
 
 
@@ -36,9 +36,9 @@ def local_to_graph(thisDirectory, thisGraph):
 
     # Iterate through list, parsing list information into RDFlib graph object
     print(f'Starting graphing process...')
-    for n in range(len(thisList)):
+    for n in range(len(json_only)):
         temp_graph = Graph()                            # Creates empty RDFlib graph
-        temp_graph.parse(thisList[n], format='json-ld') # Parse list data in JSON format
+        temp_graph.parse(json_only[n], format='json-ld') # Parse list data in JSON format
         thisGraph = thisGraph + temp_graph              # Add parsed data to graph object
     return thisGraph
 
@@ -84,7 +84,6 @@ else:
 # Set up request session as se, config to handle file URIs with FileAdapter
 print("Starting session handler...")
 se = requests.Session()
-print(se)
 se.mount('file://',FileAdapter())
 app = FastAPI()
 
@@ -144,7 +143,7 @@ async def createprecisionfeedback(info:Request):
     
     measure_details=read_graph(f3json)
     mpm=f5json
-    print(type(mpm))
+    #print(type(mpm))
     mpm_df=pd.read_csv(BytesIO(mpm))
     # print(df1)
     performer_graph=create_performer_graph(measure_details)
@@ -181,7 +180,6 @@ async def createprecisionfeedback(info:Request):
     measure_list=performance_data_df["measure"].drop_duplicates()
     # print(*measure_list)
     es=Esteemer(spek_tp,measure_list,preferences,history,mpm_df)
-    
     # # es.apply_preferences()
     # # es.apply_history()
     es.process_spek()
@@ -191,28 +189,19 @@ async def createprecisionfeedback(info:Request):
     # node,spek_es=es.select()
     selected_message=es.get_selected_message()
     # # es.apply_history()
-  
-    # selected_message=es.get_selected_message()
     
-    
-    # # # print(selected_message)
-    if selected_message["text"]!= "No message selected":
-    # # #Runnning Pictoralist
-
-        ## Set init flag for image generation based on value of env var
+    ### Pictoralist 2, now on the Nintendo DS: ###
+    if selected_message["message_text"]!= "No message selected":
+        # Set init flag for image generation based on value of env var
         generate_image = not (os.environ.get("pictoraless") == "true")
-        pc=Pictoralist(selected_message, p_df, generate_image, performance_data_df)
-        ## Process env var declaration (must be string) to determine if image generation happens
-        base64_image=pc.create_graph()
-        selected_message["image"]=base64_image
-        selected_message1=pc.prepare_selected_message()
-
-    # '<img align="left" src="data:image/png;base64,%s">' %base64_image
-    # ES=spek_es.serialize(format='json-ld', indent=4)
-    # if str(debug)=="yes":
-    #     f = open("outputs/spek_es.json", "w")
-    #     f.write(ES)
-    #     f.close()
-    # print(vignette)
+        
+        ## Initialize and run pictoralist functions:
+        pc=Pictoralist(performance_data_df, p_df, selected_message, generate_image)
+        pc.prep_data_for_graphing()
+        pc.fill_missing_months()
+        pc.finalize_text()
+        pc.set_timeframe()
+        pc.graph_controller()
+        full_selected_message   = pc.prepare_selected_message()
     
-    return selected_message1
+    return full_selected_message
