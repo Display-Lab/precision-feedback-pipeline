@@ -4,6 +4,19 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 
 ## Version 0.2.0 [unreleased, no link]
 ### Release date: (not yet)
+**Changed:** Environmental variable loading and handling with .env files
+- Seperated local and remote env files
+- Heirarchy should help keep dev changes from leaking into production
+- Really, really want to switch to a true settings.py seperation of config and build, but need approval since pilot launch upcoming
+- Use .env.local for storing your settings when running local instance, and .env.remote should remain unchanged and can stay untracked by gitignore to keep changes in dev from breaking things in the deployment(s)
+
+**Changed:** Pictoralist strategy for caching images
+- Uses slightly altered code from LDT to ensure directory before caching images
+    - safer for prod
+- Working towards infrastructure changes to maintain cache size at a reasonable level
+
+
+
 **Improvement:** Visual display tweaks to pictoralist ([#127](https://github.com/Display-Lab/precision-feedback-pipeline/issues/127))
 - Changed output to 1 precision float in text message
 - Various visual changes to line graph format

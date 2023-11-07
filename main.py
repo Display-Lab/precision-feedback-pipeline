@@ -19,8 +19,8 @@ import os
 
 global templates, pathways, measures
 config = {
-    **dotenv_values(".env.localdev")        # Loads local environment file
-    **dotenv_values(".env.prod")            # Loads remote env file for production
+    **dotenv_values(".env.local")        # Loads local testing environment file
+    **dotenv_values(".env.remote")      # Loads remote env file for production (comment line out for local testing)
     **os.environ                            # Overwrite with env vars if set some other fashion
 }
 # Not yet finished with this, need to find a way to select between which config set to pull through to basesettings
@@ -31,10 +31,10 @@ class Settings(BaseSettings):
     measures: str = os.environ.get('measures',      config['measures'])
     mpm: str = os.environ.get('mpm',                config['mpm'])
 
-    # Configuration settings
-    log_level:      str = os.environ.get('log_level',           config['INFO'])             # Logging level of pipeline instance (info, debug)
-    display_window: int = int(os.environ.get('display_window',  config['display_window']))   # Months to show in display
-    pictoraless:   bool = bool(int(os.environ.get('pictoraless',config['pictoraless'])))     # Prevent image generation when true
+    # Configuration settings (currently work-arounded... exploring better setup with decouple)
+    log_level:      str = os.environ.get('log_level',               config['INFO'])              # Logging level of pipeline instance (info, debug)
+    display_window: int = int(os.environ.get('display_window',      config['display_window']))   # Months to show in display
+    pictoraless:   bool = bool(int(os.environ.get('pictoraless',    config['pictoraless'])))     # Prevent image generation when true
     goal_line:     bool = bool(int(os.environ.get('plot_goal_line', config['plot_goal_line'])))  # Plots goal line in image if true
 settings = Settings()
 
