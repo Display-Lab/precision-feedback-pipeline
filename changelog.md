@@ -8,6 +8,7 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 - Changed output to 1 precision float in text message
 - Various visual changes to line graph format
 - Added functionality to graph data voids with thin dashed lines between continuous data per request
+- Various changes to bar chart display format
 
 **Changed:** Basesettings and environment variable infrastructure
 - Moved env vars to basesettings class of pydantic when appropriate
