@@ -8,7 +8,7 @@ from esteemer.esteemer import Esteemer
 from requests_file import FileAdapter
 from fastapi import FastAPI, Request
 from pydantic import BaseSettings
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 from io import BytesIO
 import pandas as pd
 import webbrowser
@@ -18,19 +18,24 @@ import json
 import os
 
 global templates, pathways, measures
-load_dotenv()
+config = {
+    **dotenv_values(".env.localdev")        # Loads local environment file
+    **dotenv_values(".env.prod")            # Loads remote env file for production
+    **os.environ                            # Overwrite with env vars if set some other fashion
+}
+# Not yet finished with this, need to find a way to select between which config set to pull through to basesettings
 class Settings(BaseSettings):
-    # Knowledge to load on startup:                   vvv Default values below (when .env not readable or extant) vvvvvvvvvvvvvvvv
-    templates: str = os.environ.get('templates',    'https://api.github.com/repos/Display-Lab/knowledge-base/contents/message_templates')
-    pathways: str = os.environ.get('pathways',      'https://api.github.com/repos/Display-Lab/knowledge-base/contents/causal_pathways')
-    measures: str = os.environ.get('measures',      'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/measures.json')
-    mpm: str = os.environ.get('mpm',                'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/motivational_potential_model.csv')
-    
+    # Knowledge to load on startup:                 Reads env vars first, then from env file the following keys:
+    templates: str = os.environ.get('templates',    config['templates'])
+    pathways: str = os.environ.get('pathways',      config['pathways'])
+    measures: str = os.environ.get('measures',      config['measures'])
+    mpm: str = os.environ.get('mpm',                config['mpm'])
+
     # Configuration settings
-    log_level:      str = os.environ.get('log_level', 'INFO')               # Logging level of pipeline instance (info, debug)
-    display_window: int = int(os.environ.get('display_window', '12'))       # Months to show in display
-    pictoraless:   bool = bool(int(os.environ.get('pictoraless', '0')))     # Prevent image generation when true
-    goal_line:     bool = bool(int(os.environ.get('plot_goal_line', '1')))  # Plots goal line in image if true
+    log_level:      str = os.environ.get('log_level',           config['INFO'])             # Logging level of pipeline instance (info, debug)
+    display_window: int = int(os.environ.get('display_window',  config['display_window']))   # Months to show in display
+    pictoraless:   bool = bool(int(os.environ.get('pictoraless',config['pictoraless'])))     # Prevent image generation when true
+    goal_line:     bool = bool(int(os.environ.get('plot_goal_line', config['plot_goal_line'])))  # Plots goal line in image if true
 settings = Settings()
 
 
