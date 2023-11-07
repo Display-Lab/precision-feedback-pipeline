@@ -23,7 +23,7 @@ class Pictoralist():
         self.acceptable_by      = str(selected_candidate["acceptable_by"])          # Causal pathway determined to be acceptible by
         self.base64_image       = []                                                # Initialize as empty key to later fill image into
         self.staff_ID           = performance_dataframe["staff_number"].iloc[0]     # Preserve one instance of staff number before data cleanup
-        self.ghost_frame        = None                                              # placeholder for plotting data voids
+        self.ghost_frame        = pd.DataFrame()                                    # placeholder for plotting data voids
 
         # Config settings from main basesettings class
         self.log_level          = settings.log_level
@@ -107,7 +107,7 @@ class Pictoralist():
             logging.info:(f"Data gap(s) detected, filling voids...")
             
             # Make copy of raw data for plotting beneath data gaps if display is a line graph
-            if self.display_format == "line_graph":
+            if self.display_format == "line graph":
                 self.ghost_frame = self.performance_data.loc[:, ['month', 'performance_level', 'comparator_level']]
             
             # Reindex the DataFrame with all months and fill missing values
@@ -160,12 +160,12 @@ class Pictoralist():
         ## Error catcher for windows <3 months
         if self.display_timeframe < 3:
             self.generate_image ==  "false"     # Turn off image generation
-            self.display_format == "text_only"  # Set to text-only display type
+            self.display_format == "text only"  # Set to text-only display type
             logging.warning:("Display format forced to text only by func set_timeframe")
             raise Exception(f"Display Timeframe too small\n\tHow did you do that?")
 
         ## Hardcoding a policy where bar charts should only show the last 4 months of data:
-        if self.display_format == "bar_chart":
+        if self.display_format == "bar chart":
             self.display_timeframe = 4
 
         print(f"Graphing with window of {self.display_timeframe} months")   # Log @ DEBUG once logging handler sorted out
@@ -195,7 +195,7 @@ class Pictoralist():
         x_values = self.performance_data['month'].dt.strftime("%b '%y")
         x_labels = x_values.tolist()
 
-        plt.figure(figsize=(11, 6)) # Create the plot
+        plt.figure(figsize=(11, 7)) # Create the plot
         
         # Add vertical lines for each month
         for x in x_values:
@@ -307,11 +307,11 @@ class Pictoralist():
 
     ### Graphing function control logic (modularized to allow for changes and extra display formats in the future):
     def graph_controller(self):
-        if self.display_format == "line_graph":
+        if self.display_format == "line graph":
             print(f"Generating line graph from performance data...")
             self.generate_linegraph()
         
-        elif self.display_format == "bar_chart":
+        elif self.display_format == "bar chart":
             print(f"Generating bar chart from performance data...")
             self.generate_barchart()
         

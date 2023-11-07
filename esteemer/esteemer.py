@@ -461,7 +461,7 @@ class Esteemer():
             pqw=URIRef("http://example.com/slowmo#PerformanceTrendSlope")
 
             p232= URIRef("psdo:PerformanceSummaryDisplay")
-            Display=["text_only", "bar_chart", "line_graph"]
+            Display=["text only", "bar chart", "line graph"]
             comparator_types=["Top 25","Top 10","Peers","Goal"]
             sw=0
             o2wea=[]
@@ -523,7 +523,7 @@ class Esteemer():
                         s_m["comparator_type"]="Peers"
                     if o14==p15:
                         s_m["comparator_type"]="Goal"
-
+                        
             return s_m
     
 # logging.critical("--score and select %s seconds ---" % (time.time() - start_time1))
