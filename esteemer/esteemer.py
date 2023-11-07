@@ -415,8 +415,8 @@ class Esteemer():
                 df_merged=pd.merge(df_a_new, df_b_new, on='comp_node')
                 df_merged["score"] = df_merged['Gaps'] + df_merged['Trends'] 
             score_list = df_merged['score'].tolist()
-            score_max = max(score_list)
-            score_dict[i]=score_max
+            # score_max = max(score_list)
+            score_dict[i]=score_list
             # print(df_merged)
             # print("\n")
         Keymax = max(zip(score_dict.values(), score_dict.keys()))[1]
