@@ -178,7 +178,12 @@ class Pictoralist():
     def plot_and_save(self):
         plt.tight_layout()
         #plt.show()  # Allow for spot-check of graph locally (not for production)
-        plt.savefig(f"cache/display_{self.init_time}.png")            # Save figure locally (redirect if saving images as part of the study I guess?)
+        logging.debug("RUNNING FUNCTION: 'plot_and_save'...")
+        folderName = "pictoralist_cache"
+        os.makedirs(folderName, exist_ok=True)
+        imgName = os.path.join(folderName, f"response_{self.init_time}.png")
+        
+        plt.savefig(imgName)            # Save figure locally (redirect if saving images as part of the study I guess?)
         s = io.BytesIO()
         plt.savefig(s, format='png', bbox_inches="tight")
         plt.close()
