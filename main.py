@@ -1,21 +1,21 @@
+from rdflib import Graph, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
+from candidatesmasher.candidatesmasher import CandidateSmasher
+from graph_operations import read_graph, create_performer_graph
+from thinkpudding.thinkpudding import Thinkpudding
+from bit_stomach.bit_stomach import Bit_stomach
+from pictoralist.pictoralist import Pictoralist
+from esteemer.esteemer import Esteemer
+from requests_file import FileAdapter
 from fastapi import FastAPI, Request
 from pydantic import BaseSettings
-from rdflib import Graph, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
+from dotenv import load_dotenv
+from io import BytesIO
 import pandas as pd
-from graph_operations import read_graph, create_performer_graph
-from bit_stomach.bit_stomach import Bit_stomach
-from candidatesmasher.candidatesmasher import CandidateSmasher
-from thinkpudding.thinkpudding import Thinkpudding
-from esteemer.esteemer import Esteemer
-from pictoralist.pictoralist import Pictoralist
-import json
 import webbrowser
 import requests
-from requests_file import FileAdapter
-from io import BytesIO
+import logging
+import json
 import os
-from dotenv import load_dotenv
-
 
 global templates, pathways, measures
 load_dotenv()
@@ -27,11 +27,10 @@ class Settings(BaseSettings):
     mpm: str = os.environ.get('mpm',                'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/motivational_potential_model.csv')
     
     # Configuration settings
-    info_level:     str = os.environ.get('info_level', 'INFO')              # Logging level of pipeline instance (info, debug)
+    log_level:      str = os.environ.get('log_level', 'INFO')               # Logging level of pipeline instance (info, debug)
     display_window: int = int(os.environ.get('display_window', '12'))       # Months to show in display
     pictoraless:   bool = bool(int(os.environ.get('pictoraless', '0')))     # Prevent image generation when true
     goal_line:     bool = bool(int(os.environ.get('plot_goal_line', '1')))  # Plots goal line in image if true
-
 settings = Settings()
 
 
@@ -90,7 +89,7 @@ else:
     templates       = remote_to_graph(settings.templates, template_graph)
 
 # Set up request session as se, config to handle file URIs with FileAdapter
-print("Starting session handler...")
+logging.info:("Starting session handler...")
 se = requests.Session()
 se.mount('file://',FileAdapter())
 app = FastAPI()
@@ -198,7 +197,9 @@ async def createprecisionfeedback(info:Request):
     selected_message=es.get_selected_message()
     # # es.apply_history()
     
+
     ### Pictoralist 2, now on the Nintendo DS: ###
+    logging.debug('Starting Pictoralist...')
     if selected_message["message_text"]!= "No message selected":        
         ## Initialize and run message and display generation:
         pc=Pictoralist(performance_data_df, p_df, selected_message, settings)

@@ -6,6 +6,9 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 ### Release date: (not yet)
 **Improvement:** Visual display tweaks to pictoralist ([#127](https://github.com/Display-Lab/precision-feedback-pipeline/issues/127))
 - Changed output to 1 precision float in text message
+- Various visual changes to line graph format
+- Added functionality to graph data voids with thin dashed lines between continuous data per request
+- Various changes to bar chart display format
 
 **Changed:** Basesettings and environment variable infrastructure
 - Moved env vars to basesettings class of pydantic when appropriate
@@ -14,13 +17,10 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 
 **Removed:** Debug prints from esteemer node graph of message candidates (to comment)
 
-**Improvement:** Rework Pictoralist
+**Changed:** Pictoralist (major rework)
 - Maintain class-based architecture, but operate procedurally
-- Implemented data cleanup function to simplify dataframe for use in pictoralist
+- Implemented data cleanup function to simplify dataframe for plotting
 - Implemented gap filling function
-    - See issue [#110](https://github.com/Display-Lab/precision-feedback-pipeline/issues/110)  
-    - Still thinking about best way to check error about < 3 months of data, could implement here and assert data length, could also implement in main.py 
-    - Above is contingent on that bug still being present in the new script, can't tell until we have 'about_comparator' and 'message_template_name' key changes made and we enter testing phase (resolve issue [#112](https://github.com/Display-Lab/precision-feedback-pipeline/issues/112) first)
 
 - Implemented generative text replacement functionality (Issue [#107](https://github.com/Display-Lab/precision-feedback-pipeline/issues/107))
     - Can use this function (finalize_text) to add links to MPOG spec and dashboard, however should probably be done on MPOG side after recieving the PFP response
