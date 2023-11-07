@@ -19,13 +19,14 @@ class Pictoralist():
         self.template_id        = str(selected_candidate["template_id"])            # Message template ID of selected candidate message
         self.display_format     = str(selected_candidate["display"])                # Selected display type
         self.message_text       = str(selected_candidate["message_text"])           # Raw message template fulltext (sans 'Additional message text' (changed 11/6))
-        self.comparator_type    = str(selected_candidate["comparator_type"])        # ["Top 25", "Top 10", "Peers", "Goal"] (Peers is peer average I believe)
+        self.comparator_type    = str(selected_candidate["comparator_type"])        # ["Top 25", "Top 10", "Peers", "Goal"] (Peers is peer average?)
         self.acceptable_by      = str(selected_candidate["acceptable_by"])          # Causal pathway determined to be acceptible by
         self.base64_image       = []                                                # Initialize as empty key to later fill image into
-        self.staff_ID           = float(performance_dataframe["staff_number"].iloc[0])  # Preserve one instance of staff number before data cleanup
+        self.staff_ID           = performance_dataframe["staff_number"].iloc[0]     # Preserve one instance of staff number before data cleanup
+        self.ghost_frame        = None                                              # placeholder for plotting data voids
 
         # Config settings from main basesettings class
-        #self.info_level         = settings.info_level
+        self.log_level          = settings.log_level
         self.generate_image     = settings.pictoraless
         self.display_timeframe  = settings.display_window
         self.plot_goal_line     = settings.goal_line
@@ -34,7 +35,15 @@ class Pictoralist():
         #self.template_name      = str(selected_candidate["template_name"])  # Template text name
             # Semantic name of message template, would be best to implement much earlier in the pipeline, carry it forward
 
+        ### Logging module setup ((WIP))
+        # settings.log_level must contain a string like 'INFO' or 'DEBUG'
+        log_level = getattr(logging, self.log_level, logging.INFO)
+        logging.basicConfig(level=log_level)
 
+        picto_log = logging.StreamHandler()
+        picto_log.setLevel(log_level)
+        root_logger = logging.getLogger()
+        root_logger.addHandler(picto_log)
 
     # # # # # # # # # # # # Data Setup and Manipulations # # # # # # # # # # # # #
 
@@ -84,7 +93,7 @@ class Pictoralist():
 
 
 
-    ### Fill any gaps in the dataset
+    ### Fill data voids in the dataset
     def fill_missing_months(self):
         # Sort the DataFrame by the 'month' column
         self.performance_data = self.performance_data.sort_values(by='month')
@@ -94,25 +103,25 @@ class Pictoralist():
         end_date = self.performance_data['month'].max()
         all_months = pd.date_range(start_date, end_date, freq='MS')
 
-        # Reindex the DataFrame with all months and fill missing values
-        self.performance_data = self.performance_data.set_index('month').reindex(all_months, fill_value=None).reset_index()
-        self.performance_data = self.performance_data.rename(columns={'index': 'month'})  # reset col name from index to month
+        if len(all_months) != len(self.performance_data['month']):
+            logging.info:(f"Data gap(s) detected, filling voids...")
+            
+            # Make copy of raw data for plotting beneath data gaps if display is a line graph
+            if self.display_format == "line_graph":
+                self.ghost_frame = self.performance_data.loc[:, ['month', 'performance_level', 'comparator_level']]
+                pprint.pprint(self.ghost_frame)
+            
+            # Reindex the DataFrame with all months and fill missing values
+            self.performance_data = self.performance_data.set_index('month').reindex(all_months, fill_value=None).reset_index()
+            self.performance_data = self.performance_data.rename(columns={'index': 'month'})  # reset col name from index to month
 
-        # Forward fill 'measure' and percent-scale version of 'MPOG_goal' columns with the previous valid values
-        self.performance_data['measure'].fillna(method='ffill', inplace=True)
-        self.performance_data['goal_percent'].fillna(method='ffill', inplace=True)
+            # Forward fill 'measure' and percent-scale version of 'MPOG_goal' columns with the previous valid values
+            self.performance_data['measure'].fillna(method='ffill', inplace=True)
+            self.performance_data['goal_percent'].fillna(method='ffill', inplace=True)
 
-                # Create a new DataFrame for the series with missing months
-        missing_months = all_months.difference(self.performance_data['month'])
-        perf_projection = pd.DataFrame({'month': missing_months})
 
-        # Append the new series to existing DataFrame
-        self.performance_data = self.performance_data.append(perf_projection, ignore_index=True)
-
-        # Sort the DataFrame by the 'month' column once again
-        self.performance_data = self.performance_data.sort_values(by='month')
-        print(f"After backfill, dataframe is:")
-        pprint.pprint(self.performance_data)
+            logging.debug:(f"After gap fill, dataframe is:")
+            logging.debug:(self.performance_data)
 
 
 
@@ -146,20 +155,18 @@ class Pictoralist():
 
     ### Logic to set display timeframe for graph generation
     def set_timeframe(self):
-        # TODO: Set up a control variable here that can control this window size and truncate further by request. 
-        # Will have to leave the particulars on exactly what conditions set this logic to the team to decide on.
-        self.display_timeframe = len(self.performance_data)    # Should return an integer of the size of the dataframe
-        print(f"After gap filling, dataframe has {self.display_timeframe} months to graph") # Would love to log INFO or DEBUG level
+        #self.display_timeframe = len(self.performance_data)    # Deprecated, now controlled by env var
+        logging.info:(f"Dataframe has {self.display_timeframe} months to graph") # Would love to log INFO or DEBUG level
         
         ## Error catcher for windows <3 months
         if self.display_timeframe < 3:
             self.generate_image ==  "false"     # Turn off image generation
-            self.display_format == "text-only"  # Set to text-only display type
-            print("Display format forced to text-only by func set_timeframe")       #Debug help
-            raise Exception(f"Display Timeframe too small!\nEsteemer has chosen a measure with only one month of data for message delivery\n\tHow did you do that?")
+            self.display_format == "text_only"  # Set to text-only display type
+            logging.warning:("Display format forced to text only by func set_timeframe")
+            raise Exception(f"Display Timeframe too small\n\tHow did you do that?")
 
         ## Hardcoding a policy where bar charts should only show the last 4 months of data:
-        if self.display_format == "bar chart":
+        if self.display_format == "bar_chart":
             self.display_timeframe = 4
 
         print(f"Graphing with window of {self.display_timeframe} months")   # Log @ DEBUG once logging handler sorted out
@@ -189,37 +196,46 @@ class Pictoralist():
         x_values = self.performance_data['month'].dt.strftime("%b '%y")
         x_labels = x_values.tolist()
 
-        plt.figure(figsize=(10, 6)) # Create the plot
+        plt.figure(figsize=(11, 6)) # Create the plot
         
         # Add vertical lines for each month
         for x in x_values:
             plt.axvline(x=x, color='gray', linewidth=0.3)
+
+        # Plot projections of the data if gaps are detected, change line formatting
+        if not self.ghost_frame.empty:
+            logging.debug('Plotting ghost series...')
+            plt.plot(self.ghost_frame['month'].dt.strftime("%b '%y"), self.ghost_frame['performance_level'],
+            color='#063763', linestyle='--', linewidth='1')
+            plt.plot(self.ghost_frame['month'].dt.strftime("%b '%y"), self.ghost_frame['comparator_level'],
+            color='#02b5af', linestyle='--', linewidth='0.75')
         
         # Plot performance and comparator level series
         plt.plot(x_values, self.performance_data["performance_level"], 
-            label="You", color="#063763"
+            label="You", color="#063763", linewidth=3
         )
         plt.plot(x_values, self.performance_data["comparator_level"], 
-            label=self.comparator_series_label, color="#02b5af"
+            label=self.comparator_series_label, color="#02b5af", linewidth=2
         )
         plt.xticks(rotation=45)
 
         # Set Axes and plot labels
         plt.yticks(y_values, y_labels)
-        plt.ylabel("Performance Level")
-        plt.xlabel("Time")
+        plt.ylabel("Performance Level", weight='bold')
+        plt.xlabel("Time", weight='bold')
         plt.title(f"Performance Over Time for Measure {self.selected_measure}")
 
         # Add data labels for the last three months of performance levels as 2 precision floats
         last_three_months = x_values[-3:]
         last_three_performance = self.performance_data["performance_level"][-3:]
         for x, y in zip(last_three_months, last_three_performance):
-            #if not np.isnan(x) and not np.isnan(y) and x != None and y != None:      # Only add data labels for values that exist after gap filling
+            # Adjust the xytext parameter to move the label beneath the line
             plt.annotate(f'{y:.2f}%', (x, y), textcoords="offset points",
-                xytext=(0, 10), ha='center', fontsize=8, color="#212121"
-            )
+                weight='bold', xytext=(-5, -20),  # Adjust the offset as needed
+                ha='center', fontsize=10.5, color="#063763"
+        )
 
-        plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.3), ncol=2)
+        plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.3), ncol=1)
         
         # Save and display the graph
         self.base64_image = self.plot_and_save()
@@ -291,11 +307,11 @@ class Pictoralist():
 
     ### Graphing function control logic (modularized to allow for changes and extra display formats in the future):
     def graph_controller(self):
-        if self.display_format == "line graph":
+        if self.display_format == "line_graph":
             print(f"Generating line graph from performance data...")
             self.generate_linegraph()
         
-        elif self.display_format == "bar chart":
+        elif self.display_format == "bar_chart":
             print(f"Generating bar chart from performance data...")
             self.generate_barchart()
         
