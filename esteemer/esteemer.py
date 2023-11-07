@@ -121,7 +121,7 @@ class Esteemer():
                                         # print(str(o125))
                                         gaps.append(str(o1234))
                                         gaps.append(Measure)
-                                        gaps.append(float(o125))
+                                        gaps.append(float(abs(o125)))
                                         gaps_tuples=tuple(gaps)
                                         self.measure_gap_list.append(gaps_tuples)
                     if o123 == ph3 or o123 ==ph4:
@@ -441,6 +441,7 @@ class Esteemer():
 
     def get_selected_message(self):
         s_m={}
+        a=0
         if self.node== "No message selected":
             s_m["message_text"]="No message selected"
             return s_m 
@@ -503,7 +504,7 @@ class Esteemer():
 
             
                 
-            
+            comparator_list=[]
 
             for s5,p5,o5 in self.spek_tp.triples((s,p3,None)):
                 s6=o5
@@ -516,14 +517,21 @@ class Esteemer():
                 for s14,p14,o14 in self.spek_tp.triples((s6,RDF.type,None)):
                     #print(o14)
                     if o14==p12:
-                        s_m["comparator_type"]="Top 25"                        
+                        comparator_list.append("Top 25")
+                        # s_m["comparator_type"]="Top 25"                        
                     if o14==p13:
-                        s_m["comparator_type"]="Top 10"
+                        comparator_list.append("Top 10")
+                        # s_m["comparator_type"]="Top 10"
                     if o14==p14:
-                        s_m["comparator_type"]="Peers"
+                        comparator_list.append("Peers")
+                        # s_m["comparator_type"]="Peers"
                     if o14==p15:
-                        s_m["comparator_type"]="Goal"
-                        
+                        comparator_list.append("Goal")
+                        # s_m["comparator_type"]="Goal"
+            for i in comparator_list:
+                if i is not None:
+                    a=i
+            s_m["comparator_type"]=a            
             return s_m
     
 # logging.critical("--score and select %s seconds ---" % (time.time() - start_time1))
