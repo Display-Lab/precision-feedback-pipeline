@@ -27,9 +27,10 @@ class Pictoralist():
 
         # Config settings from main basesettings class
         self.log_level          = settings.log_level
-        self.generate_image     = settings.pictoraless
+        self.generate_image     = settings.generate_image
+        self.cache_image        = settings.cache_image
         self.display_timeframe  = settings.display_window
-        self.plot_goal_line     = settings.goal_line
+        self.plot_goal_line     = settings.plot_goal_line
         
         ## IMPLEMENTATION NEEDED ##
         #self.template_name      = str(selected_candidate["template_name"])  # Template text name
@@ -159,16 +160,10 @@ class Pictoralist():
         
         ## Error catcher for windows <3 months
         if self.display_timeframe < 3:
-            self.generate_image ==  "false"     # Turn off image generation
+            self.generate_image == False        # Turn off image generation
             self.display_format == "text only"  # Set to text-only display type
             logging.warning:("Display format forced to text only by func set_timeframe")
             raise Exception(f"Display Timeframe too small\n\tHow did you do that?")
-
-        ## Hardcoding a policy where bar charts should only show the last 4 months of data:
-        if self.display_format == "bar chart":
-            self.display_timeframe = 4
-
-        print(f"Graphing with window of {self.display_timeframe} months")   # Log @ DEBUG once logging handler sorted out
 
 
 
@@ -176,17 +171,20 @@ class Pictoralist():
 
     ### Modularized plotting and saving shared code for both visual display types:
     def plot_and_save(self):
+        logging.debug("Running 'plot_and_save'...")
         plt.tight_layout()
         #plt.show()  # Allow for spot-check of graph locally (not for production)
-        logging.debug("Running 'plot_and_save'...")
         
-        # Specify cache folder name and image filename
-        folderName = "pictoralist_cache"
-        os.makedirs(folderName, exist_ok=True)
-        imgName = os.path.join(folderName, f"response_{self.init_time}.png")
+        if self.cache_image:        
+            # Specify cache folder name and image filename
+            folderName = "pictoralist_cache"
+            os.makedirs(folderName, exist_ok=True)
+            imgName = os.path.join(folderName, f"response_{self.init_time}.png")
+
+            # Save figure to cache, then save to io bytes object, convert to base64 and return
+            plt.savefig(imgName)            # Save figure locally
         
-        # Save figure to cache, then save to io bytes object, convert to base64 and return
-        plt.savefig(imgName)            # Save figure locally (redirect if saving images as part of the study I guess?)
+        # Save figure to io bytes object, encode base64, and return:
         s = io.BytesIO()
         plt.savefig(s, format='png', bbox_inches="tight")
         plt.close()
@@ -315,11 +313,11 @@ class Pictoralist():
 
     ### Graphing function control logic (modularized to allow for changes and extra display formats in the future):
     def graph_controller(self):
-        if self.display_format == "line graph":
+        if self.display_format == "line graph" and self.generate_image:
             print(f"Generating line graph from performance data...")
             self.generate_linegraph()
         
-        elif self.display_format == "bar chart":
+        elif self.display_format == "bar chart" and self.generate_image:
             print(f"Generating bar chart from performance data...")
             self.generate_barchart()
         

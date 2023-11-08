@@ -7,8 +7,7 @@ from pictoralist.pictoralist import Pictoralist
 from esteemer.esteemer import Esteemer
 from requests_file import FileAdapter
 from fastapi import FastAPI, Request
-from pydantic import BaseSettings
-from dotenv import dotenv_values
+#from pydantic import BaseSettings
 from io import BytesIO
 import pandas as pd
 import webbrowser
@@ -17,26 +16,10 @@ import logging
 import json
 import os
 
-global templates, pathways, measures
-config = {
-    **dotenv_values(".env.local")        # Loads local testing environment file
-    **dotenv_values(".env.remote")      # Loads remote env file for production (comment line out for local testing)
-    **os.environ                            # Overwrite with env vars if set some other fashion
-}
-# Not yet finished with this, need to find a way to select between which config set to pull through to basesettings
-class Settings(BaseSettings):
-    # Knowledge to load on startup:                 Reads env vars first, then from env file the following keys:
-    templates: str = os.environ.get('templates',    config['templates'])
-    pathways: str = os.environ.get('pathways',      config['pathways'])
-    measures: str = os.environ.get('measures',      config['measures'])
-    mpm: str = os.environ.get('mpm',                config['mpm'])
+from settings import settings
+import pprint
 
-    # Configuration settings (currently work-arounded... exploring better setup with decouple)
-    log_level:      str = os.environ.get('log_level',               config['INFO'])              # Logging level of pipeline instance (info, debug)
-    display_window: int = int(os.environ.get('display_window',      config['display_window']))   # Months to show in display
-    pictoraless:   bool = bool(int(os.environ.get('pictoraless',    config['pictoraless'])))     # Prevent image generation when true
-    goal_line:     bool = bool(int(os.environ.get('plot_goal_line', config['plot_goal_line'])))  # Plots goal line in image if true
-settings = Settings()
+global templates, pathways, measures
 
 
 ### Create RDFlib graph from locally saved json files

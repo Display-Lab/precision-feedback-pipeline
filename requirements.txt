@@ -4,6 +4,8 @@ matplotlib==3.6.1
 numpy==1.22.4
 pandas==1.4.3
 pydantic==1.10.7
+python-decouple==3.8
+python-dotenv==1.0.0
 rdflib==6.1.1
 rdfpandas==1.1.5
 scipy==1.9.1
@@ -16,6 +18,4 @@ watchfiles==0.17.0
 watchgod==0.8.2
 websockets==10.3
 requests-file==1.5.1
-python-git-info==0.8.3
 web-browser==0.0.1
-python-dotenv==1.0.0
