@@ -21,7 +21,7 @@ With changes to be released in V0.2.0, there are slight changes to the setup for
 ### Setting up your environment:
 Each developer should set up a local copy of the PFKB repo to avoid scraping the github repository on startup and thus avoid GitHub rate limitations when many changes are being made and auto-redeployment is enabled. Here is how to do this:
 
-1. Create .env.local
+**1. Create .env.local**  
 In your local clone of the PFP repo, create a new file named .env.local  
 Populate this file with the same fields as .env.remote, while changing the knowledge settings to point at your local copies of the relevant files in your own PFKB clone:
 ```zsh
@@ -37,12 +37,12 @@ display_window=6
 ```
 Any of the instance settings can now be changed as you wish, and your changes will not be tracked as .env.local is included in the .gitignore file. It is wise to keep a copy of this file in another location outside of your repo clone for testing fresh checkouts of the PFP repo.
 
-2. Enable development mode
+**2. Enable development mode**  
 To allow the PFP API to load using the .env.local file, enter your poetry shell or other virtual environment, and use the following command to tell the API to load your local environment specifications:
 ```zsh
 export IS_PROD=0
 ```
-
+---
 To switch back to locally testing the remote-scraping configuration, which should be done at least once before any changes are merged to main, simply revert this variable:
 ```zsh
 export IS_PROD=1
