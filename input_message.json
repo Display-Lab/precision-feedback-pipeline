@@ -105,28 +105,28 @@
           "message_instance_id":(format TBD)
         }
   },
-  "Preferences":{
-      "Utilities": {
-      "Message_Format": 
+  "preferences":{
+      "utilities": {
+      "message_format": 
         {
-          "Social gain":"12.9773039154073",
-          "Social stayed better":"6.16437763767096",
-          "Worsening":"-22.2302388558724",
-          "Improving":"3.32588337712841",
-          "Social loss":"9.9561277682732",
-          "Social stayed worse":"-7.71048464732243",
-          "Social better":"-1.61124311975164",
-          "Social worse":"-14.8679453275023",
-          "Social approach":"13.9962122952887",
-          "Goal gain":"12.9773039154073",
-          "Goal approach":"13.9962122952887"
+          "social_gain":"12.9773039154073",
+          "social_stayed_better":"6.16437763767096",
+          "worsening":"-22.2302388558724",
+          "improving":"3.32588337712841",
+          "social_loss":"9.9561277682732",
+          "social_stayed worse":"-7.71048464732243",
+          "social_better":"-1.61124311975164",
+          "social_worse":"-14.8679453275023",
+          "social_approach":"13.9962122952887",
+          "goal_gain":"12.9773039154073",
+          "goal_approach":"13.9962122952887"
         },
-      "Display_Format":
+      "display_format":
         {
-          "Bar chart": "1",
-          "Line chart": "0",
-          "Text-only": "0",
-          "System-generated":"0"
+          "bar_chart": "1",
+          "line_chart": "0",
+          "text_only": "0",
+          "system_generated":"0"
         }
     }
   }
