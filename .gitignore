@@ -7,7 +7,7 @@ doc/**/figures/*
 
 
 
-cache/*
+pictoralist_cache/*
 outputs/*
 
 
@@ -27,3 +27,4 @@ venv/
 PFPenv/
 *.pyc
 .vscode
+.env.local
