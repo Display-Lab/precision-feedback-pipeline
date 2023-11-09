@@ -1,9 +1,18 @@
 # PFP Changelog
 This project follows [semantic versioning](https://semver.org/spec/v2.0.0.html)!
 This changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), conforming as well as possible to the guiding principles.
+## [Version 0.2.1]()
+### Release date: (unreleased)
+**Changed:** Display formatting for line graphs and bar charts
+- Fixed resolution at 500x250 w/ 300 dpi
+- Adjusted scaling of visual elements to match new resolution
+- Added alpha channel to figure (testing fully transparent for email implementation)
 
-## Version 0.2.0 [unreleased, no link]
-### Release date: (not yet)
+
+
+
+## [Version 0.2.0](https://github.com/Display-Lab/precision-feedback-pipeline/releases/tag/v0.2.0)
+### Release date: 11/9/23
 **Changed:** Settings handling for builds
 - Seperated local and remote env files
     - Heirarchy should help keep dev changes from leaking into production

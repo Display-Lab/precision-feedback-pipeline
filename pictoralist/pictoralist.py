@@ -25,7 +25,6 @@ class Pictoralist():
             self.acceptable_by.append(pathway)        # Add string value of rdflib literal to list
         self.base64_image       = []                                                # Initialize as empty key to later fill image into
         self.staff_ID           = performance_dataframe["staff_number"].iloc[0]     # Preserve one instance of staff number before data cleanup
-        self.ghost_frame        = pd.DataFrame()                                    # placeholder for plotting data voids
 
         # Config settings from main basesettings class
         self.log_level          = settings.log_level
@@ -175,6 +174,7 @@ class Pictoralist():
     def plot_and_save(self):
         logging.debug("Running 'plot_and_save'...")
         plt.tight_layout()
+        plt.gca().set_alpha(0)  # Set alpha channel level to 0, full transparency of current axes
         #plt.show()  # Allow for spot-check of graph locally (not for production)
         
         if self.cache_image:        
@@ -184,11 +184,11 @@ class Pictoralist():
             imgName = os.path.join(folderName, f"response_{self.init_time}.png")
 
             # Save figure to cache, then save to io bytes object, convert to base64 and return
-            plt.savefig(imgName)            # Save figure locally
+            plt.savefig(imgName, dpi=300, bbox_inches='tight')            # Save figure locally
         
         # Save figure to io bytes object, encode base64, and return:
         s = io.BytesIO()
-        plt.savefig(s, format='png', bbox_inches="tight")
+        plt.savefig(s, format='png', dpi=300, bbox_inches="tight")
         plt.close()
         s = base64.b64encode(s.getvalue()).decode("utf-8").replace("\n", "")
         return s
@@ -202,48 +202,46 @@ class Pictoralist():
         y_labels = [str(val) + '%' for val in y_values]
         x_values = self.performance_data['month'].dt.strftime("%b '%y")
         x_labels = x_values.tolist()
-
-        plt.figure(figsize=(11, 7)) # Create the plot
+        plt.figure(figsize=(5, 2.5)) # Create the plot
         
         # Add vertical lines for each month
         for x in x_values:
             plt.axvline(x=x, color='gray', linewidth=0.3)
-
-        # Plot projections of the data if gaps are detected, change line formatting
-        if not self.ghost_frame.empty:
-            logging.debug('Plotting ghost series...')
-            plt.plot(self.ghost_frame['month'].dt.strftime("%b '%y"), self.ghost_frame['performance_level'],
-            color='#063763', linestyle='--', linewidth='1')
-            plt.plot(self.ghost_frame['month'].dt.strftime("%b '%y"), self.ghost_frame['comparator_level'],
-            color='#02b5af', linestyle='--', linewidth='0.75')
         
         # Plot performance and comparator level series
         plt.plot(x_values, self.performance_data["performance_level"], 
-            label="You", color="#063763", linewidth=3
+            label="You", color="#063763", linewidth=1.2, marker='.'
         )
         plt.plot(x_values, self.performance_data["comparator_level"], 
-            label=self.comparator_series_label, color="#02b5af", linewidth=2
+            label=self.comparator_series_label, color="#02b5af", linewidth=1.0, marker='.'
         )
-        plt.xticks(rotation=45)
+        
+        # If include_goal_line is True and comparator isn't the goal line anyway, plot the goal line
+        if self.plot_goal_line and self.comparator_series_label != 'Goal Value':
+            plt.hlines(y=self.performance_data['goal_percent'][-self.display_timeframe:].values, 
+               xmin=0, xmax=len(x_values)-1, linestyle='--', linewidth=0.35, color='black', label="Goal"
+            )
+        # Add month labels to x axis
+        plt.xticks(rotation=45, fontsize=4)
 
         # Set Axes and plot labels
-        plt.yticks(y_values, y_labels)
-        plt.ylabel("Performance Level", weight='bold')
-        plt.xlabel("Time", weight='bold')
-        plt.title(f"Performance Over Time for Measure {self.selected_measure}")
+        plt.yticks(y_values, y_labels, fontsize=4)
+        plt.ylabel("Performance Level", weight='bold', fontsize=5)
+        plt.xlabel("Time", weight='bold', fontsize=5)
+        plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold', fontsize=5)
 
         # Add data labels for the last three months of performance levels as 2 precision floats
         last_three_months = x_values[-3:]
         last_three_performance = self.performance_data["performance_level"][-3:]
         for x, y in zip(last_three_months, last_three_performance):
             # Adjust the xytext parameter to move the label beneath the line
-            plt.annotate(f'{y:.2f}%', (x, y), textcoords="offset points",
-                weight='bold', xytext=(-5, -20),  # Adjust the offset as needed
-                ha='center', fontsize=10.5, color="#063763"
+            plt.annotate(f'{y:.1f}%', (x, y), textcoords="offset points",
+                weight='bold', xytext=(0, -8),  # Adjust the offset as needed
+                ha='center', fontsize=4, color="#063763"
         )
 
-        plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.3), ncol=1)
-        
+        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=1, fontsize=4)
+
         # Save and display the graph
         self.base64_image = self.plot_and_save()
 
@@ -251,7 +249,7 @@ class Pictoralist():
 
     ### Function to generate bar chart
     def generate_barchart(self):
-        plt.figure(figsize=(11, 8))  # Create figure instance
+        plt.figure(figsize=(5, 2.5))  # Create figure instance
         bar_width = 0.45             # Arbitrary bar width, adjust to find a good ratio to the display window
         bar_spacing = 0
         
@@ -276,35 +274,37 @@ class Pictoralist():
         for x, value in zip(x1, series_1_data):
             index = int(x)  # Cast x to an integer
             if not np.isnan(value):
-                label_text = f"{value:.2f}%\n" \
+                label_text = f"{value:.1f}%\n" \
                              f"{self.performance_data['passed_count'].iloc[-self.display_timeframe + index]} / " \
                              f"{self.performance_data['denominator'].iloc[-self.display_timeframe + index]}"
-                plt.annotate(label_text, (x + bar_width/2, value + 5), ha='center', va='bottom', fontsize=10.5, color="#29a3af", 
-                xytext=(-34, -65), textcoords='offset points', weight='bold')
+                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=3.5, color="#29a3af", 
+                #xytext=(-3, -20), 
+                textcoords='offset points', weight='bold')
 
         # Add data labels for each bar in comparator levels
         for x, value in zip(x2, series_2_data):
             if not np.isnan(value):
-                label_text = f"{value:.2f}%"
-                plt.annotate(label_text, (x + bar_width/2, value + 5), ha='center', va='bottom', fontsize=10, color="#f3f0ed", 
-                xytext=(-38, -65), textcoords='offset points', weight='bold')
+                label_text = f"{value:.1f}%"
+                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=3.5, color="#f3f0ed", 
+                #xytext=(-(barwidth/2), -25), 
+                textcoords='offset points', weight='bold')
 
         # If include_goal_line is True, plot the goal line
         if self.plot_goal_line:
             plt.hlines(y=self.performance_data['goal_percent'][-self.display_timeframe:].values, 
-               xmin=0, xmax=len(last_x_months), linestyle='--', color='gray', label="Goal"
+               xmin=0, xmax=len(last_x_months), linestyle='--', color='black', label="Goal"
             )
 
         # Configure labels, titles, ticks, and limits
-        plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold')
-        plt.ylabel("Performance Level", weight='bold')
-        plt.yticks(y_values, y_labels)
-        plt.xlabel("Time", weight='bold')
-        plt.xticks(x1 + bar_width / 2, last_x_months, rotation=45)
+        plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold', fontsize=5)
+        plt.ylabel("Performance Level", weight='bold', fontsize=5)
+        plt.yticks(y_values, y_labels, fontsize=5)
+        plt.xlabel("Time", weight='bold', fontsize=5)
+        plt.xticks(x1 + bar_width / 2, last_x_months, rotation=45, fontsize=5)
         plt.ylim(0, 100)
        
         # Format legend and grid
-        plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.3), ncol=1)
+        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=1, fontsize=4)
         plt.grid(False)
 
         # Save and display the graph
