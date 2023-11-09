@@ -121,7 +121,9 @@ class Esteemer():
                                         # print(str(o125))
                                         gaps.append(str(o1234))
                                         gaps.append(Measure)
+
                                         gaps.append(float(abs(o125)))
+                                        gaps.append(float(o125))
                                         gaps_tuples=tuple(gaps)
                                         self.measure_gap_list.append(gaps_tuples)
                     if o123 == ph3 or o123 ==ph4:
@@ -262,11 +264,14 @@ class Esteemer():
         j_new=()
         a_new=[]
         score_dict={}
+        df_final = pd.DataFrame()
 
         ## Makes candidate list, iterates through candidates
         for i in self.y:
             a_full_list=[]
+            a_full_list1=[]
             b_full_list=[]
+            
             # print(i)
             s = i
             pwed = URIRef("slowmo:acceptable_by")
@@ -286,7 +291,7 @@ class Esteemer():
             for s5,p5,o5 in self.spek_tp.triples((s,p3,None)):
                 for s2we,p2we,o2we in self.spek_tp.triples((s,pwed,None)):
                     o2we=str(o2we)
-                    # print(o2we)
+                    accept_path=o2we
                     if "Gain" in str(o2we):
                         o2we= "Achievement"
                     if "better" in str(o2we):
@@ -306,8 +311,11 @@ class Esteemer():
                         #gap_multiplication
                         if o7==ph5 or o7==ph6:
                             for s7,p7,o7 in self.spek_tp.triples((s6,p4,None)):
+
                                 a=[item for item in self.measure_gap_list_new if str(o7) in item]
-                                # print(*a)
+                                # a_new = a
+                                # a_new.append(accept_path)
+                                
                                 # print("cal")
                                 for k,v in self.gap_dict.items():
                                     if k == o2we:
@@ -317,7 +325,17 @@ class Esteemer():
                                             v= float(v)
                                             j[2]=j[2]*v
                                 # a.append(i)
+                                # a_new.append(accept_path)
+                                # a.append(accept_path)
                                 a_full_list.append(a)
+
+                                a_new=a[:]
+                                a_new.append(accept_path)
+                                a_full_list1.append(a_new)
+                                # print(*a_new)
+                                # a_new.append(accept_path)
+                                # print(*a_new)
+                                # print(accept_path)
                                 # print(*a)
                             # print(*a_full_list)
                             # print("\n")
@@ -400,13 +418,33 @@ class Esteemer():
                        
             # print("outer loop")
             # print(*a_full_list)
-            df_a = pd.DataFrame(a_full_list, columns=['Gaps'])
+            # print(*a_full_list1)
+            flat_list = [item for sublist in a_full_list1 for item in sublist]
+            flat_list1=[]
+            flatlist2=[]
+            # print(*flat_list)
+            # flat_list1 = [item for sublist in flat_list for item in sublist]
+            for x in flat_list:
+                if type(x) == list:
+                    flat_list1=x[:]
+                else:
+                    flat_list1.append(x)
+                flatlist2.append(flat_list1)
+            res = []
+            [res.append(x) for x in flatlist2 if x not in res]
+            res1=[res[:]]
+            # print(*res1)
+            # print(*flatlist2)
+            # print(*a_full_list)
+            df_a = pd.DataFrame(res1, columns=['Gaps'])
+            # print(df_a.loc[[0]])
             # print(df_a)
             df_b =pd.DataFrame(b_full_list,columns=['Trends'])
             # print(df_b)
-            df_a_new=pd.DataFrame(df_a["Gaps"].to_list(), columns=['comp_node', 'Measure','Gaps'])
+            df_a_new=pd.DataFrame(df_a["Gaps"].to_list(), columns=['comp_node', 'Measure','Gaps','signed_Gaps','accept_path'])
+            # df_a_new=pd.DataFrame(df_a["accept_path"].to_list(), columns=['comp_node', 'Measure','Gaps','signed_Gaps','accept_path'])
             df_b_new =pd.DataFrame(df_b["Trends"].to_list(),columns=['comp_node','Measure','Trends'])
-            # print(df_a_new)
+            # print(df_a_new.loc[[0]])
             # print(df_b_new)
             if df_b_new.empty:
                 df_merged=df_a_new
@@ -416,11 +454,28 @@ class Esteemer():
                 df_merged["score"] = df_merged['Gaps'] + df_merged['Trends'] 
             score_list = df_merged['score'].tolist()
             # score_max = max(score_list)
+            # print(score_max)
             score_dict[i]=score_list
+            df_final = df_final.append(df_merged, ignore_index = True)
             # print(df_merged)
             # print("\n")
         Keymax = max(zip(score_dict.values(), score_dict.keys()))[1]
+        # Valuemax= max(zip(score_dict.values(), score_dict.keys()))[0]
+        index_list=[]
+        df_final1=df_final.iloc[df_final.score.argmax()]
+        if df_final1['accept_path']=="Social better":
+            # print("yes")
+            rslt_df = df_final.loc[df_final['accept_path'] == "Social better"]
+            if (rslt_df['signed_Gaps'] > 0).all():
+                result=rslt_df.groupby('accept_path')['score'].nlargest(2).droplevel(0).iloc[-1]
+            # print(result)
+                Kew=[k for k, v in score_dict.items() if result in v]
+                self.node=Kew[0]
+                return self.node,self.spek_tp
+            
+            
         self.node=Keymax
+            
         return self.node,self.spek_tp
         # for k,v in score_dict.items():print(k, v)
     # # def select(self):
@@ -442,6 +497,7 @@ class Esteemer():
     def get_selected_message(self):
         s_m={}
         a=0
+        # print(self.node)
         if self.node== "No message selected":
             s_m["message_text"]="No message selected"
             return s_m 
