@@ -5,7 +5,7 @@ import os
 
 ## Control switch for production and dev configurations
 # User specifies custom env var set to use on startup, else uses prod environment file
-envpath = os.environ.get('ENV_PATH', default='.env.remote')
+env_path = os.environ.get('ENV_PATH', default='.env.remote')
 
 # Merge env vars from selected .env to the current environment (respecting unix way):
 os.environ.update(dotenv_values(env_path))
