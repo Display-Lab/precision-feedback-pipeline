@@ -108,10 +108,6 @@ class Pictoralist():
         if len(all_months) != len(self.performance_data['month']):
             logging.info:(f"Data gap(s) detected, filling voids...")
             
-            # Make copy of raw data for plotting beneath data gaps if display is a line graph
-            if self.display_format == "line graph":
-                self.ghost_frame = self.performance_data.loc[:, ['month', 'performance_level', 'comparator_level']]
-            
             # Reindex the DataFrame with all months and fill missing values
             self.performance_data = self.performance_data.set_index('month').reindex(all_months, fill_value=None).reset_index()
             self.performance_data = self.performance_data.rename(columns={'index': 'month'})  # reset col name from index to month
@@ -277,8 +273,8 @@ class Pictoralist():
                 label_text = f"{value:.1f}%\n" \
                              f"{self.performance_data['passed_count'].iloc[-self.display_timeframe + index]} / " \
                              f"{self.performance_data['denominator'].iloc[-self.display_timeframe + index]}"
-                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=3.5, color="#29a3af", 
-                #xytext=(-3, -20), 
+                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=3.5, color="#ffffff", 
+                xytext=(-(bar_width/2), -15), 
                 textcoords='offset points', weight='bold')
 
         # Add data labels for each bar in comparator levels
@@ -286,13 +282,13 @@ class Pictoralist():
             if not np.isnan(value):
                 label_text = f"{value:.1f}%"
                 plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=3.5, color="#f3f0ed", 
-                #xytext=(-(barwidth/2), -25), 
+                xytext=(-(bar_width/2), -15), 
                 textcoords='offset points', weight='bold')
 
         # If include_goal_line is True, plot the goal line
-        if self.plot_goal_line:
+        if self.plot_goal_line and self.comparator_series_label != 'Goal Value':
             plt.hlines(y=self.performance_data['goal_percent'][-self.display_timeframe:].values, 
-               xmin=0, xmax=len(last_x_months), linestyle='--', color='black', label="Goal"
+               xmin=0, xmax=len(last_x_months), linestyle='--', color='black', label="Goal", linewidth=0.5
             )
 
         # Configure labels, titles, ticks, and limits
