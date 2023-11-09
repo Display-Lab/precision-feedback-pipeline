@@ -4,6 +4,20 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 
 ## Version 0.2.0 [unreleased, no link]
 ### Release date: (not yet)
+**Changed:** Settings handling for builds
+- Seperated local and remote env files
+    - Heirarchy should help keep dev changes from leaking into production
+    - Use a configured copy of .env.devexample for storing your settings when running local instance, and .env.remote should remain unchanged to keep changes in dev from breaking things in the deployments
+- Created 'settings.py' to handle configuration setting on startup outside main.py
+- Added python-decouple to build requirements (requirements.txt)
+- Removed python-dotenv: requirements, poetry requirements, and settings.py
+- Updated readme with information on setting up a dev .env file and configuring pipeline instances
+
+**Changed:** Pictoralist strategy for caching images
+- Uses slightly altered code from LDT to ensure directory before caching images
+    - safer for prod
+- Working towards infrastructure changes to maintain cache size at a reasonable level
+
 **Improvement:** Visual display tweaks to pictoralist ([#127](https://github.com/Display-Lab/precision-feedback-pipeline/issues/127))
 - Changed output to 1 precision float in text message
 - Various visual changes to line graph format

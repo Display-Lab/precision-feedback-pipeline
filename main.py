@@ -7,8 +7,7 @@ from pictoralist.pictoralist import Pictoralist
 from esteemer.esteemer import Esteemer
 from requests_file import FileAdapter
 from fastapi import FastAPI, Request
-from pydantic import BaseSettings
-from dotenv import load_dotenv
+from settings import settings
 from io import BytesIO
 import pandas as pd
 import webbrowser
@@ -17,21 +16,8 @@ import logging
 import json
 import os
 
+
 global templates, pathways, measures
-load_dotenv()
-class Settings(BaseSettings):
-    # Knowledge to load on startup:                   vvv Default values below (when .env not readable or extant) vvvvvvvvvvvvvvvv
-    templates: str = os.environ.get('templates',    'https://api.github.com/repos/Display-Lab/knowledge-base/contents/message_templates')
-    pathways: str = os.environ.get('pathways',      'https://api.github.com/repos/Display-Lab/knowledge-base/contents/causal_pathways')
-    measures: str = os.environ.get('measures',      'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/measures.json')
-    mpm: str = os.environ.get('mpm',                'https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/motivational_potential_model.csv')
-    
-    # Configuration settings
-    log_level:      str = os.environ.get('log_level', 'INFO')               # Logging level of pipeline instance (info, debug)
-    display_window: int = int(os.environ.get('display_window', '12'))       # Months to show in display
-    pictoraless:   bool = bool(int(os.environ.get('pictoraless', '0')))     # Prevent image generation when true
-    goal_line:     bool = bool(int(os.environ.get('plot_goal_line', '1')))  # Plots goal line in image if true
-settings = Settings()
 
 
 ### Create RDFlib graph from locally saved json files
