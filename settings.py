@@ -1,14 +1,15 @@
-from dotenv import dotenv_values
-from decouple import config
-import pprint
+from decouple import Config, RepositoryEnv, config
 import os
 
 ## Control switch for production and dev configurations
 # User specifies custom env var set to use on startup, else uses prod environment file
-env_path = os.environ.get('ENV_PATH', default='.env.remote')
+env_path = os.environ.get('ENV_PATH')
+if env_path != None:
+    print(f"ENV_PATH specified. Running from environment variables in {env_path}...")
+    config = Config(RepositoryEnv(env_path))
+else:
+    print(f"ENV_PATH not specified, running from manually set environment variables...")
 
-# Merge env vars from selected .env to the current environment (respecting unix way):
-os.environ.update(dotenv_values(env_path))
 
 ## Settings class to store decoupled instance and build settings:
 class Settings:
