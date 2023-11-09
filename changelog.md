@@ -7,9 +7,11 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 **Changed:** Settings handling for builds
 - Seperated local and remote env files
     - Heirarchy should help keep dev changes from leaking into production
-    - Use .env.local for storing your settings when running local instance, and .env.remote should remain unchanged to keep changes in dev from breaking things in the deployments
+    - Use a configured copy of .env.devexample for storing your settings when running local instance, and .env.remote should remain unchanged to keep changes in dev from breaking things in the deployments
 - Created 'settings.py' to handle configuration setting on startup outside main.py
 - Added python-decouple to build requirements (requirements.txt)
+- Removed python-dotenv: requirements, poetry requirements, and settings.py
+- Updated readme with information on setting up a dev .env file and configuring pipeline instances
 
 **Changed:** Pictoralist strategy for caching images
 - Uses slightly altered code from LDT to ensure directory before caching images

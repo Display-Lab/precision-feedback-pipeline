@@ -21,31 +21,37 @@ With changes to be released in V0.2.0, there are slight changes to the setup for
 ### Setting up your environment:
 Each developer should set up a local copy of the PFKB repo to avoid scraping the github repository on startup and thus avoid GitHub rate limitations when many changes are being made and auto-redeployment is enabled. Here is how to do this:
 
-**1. Create .env.local**  
-In your local clone of the PFP repo, create a new file named .env.local  
-Populate this file with the same fields as .env.remote, while changing the knowledge settings to point at your local copies of the relevant files in your own PFKB clone:
+**1. Create a dev .env file**  
+In whatever place you so choose, preferrably outside of the repo clone, create a new file named as you wish, and populate it with the contents of `.env.devexample` (shown below for convenience)
+Edit this file where the ellipses are to point to your local PFKB files:
 ```zsh
-templates=/Users/.../Display-Lab/knowledge-base/message_templates/  
-pathways=/Users/.../Display-Lab/knowledge-base/causal_pathways/  
-measures=file:///Users/.../Display-Lab/knowledge-base/measures.json  
-mpm=file:///Users/.../Display-Lab/knowledge-base/motivational_potential_model.csv
+templates=/Users/.../knowledge-base/message_templates/  
+pathways=/Users/.../knowledge-base/causal_pathways/  
+measures=file:///Users/.../knowledge-base/measures.json  
+mpm=file:///Users/.../knowledge-base/motivational_potential_model.csv
 log_level=DEBUG
 generate_image=1
 cache_image=1
 plot_goal_line=1
 display_window=6
 ```
-Any of the instance settings can now be changed as you wish, and your changes will not be tracked as .env.local is included in the .gitignore file. It is wise to keep a copy of this file in another location outside of your repo clone for testing fresh checkouts of the PFP repo.
+Change any of the settings as you wish in this file while working on dev changes. It is wise to keep this dev.env file in another location outside of your repo clone for testing fresh checkouts of the PFP repo.
 
 **2. Enable development mode**  
-To allow the PFP API to load using the .env.local file, enter your poetry shell or other virtual environment, and use the following command to tell the API to load your local environment specifications:
+To allow the PFP API to load using the .env.local file, enter your poetry shell or other virtual environment, and specify the path to your dev.env file as `ENV_PATH`. Example commands are below:
 ```zsh
-export IS_PROD=0
+export ENV_PATH=/path/to/devenv
+poetry run uvicorn main:app
 ```
----
-To switch back to locally testing the remote-scraping configuration, which should be done at least once before any changes are merged to main, simply revert this variable:
+You can also run things on the fly with one line commands like so:
 ```zsh
-export IS_PROD=1
+ENV_PATH=/path/to/devenv poetry run uvicorn main:app
+```
+If running from a poetry shell, the commands change to just `uvicorn main:app`.
+---
+To run the instance with the production environment config, use this command (which should be done at least once before any changes are merged to main):
+```zsh
+ENV_PATH=.env.remote poetry run uvicorn main:app
 ```
 
 Now the PFP API will report the files that it loads from GitHub in the log, verifying that you are indeed testing the API with the loading strategy that is used in production. Simple!

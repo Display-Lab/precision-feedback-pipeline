@@ -2,7 +2,7 @@ from decouple import Config, RepositoryEnv, config
 import os
 
 ## Control switch for production and dev configurations
-# User specifies custom env var set to use on startup, else uses prod environment file
+# User specifies custom env var set to use on startup, else errors out at loading 'templates'
 env_path = os.environ.get('ENV_PATH')
 if env_path != None:
     print(f"ENV_PATH specified. Running from environment variables in {env_path}...")
@@ -32,7 +32,7 @@ class Settings:
 # Instantiate
 settings = Settings()
 
-# Debug
+# Debug print (implent when logging handler sorted)
 print(f"Startup configuration for this instance:")
 for attribute in dir(settings):
     if not attribute.startswith("__"):
