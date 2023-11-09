@@ -20,7 +20,9 @@ class Pictoralist():
         self.display_format     = str(selected_candidate["display"])                # Selected display type
         self.message_text       = str(selected_candidate["message_text"])           # Raw message template fulltext (sans 'Additional message text' (changed 11/6))
         self.comparator_type    = str(selected_candidate["comparator_type"])        # ["Top 25", "Top 10", "Peers", "Goal"] (Peers is peer average?)
-        self.acceptable_by      = str(selected_candidate["acceptable_by"])          # Causal pathway determined to be acceptible by
+        self.acceptable_by      = []                                                # Causal pathway determined to be acceptible by
+        for pathway in selected_candidate["acceptable_by"]:
+            self.acceptable_by.append(pathway)        # Add string value of rdflib literal to list
         self.base64_image       = []                                                # Initialize as empty key to later fill image into
         self.staff_ID           = performance_dataframe["staff_number"].iloc[0]     # Preserve one instance of staff number before data cleanup
         self.ghost_frame        = pd.DataFrame()                                    # placeholder for plotting data voids

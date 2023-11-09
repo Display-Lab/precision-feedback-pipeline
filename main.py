@@ -7,7 +7,7 @@ from pictoralist.pictoralist import Pictoralist
 from esteemer.esteemer import Esteemer
 from requests_file import FileAdapter
 from fastapi import FastAPI, Request
-#from pydantic import BaseSettings
+from settings import settings
 from io import BytesIO
 import pandas as pd
 import webbrowser
@@ -16,8 +16,6 @@ import logging
 import json
 import os
 
-from settings import settings
-import pprint
 
 global templates, pathways, measures
 

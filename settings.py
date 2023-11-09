@@ -4,37 +4,29 @@ import pprint
 import os
 
 ## Control switch for production and dev configurations
-# Set is_prod as a boolean, developers should set env var to 0 when dev testing
-is_prod = bool(int(os.environ.get('IS_PROD', default='1')))
+# User specifies custom env var set to use on startup, else uses prod environment file
+envpath = os.environ.get('ENV_PATH', default='.env.remote')
 
-if is_prod:
-    # Load configuration that loads from remote knowledgebase
-    env = dotenv_values('.env.remote')      
-
-else:
-    # Load configuration for local knowledge startup for development
-    env = dotenv_values('.env.local')
-
-# Merge env vars from selected .env to the current environment:
-os.environ.update(env)  # Respects the unix way, CLI variable settings take precedence
+# Merge env vars from selected .env to the current environment (respecting unix way):
+os.environ.update(dotenv_values(env_path))
 
 ## Settings class to store decoupled instance and build settings:
 class Settings:
     def __init__(self):
         # Knowledge settings
-        self.templates = config('templates', cast=str, default='https://api.github.com/repos/Display-Lab/knowledge-base/contents/message_templates')
-        self.pathways  = config('pathways', cast=str, default='https://api.github.com/repos/Display-Lab/knowledge-base/contents/causal_pathways')
-        self.measures  = config('measures', cast=str, default='https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/measures.json')
-        self.mpm       = config('mpm', cast=str, default='https://raw.githubusercontent.com/Display-Lab/knowledge-base/main/motivational_potential_model.csv')
+        self.templates = config('templates', cast=str)
+        self.pathways  = config('pathways', cast=str)
+        self.measures  = config('measures', cast=str)
+        self.mpm       = config('mpm', cast=str)
 
         # Instance settings
-        self.log_level      = config('log_level', cast=str, default='INFO')    # Logging level for instance
-        self.generate_image = config('generate_image', cast=bool, default=1)   # Generate image flag (pictoraless)
-        self.cache_image    = config('cache_image', cast=bool, default=0)      # Cache generated image flag
+        self.log_level      = config('log_level', cast=str)    # Logging level for instance
+        self.generate_image = config('generate_image', cast=bool)   # Generate image flag (pictoraless)
+        self.cache_image    = config('cache_image', cast=bool)      # Cache generated image flag
 
         # Instance display settings
-        self.display_window = config('display_window', cast=int, default=6)
-        self.plot_goal_line = config('plot_goal_line', cast=bool, default=1)
+        self.display_window = config('display_window', cast=int)
+        self.plot_goal_line = config('plot_goal_line', cast=bool)
 
 # Instantiate
 settings = Settings()
