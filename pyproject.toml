@@ -18,6 +18,7 @@ matplotlib = "3.6.1"
 numpy = "1.23.2"
 requests_file = "1.5.1"
 python-decouple = "^3.8"
+loguru = "^0.7.2"
 
 [tool.poetry.dev-dependencies]
 uvicorn = "^0.20.0"
