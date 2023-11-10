@@ -1,6 +1,11 @@
 # PFP Changelog
 This project follows [semantic versioning](https://semver.org/spec/v2.0.0.html)!
 This changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), conforming as well as possible to the guiding principles.
+## [Version 0.2.1]()
+### Release date: (unreleased)
+**Changed:** 
+**Improvement** Rank candidates for social comparators based on highest comparator performance level
+- When Esteemer finds more than one candidate to be acceptable by social better, select the candidate with the highest comparator performance level
 
 ## Version 0.2.0 [unreleased, no link]
 ### Release date: (not yet)
