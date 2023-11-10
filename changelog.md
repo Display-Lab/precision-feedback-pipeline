@@ -8,8 +8,8 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 - Adjusted scaling of visual elements to match new resolution
 - Added alpha channel to figure (testing fully transparent for email implementation)
 
-
-
+**Improvement** Rank candidates for social comparators based on highest comparator performance level
+- When Esteemer finds more than one candidate to be acceptable by social better, select the candidate with the highest comparator performance level
 
 ## [Version 0.2.0](https://github.com/Display-Lab/precision-feedback-pipeline/releases/tag/v0.2.0)
 ### Release date: 11/9/23
