@@ -10,7 +10,7 @@ import io
 import pprint
 
 class Pictoralist():
-    def __init__(self, performance_dataframe, serialized_perf_df, selected_candidate, settings):
+    def __init__(self, performance_dataframe, serialized_perf_df, selected_candidate, settings, message_instance_id):
         ## Setup variables to process selected message
         self.performance_data   = performance_dataframe                             # Dataframe of recipient perf data (performance_data_df)
         self.performance_block  = str(serialized_perf_df)                           # Pull un-altered performance (serialized JSON) data to append output messsage with
@@ -23,6 +23,7 @@ class Pictoralist():
         self.acceptable_by      = []                                                # Causal pathway determined to be acceptible by
         for pathway in selected_candidate["acceptable_by"]:
             self.acceptable_by.append(pathway)        # Add string value of rdflib literal to list
+        self.message_instance_id= message_instance_id
         self.base64_image       = []                                                # Initialize as empty key to later fill image into
         self.staff_ID           = performance_dataframe["staff_number"].iloc[0]     # Preserve one instance of staff number before data cleanup
 
@@ -342,7 +343,7 @@ class Pictoralist():
 
         full_message = {
             "pfkb_version":'0.0.0',     # Need to soft code this so it is accurate
-            "pfp_version":'0.2.0 indev',    # Ditto
+            "pfp_version":'0.2.1 indev',    # Ditto
             "staff_number":self.staff_ID,
             "selected_candidate":candidate,
             "performance_month":self.performance_data["month"].iloc[-1],
@@ -350,5 +351,8 @@ class Pictoralist():
             "message_generated_datetime":self.init_time,
             "message":message
         }
+        if self.message_instance_id != None:
+            full_message['message_instance_id']=self.message_instance_id
+
 
         return full_message
