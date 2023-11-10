@@ -12,6 +12,50 @@ Read through our [wiki pages](https://github.com/Display-Lab/precision-feedback-
 - Testing with Google Cloud? See [this page](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-with-Google-Cloud) for instructions.
      - Make sure you have Google Chrome installed
      - Check the wiki page for instructions on installing and using the Postman Interceptor plugin.
+
+
+## For Developers
+### Local instance testing
+With changes to be released in V0.2.0, there are slight changes to the setup for testing a local API instance. 
+
+### Setting up your environment:
+Each developer should set up a local copy of the PFKB repo to avoid scraping the github repository on startup and thus avoid GitHub rate limitations when many changes are being made and auto-redeployment is enabled. Here is how to do this:
+
+**1. Create a dev .env file**  
+In whatever place you so choose, preferrably outside of the repo clone, create a new file named as you wish, and populate it with the contents of `.env.devexample` (shown below for convenience)
+Edit this file where the ellipses are to point to your local PFKB files:
+```zsh
+templates=/Users/.../knowledge-base/message_templates/  
+pathways=/Users/.../knowledge-base/causal_pathways/  
+measures=file:///Users/.../knowledge-base/measures.json  
+mpm=file:///Users/.../knowledge-base/motivational_potential_model.csv
+log_level=DEBUG
+generate_image=1
+cache_image=1
+plot_goal_line=1
+display_window=6
+```
+Change any of the settings as you wish in this file while working on dev changes. It is wise to keep this dev.env file in another location outside of your repo clone for testing fresh checkouts of the PFP repo.
+
+**2. Enable development mode**  
+To allow the PFP API to load using the .env.local file, enter your poetry shell or other virtual environment, and specify the path to your dev.env file as `ENV_PATH`. Example commands are below:
+```zsh
+export ENV_PATH=/path/to/devenv
+poetry run uvicorn main:app
+```
+You can also run things on the fly with one line commands like so:
+```zsh
+ENV_PATH=/path/to/devenv poetry run uvicorn main:app
+```
+If running from a poetry shell, the commands change to just `uvicorn main:app`.
+---
+To run the instance with the production environment config, use this command (which should be done at least once before any changes are merged to main):
+```zsh
+ENV_PATH=.env.remote poetry run uvicorn main:app
+```
+
+Now the PFP API will report the files that it loads from GitHub in the log, verifying that you are indeed testing the API with the loading strategy that is used in production. Simple!
+
 <!--
 To test the pipeline hosted in heroku:
 1. Download, postman app from ```https://www.postman.com/downloads/``` and install it.

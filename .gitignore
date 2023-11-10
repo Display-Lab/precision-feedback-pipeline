@@ -7,13 +7,14 @@ doc/**/figures/*
 
 
 
-cache/*
+pictoralist_cache/*
 outputs/*
 
 
 /.idea/
 .DS_Store
 *.DS_Store
+.env.local
 
 *.csv
 **/bin/__pycache__/
@@ -22,10 +23,8 @@ python/.vscode/settings.json
 **/__pycache__/
 .python-version
 ES.json
-cached_env_configs.zsh
-cache/cached1.png
 venv/
 PFPenv/
 *.pyc
 .vscode
-.env
+.env.local
