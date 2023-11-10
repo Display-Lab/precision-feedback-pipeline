@@ -127,6 +127,8 @@ async def createprecisionfeedback(info:Request):
     history=req_info1["History"]
     del req_info1["History"]
     preferences=req_info1["Preferences"]
+    ## Pass message instance ID from input message through to pictoralist
+    message_instance_id=req_info1.get("message_instance_id")
     del req_info1["Preferences"]
     input_message=read_graph(req_info1)
     measure_details= Graph()
@@ -188,7 +190,7 @@ async def createprecisionfeedback(info:Request):
     logging.debug('Starting Pictoralist...')
     if selected_message["message_text"]!= "No message selected":        
         ## Initialize and run message and display generation:
-        pc=Pictoralist(performance_data_df, p_df, selected_message, settings)
+        pc=Pictoralist(performance_data_df, p_df, selected_message, settings, message_instance_id)
         pc.prep_data_for_graphing()
         pc.fill_missing_months()
         pc.finalize_text()
