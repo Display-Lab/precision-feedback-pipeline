@@ -46,7 +46,8 @@ poetry run uvicorn main:app
 You can also run things on the fly with one line commands like so:
 ```zsh
 ENV_PATH=/path/to/devenv poetry run uvicorn main:app
-```
+```  
+
 If running from a poetry shell, the commands change to just `uvicorn main:app`.
 ---
 To run the instance with the production environment config, use this command (which should be done at least once before any changes are merged to main):
