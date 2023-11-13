@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from datetime import datetime
 import pandas as pd
 import numpy as np
 import datetime
@@ -38,15 +39,6 @@ class Pictoralist():
         #self.template_name      = str(selected_candidate["template_name"])  # Template text name
             # Semantic name of message template, would be best to implement much earlier in the pipeline, carry it forward
 
-        ### Logging module setup ((WIP))
-        # settings.log_level must contain a string like 'INFO' or 'DEBUG'
-        log_level = getattr(logging, self.log_level, logging.INFO)
-        logging.basicConfig(level=log_level)
-
-        picto_log = logging.StreamHandler()
-        picto_log.setLevel(log_level)
-        root_logger = logging.getLogger()
-        root_logger.addHandler(picto_log)
 
     # # # # # # # # # # # # Data Setup and Manipulations # # # # # # # # # # # # #
 
@@ -197,7 +189,7 @@ class Pictoralist():
         # Define the axes, values, and their labels
         y_values = np.arange(0, 101, 20)
         y_labels = [str(val) + '%' for val in y_values]
-        x_values = self.performance_data['month'].dt.strftime("%b '%y")
+        x_values = self.performance_data['month'][-self.display_timeframe:].dt.strftime("%b '%y")
         x_labels = x_values.tolist()
         plt.figure(figsize=(5, 2.5)) # Create the plot
 
@@ -218,7 +210,7 @@ class Pictoralist():
         )
         
         # Add month labels to x axis
-        plt.xticks(rotation=45, fontsize=7)
+        plt.xticks(fontsize=7)
 
         # Set Axes and plot labels
         plt.yticks(y_values, y_labels, fontsize=7)
@@ -230,17 +222,19 @@ class Pictoralist():
         # Add data labels for the last three months of performance levels as 2 precision floats
         last_three_months = x_values[-3:]
         last_three_performance = self.performance_data["performance_level"][-3:]
-        for x, y in zip(last_three_months, last_three_performance):
-            label_text = f"{value:.1f}%\n" \
-                             f"{self.performance_data['passed_count'].iloc[-self.display_timeframe + index]} / " \
-                             f"{self.performance_data['denominator'].iloc[-self.display_timeframe + index]}"
-            # Adjust the xytext parameter to move the label beneath the line
-            plt.annotate(label_text, (x, y), textcoords="offset points",
-                weight='bold', xytext=(0, -8),  # Adjust the offset as needed
-                ha='center', fontsize=6, color="#063763"
-        )
+        last_three_passed = self.performance_data["passed_count"][-3:]
+        last_three_denom = self.performance_data["denominator"][-3:]
 
-        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=2, fontsize=6, frameon=False)
+        for month, performance, passed, denom in zip(last_three_months, last_three_performance, last_three_passed, last_three_denom):
+            label_text = f"{performance:.0f}%\n{passed} / {denom}"
+
+            # Adjust the xytext parameter to move the label beneath the line
+            plt.annotate(label_text, (month, performance), textcoords="offset points",
+                         weight='bold', xytext=(0, -18),  # Adjust the offset as needed
+                         ha='center', fontsize=5, color="#063763"
+            )
+
+        plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.3), ncol=2, fontsize=6, frameon=False)
 
         # Save and display the graph
         self.base64_image = self.plot_and_save()
@@ -274,19 +268,19 @@ class Pictoralist():
         for x, value in zip(x1, perf_series):
             index = int(x)  # Cast x to an integer
             if not np.isnan(value):
-                label_text = f"{value:.1f}%\n" \
+                label_text = f"{value:.0f}%\n" \
                              f"{self.performance_data['passed_count'].iloc[-self.display_timeframe + index]} / " \
                              f"{self.performance_data['denominator'].iloc[-self.display_timeframe + index]}"
-                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=5.5, color="#ffffff", 
-                xytext=(-(bar_width/2), -15), 
+                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=4.5, color="#ffffff", 
+                xytext=(-(bar_width/2), -40), 
                 textcoords='offset points', weight='bold')
 
         # Add data labels for each bar in comparator levels
         for x, value in zip(x2, comp_series):
             if not np.isnan(value):
                 label_text = f"{value:.1f}%"
-                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=5.5, color="#f3f0ed", 
-                xytext=(-(bar_width/2), -15), 
+                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=5, color="#f3f0ed", 
+                xytext=(-(bar_width/2), -40), 
                 textcoords='offset points', weight='bold')
 
         # If include_goal_line is True, plot the goal line
@@ -304,7 +298,7 @@ class Pictoralist():
         plt.ylim(0, 100)
        
         # Format legend and grid
-        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=3, fontsize=6, frameon=False)
+        plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.3), ncol=3, fontsize=6, frameon=False)
         plt.grid(False)
 
         # Save and display the graph
