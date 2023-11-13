@@ -1,15 +1,21 @@
 import matplotlib.pyplot as plt
+from loguru import logger
 import pandas as pd
 import numpy as np
 import datetime
-import logging
 import base64
+import sys
 import os
 import io
+
+## Logging setup
+logger.remove()
+logger.add(sys.stdout, colorize=True, format="{level} | {message}")
 
 class Pictoralist():
     def __init__(self, performance_dataframe, serialized_perf_df, selected_candidate, settings, message_instance_id):
         ## Setup variables to process selected message
+        # Needs cleanup to stop redundant var declaration (those passed directly to prepare_selected_message)
         self.performance_data   = performance_dataframe                             # Dataframe of recipient perf data (performance_data_df)
         self.performance_block  = str(serialized_perf_df)                           # Pull un-altered performance (serialized JSON) data to append output messsage with
         self.selected_measure   = str(selected_candidate["measure_name"])           # Name of selected measure
@@ -96,7 +102,7 @@ class Pictoralist():
         all_months = pd.date_range(start_date, end_date, freq='MS')
 
         if len(all_months) != len(self.performance_data['month']):
-            logging.info:(f"Data gap(s) detected, filling voids...")
+            logger.info(f"Data gap(s) detected, filling voids...")
             
             # Reindex the DataFrame with all months and fill missing values
             self.performance_data = self.performance_data.set_index('month').reindex(all_months, fill_value=None).reset_index()
@@ -107,8 +113,8 @@ class Pictoralist():
             self.performance_data['goal_percent'].fillna(method='ffill', inplace=True)
 
 
-            logging.debug:(f"After gap fill, dataframe is:")
-            logging.debug:(self.performance_data)
+            logger.debug(f"After gap fill, dataframe is:")
+            logger.debug(f'\n{self.performance_data}')
 
 
 
@@ -143,14 +149,14 @@ class Pictoralist():
     ### Logic to set display timeframe for graph generation
     def set_timeframe(self):
         #self.display_timeframe = len(self.performance_data)    # Deprecated, now controlled by env var
-        logging.info:(f"Dataframe has {self.display_timeframe} months to graph") # Would love to log INFO or DEBUG level
+        logger.debug(f"Dataframe has {self.display_timeframe} months to graph") # Would love to log INFO or DEBUG level
         
         ## Error catcher for windows <3 months
         if self.display_timeframe < 3:
             self.generate_image == False        # Turn off image generation
             self.display_format == "text only"  # Set to text-only display type
-            logging.warning:("Display format forced to text only by func set_timeframe")
-            raise Exception(f"Display Timeframe too small\n\tHow did you do that?")
+            logger.warning("Display format forced to text only by func set_timeframe")
+            raise Exception(f"Display Timeframe too small")
 
 
 
@@ -158,7 +164,7 @@ class Pictoralist():
 
     ### Modularized plotting and saving shared code for both visual display types:
     def plot_and_save(self):
-        logging.debug("Running 'plot_and_save'...")
+        logger.debug("Running 'plot_and_save'...")
         plt.tight_layout()
         plt.gca().set_alpha(0)  # Set alpha channel level to 0, full transparency of current axes
         #plt.show()  # Allow for spot-check of graph locally (not for production)
@@ -307,21 +313,22 @@ class Pictoralist():
     ### Graphing function control logic (modularized to allow for changes and extra display formats in the future):
     def graph_controller(self):
         if self.display_format == "line graph" and self.generate_image:
-            print(f"Generating line graph from performance data...")
+            logger.info(f"Generating line graph from performance data...")
             self.generate_linegraph()
         
         elif self.display_format == "bar chart" and self.generate_image:
-            print(f"Generating bar chart from performance data...")
+            logger.info(f"Generating bar chart from performance data...")
             self.generate_barchart()
         
         else:
-            print(f"Generating text only feedback message, graphing skipped...")
+            logger.info(f"Generating text only feedback message, graphing skipped...")
 
 
 
 
     ### Prepare selected message as done previously for LDT continuity:
     def prepare_selected_message(self):
+        logger.debug(f"Running pictoralist/prepare_selected_message...")
         candidate={}
         message={}
         candidate["message_template_id"]    =self.template_id
