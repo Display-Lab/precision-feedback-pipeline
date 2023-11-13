@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-from datetime import datetime
 import pandas as pd
 import numpy as np
 import datetime
@@ -7,8 +6,6 @@ import logging
 import base64
 import os
 import io
-## Debugging print module
-import pprint
 
 class Pictoralist():
     def __init__(self, performance_dataframe, serialized_perf_df, selected_candidate, settings, message_instance_id):
