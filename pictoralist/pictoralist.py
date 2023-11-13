@@ -200,17 +200,21 @@ class Pictoralist():
         x_values = self.performance_data['month'].dt.strftime("%b '%y")
         x_labels = x_values.tolist()
         plt.figure(figsize=(5, 2.5)) # Create the plot
+
+        # Restrict graph to timeframe specified by set_timeframe()
+        perf_series = self.performance_data["performance_level"][-self.display_timeframe:]
+        comp_series = self.performance_data["comparator_level"][-self.display_timeframe:]
         
         # Add vertical lines for each month
         for x in x_values:
             plt.axvline(x=x, color='gray', linewidth=0.3)
         
         # Plot performance and comparator level series
-        plt.plot(x_values, self.performance_data["performance_level"], 
-            label="You", color="#063763", linewidth=1.2, marker='.'
+        plt.plot(x_values, perf_series, label="You", 
+            color="#063763", linewidth=1.2, marker='.'
         )
-        plt.plot(x_values, self.performance_data["comparator_level"], 
-            label=self.comparator_series_label, color="#02b5af", linewidth=1.0, marker='.'
+        plt.plot(x_values, comp_series, label=self.comparator_series_label, 
+            color="#02b5af", linewidth=1.0, marker='.'
         )
         
         # Add month labels to x axis
@@ -218,9 +222,9 @@ class Pictoralist():
 
         # Set Axes and plot labels
         plt.yticks(y_values, y_labels, fontsize=4)
-        plt.ylabel("Performance Level", weight='bold', fontsize=5)
-        plt.xlabel("Time", weight='bold', fontsize=5)
-        plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold', fontsize=5)
+        #plt.ylabel("Performance Level", weight='bold', fontsize=5)
+        #plt.xlabel("Time", weight='bold', fontsize=5)
+        #plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold', fontsize=5) # Requested removal, may implement again in debug for spot checking images
 
         # Add data labels for the last three months of performance levels as 2 precision floats
         last_three_months = x_values[-3:]
@@ -232,7 +236,7 @@ class Pictoralist():
                 ha='center', fontsize=4, color="#063763"
         )
 
-        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=1, fontsize=4)
+        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=2, fontsize=4)
 
         # Save and display the graph
         self.base64_image = self.plot_and_save()
@@ -253,17 +257,17 @@ class Pictoralist():
 
         # Create bars for the timeframe specified by set_timeframe()
         last_x_months = x_values[-self.display_timeframe:]
-        series_1_data = self.performance_data["performance_level"][-self.display_timeframe:]
-        series_2_data = self.performance_data["comparator_level"][-self.display_timeframe:]
+        perf_series = self.performance_data["performance_level"][-self.display_timeframe:]
+        comp_series = self.performance_data["comparator_level"][-self.display_timeframe:]
 
         # Plot the bars for both data series
         x1 = np.arange(len(last_x_months)) + bar_width/2    # position for first bar
         x2 = [x + bar_width + bar_spacing for x in x1]      # position for second bar
-        plt.bar(x1, series_1_data, width=bar_width, label="You", color="#00254a")
-        plt.bar(x2, series_2_data, width=bar_width, label=self.comparator_series_label, color="#4d5458")
+        plt.bar(x1, perf_series, width=bar_width, label="You", color="#00254a")
+        plt.bar(x2, comp_series, width=bar_width, label=self.comparator_series_label, color="#4d5458")
 
         # Add data labels for each bar in performance levels
-        for x, value in zip(x1, series_1_data):
+        for x, value in zip(x1, perf_series):
             index = int(x)  # Cast x to an integer
             if not np.isnan(value):
                 label_text = f"{value:.1f}%\n" \
@@ -274,7 +278,7 @@ class Pictoralist():
                 textcoords='offset points', weight='bold')
 
         # Add data labels for each bar in comparator levels
-        for x, value in zip(x2, series_2_data):
+        for x, value in zip(x2, comp_series):
             if not np.isnan(value):
                 label_text = f"{value:.1f}%"
                 plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=3.5, color="#f3f0ed", 
@@ -288,15 +292,15 @@ class Pictoralist():
             )
 
         # Configure labels, titles, ticks, and limits
-        plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold', fontsize=5)
-        plt.ylabel("Performance Level", weight='bold', fontsize=5)
+        #plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold', fontsize=5)
+        #plt.ylabel("Performance Level", weight='bold', fontsize=5)
         plt.yticks(y_values, y_labels, fontsize=5)
-        plt.xlabel("Time", weight='bold', fontsize=5)
+        #plt.xlabel("Time", weight='bold', fontsize=5)
         plt.xticks(x1 + bar_width / 2, last_x_months, rotation=45, fontsize=5)
         plt.ylim(0, 100)
        
         # Format legend and grid
-        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=1, fontsize=4)
+        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=3, fontsize=4)
         plt.grid(False)
 
         # Save and display the graph
