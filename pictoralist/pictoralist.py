@@ -222,9 +222,10 @@ class Pictoralist():
 
         # Set Axes and plot labels
         plt.yticks(y_values, y_labels, fontsize=7)
+        # Requested removal of labels, may implement again in debug for spot checking images
         #plt.ylabel("Performance Level", weight='bold', fontsize=5)
         #plt.xlabel("Time", weight='bold', fontsize=5)
-        #plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold', fontsize=5) # Requested removal, may implement again in debug for spot checking images
+        #plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold', fontsize=5) 
 
         # Add data labels for the last three months of performance levels as 2 precision floats
         last_three_months = x_values[-3:]
@@ -239,7 +240,7 @@ class Pictoralist():
                 ha='center', fontsize=6, color="#063763"
         )
 
-        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=2, fontsize=6)
+        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=2, fontsize=6, frameon=False)
 
         # Save and display the graph
         self.base64_image = self.plot_and_save()
@@ -303,7 +304,7 @@ class Pictoralist():
         plt.ylim(0, 100)
        
         # Format legend and grid
-        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=3, fontsize=6)
+        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=3, fontsize=6, frameon=False)
         plt.grid(False)
 
         # Save and display the graph
