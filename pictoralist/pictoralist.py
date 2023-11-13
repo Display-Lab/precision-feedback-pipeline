@@ -213,11 +213,6 @@ class Pictoralist():
             label=self.comparator_series_label, color="#02b5af", linewidth=1.0, marker='.'
         )
         
-        # If include_goal_line is True and comparator isn't the goal line anyway, plot the goal line
-        if self.plot_goal_line and self.comparator_series_label != 'Goal Value':
-            plt.hlines(y=self.performance_data['goal_percent'][-self.display_timeframe:].values, 
-               xmin=0, xmax=len(x_values)-1, linestyle='--', linewidth=0.35, color='black', label="Goal"
-            )
         # Add month labels to x axis
         plt.xticks(rotation=45, fontsize=4)
 
