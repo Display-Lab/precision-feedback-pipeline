@@ -218,10 +218,10 @@ class Pictoralist():
         )
         
         # Add month labels to x axis
-        plt.xticks(rotation=45, fontsize=4)
+        plt.xticks(rotation=45, fontsize=7)
 
         # Set Axes and plot labels
-        plt.yticks(y_values, y_labels, fontsize=4)
+        plt.yticks(y_values, y_labels, fontsize=7)
         #plt.ylabel("Performance Level", weight='bold', fontsize=5)
         #plt.xlabel("Time", weight='bold', fontsize=5)
         #plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold', fontsize=5) # Requested removal, may implement again in debug for spot checking images
@@ -230,13 +230,16 @@ class Pictoralist():
         last_three_months = x_values[-3:]
         last_three_performance = self.performance_data["performance_level"][-3:]
         for x, y in zip(last_three_months, last_three_performance):
+            label_text = f"{value:.1f}%\n" \
+                             f"{self.performance_data['passed_count'].iloc[-self.display_timeframe + index]} / " \
+                             f"{self.performance_data['denominator'].iloc[-self.display_timeframe + index]}"
             # Adjust the xytext parameter to move the label beneath the line
-            plt.annotate(f'{y:.1f}%', (x, y), textcoords="offset points",
+            plt.annotate(label_text, (x, y), textcoords="offset points",
                 weight='bold', xytext=(0, -8),  # Adjust the offset as needed
-                ha='center', fontsize=4, color="#063763"
+                ha='center', fontsize=6, color="#063763"
         )
 
-        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=2, fontsize=4)
+        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=2, fontsize=6)
 
         # Save and display the graph
         self.base64_image = self.plot_and_save()
@@ -273,7 +276,7 @@ class Pictoralist():
                 label_text = f"{value:.1f}%\n" \
                              f"{self.performance_data['passed_count'].iloc[-self.display_timeframe + index]} / " \
                              f"{self.performance_data['denominator'].iloc[-self.display_timeframe + index]}"
-                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=3.5, color="#ffffff", 
+                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=5.5, color="#ffffff", 
                 xytext=(-(bar_width/2), -15), 
                 textcoords='offset points', weight='bold')
 
@@ -281,7 +284,7 @@ class Pictoralist():
         for x, value in zip(x2, comp_series):
             if not np.isnan(value):
                 label_text = f"{value:.1f}%"
-                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=3.5, color="#f3f0ed", 
+                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=5.5, color="#f3f0ed", 
                 xytext=(-(bar_width/2), -15), 
                 textcoords='offset points', weight='bold')
 
@@ -294,13 +297,13 @@ class Pictoralist():
         # Configure labels, titles, ticks, and limits
         #plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold', fontsize=5)
         #plt.ylabel("Performance Level", weight='bold', fontsize=5)
-        plt.yticks(y_values, y_labels, fontsize=5)
+        plt.yticks(y_values, y_labels, fontsize=7)
         #plt.xlabel("Time", weight='bold', fontsize=5)
-        plt.xticks(x1 + bar_width / 2, last_x_months, rotation=45, fontsize=5)
+        plt.xticks(x1 + bar_width / 2, last_x_months, fontsize=7)
         plt.ylim(0, 100)
        
         # Format legend and grid
-        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=3, fontsize=4)
+        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=3, fontsize=6)
         plt.grid(False)
 
         # Save and display the graph
