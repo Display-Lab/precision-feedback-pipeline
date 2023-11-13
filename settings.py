@@ -1,14 +1,20 @@
 from decouple import Config, RepositoryEnv, config
+from loguru import logger
+import sys
 import os
+
+## Logging setup
+logger.remove()
+logger.add(sys.stdout, colorize=True, format="{level} | {message}")
 
 ## Control switch for production and dev configurations
 # User specifies custom env var set to use on startup, else errors out at loading 'templates'
 env_path = os.environ.get('ENV_PATH')
 if env_path != None:
-    print(f"ENV_PATH specified. Running from environment variables in {env_path}...")
+    logger.debug(f"ENV_PATH specified. Running from environment variables in {env_path}...")
     config = Config(RepositoryEnv(env_path))
 else:
-    print(f"ENV_PATH not specified, running from manually set environment variables...")
+    logger.debug(f"ENV_PATH not specified, running from manually set environment variables...")
 
 
 ## Settings class to store decoupled instance and build settings:
@@ -31,10 +37,3 @@ class Settings:
 
 # Instantiate
 settings = Settings()
-
-# Debug print (implent when logging handler sorted)
-print(f"Startup configuration for this instance:")
-for attribute in dir(settings):
-    if not attribute.startswith("__"):
-        value = getattr(settings, attribute)
-        print(f"{attribute}:\t{value}")

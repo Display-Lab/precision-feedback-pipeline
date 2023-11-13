@@ -12,9 +12,13 @@ import io
 logger.remove()
 logger.add(sys.stdout, colorize=True, format="{level} | {message}")
 
+logger.remove()
+logger.add(sys.stdout, colorize=True, format="{level} | {message}")
+
 class Pictoralist():
     def __init__(self, performance_dataframe, serialized_perf_df, selected_candidate, settings, message_instance_id):
         ## Setup variables to process selected message
+        # Needs cleanup to stop redundant var declaration (those passed directly to prepare_selected_message)
         # Needs cleanup to stop redundant var declaration (those passed directly to prepare_selected_message)
         self.performance_data   = performance_dataframe                             # Dataframe of recipient perf data (performance_data_df)
         self.performance_block  = str(serialized_perf_df)                           # Pull un-altered performance (serialized JSON) data to append output messsage with
@@ -103,6 +107,7 @@ class Pictoralist():
 
         if len(all_months) != len(self.performance_data['month']):
             logger.info(f"Data gap(s) detected, filling voids...")
+            logger.info(f"Data gap(s) detected, filling voids...")
             
             # Reindex the DataFrame with all months and fill missing values
             self.performance_data = self.performance_data.set_index('month').reindex(all_months, fill_value=None).reset_index()
@@ -113,6 +118,8 @@ class Pictoralist():
             self.performance_data['goal_percent'].fillna(method='ffill', inplace=True)
 
 
+            logger.debug(f"After gap fill, dataframe is:")
+            logger.debug(f'\n{self.performance_data}')
             logger.debug(f"After gap fill, dataframe is:")
             logger.debug(f'\n{self.performance_data}')
 
@@ -150,11 +157,14 @@ class Pictoralist():
     def set_timeframe(self):
         #self.display_timeframe = len(self.performance_data)    # Deprecated, now controlled by env var
         logger.debug(f"Dataframe has {self.display_timeframe} months to graph") # Would love to log INFO or DEBUG level
+        logger.debug(f"Dataframe has {self.display_timeframe} months to graph") # Would love to log INFO or DEBUG level
         
         ## Error catcher for windows <3 months
         if self.display_timeframe < 3:
             self.generate_image == False        # Turn off image generation
             self.display_format == "text only"  # Set to text-only display type
+            logger.warning("Display format forced to text only by func set_timeframe")
+            raise Exception(f"Display Timeframe too small")
             logger.warning("Display format forced to text only by func set_timeframe")
             raise Exception(f"Display Timeframe too small")
 
@@ -164,6 +174,7 @@ class Pictoralist():
 
     ### Modularized plotting and saving shared code for both visual display types:
     def plot_and_save(self):
+        logger.debug("Running 'plot_and_save'...")
         logger.debug("Running 'plot_and_save'...")
         plt.tight_layout()
         plt.gca().set_alpha(0)  # Set alpha channel level to 0, full transparency of current axes
@@ -314,13 +325,16 @@ class Pictoralist():
     def graph_controller(self):
         if self.display_format == "line graph" and self.generate_image:
             logger.info(f"Generating line graph from performance data...")
+            logger.info(f"Generating line graph from performance data...")
             self.generate_linegraph()
         
         elif self.display_format == "bar chart" and self.generate_image:
             logger.info(f"Generating bar chart from performance data...")
+            logger.info(f"Generating bar chart from performance data...")
             self.generate_barchart()
         
         else:
+            logger.info(f"Generating text only feedback message, graphing skipped...")
             logger.info(f"Generating text only feedback message, graphing skipped...")
 
 
@@ -328,6 +342,7 @@ class Pictoralist():
 
     ### Prepare selected message as done previously for LDT continuity:
     def prepare_selected_message(self):
+        logger.debug(f"Running pictoralist/prepare_selected_message...")
         logger.debug(f"Running pictoralist/prepare_selected_message...")
         candidate={}
         message={}

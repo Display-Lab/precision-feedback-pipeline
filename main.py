@@ -8,27 +8,37 @@ from esteemer.esteemer import Esteemer
 from requests_file import FileAdapter
 from fastapi import FastAPI, Request
 from settings import settings
+from loguru import logger
 from io import BytesIO
 import pandas as pd
 import webbrowser
 import requests
-import logging
 import json
+import sys
 import os
 
-
 global templates, pathways, measures
+
+### Logging module setup (using loguru module)
+logger.remove()
+logger.add(sys.stderr, colorize=True, format="{level}|  {message}", level=settings.log_level)
+
+## Log of instance configuration
+logger.info(f"Startup configuration for this instance:")
+for attribute in dir(settings):
+    if not attribute.startswith("__"):
+        value = getattr(settings, attribute)
+        logger.info(f"{attribute}:\t{value}")
 
 
 ### Create RDFlib graph from locally saved json files
 def local_to_graph(thisDirectory, thisGraph):
+    logger.debug(f'Starting function local_to_graph...')
+
     # Scrape directory, filter to only JSON files, build list of paths to the files (V2)
-    print(f'Starting dir-to-list transform...')
     json_only = [entry.path for entry in os.scandir(thisDirectory) if entry.name.endswith('.json')]
-    ## inject logging statement (Info lvl) here to track what files loaded visually for testers
 
     # Iterate through list, parsing list information into RDFlib graph object
-    print(f'Starting graphing process...')
     for n in range(len(json_only)):
         temp_graph = Graph()                            # Creates empty RDFlib graph
         temp_graph.parse(json_only[n], format='json-ld') # Parse list data in JSON format
@@ -38,6 +48,8 @@ def local_to_graph(thisDirectory, thisGraph):
 
 ### Create RDFlib graph from remote knowledgebase JSON files
 def remote_to_graph(contentURL, thisGraph):
+    logger.debug(f"Starting function remote_to_graph...")
+    
     # Fetch JSON content from URL (directory)
     response = requests.get(contentURL)
     if response.status_code != 200:
@@ -50,10 +62,9 @@ def remote_to_graph(contentURL, thisGraph):
             if file_name.endswith(".json"):  # Check if the file has a .json extension
                 file_jsoned = json.loads(requests.get(item["download_url"]).content)        # Download content, store as JSON
                 temp_graph = Graph().parse(data=json.dumps(file_jsoned), format='json-ld')  # Parse JSON, store as graph
-                print(f'Graphed file {file_name}')
+                logger.debug(f'Graphed file {file_name}')
                 thisGraph += temp_graph
-            else:
-                print(f"Skipped non-JSON file: {file_name}")
+
     except json.JSONDecodeError as e:
         raise Exception("Failed parsing JSON content.")
         
@@ -75,7 +86,6 @@ else:
     templates       = remote_to_graph(settings.templates, template_graph)
 
 # Set up request session as se, config to handle file URIs with FileAdapter
-logging.info:("Starting session handler...")
 se = requests.Session()
 se.mount('file://',FileAdapter())
 app = FastAPI()
@@ -144,12 +154,14 @@ async def createprecisionfeedback(info:Request):
     performer_graph=create_performer_graph(measure_details)
     
     #BitStomach
+    logger.info(f"Calling BitStomach from main...")
     bs=Bit_stomach(performer_graph,performance_data_df)
     BS=bs.annotate()
     op=BS.serialize(format='json-ld', indent=4)
     
     
     #CandidateSmasher
+    logger.info(f"Calling CandidateSmasher from main...")
     cs=CandidateSmasher(BS,templates)
     df_graph,goal_types,df_graph,top_10_types,top_25_types=cs.get_graph_type()
     df_template,df_1,df_2,df_3,df16=cs.get_template_data()
@@ -163,6 +175,7 @@ async def createprecisionfeedback(info:Request):
     CS=cs.create_candidates(goal_types,df16)
     
     #Thinkpuddung
+    logger.info(f"Calling ThinkPudding from main...")
     tp=Thinkpudding(CS,causal_pathways)
     tp.process_causalpathways()
     tp.process_spek()
@@ -172,6 +185,7 @@ async def createprecisionfeedback(info:Request):
 
 
     # #Esteemer
+    logger.info(f"Calling Esteemer from main...")
     measure_list=performance_data_df["measure"].drop_duplicates()
     # print(*measure_list)
     es=Esteemer(spek_tp,measure_list,preferences,history,mpm_df)
@@ -187,7 +201,7 @@ async def createprecisionfeedback(info:Request):
     
 
     ### Pictoralist 2, now on the Nintendo DS: ###
-    logging.debug('Starting Pictoralist...')
+    logger.info(f"Calling Pictoralist from main...")
     if selected_message["message_text"]!= "No message selected":        
         ## Initialize and run message and display generation:
         pc=Pictoralist(performance_data_df, p_df, selected_message, settings, message_instance_id)
