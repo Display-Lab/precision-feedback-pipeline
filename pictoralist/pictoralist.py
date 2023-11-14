@@ -8,13 +8,17 @@ import sys
 import os
 import io
 
-## Logging setup (WIP)
+## Logging setup
+logger.remove()
+logger.add(sys.stdout, colorize=True, format="{level} | {message}")
+
 logger.remove()
 logger.add(sys.stdout, colorize=True, format="{level} | {message}")
 
 class Pictoralist():
     def __init__(self, performance_dataframe, serialized_perf_df, selected_candidate, settings, message_instance_id):
         ## Setup variables to process selected message
+        # Needs cleanup to stop redundant var declaration (those passed directly to prepare_selected_message)
         # Needs cleanup to stop redundant var declaration (those passed directly to prepare_selected_message)
         self.performance_data   = performance_dataframe                             # Dataframe of recipient perf data (performance_data_df)
         self.performance_block  = str(serialized_perf_df)                           # Pull un-altered performance (serialized JSON) data to append output messsage with
@@ -103,6 +107,7 @@ class Pictoralist():
 
         if len(all_months) != len(self.performance_data['month']):
             logger.info(f"Data gap(s) detected, filling voids...")
+            logger.info(f"Data gap(s) detected, filling voids...")
             
             # Reindex the DataFrame with all months and fill missing values
             self.performance_data = self.performance_data.set_index('month').reindex(all_months, fill_value=None).reset_index()
@@ -113,6 +118,8 @@ class Pictoralist():
             self.performance_data['goal_percent'].fillna(method='ffill', inplace=True)
 
 
+            logger.debug(f"After gap fill, dataframe is:")
+            logger.debug(f'\n{self.performance_data}')
             logger.debug(f"After gap fill, dataframe is:")
             logger.debug(f'\n{self.performance_data}')
 
@@ -150,11 +157,14 @@ class Pictoralist():
     def set_timeframe(self):
         #self.display_timeframe = len(self.performance_data)    # Deprecated, now controlled by env var
         logger.debug(f"Dataframe has {self.display_timeframe} months to graph") # Would love to log INFO or DEBUG level
+        logger.debug(f"Dataframe has {self.display_timeframe} months to graph") # Would love to log INFO or DEBUG level
         
         ## Error catcher for windows <3 months
         if self.display_timeframe < 3:
             self.generate_image == False        # Turn off image generation
             self.display_format == "text only"  # Set to text-only display type
+            logger.warning("Display format forced to text only by func set_timeframe")
+            raise Exception(f"Display Timeframe too small")
             logger.warning("Display format forced to text only by func set_timeframe")
             raise Exception(f"Display Timeframe too small")
 
@@ -164,6 +174,7 @@ class Pictoralist():
 
     ### Modularized plotting and saving shared code for both visual display types:
     def plot_and_save(self):
+        logger.debug("Running 'plot_and_save'...")
         logger.debug("Running 'plot_and_save'...")
         plt.tight_layout()
         plt.gca().set_alpha(0)  # Set alpha channel level to 0, full transparency of current axes
@@ -192,47 +203,52 @@ class Pictoralist():
         # Define the axes, values, and their labels
         y_values = np.arange(0, 101, 20)
         y_labels = [str(val) + '%' for val in y_values]
-        x_values = self.performance_data['month'].dt.strftime("%b '%y")
+        x_values = self.performance_data['month'][-self.display_timeframe:].dt.strftime("%b '%y")
         x_labels = x_values.tolist()
         plt.figure(figsize=(5, 2.5)) # Create the plot
+
+        # Restrict graph to timeframe specified by set_timeframe()
+        perf_series = self.performance_data["performance_level"][-self.display_timeframe:]
+        comp_series = self.performance_data["comparator_level"][-self.display_timeframe:]
         
         # Add vertical lines for each month
         for x in x_values:
             plt.axvline(x=x, color='gray', linewidth=0.3)
         
         # Plot performance and comparator level series
-        plt.plot(x_values, self.performance_data["performance_level"], 
-            label="You", color="#063763", linewidth=1.2, marker='.'
+        plt.plot(x_values, perf_series, label="You", 
+            color="#063763", linewidth=1.2, marker='.'
         )
-        plt.plot(x_values, self.performance_data["comparator_level"], 
-            label=self.comparator_series_label, color="#02b5af", linewidth=1.0, marker='.'
+        plt.plot(x_values, comp_series, label=self.comparator_series_label, 
+            color="#02b5af", linewidth=1.0, marker='.'
         )
         
-        # If include_goal_line is True and comparator isn't the goal line anyway, plot the goal line
-        if self.plot_goal_line and self.comparator_series_label != 'Goal Value':
-            plt.hlines(y=self.performance_data['goal_percent'][-self.display_timeframe:].values, 
-               xmin=0, xmax=len(x_values)-1, linestyle='--', linewidth=0.35, color='black', label="Goal"
-            )
         # Add month labels to x axis
-        plt.xticks(rotation=45, fontsize=4)
+        plt.xticks(fontsize=7)
 
         # Set Axes and plot labels
-        plt.yticks(y_values, y_labels, fontsize=4)
-        plt.ylabel("Performance Level", weight='bold', fontsize=5)
-        plt.xlabel("Time", weight='bold', fontsize=5)
-        plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold', fontsize=5)
+        plt.yticks(y_values, y_labels, fontsize=7)
+        # Requested removal of labels, may implement again in debug for spot checking images
+        #plt.ylabel("Performance Level", weight='bold', fontsize=5)
+        #plt.xlabel("Time", weight='bold', fontsize=5)
+        #plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold', fontsize=5) 
 
         # Add data labels for the last three months of performance levels as 2 precision floats
         last_three_months = x_values[-3:]
         last_three_performance = self.performance_data["performance_level"][-3:]
-        for x, y in zip(last_three_months, last_three_performance):
-            # Adjust the xytext parameter to move the label beneath the line
-            plt.annotate(f'{y:.1f}%', (x, y), textcoords="offset points",
-                weight='bold', xytext=(0, -8),  # Adjust the offset as needed
-                ha='center', fontsize=4, color="#063763"
-        )
+        last_three_passed = self.performance_data["passed_count"][-3:]
+        last_three_denom = self.performance_data["denominator"][-3:]
 
-        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=1, fontsize=4)
+        for month, performance, passed, denom in zip(last_three_months, last_three_performance, last_three_passed, last_three_denom):
+            label_text = f"{performance:.0f}%\n{passed} / {denom}"
+
+            # Adjust the xytext parameter to move the label beneath the line
+            plt.annotate(label_text, (month, performance), textcoords="offset points",
+                         weight='bold', xytext=(0, -18),  # Adjust the offset as needed
+                         ha='center', fontsize=5, color="#063763"
+            )
+
+        plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.3), ncol=2, fontsize=6, frameon=False)
 
         # Save and display the graph
         self.base64_image = self.plot_and_save()
@@ -253,32 +269,32 @@ class Pictoralist():
 
         # Create bars for the timeframe specified by set_timeframe()
         last_x_months = x_values[-self.display_timeframe:]
-        series_1_data = self.performance_data["performance_level"][-self.display_timeframe:]
-        series_2_data = self.performance_data["comparator_level"][-self.display_timeframe:]
+        perf_series = self.performance_data["performance_level"][-self.display_timeframe:]
+        comp_series = self.performance_data["comparator_level"][-self.display_timeframe:]
 
         # Plot the bars for both data series
         x1 = np.arange(len(last_x_months)) + bar_width/2    # position for first bar
         x2 = [x + bar_width + bar_spacing for x in x1]      # position for second bar
-        plt.bar(x1, series_1_data, width=bar_width, label="You", color="#00254a")
-        plt.bar(x2, series_2_data, width=bar_width, label=self.comparator_series_label, color="#4d5458")
+        plt.bar(x1, perf_series, width=bar_width, label="You", color="#00254a")
+        plt.bar(x2, comp_series, width=bar_width, label=self.comparator_series_label, color="#4d5458")
 
         # Add data labels for each bar in performance levels
-        for x, value in zip(x1, series_1_data):
+        for x, value in zip(x1, perf_series):
             index = int(x)  # Cast x to an integer
             if not np.isnan(value):
-                label_text = f"{value:.1f}%\n" \
+                label_text = f"{value:.0f}%\n" \
                              f"{self.performance_data['passed_count'].iloc[-self.display_timeframe + index]} / " \
                              f"{self.performance_data['denominator'].iloc[-self.display_timeframe + index]}"
-                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=3.5, color="#ffffff", 
-                xytext=(-(bar_width/2), -15), 
+                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=4.5, color="#ffffff", 
+                xytext=(-(bar_width/2), -40), 
                 textcoords='offset points', weight='bold')
 
         # Add data labels for each bar in comparator levels
-        for x, value in zip(x2, series_2_data):
+        for x, value in zip(x2, comp_series):
             if not np.isnan(value):
                 label_text = f"{value:.1f}%"
-                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=3.5, color="#f3f0ed", 
-                xytext=(-(bar_width/2), -15), 
+                plt.annotate(label_text, (x, value), ha='center', va='bottom', fontsize=5, color="#f3f0ed", 
+                xytext=(-(bar_width/2), -40), 
                 textcoords='offset points', weight='bold')
 
         # If include_goal_line is True, plot the goal line
@@ -288,15 +304,15 @@ class Pictoralist():
             )
 
         # Configure labels, titles, ticks, and limits
-        plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold', fontsize=5)
-        plt.ylabel("Performance Level", weight='bold', fontsize=5)
-        plt.yticks(y_values, y_labels, fontsize=5)
-        plt.xlabel("Time", weight='bold', fontsize=5)
-        plt.xticks(x1 + bar_width / 2, last_x_months, rotation=45, fontsize=5)
+        #plt.title(f"Performance Over Time for Measure {self.selected_measure}", weight='bold', fontsize=5)
+        #plt.ylabel("Performance Level", weight='bold', fontsize=5)
+        plt.yticks(y_values, y_labels, fontsize=7)
+        #plt.xlabel("Time", weight='bold', fontsize=5)
+        plt.xticks(x1 + bar_width / 2, last_x_months, fontsize=7)
         plt.ylim(0, 100)
        
         # Format legend and grid
-        plt.legend(loc='lower right', bbox_to_anchor=(1.0, 0.0), ncol=1, fontsize=4)
+        plt.legend(loc='lower center', bbox_to_anchor=(0.5, -0.3), ncol=3, fontsize=6, frameon=False)
         plt.grid(False)
 
         # Save and display the graph
@@ -309,13 +325,16 @@ class Pictoralist():
     def graph_controller(self):
         if self.display_format == "line graph" and self.generate_image:
             logger.info(f"Generating line graph from performance data...")
+            logger.info(f"Generating line graph from performance data...")
             self.generate_linegraph()
         
         elif self.display_format == "bar chart" and self.generate_image:
             logger.info(f"Generating bar chart from performance data...")
+            logger.info(f"Generating bar chart from performance data...")
             self.generate_barchart()
         
         else:
+            logger.info(f"Generating text only feedback message, graphing skipped...")
             logger.info(f"Generating text only feedback message, graphing skipped...")
 
 
@@ -323,6 +342,7 @@ class Pictoralist():
 
     ### Prepare selected message as done previously for LDT continuity:
     def prepare_selected_message(self):
+        logger.debug(f"Running pictoralist/prepare_selected_message...")
         logger.debug(f"Running pictoralist/prepare_selected_message...")
         candidate={}
         message={}
