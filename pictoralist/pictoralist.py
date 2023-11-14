@@ -359,7 +359,7 @@ class Pictoralist():
 
         full_message = {
             "pfkb_version":'0.0.0',     # Need to soft code this so it is accurate
-            "pfp_version":'0.2.1 indev',    # Ditto
+            "pfp_version":'0.2.1',    # Ditto
             "staff_number":self.staff_ID,
             "selected_candidate":candidate,
             "performance_month":self.performance_data["month"].iloc[-1],
