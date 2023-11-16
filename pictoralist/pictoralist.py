@@ -274,6 +274,12 @@ class Pictoralist():
         graphed_pass    = self.performance_data["passed_count"][-self.display_timeframe:]
         graphed_denom   = self.performance_data["denominator"][-self.display_timeframe:]
 
+        ## If include_goal_line is True, plot the goal line
+        if self.plot_goal_line and self.comparator_series_label != 'Goal Value':
+            plt.hlines(y=self.performance_data['goal_percent'][-self.display_timeframe:].values, 
+               xmin=0, xmax=len(x_values), linestyle='--', color='black', label="Goal", linewidth=0.5
+            )
+
         ## Plot the bars for both data series
         x1 = np.arange(len(x_values)) + bar_width/2    # position for first bar
         x2 = [x + bar_width + bar_spacing for x in x1]      # position for second bar
@@ -311,12 +317,6 @@ class Pictoralist():
                 plt.annotate(label_text, (month, comparator), ha='center', va='bottom', fontsize=5, color="#f3f0ed", 
                 xytext=(-(bar_width/2), vert_offset),    # Variable offest for comparators as well
                 textcoords='offset points', weight='bold')
-
-        ## If include_goal_line is True, plot the goal line
-        if self.plot_goal_line and self.comparator_series_label != 'Goal Value':
-            plt.hlines(y=self.performance_data['goal_percent'][-self.display_timeframe:].values, 
-               xmin=0, xmax=len(x_values), linestyle='--', color='black', label="Goal", linewidth=0.5
-            )
 
         ## Configure labels, titles, ticks, and limits
         plt.yticks(y_values, y_labels, fontsize=7)
