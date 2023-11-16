@@ -7,6 +7,7 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 - Changed strategy for generating annotations on bar chart performance, now using distinct truncated dataframes as in line graphs
 - Fixed duplicate logging statements
 - Fixed set_timeframe, now functions as intended
+- Added conditional annoatation formatting in line and bar displays for low-performance values
 
 **Changed:** Pictoralist: Display formatting for line graphs and bar charts  
 - Fixed resolution at 500x250 w/ 300 dpi  

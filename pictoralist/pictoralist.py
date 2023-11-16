@@ -121,11 +121,11 @@ class Pictoralist():
     ### Logic to set display timeframe for graph generation
     def set_timeframe(self):
         available_timeframe = len(self.performance_data)
-        logger.debug(f"Dataframe has {len(self.performance_data)} months to graph, preparing {self.display_timeframe}")
+        logger.debug(f"Requested {self.display_timeframe} month display, dataframe has {len(self.performance_data)} months")
 
         ## Restrict graph to extant data if less than user-set default
         if self.display_timeframe > available_timeframe:
-            logger.debug("Restricting time window d/t lack of data")
+            logger.debug("Restricting time window due to lack of data")
             self.display_timeframe = available_timeframe
         
         ## Error catcher for windows <3 months
@@ -133,8 +133,7 @@ class Pictoralist():
             self.generate_image = False        # Turn off image generation
             self.display_format = "text only"  # Set to text-only display type
             logger.warning("Dataset too small, display format forced to text only")
-            logger.debug(f"DF: {self.display_format}\tDT: {self.display_timeframe}")
-            #raise Exception(f"Display Timeframe too small")
+            logger.debug(f"DFormat: {self.display_format}\tDTime: {self.display_timeframe}")
 
 
 
@@ -240,9 +239,13 @@ class Pictoralist():
         for month, performance, passed, denom in zip(last_three_months, last_three_performance, last_three_passed, last_three_denom):
             label_text = f"{performance:.0f}%\n{passed} / {denom}"
 
-            ## Adjust the xytext parameter to move the label beneath the line
+            ## Adjust the xytext parameter to move the label conditionally
+            vert_offset = -15
+            if performance < 25:
+                vert_offset = 15
+
             plt.annotate(label_text, (month, performance), textcoords="offset points",
-                         weight='bold', xytext=(0, -18),  # Adjust the offset as needed
+                         weight='bold', xytext=(0, vert_offset),  # Offset adjusted conditionally
                          ha='center', fontsize=5, color="#063763"
             )
 
@@ -266,9 +269,6 @@ class Pictoralist():
         x_labels = x_values.tolist()
 
         ## Create bars for the timeframe specified by set_timeframe()
-        #graphed_months = self.performance_data['month'][-self.display_timeframe:].dt.strftime("%b '%y")
-        logger.debug(x_values)
-        logger.debug(self.selected_measure)
         graphed_perf    = self.performance_data["performance_level"][-self.display_timeframe:]
         graphed_comp    = self.performance_data["comparator_level"][-self.display_timeframe:]
         graphed_pass    = self.performance_data["passed_count"][-self.display_timeframe:]
@@ -283,10 +283,17 @@ class Pictoralist():
         ## Add data labels for each bar in performance levels
         for month, performance, passed, denom in zip(x1, graphed_perf, graphed_pass, graphed_denom):
             if not np.isnan(performance):
-                label_text = f"{performance:.0f}%\n{passed} / {denom}"  # format annotation text
+                label_text = f"{performance:.0f}%\n{passed} / {denom}"
                 
-                plt.annotate(label_text, (month, performance), ha='center', va='bottom', fontsize=4.5, color="#ffffff", 
-                xytext=(-(bar_width/2), -(performance*.5)+5),   # Trying variable offset
+                # Create and adjust annotations (and text color)
+                vert_offset = -15
+                text_color = '#ffffff'
+                if performance < 25:
+                    vert_offset = 15
+                    text_color = '#000000'
+                
+                plt.annotate(label_text, (month, performance), ha='center', va='bottom', fontsize=4.5, color=text_color, 
+                xytext=(-(bar_width/2), vert_offset),   # Trying variable offset
                 textcoords='offset points', weight='bold')
 
         ## Add data labels for each bar in comparator levels
@@ -294,8 +301,15 @@ class Pictoralist():
             if not np.isnan(comparator):
                 label_text = f"{comparator:.0f}"
                 
+                # Create and adjust annotations
+                vert_offset = -20
+                text_color = '#ffffff'
+                if comparator < 25:
+                    vert_offset = 20
+                    text_color = '#000000'
+                
                 plt.annotate(label_text, (month, comparator), ha='center', va='bottom', fontsize=5, color="#f3f0ed", 
-                xytext=(-(bar_width/2), -(comparator*.5)+5),    # Variable offest for comparators as well
+                xytext=(-(bar_width/2), vert_offset),    # Variable offest for comparators as well
                 textcoords='offset points', weight='bold')
 
         ## If include_goal_line is True, plot the goal line
