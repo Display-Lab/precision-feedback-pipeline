@@ -290,7 +290,7 @@ class Pictoralist():
                 text_color = '#ffffff'
                 if performance < 25:
                     vert_offset = 15
-                    text_color = '#000000'
+                    text_color = '#00254a'
                 
                 plt.annotate(label_text, (month, performance), ha='center', va='bottom', fontsize=4.5, color=text_color, 
                 xytext=(-(bar_width/2), vert_offset),   # Trying variable offset
