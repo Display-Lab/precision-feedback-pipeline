@@ -3,24 +3,31 @@ This project follows [semantic versioning](https://semver.org/spec/v2.0.0.html)!
 This changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), conforming as well as possible to the guiding principles.
 ## [Version 0.2.1]()
 ### Release date: (unreleased)
-**Changed:** Display formatting for line graphs and bar charts
-- Fixed resolution at 500x250 w/ 300 dpi
-- Adjusted scaling of visual elements to match new resolution
-- Added alpha channel to figure (testing fully transparent for email implementation)
+**Improvement:** Pictoralist: Display functionality fixes (see [#163](https://github.com/Display-Lab/precision-feedback-pipeline/issues/163))
+- Changed strategy for generating annotations on bar chart performance, now using distinct truncated dataframes as in line graphs
+- Fixed duplicate logging statements
+- Fixed set_timeframe, now functions as intended
+- Added conditional annoatation formatting in line and bar displays for low-performance values
+- Goal line on bar charts now behind bars
 
-**Improvement** Rank candidates for social comparators based on highest comparator performance level
-- When Esteemer finds more than one candidate to be acceptable by social better, select the candidate with the highest comparator performance level
+**Changed:** Pictoralist: Display formatting for line graphs and bar charts  
+- Fixed resolution at 500x250 w/ 300 dpi  
+- Adjusted scaling of visual elements to match new resolution 
+- Added alpha channel to figure (testing fully transparent for email implementation)  
+
+**Improvement** Esteemer: Rank candidates for social comparators based on highest comparator performance level 
+- When Esteemer finds more than one candidate to be acceptable by social better, select the candidate with the highest comparator performance level 
 
 ## [Version 0.2.0](https://github.com/Display-Lab/precision-feedback-pipeline/releases/tag/v0.2.0)
 ### Release date: 11/9/23
-**Changed:** Settings handling for builds
-- Seperated local and remote env files
-    - Heirarchy should help keep dev changes from leaking into production
-    - Use a configured copy of .env.devexample for storing your settings when running local instance, and .env.remote should remain unchanged to keep changes in dev from breaking things in the deployments
-- Created 'settings.py' to handle configuration setting on startup outside main.py
-- Added python-decouple to build requirements (requirements.txt)
-- Removed python-dotenv: requirements, poetry requirements, and settings.py
-- Updated readme with information on setting up a dev .env file and configuring pipeline instances
+**Changed:** Settings handling for builds  
+- Seperated local and remote env files  
+    - Heirarchy should help keep dev changes from leaking into production 
+    - Use a configured copy of .env.devexample for storing your settings when running local instance, and .env.remote should remain unchanged to keep changes in dev from breaking things in the deployments  
+- Created 'settings.py' to handle configuration setting on startup outside main.py  
+- Added python-decouple to build requirements (requirements.txt)  
+- Removed python-dotenv: requirements, poetry requirements, and settings.py  
+- Updated readme with information on setting up a dev .env file and configuring pipeline instances  
 
 **Changed:** Pictoralist strategy for caching images
 - Uses slightly altered code from LDT to ensure directory before caching images
