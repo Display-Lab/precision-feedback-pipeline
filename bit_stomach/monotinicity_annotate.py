@@ -74,7 +74,7 @@ def find_number(backup_df,trend_sign1):
         count=0
         y=-1
         z=y-1
-        for x in range(len(lista)):
+        for x in range(len(lista)-1):
             if lista[z]<=lista[y]:
                 return count
             if(lista[z]>lista[y]):
@@ -89,7 +89,7 @@ def find_number(backup_df,trend_sign1):
         count=0
         y=-1
         z=y-1
-        for x in range(len(lista)):
+        for x in range(len(lista)-1):
             if lista[z]>=lista[y]:
                 return count
             if(lista[z]<lista[y]):
