@@ -205,11 +205,11 @@ async def createprecisionfeedback(info:Request):
     if selected_message["message_text"]!= "No message selected":        
         ## Initialize and run message and display generation:
         pc=Pictoralist(performance_data_df, p_df, selected_message, settings, message_instance_id)
-        pc.prep_data_for_graphing()
-        pc.fill_missing_months()
-        pc.finalize_text()
-        pc.set_timeframe()
-        pc.graph_controller()
+        pc.prep_data_for_graphing()     # Setup dataframe of one measure, cleaned for graphing
+        pc.fill_missing_months()        # Fill holes in dataframe where they exist
+        pc.set_timeframe()              # Ensure no less than three months being graphed
+        pc.finalize_text()              # Finalize text message and labels
+        pc.graph_controller()           # Select and run graphing based on display type
         full_selected_message   = pc.prepare_selected_message()
     
     return full_selected_message
