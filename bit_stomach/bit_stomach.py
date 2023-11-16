@@ -1,15 +1,19 @@
-
-
-
-
-import pandas as pd
 from rdflib import Graph, Literal, URIRef, BNode
 from rdflib.namespace import RDF
+from loguru import logger
+import pandas as pd
+import sys
+
+## Logging setup
+logger.remove()
+logger.add(sys.stdout, colorize=True, format="{level} | {message}")
+
 
 #from calc_gaps_slopes import gap_calc,trend_calc,monotonic_pred,mod_collector
 #from insert_annotate import insert_annotate
 
 from bit_stomach.prepare_data_annotate import Prepare_data_annotate
+from bit_stomach.student_t_cleaner import student_t_cleaner
 
 class Bit_stomach:
     def __init__(self,input_graph:Graph,performance_data:pd.DataFrame):
@@ -20,7 +24,13 @@ class Bit_stomach:
         self.top_10_dicts={}
         self.top_25_dicts={}
         self.goal1_dicts={}
-        self.performance_data_df=performance_data
+        # Hijack here, inject cleaned dataframe as self.performance_data_df:
+        try:
+            self.performance_data_df=student_t_cleaner(performance_data)
+        except ValueError as e:
+            raise e
+            exit(1)
+        
         self.input_graph=input_graph
         s=URIRef("http://example.com/app#display-lab")
         p=URIRef('http://example.com/slowmo#IsAboutMeasure')
@@ -43,7 +53,8 @@ class Bit_stomach:
         o2222=Literal("top_25")
         o21222=Literal("GOAL")
         o22222=Literal("goal")
-        self.input_graph=input_graph
+        self.input_graph=input_graph    # duplicate, line 33
+
         def remove_annotate(self):
             s12 = URIRef('http://example.com/app#display-lab')
             p12=URIRef('http://example.com/slowmo#IsAboutPerformer')

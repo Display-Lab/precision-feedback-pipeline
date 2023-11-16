@@ -373,6 +373,7 @@ class Pictoralist():
             "pfp_version":'0.2.1',    # Ditto
             "staff_number":self.staff_ID,
             "selected_candidate":candidate,
+            "selected_comparator":self.comparator_series_label,
             "performance_month":self.performance_data["month"].iloc[-1],
             "performance_data":self.performance_block,
             "message_generated_datetime":self.init_time,
@@ -380,6 +381,8 @@ class Pictoralist():
         }
         if self.message_instance_id != None:
             full_message['message_instance_id']=self.message_instance_id
+
+        print(self.performance_data)
 
 
         return full_message
