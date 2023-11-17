@@ -20,14 +20,36 @@ def student_t_cleaner(perf_dataframe):
         if row['denominator'] < 10:
             cleaned_rows.append(index)
 
-    # Remove rows with insignificant denominators
+    # Remove rows that need to be cleaned (insignificant denominators, non-current month)
     if cleaned_rows:
         logger.debug(f'Found rows with non-significant denominators, attempting removal...')
         perf_dataframe.drop(cleaned_rows, inplace=True)
         #logger.debug(f'Cleaned dataframe is: \n{perf_dataframe}')
 
-    # Check if there are at least 3 rows with the same measure after cleaning
-    if len(perf_dataframe['measure'].unique()) < 3:
+
+
+    ### Clean measures out that do not have the most recent month of data in them (V9)
+    cleaned_rows = [] # Make it blank again, this method sucks
+    performance_month = perf_dataframe['month'].max()
+    
+    # Iterate through measures without the latest month
+    for measure in perf_dataframe['measure'].unique():
+        measure_rows = perf_dataframe[perf_dataframe['measure'] == measure]
+        if performance_month not in measure_rows['month'].unique():
+            cleaned_rows.extend(measure_rows.index)
+
+    # Remove rows without the latest month
+    if cleaned_rows:
+        logger.debug(f'Found rows without the latest month, attempting removal...')
+        perf_dataframe.drop(cleaned_rows, inplace=True)
+        logger.debug(f'Cleaned dataframe is: \n{perf_dataframe}')
+
+
+
+
+    ## Check if there are no measures with more than 3 unique months after cleaning
+    # NOTE: still allows through data for measures with less than 3 months, but if selected we will only get text feedback so that should work.
+    if perf_dataframe.groupby('measure')['month'].nunique().max() <= 3:
         logger.error(f"Not enough significant data detected in performance block, aborting feedback...")
         raise ValueError("PROCESS_ABORTED")
 

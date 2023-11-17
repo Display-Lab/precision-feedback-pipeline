@@ -3,7 +3,9 @@ This project follows [semantic versioning](https://semver.org/spec/v2.0.0.html)!
 This changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), conforming as well as possible to the guiding principles.
 ## [Version 0.2.1]()
 ### Release date: (unreleased)
-**Changed:** Added student_t_cleaner to BitStomach
+**Added:** student_t_cleaner to BitStomach
+- cleans data of denominators less than ten
+- cleans data of measures lacking data for the most recent month's performance
 
 **Improvement:** Pictoralist: Display functionality fixes (see [#163](https://github.com/Display-Lab/precision-feedback-pipeline/issues/163))
 - Changed strategy for generating annotations on bar chart performance, now using distinct truncated dataframes as in line graphs
