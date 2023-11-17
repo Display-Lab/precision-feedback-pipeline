@@ -18,27 +18,27 @@ def goal_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['goal_comparison_value']
     
-    if (gap_size[0]!= 0):
-        ac=BNode(latest_measure_df["measure"][0])
-        av=comparator_bnode
-        goal_gap_size=gap_size[0]
-        goal_gap_size=Literal(goal_gap_size)
+    # if (gap_size[0]!= 0):
+    ac=BNode(latest_measure_df["measure"][0])
+    av=comparator_bnode
+    goal_gap_size=gap_size[0]
+    goal_gap_size=Literal(goal_gap_size)
     #         #annotate goal comparator
+    o14=BNode() 
+    input_graph.add((s14,p14,o14))
+    input_graph=annotate_goal_comparator(input_graph,o14,ac,av)
+    o14=BNode() 
+    input_graph.add((s14,p14,o14))
+    input_graph=annotate_performance_goal_gap(input_graph,o14,ac,av)
+    if(latest_measure_df['goal_comparison_value'][0]<=latest_measure_df['Performance_Rate'][0]):
         o14=BNode() 
         input_graph.add((s14,p14,o14))
-        input_graph=annotate_goal_comparator(input_graph,o14,ac,av)
-        o14=BNode() 
-        input_graph.add((s14,p14,o14))
-        input_graph=annotate_performance_goal_gap(input_graph,o14,ac,av)
-        if(latest_measure_df['goal_comparison_value'][0]<=latest_measure_df['Performance_Rate'][0]):
-            o14=BNode() 
-            input_graph.add((s14,p14,o14))
-            input_graph=annotate_positive_goal_gap(input_graph,o14,ac,av,goal_gap_size)
+        input_graph=annotate_positive_goal_gap(input_graph,o14,ac,av,goal_gap_size)
 
-        if(latest_measure_df['goal_comparison_value'][0]>latest_measure_df['Performance_Rate'][0]):
-            o14=BNode() 
-            input_graph.add((s14,p14,o14))
-            input_graph=annotate_negative_goal_gap(input_graph,o14,ac,av,goal_gap_size)
+    if(latest_measure_df['goal_comparison_value'][0]>latest_measure_df['Performance_Rate'][0]):
+        o14=BNode() 
+        input_graph.add((s14,p14,o14))
+        input_graph=annotate_negative_goal_gap(input_graph,o14,ac,av,goal_gap_size)
         
 
     
@@ -105,27 +105,27 @@ def peer_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
    
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_average_comparator']
     
-    if (gap_size[0]!= 0):
-        ac=BNode(latest_measure_df["measure"][0])
-        av=comparator_bnode
-        goal_gap_size=gap_size[0]
-        goal_gap_size=Literal(goal_gap_size)
+    # if (gap_size[0]!= 0):
+    ac=BNode(latest_measure_df["measure"][0])
+    av=comparator_bnode
+    goal_gap_size=gap_size[0]
+    goal_gap_size=Literal(goal_gap_size)
     #         #annotate goal comparator
+    o14=BNode() 
+    input_graph.add((s14,p14,o14))
+    input_graph=annotate_peer_comparator(input_graph,o14,ac,av)
+    input_graph=annotate_peer_average_comparator(input_graph,o14,ac,av)
+    o14=BNode() 
+    input_graph.add((s14,p14,o14))
+    input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
+    if(latest_measure_df['peer_average_comparator'][0]<=latest_measure_df['Performance_Rate'][0]):
         o14=BNode() 
         input_graph.add((s14,p14,o14))
-        input_graph=annotate_peer_comparator(input_graph,o14,ac,av)
-        input_graph=annotate_peer_average_comparator(input_graph,o14,ac,av)
+        input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+    if(latest_measure_df['Performance_Rate'][0]<latest_measure_df['peer_average_comparator'][0]):
         o14=BNode() 
         input_graph.add((s14,p14,o14))
-        input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
-        if(latest_measure_df['peer_average_comparator'][0]<=latest_measure_df['Performance_Rate'][0]):
-            o14=BNode() 
-            input_graph.add((s14,p14,o14))
-            input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)
-        if(latest_measure_df['Performance_Rate'][0]<latest_measure_df['peer_average_comparator'][0]):
-            o14=BNode() 
-            input_graph.add((s14,p14,o14))
-            input_graph=annotate_negative_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+        input_graph=annotate_negative_peer_gap(input_graph,o14,ac,av,goal_gap_size)
         
 
     
@@ -155,30 +155,36 @@ def top_10_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_90th_percentile_benchmark']
     
-    if (gap_size[0]!= 0):
-        ac=BNode(latest_measure_df["measure"][0])
-        av=comparator_bnode
-        goal_gap_size=gap_size[0]
-        goal_gap_size=Literal(goal_gap_size)
+    # if (gap_size[0]>= 0):
+    ac=BNode(latest_measure_df["measure"][0])
+    av=comparator_bnode
+    goal_gap_size=gap_size[0]
+    goal_gap_size=Literal(goal_gap_size)
     #         #annotate goal comparator
-        o14=BNode() 
-        input_graph.add((s14,p14,o14))
-        input_graph=annotate_peer_comparator(input_graph,o14,ac,av)
-        input_graph=annotate_peer_average_comparator(input_graph,o14,ac,av)
-        o14=BNode() 
-        input_graph.add((s14,p14,o14))
-        input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
+    o14=BNode() 
+    input_graph.add((s14,p14,o14))
+    input_graph=annotate_peer_comparator(input_graph,o14,ac,av)
+    input_graph=annotate_peer_average_comparator(input_graph,o14,ac,av)
+    o14=BNode() 
+    input_graph.add((s14,p14,o14))
+    input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
         # o14=BNode()
         # input_graph.add((s14,p14,o14))
-        input_graph=annotate_top_10_percentile(input_graph,o14,ac,av)
-        if(latest_measure_df['peer_90th_percentile_benchmark'][0]<=latest_measure_df['Performance_Rate'][0]):
-            o14=BNode() 
-            input_graph.add((s14,p14,o14))
-            input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)
-        if(latest_measure_df['Performance_Rate'][0]<latest_measure_df['peer_90th_percentile_benchmark'][0]):
-            o14=BNode() 
-            input_graph.add((s14,p14,o14))
-            input_graph=annotate_negative_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+    input_graph=annotate_top_10_percentile(input_graph,o14,ac,av)
+    if(latest_measure_df['peer_90th_percentile_benchmark'][0]<=latest_measure_df['Performance_Rate'][0]):
+        # print("entere here")
+        o14=BNode() 
+        input_graph.add((s14,p14,o14))
+        input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+    if(latest_measure_df['peer_90th_percentile_benchmark'][0]==latest_measure_df['Performance_Rate'][0]):
+            # print("entere here")
+        o14=BNode() 
+        input_graph.add((s14,p14,o14))
+        input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+    if(latest_measure_df['Performance_Rate'][0]<latest_measure_df['peer_90th_percentile_benchmark'][0]):
+        o14=BNode() 
+        input_graph.add((s14,p14,o14))
+        input_graph=annotate_negative_peer_gap(input_graph,o14,ac,av,goal_gap_size)
     return input_graph
 
 def annotate_top_25_percentile(a,s16,measure_Name,o16):
@@ -200,30 +206,31 @@ def top_25_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
     
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_75th_percentile_benchmark']
     
-    if (gap_size[0]!= 0):
-        ac=BNode(latest_measure_df["measure"][0])
-        av=comparator_bnode
-        goal_gap_size=gap_size[0]
-        goal_gap_size=Literal(goal_gap_size)
+    # if (gap_size[0]>= 0):
+    ac=BNode(latest_measure_df["measure"][0])
+    av=comparator_bnode
+    goal_gap_size=gap_size[0]
+    goal_gap_size=Literal(goal_gap_size)
     #         #annotate goal comparator
-        o14=BNode() 
-        input_graph.add((s14,p14,o14))
-        input_graph=annotate_peer_comparator(input_graph,o14,ac,av)
-        input_graph=annotate_peer_average_comparator(input_graph,o14,ac,av)
-        o14=BNode() 
-        input_graph.add((s14,p14,o14))
-        input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
+    o14=BNode() 
+    input_graph.add((s14,p14,o14))
+    input_graph=annotate_peer_comparator(input_graph,o14,ac,av)
+    input_graph=annotate_peer_average_comparator(input_graph,o14,ac,av)
+    o14=BNode() 
+    input_graph.add((s14,p14,o14))
+    input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
         # o14=BNode()
         # input_graph.add((s14,p14,o14))
-        input_graph=annotate_top_25_percentile(input_graph,o14,ac,av)
-        if(latest_measure_df['peer_75th_percentile_benchmark'][0]<=latest_measure_df['Performance_Rate'][0]):
-            o14=BNode() 
-            input_graph.add((s14,p14,o14))
-            input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)
-        if(latest_measure_df['Performance_Rate'][0]<latest_measure_df['peer_75th_percentile_benchmark'][0]):
-            o14=BNode() 
-            input_graph.add((s14,p14,o14))
-            input_graph=annotate_negative_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+    input_graph=annotate_top_25_percentile(input_graph,o14,ac,av)
+    if(latest_measure_df['peer_75th_percentile_benchmark'][0]<=latest_measure_df['Performance_Rate'][0]):
+        o14=BNode() 
+        # print("entered annotation")
+        input_graph.add((s14,p14,o14))
+        input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+    if(latest_measure_df['Performance_Rate'][0]<latest_measure_df['peer_75th_percentile_benchmark'][0]):
+        o14=BNode() 
+        input_graph.add((s14,p14,o14))
+        input_graph=annotate_negative_peer_gap(input_graph,o14,ac,av,goal_gap_size)
         
 
     
@@ -263,6 +270,7 @@ def annotate_performance_peer_gap(a,s16,measure_Name,o16):
     return a
 
 def annotate_positive_peer_gap(a,s16,measure_Name,o16,goal_gap_size):
+    # print("entered here")
     p15=RDF.type
     o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000104')
     a.add((s16,p15,o15))
