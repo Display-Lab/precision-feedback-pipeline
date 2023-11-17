@@ -24,7 +24,7 @@ def student_t_cleaner(perf_dataframe):
     if cleaned_rows:
         logger.debug(f'Found rows with non-significant denominators, attempting removal...')
         perf_dataframe.drop(cleaned_rows, inplace=True)
-        #logger.debug(f'Cleaned dataframe is: \n{perf_dataframe}')
+        logger.debug(f'Cleaned dataframe is: \n{perf_dataframe}')
 
 
 
@@ -40,7 +40,7 @@ def student_t_cleaner(perf_dataframe):
 
     # Remove rows without the latest month
     if cleaned_rows:
-        logger.debug(f'Found rows without the latest month, attempting removal...')
+        logger.debug(f'Found measures without the latest month, attempting removal...')
         perf_dataframe.drop(cleaned_rows, inplace=True)
         logger.debug(f'Cleaned dataframe is: \n{perf_dataframe}')
 
