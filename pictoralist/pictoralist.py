@@ -374,7 +374,7 @@ class Pictoralist():
             "staff_number":self.staff_ID,
             "selected_candidate":candidate,
             "selected_comparator":self.comparator_series_label,
-            "performance_month":self.performance_data["month"].iloc[-1],
+            "performance_month":self.performance_data["month"].iloc[-1].strftime("%B %Y"),   # Becomes string in response, format here
             "performance_data":self.performance_block,
             "message_generated_datetime":self.init_time,
             "message":message
