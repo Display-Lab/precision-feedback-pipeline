@@ -9,6 +9,7 @@ from io import StringIO
 from rdflib import Literal, URIRef, BNode
 from rdflib.namespace import RDF
 from decimal import *
+import numpy as np
 
 
 
@@ -264,8 +265,10 @@ class Esteemer():
         j_new=()
         a_new=[]
         score_dict={}
+        comp_node_dict={}
         df_final = pd.DataFrame()
-
+        # print("acceptable by")
+        # print(*self.y)
         ## Makes candidate list, iterates through candidates
         for i in self.y:
             a_full_list=[]
@@ -453,26 +456,73 @@ class Esteemer():
                 df_merged=pd.merge(df_a_new, df_b_new, on='comp_node')
                 df_merged["score"] = df_merged['Gaps'] + df_merged['Trends'] 
             score_list = df_merged['score'].tolist()
+            comp_node_list=df_merged["comp_node"].tolist()
+
             # score_max = max(score_list)
             # print(score_max)
             score_dict[i]=score_list
+            comp_node_dict[i]=comp_node_list
+            # print(i)
+            # print(score_list)
             df_final = df_final.append(df_merged, ignore_index = True)
             # print(df_merged)
             # print("\n")
+        
+        
         Keymax = max(zip(score_dict.values(), score_dict.keys()))[1]
         # Valuemax= max(zip(score_dict.values(), score_dict.keys()))[0]
+        
         index_list=[]
         df_final1=df_final.iloc[df_final.score.argmax()]
         if df_final1['accept_path']=="Social better":
             # print("yes")
             rslt_df = df_final.loc[df_final['accept_path'] == "Social better"]
+            if "Measure" not in rslt_df.columns:
+                rslt_df["Measure"]=np.nan
+            cols = ['Measure', 'Measure_x']
+            rslt_df["Measures"] = [[e for e in row if e==e] for row in rslt_df[cols].values]
+            rslt_df = rslt_df.drop('Measure', axis=1)
+            rslt_df = rslt_df.drop('Measure_x', axis=1)
+            rslt_df = rslt_df.drop('Measure_y', axis=1)
+            rslt_df ['Measures1'] = [','.join(map(str, l)) for l in rslt_df['Measures']]
+            # print(rslt_df)
             if (rslt_df['signed_Gaps'] > 0).all():
                 result=rslt_df.groupby('accept_path')['score'].nlargest(2).droplevel(0).iloc[-1]
-            # print(result)
+                # print(result)
                 Kew=[k for k, v in score_dict.items() if result in v]
                 self.node=Kew[0]
                 return self.node,self.spek_tp
-            
+            if (rslt_df['signed_Gaps'] == 0).all():
+                rsdf=rslt_df.sample(n=1)
+                
+                #rdf=rslt_df.loc[rslt_df['Measures'] == rsdf["Measures"].values]
+
+                # result=rslt_df
+                measure_selected=rsdf["Measures"].values[0]
+                # print(type(measure_selected))
+                measure_selected=" ".join(map(str,measure_selected))
+                # print(type(measure_selected))
+                # print(rslt_df)
+                new_df = rslt_df[(rslt_df['Measures1']==measure_selected )]
+                # print(new_df)
+                comp_node_list = new_df['comp_node'].tolist()
+                # print(*comp_node_list)
+                for x in comp_node_list:
+                    x=BNode(x)
+                    # print(type(x))
+                    p5=URIRef("http://example.com/slowmo#RegardingComparator")
+                    p22=URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+                    top_10=URIRef("http://purl.obolibrary.org/obo/PSDO_0000129")
+                    for s1234,p1234,o1234 in self.spek_tp.triples((None,p5,x)):
+                        for sa,pa,oa in self.spek_tp.triples((s1234,p22, None)):
+                            if oa == top_10:
+                                final_x= x
+                final_x=str(final_x)            
+                Kew1=[k for k, v in comp_node_dict.items() if final_x in v]
+                self.node=Kew1[0]
+                return self.node,self.spek_tp 
+                        
+
             
         self.node=Keymax
             
