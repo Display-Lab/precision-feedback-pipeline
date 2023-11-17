@@ -479,7 +479,11 @@ class Esteemer():
             rslt_df = df_final.loc[df_final['accept_path'] == "Social better"]
             if "Measure" not in rslt_df.columns:
                 rslt_df["Measure"]=np.nan
-            cols = ['Measure', 'Measure_x']
+            if "Measure_x" not in rslt_df.columns:
+                rslt_df["Measure_x"]=np.nan
+            if "Measure_y" not in rslt_df.columns:
+                rslt_df["Measure_y"]=np.nan
+            cols = ['Measure', 'Measure_y']
             rslt_df["Measures"] = [[e for e in row if e==e] for row in rslt_df[cols].values]
             rslt_df = rslt_df.drop('Measure', axis=1)
             rslt_df = rslt_df.drop('Measure_x', axis=1)
