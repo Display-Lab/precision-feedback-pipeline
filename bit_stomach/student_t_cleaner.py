@@ -24,7 +24,7 @@ def student_t_cleaner(perf_dataframe):
     if cleaned_rows:
         logger.debug(f'Found rows with non-significant denominators, attempting removal...')
         perf_dataframe.drop(cleaned_rows, inplace=True)
-        logger.debug(f'Cleaned dataframe is: \n{perf_dataframe}')
+        #logger.debug(f'Cleaned dataframe is: \n{perf_dataframe}')
 
     # Check if there are at least 3 rows with the same measure after cleaning
     if len(perf_dataframe['measure'].unique()) < 3:
