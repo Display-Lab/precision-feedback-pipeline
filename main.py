@@ -1,12 +1,12 @@
 from rdflib import Graph, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
 from candidatesmasher.candidatesmasher import CandidateSmasher
 from graph_operations import read_graph, create_performer_graph
+from fastapi import FastAPI, Request, HTTPException
 from thinkpudding.thinkpudding import Thinkpudding
 from bit_stomach.bit_stomach import Bit_stomach
 from pictoralist.pictoralist import Pictoralist
 from esteemer.esteemer import Esteemer
 from requests_file import FileAdapter
-from fastapi import FastAPI, Request
 from settings import settings
 from loguru import logger
 from io import BytesIO
@@ -21,7 +21,7 @@ global templates, pathways, measures
 
 ### Logging module setup (using loguru module)
 logger.remove()
-logger.add(sys.stderr, colorize=True, format="{level}|  {message}", level=settings.log_level)
+logger.add(sys.stdout, colorize=True, format="{level}|  {message}", level=settings.log_level)
 
 ## Log of instance configuration
 logger.info(f"Startup configuration for this instance:")
@@ -155,7 +155,12 @@ async def createprecisionfeedback(info:Request):
     
     #BitStomach
     logger.info(f"Calling BitStomach from main...")
-    bs=Bit_stomach(performer_graph,performance_data_df)
+    try:
+        bs=Bit_stomach(performer_graph,performance_data_df)
+    except SystemExit:
+        # Not as graceful as I want, but can't spend time perfecting this
+        HTTPException(status_code=500, detail='Process aborted')
+
     BS=bs.annotate()
     op=BS.serialize(format='json-ld', indent=4)
     

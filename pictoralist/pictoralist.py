@@ -112,9 +112,9 @@ class Pictoralist():
             self.performance_data['measure'].fillna(method='ffill', inplace=True)
             self.performance_data['goal_percent'].fillna(method='ffill', inplace=True)
 
-
-            logger.debug(f"After gap fill, dataframe is:")
-            logger.debug(f'\n{self.performance_data}')
+            # Debugging statement
+            #logger.debug(f"After gap fill, dataframe is:")
+            #logger.debug(f'\n{self.performance_data}')
 
 
 
@@ -133,7 +133,8 @@ class Pictoralist():
             self.generate_image = False        # Turn off image generation
             self.display_format = "text only"  # Set to text-only display type
             logger.warning("Dataset too small, display format forced to text only")
-            logger.debug(f"DFormat: {self.display_format}\tDTime: {self.display_timeframe}")
+            logger.debug(f"Display Format: {self.display_format}\tDisplay Months: {self.display_timeframe}")
+            logger.debug(f"Performance dataframe is:\n{self.performance_data}")
 
 
 
@@ -373,13 +374,13 @@ class Pictoralist():
             "pfp_version":'0.2.1',    # Ditto
             "staff_number":self.staff_ID,
             "selected_candidate":candidate,
-            "performance_month":self.performance_data["month"].iloc[-1],
+            "selected_comparator":self.comparator_series_label,
+            "performance_month":self.performance_data["month"].iloc[-1].strftime("%B %Y"),   # Becomes string in response, format here
             "performance_data":self.performance_block,
             "message_generated_datetime":self.init_time,
             "message":message
         }
         if self.message_instance_id != None:
             full_message['message_instance_id']=self.message_instance_id
-
 
         return full_message
