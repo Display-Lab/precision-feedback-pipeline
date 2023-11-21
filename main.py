@@ -1,12 +1,12 @@
 from rdflib import Graph, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
 from candidatesmasher.candidatesmasher import CandidateSmasher
 from graph_operations import read_graph, create_performer_graph
+from fastapi import FastAPI, Request, HTTPException
 from thinkpudding.thinkpudding import Thinkpudding
 from bit_stomach.bit_stomach import Bit_stomach
 from pictoralist.pictoralist import Pictoralist
 from esteemer.esteemer import Esteemer
 from requests_file import FileAdapter
-from fastapi import FastAPI, Request, HTTPException, status
 from settings import settings
 from loguru import logger
 from io import BytesIO
