@@ -163,6 +163,11 @@ async def createprecisionfeedback(info:Request):
 
     BS=bs.annotate()
     op=BS.serialize(format='json-ld', indent=4)
+    if settings.outputs == True and settings.log_level == "DEBUG":
+        folderName = "outputs"
+        os.makedirs(folderName, exist_ok=True)
+        print(settings.outputs)
+        print(settings.log_level)
     
     
     #CandidateSmasher

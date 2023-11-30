@@ -30,6 +30,7 @@ class Settings:
         self.log_level      = config('log_level', cast=str)    # Logging level for instance
         self.generate_image = config('generate_image', cast=bool)   # Generate image flag (pictoraless)
         self.cache_image    = config('cache_image', cast=bool)      # Cache generated image flag
+        self.outputs        = config('outputs',cast=bool)           #output
 
         # Instance display settings
         self.display_window = config('display_window', cast=int)
