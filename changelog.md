@@ -6,6 +6,7 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 **Added:** student_t_cleaner to BitStomach
 - cleans data of denominators less than ten
 - cleans data of measures lacking data for the most recent month's performance
+- exits gracefully with 200 code response when no data remains for feedback generation
 
 **Improvement:** Pictoralist: Display functionality fixes (see [#163](https://github.com/Display-Lab/precision-feedback-pipeline/issues/163))
 - Changed strategy for generating annotations on bar chart performance, now using distinct truncated dataframes as in line graphs

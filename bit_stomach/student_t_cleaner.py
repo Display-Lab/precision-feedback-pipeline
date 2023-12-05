@@ -2,6 +2,7 @@ from rdflib import Literal, URIRef, BNode
 from rdflib.namespace import RDF
 from loguru import logger
 import pandas as pd
+import fastapi
 import sys
 
 ## Logging setup
@@ -45,13 +46,9 @@ def student_t_cleaner(perf_dataframe):
         logger.debug(f'Cleaned dataframe is: \n{perf_dataframe}')
 
 
-
-    '''
-    ## Check if there are no measures with more than 3 unique months after cleaning
-    # NOTE: still allows through data for measures with less than 3 months, but if selected we will only get text feedback so that should work.
-    if perf_dataframe.groupby('measure')['month'].nunique().max() < 3:
+    ## Check if there is any data left in the performance dataframe after cleaning
+    if len(perf_dataframe) <1 :
         logger.error(f"Not enough significant data detected in performance block, aborting feedback...")
-        raise ValueError("PROCESS_ABORTED")
-    '''
-    return perf_dataframe
-
+        raise ValueError (f"Not enough significant data detected in performance block, aborting feedback...")
+    else:
+        return perf_dataframe

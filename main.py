@@ -155,11 +155,17 @@ async def createprecisionfeedback(info:Request):
     
     #BitStomach
     logger.info(f"Calling BitStomach from main...")
+    
+    # Trying another strategy for graceful exit:    
     try:
         bs=Bit_stomach(performer_graph,performance_data_df)
-    except SystemExit:
-        # Not as graceful as I want, but can't spend time perfecting this
-        HTTPException(status_code=500, detail='Process aborted')
+    except ValueError:
+        raise HTTPException(
+            status_code=400,
+            detail=f'Insufficient significant data found for providing feedback, process aborted. Message_instance_id: {message_instance_id}',
+            headers={"400-Error": "Invalid Input Error"}
+        )
+        sys.exit(4)
 
     BS=bs.annotate()
     op=BS.serialize(format='json-ld', indent=4)

@@ -29,7 +29,7 @@ class Bit_stomach:
             self.performance_data_df=student_t_cleaner(performance_data)
         except ValueError as e:
             raise e
-            exit(1)
+            
         
         self.input_graph=input_graph
         s=URIRef("http://example.com/app#display-lab")
