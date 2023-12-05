@@ -166,8 +166,11 @@ async def createprecisionfeedback(info:Request):
     if settings.outputs == True and settings.log_level == "DEBUG":
         folderName = "outputs"
         os.makedirs(folderName, exist_ok=True)
-        print(settings.outputs)
-        print(settings.log_level)
+        f = open("outputs/spek_bs.json", "w")
+        f.write(op)
+        f.close()
+        # print(settings.outputs)
+        # print(settings.log_level)
     
     
     #CandidateSmasher
@@ -183,6 +186,13 @@ async def createprecisionfeedback(info:Request):
     CS=cs.create_candidates(df_graph,df_3)
     #create goal
     CS=cs.create_candidates(goal_types,df16)
+    oc=CS.serialize(format='json-ld', indent=4)
+    if settings.outputs == True and settings.log_level == "DEBUG":
+        folderName = "outputs"
+        os.makedirs(folderName, exist_ok=True)
+        f = open("outputs/spek_cs.json", "w")
+        f.write(oc)
+        f.close()
     
     #Thinkpuddung
     logger.info(f"Calling ThinkPudding from main...")
@@ -191,7 +201,13 @@ async def createprecisionfeedback(info:Request):
     tp.process_spek()
     tp.matching()
     spek_tp=tp.insert()
-    op=spek_tp.serialize(format='json-ld', indent=4)
+    ot=spek_tp.serialize(format='json-ld', indent=4)
+    if settings.outputs == True and settings.log_level == "DEBUG":
+        folderName = "outputs"
+        os.makedirs(folderName, exist_ok=True)
+        f = open("outputs/spek_tp.json", "w")
+        f.write(ot)
+        f.close()
 
 
     # #Esteemer
