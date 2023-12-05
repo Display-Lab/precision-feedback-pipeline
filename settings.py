@@ -27,14 +27,14 @@ class Settings:
         self.mpm       = config('mpm', cast=str)
 
         # Instance settings
-        self.log_level      = config('log_level', cast=str)    # Logging level for instance
-        self.generate_image = config('generate_image', cast=bool)   # Generate image flag (pictoraless)
-        self.cache_image    = config('cache_image', cast=bool)      # Cache generated image flag
-        self.outputs        = config('outputs',cast=bool)           #output
+        self.log_level      = config('log_level', cast=str, default='INFO')         # Logging level for instance
+        self.generate_image = config('generate_image', cast=bool, default=True)     # Generate image flag (pictoraless)
+        self.cache_image    = config('cache_image', cast=bool, default=False)       # Cache generated image flag
+        self.outputs        = config('outputs', cast=bool, default=False)           # Logging of intermediate files
 
         # Instance display settings
-        self.display_window = config('display_window', cast=int)
-        self.plot_goal_line = config('plot_goal_line', cast=bool)
+        self.display_window = config('display_window', cast=int, default=6)
+        self.plot_goal_line = config('plot_goal_line', cast=bool, default=True)
 
 # Instantiate
 settings = Settings()
