@@ -106,7 +106,10 @@ async def startup_event():
         print("Startup aborted, see traceback:")
         raise e
     
+@app.get("/")
+async def root():
 
+    return{"Hello":"World"}
 
 
 
