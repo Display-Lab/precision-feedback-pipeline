@@ -1,4 +1,5 @@
 catalog-v001.xml
+*.ipynb
 
 # Abstract template and build artifacts
 doc/**/*.pdf

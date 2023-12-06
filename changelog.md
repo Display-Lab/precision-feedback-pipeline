@@ -5,6 +5,8 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 ### Release date: (unreleased)
 **Added:** student_t_cleaner to BitStomach
 - cleans data of denominators less than ten
+    - Removes any measure with data that is historically insignificant (<10)
+    - May be restrictive, however can add a sunset period at a later date to allow feedback on measures where data has been significant for >6 months
 - cleans data of measures lacking data for the most recent month's performance
 - exits gracefully with 200 code response when no data remains for feedback generation
 

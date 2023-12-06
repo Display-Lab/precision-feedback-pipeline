@@ -12,7 +12,7 @@ logger.add(sys.stdout, colorize=True, format="{level} | {message}")
 ### Clean dataframe of measures where statistical significance cannot be determined from analysis
 # Shoutout St. James Gate
 def student_t_cleaner(perf_dataframe):
-    logger.debug(f"Running bit_stomach.student_t_cleaner...")
+    logger.trace(f"Running bit_stomach.student_t_cleaner...")
     # Create a list to store indices of rows to be removed
     cleaned_rows = []
 
@@ -20,6 +20,10 @@ def student_t_cleaner(perf_dataframe):
     for index, row in perf_dataframe.iterrows():
         if row['denominator'] < 10:
             cleaned_rows.append(index)
+
+            # Also, add all indices of rows with the matching measure
+            measure_rows = perf_dataframe[perf_dataframe['measure'] == row['measure']]
+            cleaned_rows.extend(measure_rows.index)
 
     # Remove rows that need to be cleaned (insignificant denominators, non-current month)
     if cleaned_rows:
