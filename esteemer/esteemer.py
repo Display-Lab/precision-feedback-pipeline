@@ -570,7 +570,9 @@ class Esteemer():
             p20=URIRef("http://example.com/slowmo#AncestorTemplate")
             pqd=URIRef("http://example.com/slowmo#PerformanceGapSize")
             pqw=URIRef("http://example.com/slowmo#PerformanceTrendSlope")
-
+            
+            temp_name = URIRef("http://example.com/slowmo#name")   # URI of template name?
+            
             p232= URIRef("psdo:PerformanceSummaryDisplay")
             Display=["text only", "bar chart", "line graph"]
             comparator_types=["Top 25","Top 10","Peers","Goal"]
@@ -596,6 +598,10 @@ class Esteemer():
             ## Format selected_candidate to return for pictoralist-ing
             for s21,p21,o21 in self.spek_tp.triples((s,p20,None)):
                 s_m["template_id"] = o21
+            # Duplicate logic above and use to pull template name
+            for s21,p21,o21 in self.spek_tp.triples((s,temp_name,None)):
+                s_m["template_name"] = o21
+            
             for s2,p2,o2 in self.spek_tp.triples((s,p1,None)):
                 s_m["message_text"] = o2
             # for s212,p212,o212 in self.spek_tp.triples((s,p232,None)):
