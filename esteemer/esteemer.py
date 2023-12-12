@@ -326,6 +326,9 @@ class Esteemer():
                                             if v == "--":
                                                 v=0
                                             v= float(v)
+                                            abs_val=abs(j[3])
+                                            if j[2] !=abs_val:
+                                                j[2]=abs_val
                                             j[2]=j[2]*v
                                 # a.append(i)
                                 # a_new.append(accept_path)
