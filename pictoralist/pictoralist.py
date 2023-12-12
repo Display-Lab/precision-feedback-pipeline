@@ -18,9 +18,12 @@ class Pictoralist():
         # Needs cleanup to stop redundant var declaration (those passed directly to prepare_selected_message)
         self.performance_data   = performance_dataframe                             # Dataframe of recipient perf data (performance_data_df)
         self.performance_block  = str(serialized_perf_df)                           # Pull un-altered performance (serialized JSON) data to append output messsage with
+        
+        # Need refactor
         self.selected_measure   = str(selected_candidate["measure_name"])           # Name of selected measure
         self.sel_measure_title  = str(selected_candidate["measure_title"])          # Formal name of measure
         self.template_id        = str(selected_candidate["template_id"])            # Message template ID of selected candidate message
+        self.template_name      = str(selected_candidate["template_name"])          # Message template name
         self.display_format     = str(selected_candidate["display"])                # Selected display type
         self.message_text       = str(selected_candidate["message_text"])           # Raw message template fulltext (sans 'Additional message text' (changed 11/6))
         self.comparator_type    = str(selected_candidate["comparator_type"])        # ["Top 25", "Top 10", "Peers", "Goal"] (Peers is peer average?)
@@ -359,7 +362,7 @@ class Pictoralist():
         candidate={}
         message={}
         candidate["message_template_id"]    =self.template_id
-        #candidate["message_template_name"]  =self.template_name        # Left for future implementation
+        candidate["message_template_name"]  =self.template_name
         candidate["display"]                =self.display_format
         candidate["measure"]                =self.selected_measure
         candidate["acceptable_by"]          =self.acceptable_by
