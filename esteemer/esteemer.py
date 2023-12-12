@@ -189,7 +189,7 @@ class Esteemer():
         for x in self.measure_gap_list:
             x=list(x)
             self.measure_gap_list_new.append(x)
-        # print(*self.measure_gap_list_new)                        
+        print(*self.measure_gap_list_new)                        
                            
     def process_history(self):
         def extract(a):
@@ -366,6 +366,7 @@ class Esteemer():
                                             if v == "--":
                                                 v=0
                                             v= float(v)
+                                            
                                             j[2]=j[2]*v
                                             # j.append(i)
                                 # b.append(i)
@@ -474,9 +475,13 @@ class Esteemer():
         
         Keymax = max(zip(score_dict.values(), score_dict.keys()))[1]
         # Valuemax= max(zip(score_dict.values(), score_dict.keys()))[0]
+
+        for k2,v2 in score_dict.items():
+            print(k2,v2)
         
         index_list=[]
         df_final1=df_final.iloc[df_final.score.argmax()]
+        # print(df_final1)
         if df_final1['accept_path']=="Social better":
             # print("yes")
             rslt_df = df_final.loc[df_final['accept_path'] == "Social better"]
@@ -494,14 +499,16 @@ class Esteemer():
             rslt_df ['Measures1'] = [','.join(map(str, l)) for l in rslt_df['Measures']]
             # print(rslt_df)
             if (rslt_df['signed_Gaps'] > 0).all():
-                result=rslt_df.groupby('accept_path')['score'].nlargest(2).droplevel(0).iloc[-1]
+                # print("yes")
+                result=rslt_df.groupby('accept_path')['score'].nsmallest(2).droplevel(0).iloc[1]
                 # print(result)
                 Kew=[k for k, v in score_dict.items() if result in v]
                 self.node=Kew[0]
                 return self.node,self.spek_tp
-            if (rslt_df['signed_Gaps'] == 0).all():
+            if (rslt_df['signed_Gaps'] == 0.00).any():
+                # print("yes")
                 rsdf=rslt_df.sample(n=1)
-                
+                # print(rsdf)
                 #rdf=rslt_df.loc[rslt_df['Measures'] == rsdf["Measures"].values]
 
                 # result=rslt_df
