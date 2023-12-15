@@ -498,12 +498,12 @@ class Esteemer():
             rslt_df = rslt_df.drop('Measure_y', axis=1)
             rslt_df ['Measures1'] = [','.join(map(str, l)) for l in rslt_df['Measures']]
             print(rslt_df)
-            if (rslt_df['signed_Gaps'] > 0).all():
+            if (rslt_df['signed_Gaps'] >0).all():
                 
                 result=rslt_df.groupby('accept_path')['score'].nsmallest(2).droplevel(0).iloc[0]
                 print(result)
                 Kew=[k for k, v in score_dict.items() if result in v]
-                self.node=Kew[0]
+                self.node=random.choice(Kew)
                 return self.node,self.spek_tp
             if (rslt_df['signed_Gaps'] == 0.00).any():
                 # print("yes")
@@ -521,8 +521,10 @@ class Esteemer():
                 # print(new_df)
                 comp_node_list = new_df['comp_node'].tolist()
                 # print(*comp_node_list)
+                final_x=0
                 for x in comp_node_list:
                     x=BNode(x)
+                    # print(x)
                     # print(type(x))
                     p5=URIRef("http://example.com/slowmo#RegardingComparator")
                     p22=URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
@@ -531,8 +533,14 @@ class Esteemer():
                         for sa,pa,oa in self.spek_tp.triples((s1234,p22, None)):
                             if oa == top_10:
                                 final_x= x
-                final_x=str(final_x)            
+                # print(final_x)
+                
+                if final_x == 0:
+                    final_x= random.choice(comp_node_list)
+                else:
+                    final_x=str(final_x)            
                 Kew1=[k for k, v in comp_node_dict.items() if final_x in v]
+                # print(*Kew1)
                 self.node=Kew1[0]
                 return self.node,self.spek_tp 
                         
