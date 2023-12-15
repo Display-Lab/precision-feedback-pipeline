@@ -497,12 +497,13 @@ class Esteemer():
             rslt_df = rslt_df.drop('Measure_x', axis=1)
             rslt_df = rslt_df.drop('Measure_y', axis=1)
             rslt_df ['Measures1'] = [','.join(map(str, l)) for l in rslt_df['Measures']]
-            print(rslt_df)
-            if (rslt_df['signed_Gaps'] >0).all():
-                
+           
+            if (rslt_df['signed_Gaps'] > 0).all():
+                # print("yes")
                 result=rslt_df.groupby('accept_path')['score'].nsmallest(2).droplevel(0).iloc[0]
-                print(result)
+                
                 Kew=[k for k, v in score_dict.items() if result in v]
+
                 self.node=random.choice(Kew)
                 return self.node,self.spek_tp
             if (rslt_df['signed_Gaps'] == 0.00).any():
