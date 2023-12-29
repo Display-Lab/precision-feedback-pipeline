@@ -12,10 +12,10 @@ from bit_stomach.student_t_cleaner import student_t_cleaner
 
 class Bit_stomach:
     def __init__(self,performer_graph:Graph,performance_data:pd.DataFrame):
-        self.peer_dicts={} 
-        self.top_10_dicts={}
-        self.top_25_dicts={}
-        self.goal_dicts={}
+        self.peer_dicts={} #This contains blank nodes as keys and peer comparator title
+        self.top_10_dicts={}#This contains blank nodes as keys and top 10 comparator title
+        self.top_25_dicts={}#This contains blank nodes as keys and top 25 comparator title
+        self.goal_dicts={}#This contains blank nodes as keys and goal comparator title
        
         #cleaned dataframe as self.performance_data_df:
         try:
@@ -84,7 +84,7 @@ class Bit_stomach:
         insert_blank_nodes_peers(self)
         insert_blank_nodes_goal(self)
         
-           
+        #extract blank nodes for each comparator   
         for s,p,o in self.performer_graph.triples((URIRef("http://example.com/app#display-lab"), URIRef('http://example.com/slowmo#IsAboutMeasure'), None)):
             s1=o
             for s2,p2,o2 in self.performer_graph.triples((s1,URIRef("http://example.com/slowmo#WithComparator"),None)):
@@ -109,7 +109,8 @@ class Bit_stomach:
         
 
     def annotate(self):
-        pr=Prepare_data_annotate(self.performer_graph,self.performance_data_df)
+        #prepare data before annotating
+        prepared_data=Prepare_data_annotate(self.performer_graph,self.performance_data_df)
         measure_list=[]
         self.performance_data_df["measure"]=self.performance_data_df["measure"].str.decode(encoding="UTF-8")
         measure_list=self.performance_data_df["measure"].drop_duplicates()
@@ -117,24 +118,24 @@ class Bit_stomach:
         for index, element in enumerate(measure_list):
             measure_name=element
 
-            self.performer_graph=pr.goal_gap_annotate(measure_name,**self.goal_dicts)
-            self.performer_graph=pr.goal_trend_annotate(measure_name,**self.goal_dicts)
-            self.performer_graph=pr.goal_acheivement_loss_annotate(measure_name, **self.goal_dicts)
-            self.performer_graph=pr.goalconsecutive_annotate(measure_name,**self.goal_dicts)
-            self.performer_graph=pr.goal_monotonicity_annotate(measure_name,**self.goal_dicts) 
-            self.performer_graph=pr.peer_gap_annotate(measure_name,**self.peer_dicts)
-            self.performer_graph=pr.peer_trend_annotate(measure_name,**self.peer_dicts)
-            self.performer_graph=pr.peer_acheivement_loss_annotate(measure_name, **self.peer_dicts) 
-            self.performer_graph=pr.peerconsecutive_annotate(measure_name,**self.peer_dicts)
-            self.performer_graph=pr.peer_monotonicity_annotate(measure_name,**self.peer_dicts)
-            self.performer_graph=pr.top_10_gap_annotate(measure_name,**self.top_10_dicts)
-            self.performer_graph=pr.top_10_trend_annotate(measure_name,**self.top_10_dicts)
-            self.performer_graph=pr.top_10_acheivement_loss_annotate(measure_name,**self.top_10_dicts)
-            self.performer_graph=pr.top_10consecutive_annotate(measure_name,**self.top_10_dicts)
-            self.performer_graph=pr.top_10_monotonicity_annotate(measure_name,**self.top_10_dicts)
-            self.performer_graph=pr.top_25_gap_annotate(measure_name,**self.top_25_dicts)
-            self.performer_graph=pr.top_25_trend_annotate(measure_name,**self.top_25_dicts)
-            self.performer_graph=pr.top_25_acheivement_loss_annotate(measure_name,**self.top_25_dicts)
-            self.performer_graph=pr.top_25consecutive_annotate(measure_name,**self.top_25_dicts)
-            self.performer_graph=pr.top_25_monotonicity_annotate(measure_name,**self.top_25_dicts)
+            self.performer_graph=prepared_data.goal_gap_annotate(measure_name,**self.goal_dicts)
+            self.performer_graph=prepared_data.goal_trend_annotate(measure_name,**self.goal_dicts)
+            self.performer_graph=prepared_data.goal_acheivement_loss_annotate(measure_name, **self.goal_dicts)
+            self.performer_graph=prepared_data.goalconsecutive_annotate(measure_name,**self.goal_dicts)
+            self.performer_graph=prepared_data.goal_monotonicity_annotate(measure_name,**self.goal_dicts) 
+            self.performer_graph=prepared_data.peer_gap_annotate(measure_name,**self.peer_dicts)
+            self.performer_graph=prepared_data.peer_trend_annotate(measure_name,**self.peer_dicts)
+            self.performer_graph=prepared_data.peer_acheivement_loss_annotate(measure_name, **self.peer_dicts) 
+            self.performer_graph=prepared_data.peerconsecutive_annotate(measure_name,**self.peer_dicts)
+            self.performer_graph=prepared_data.peer_monotonicity_annotate(measure_name,**self.peer_dicts)
+            self.performer_graph=prepared_data.top_10_gap_annotate(measure_name,**self.top_10_dicts)
+            self.performer_graph=prepared_data.top_10_trend_annotate(measure_name,**self.top_10_dicts)
+            self.performer_graph=prepared_data.top_10_acheivement_loss_annotate(measure_name,**self.top_10_dicts)
+            self.performer_graph=prepared_data.top_10consecutive_annotate(measure_name,**self.top_10_dicts)
+            self.performer_graph=prepared_data.top_10_monotonicity_annotate(measure_name,**self.top_10_dicts)
+            self.performer_graph=prepared_data.top_25_gap_annotate(measure_name,**self.top_25_dicts)
+            self.performer_graph=prepared_data.top_25_trend_annotate(measure_name,**self.top_25_dicts)
+            self.performer_graph=prepared_data.top_25_acheivement_loss_annotate(measure_name,**self.top_25_dicts)
+            self.performer_graph=prepared_data.top_25consecutive_annotate(measure_name,**self.top_25_dicts)
+            self.performer_graph=prepared_data.top_25_monotonicity_annotate(measure_name,**self.top_25_dicts)
         return self.performer_graph
