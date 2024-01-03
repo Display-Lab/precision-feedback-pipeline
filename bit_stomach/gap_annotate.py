@@ -3,297 +3,195 @@
 from rdflib import Literal, URIRef, BNode
 from rdflib.namespace import RDF
 
-#from calc_gaps_slopes import gap_calc,trend_calc,monotonic_pred,mod_collector
-
-s=URIRef("http://example.com/app#display-lab")
-p=URIRef('http://example.com/slowmo#IsAboutMeasure')
-
-
-
-def goal_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
-    s14=s13
-    p14=URIRef('http://purl.obolibrary.org/obo/RO_0000091')
+def goal_gap_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
     latest_measure_df=latest_measure_df.reset_index(drop=True)
-    #a=insert_annotate(input_graph)
-    
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['goal_comparison_value']
-    
     # if (gap_size[0]!= 0):
-    ac=BNode(latest_measure_df["measure"][0])
-    av=comparator_bnode
+    measure_name_node=BNode(latest_measure_df["measure"][0])
     goal_gap_size=gap_size[0]
     goal_gap_size=Literal(goal_gap_size)
     #         #annotate goal comparator
-    o14=BNode() 
-    input_graph.add((s14,p14,o14))
-    input_graph=annotate_goal_comparator(input_graph,o14,ac,av)
-    o14=BNode() 
-    input_graph.add((s14,p14,o14))
-    input_graph=annotate_performance_goal_gap(input_graph,o14,ac,av)
+    blank_node=BNode() 
+    performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+    performer_graph=annotate_goal_comparator(performer_graph,blank_node,measure_name_node,comparator_bnode)
+    blank_node=BNode() 
+    performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+    performer_graph=annotate_performance_goal_gap(performer_graph,blank_node,measure_name_node,comparator_bnode)
     if(latest_measure_df['goal_comparison_value'][0]<=latest_measure_df['Performance_Rate'][0]):
-        o14=BNode() 
-        input_graph.add((s14,p14,o14))
-        input_graph=annotate_positive_goal_gap(input_graph,o14,ac,av,goal_gap_size)
-
+        blank_node=BNode() 
+        performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+        performer_graph=annotate_positive_goal_gap(performer_graph,blank_node,measure_name_node,comparator_bnode,goal_gap_size)
     if(latest_measure_df['goal_comparison_value'][0]>latest_measure_df['Performance_Rate'][0]):
-        o14=BNode() 
-        input_graph.add((s14,p14,o14))
-        input_graph=annotate_negative_goal_gap(input_graph,o14,ac,av,goal_gap_size)
-        
+        blank_node=BNode() 
+        performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+        performer_graph=annotate_negative_goal_gap(performer_graph,blank_node,measure_name_node,comparator_bnode,goal_gap_size)
+    return performer_graph
 
-    
+def annotate_goal_comparator(performer_graph,blank_node,measure_Name,comparator_bnode):
+    performer_graph.add((blank_node,RDF.type,URIRef('http://purl.obolibrary.org/obo/PSDO_0000094')))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
+    return performer_graph
 
-    return input_graph
+def annotate_performance_goal_gap(performer_graph,blank_node,measure_Name,comparator_bnode):
+    performer_graph.add((blank_node,RDF.type,URIRef('http://purl.obolibrary.org/obo/PSDO_0000106')))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
+    return performer_graph
 
-def annotate_goal_comparator(a,s16,measure_Name,o16):
-    p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000094')
-    a.add((s16,p15,o15))
-    p16=URIRef('http://example.com/slowmo#RegardingComparator')
-    a.add((s16,p16,o16))
-    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
-    o17=measure_Name
-    a.add((s16,p17,o17))
-    return a
+def annotate_positive_goal_gap(performer_graph,blank_node,measure_Name,comparator_bnode,goal_gap_size):
+    performer_graph.add((blank_node,RDF.type,URIRef('http://purl.obolibrary.org/obo/PSDO_0000104')))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#PerformanceGapSize'),goal_gap_size))
+    return performer_graph
 
-def annotate_performance_goal_gap(a,s16,measure_Name,o16):
-    p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000106')
-    a.add((s16,p15,o15))
-    p16=URIRef('http://example.com/slowmo#RegardingComparator')
-    a.add((s16,p16,o16))
-    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
-    o17=measure_Name
-    a.add((s16,p17,o17))
-    return a
+def annotate_negative_goal_gap(performer_graph,blank_node,measure_Name,comparator_bnode,goal_gap_size):
+    performer_graph.add((blank_node,RDF.type,URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#PerformanceGapSize'),goal_gap_size))
+    return performer_graph
 
-def annotate_positive_goal_gap(a,s16,measure_Name,o16,goal_gap_size):
-    p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000104')
-    a.add((s16,p15,o15))
-    p16=URIRef('http://example.com/slowmo#RegardingComparator')
-    a.add((s16,p16,o16))
-    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
-    o17=measure_Name
-    a.add((s16,p17,o17))
-    p18=URIRef('http://example.com/slowmo#PerformanceGapSize')
-    o18=goal_gap_size
-    a.add((s16,p18,o18))
-    return a
-
-def annotate_negative_goal_gap(a,s16,measure_Name,o16,goal_gap_size):
-
-    p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')
-    a.add((s16,p15,o15))
-    p16=URIRef('http://example.com/slowmo#RegardingComparator')
-    a.add((s16,p16,o16))
-    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
-    o17=measure_Name
-    a.add((s16,p17,o17))
-    p18=URIRef('http://example.com/slowmo#PerformanceGapSize')
-    o18=goal_gap_size
-    a.add((s16,p18,o18))
-    return a
-
-def peer_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
-    s14=s13
-    # print(comparator_bnode)
-    p14=URIRef('http://purl.obolibrary.org/obo/RO_0000091')
+def peer_gap_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
     latest_measure_df=latest_measure_df.reset_index(drop=True)
-    #a=insert_annotate(input_graph)
-   
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_average_comparator']
-    
-    # if (gap_size[0]!= 0):
-    ac=BNode(latest_measure_df["measure"][0])
-    av=comparator_bnode
+    measure_name_node=BNode(latest_measure_df["measure"][0])
     goal_gap_size=gap_size[0]
     goal_gap_size=Literal(goal_gap_size)
     #         #annotate goal comparator
-    o14=BNode() 
-    input_graph.add((s14,p14,o14))
-    input_graph=annotate_peer_comparator(input_graph,o14,ac,av)
-    input_graph=annotate_peer_average_comparator(input_graph,o14,ac,av)
-    o14=BNode() 
-    input_graph.add((s14,p14,o14))
-    input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
+    blank_node=BNode() 
+    performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+    performer_graph=annotate_peer_comparator(performer_graph,blank_node,measure_name_node,comparator_bnode)
+    performer_graph=annotate_peer_average_comparator(performer_graph,blank_node,measure_name_node,comparator_bnode)
+    blank_node=BNode() 
+    performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+    performer_graph=annotate_performance_peer_gap(performer_graph,blank_node,measure_name_node,comparator_bnode)
     if(latest_measure_df['peer_average_comparator'][0]<=latest_measure_df['Performance_Rate'][0]):
-        o14=BNode() 
-        input_graph.add((s14,p14,o14))
-        input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+        blank_node=BNode() 
+        performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+        performer_graph=annotate_positive_peer_gap(performer_graph,blank_node,measure_name_node,comparator_bnode,goal_gap_size)
     if(latest_measure_df['Performance_Rate'][0]<latest_measure_df['peer_average_comparator'][0]):
-        o14=BNode() 
-        input_graph.add((s14,p14,o14))
-        input_graph=annotate_negative_peer_gap(input_graph,o14,ac,av,goal_gap_size)
-        
-
-    
-
-    return input_graph
+        blank_node=BNode() 
+        performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+        performer_graph=annotate_negative_peer_gap(performer_graph,blank_node,measure_name_node,comparator_bnode,goal_gap_size)
+    return performer_graph
 
 
 
-def annotate_top_10_percentile(a,s16,measure_Name,o16):
-    p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000129')
-    a.add((s16,p15,o15))
-    p16=URIRef('http://example.com/slowmo#RegardingComparator')
-    a.add((s16,p16,o16))
-    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
-    o17=measure_Name
-    a.add((s16,p17,o17))
-    return a
+def annotate_top_10_percentile(performer_graph,blank_node,measure_Name,comparator_bnode):
+    performer_graph.add((blank_node,RDF.type,URIRef('http://purl.obolibrary.org/obo/PSDO_0000129')))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
+    return performer_graph
 
 
-def top_10_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
-    s14=s13
-    p14=URIRef('http://purl.obolibrary.org/obo/RO_0000091')
-    
+def top_10_gap_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
     latest_measure_df=latest_measure_df.reset_index(drop=True)
-    #a=insert_annotate(input_graph)
-    
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_90th_percentile_benchmark']
-    
-    # if (gap_size[0]>= 0):
-    ac=BNode(latest_measure_df["measure"][0])
-    av=comparator_bnode
+    measure_name_node=BNode(latest_measure_df["measure"][0])
     goal_gap_size=gap_size[0]
     goal_gap_size=Literal(goal_gap_size)
-    #         #annotate goal comparator
-    o14=BNode() 
-    input_graph.add((s14,p14,o14))
-    input_graph=annotate_peer_comparator(input_graph,o14,ac,av)
-    input_graph=annotate_peer_average_comparator(input_graph,o14,ac,av)
-    o14=BNode() 
-    input_graph.add((s14,p14,o14))
-    input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
+    blank_node=BNode() 
+    performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+    performer_graph=annotate_peer_comparator(performer_graph,blank_node,measure_name_node,comparator_bnode)
+    performer_graph=annotate_peer_average_comparator(performer_graph,blank_node,measure_name_node,comparator_bnode)
+    blank_node=BNode() 
+    performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+    performer_graph=annotate_performance_peer_gap(performer_graph,blank_node,measure_name_node,comparator_bnode)
         # o14=BNode()
-        # input_graph.add((s14,p14,o14))
-    input_graph=annotate_top_10_percentile(input_graph,o14,ac,av)
+        
+    performer_graph=annotate_top_10_percentile(performer_graph,blank_node,measure_name_node,comparator_bnode)
     if(latest_measure_df['peer_90th_percentile_benchmark'][0]<=latest_measure_df['Performance_Rate'][0]):
         # print("entere here")
-        o14=BNode() 
-        input_graph.add((s14,p14,o14))
-        input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+        blank_node=BNode() 
+        performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+        performer_graph=annotate_positive_peer_gap(performer_graph,blank_node,measure_name_node,comparator_bnode,goal_gap_size)
     if(latest_measure_df['peer_90th_percentile_benchmark'][0]==latest_measure_df['Performance_Rate'][0]):
             # print("entere here")
-        o14=BNode() 
-        input_graph.add((s14,p14,o14))
-        input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+        blank_node=BNode() 
+        performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+        performer_graph=annotate_positive_peer_gap(performer_graph,blank_node,measure_name_node,comparator_bnode,goal_gap_size)
     if(latest_measure_df['Performance_Rate'][0]<latest_measure_df['peer_90th_percentile_benchmark'][0]):
-        o14=BNode() 
-        input_graph.add((s14,p14,o14))
-        input_graph=annotate_negative_peer_gap(input_graph,o14,ac,av,goal_gap_size)
-    return input_graph
+        blank_node=BNode() 
+        performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+        performer_graph=annotate_negative_peer_gap(performer_graph,blank_node,measure_name_node,comparator_bnode,goal_gap_size)
+    return performer_graph
 
-def annotate_top_25_percentile(a,s16,measure_Name,o16):
-    p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000128')
-    a.add((s16,p15,o15))
-    p16=URIRef('http://example.com/slowmo#RegardingComparator')
-    a.add((s16,p16,o16))
-    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
-    o17=measure_Name
-    a.add((s16,p17,o17))
-    return a
+def annotate_top_25_percentile(performer_graph,blank_node,measure_Name,comparator_bnode):
+    performer_graph.add((blank_node,RDF.type,URIRef('http://purl.obolibrary.org/obo/PSDO_0000128')))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
+    return performer_graph
 
-def top_25_gap_annotate(input_graph,s13,latest_measure_df,comparator_bnode):
-    s14=s13
-    p14=URIRef('http://purl.obolibrary.org/obo/RO_0000091')
+def top_25_gap_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
+    
+    
     latest_measure_df=latest_measure_df.reset_index(drop=True)
-    #a=insert_annotate(input_graph)
+    
     
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_75th_percentile_benchmark']
     
     # if (gap_size[0]>= 0):
-    ac=BNode(latest_measure_df["measure"][0])
-    av=comparator_bnode
+    measure_name_node=BNode(latest_measure_df["measure"][0])
+    
     goal_gap_size=gap_size[0]
     goal_gap_size=Literal(goal_gap_size)
     #         #annotate goal comparator
-    o14=BNode() 
-    input_graph.add((s14,p14,o14))
-    input_graph=annotate_peer_comparator(input_graph,o14,ac,av)
-    input_graph=annotate_peer_average_comparator(input_graph,o14,ac,av)
-    o14=BNode() 
-    input_graph.add((s14,p14,o14))
-    input_graph=annotate_performance_peer_gap(input_graph,o14,ac,av)
+    blank_node=BNode() 
+    performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+    performer_graph=annotate_peer_comparator(performer_graph,blank_node,measure_name_node,comparator_bnode)
+    performer_graph=annotate_peer_average_comparator(performer_graph,blank_node,measure_name_node,comparator_bnode)
+    blank_node=BNode() 
+    performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+    performer_graph=annotate_performance_peer_gap(performer_graph,blank_node,measure_name_node,comparator_bnode)
         # o14=BNode()
-        # input_graph.add((s14,p14,o14))
-    input_graph=annotate_top_25_percentile(input_graph,o14,ac,av)
+        
+    performer_graph=annotate_top_25_percentile(performer_graph,blank_node,measure_name_node,comparator_bnode)
     if(latest_measure_df['peer_75th_percentile_benchmark'][0]<=latest_measure_df['Performance_Rate'][0]):
-        o14=BNode() 
+        blank_node=BNode() 
         # print("entered annotation")
-        input_graph.add((s14,p14,o14))
-        input_graph=annotate_positive_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+        performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+        performer_graph=annotate_positive_peer_gap(performer_graph,blank_node,measure_name_node,comparator_bnode,goal_gap_size)
     if(latest_measure_df['Performance_Rate'][0]<latest_measure_df['peer_75th_percentile_benchmark'][0]):
-        o14=BNode() 
-        input_graph.add((s14,p14,o14))
-        input_graph=annotate_negative_peer_gap(input_graph,o14,ac,av,goal_gap_size)
+        blank_node=BNode() 
+        performer_graph.add((p1_node,URIRef('http://purl.obolibrary.org/obo/RO_0000091'),blank_node))
+        performer_graph=annotate_negative_peer_gap(performer_graph,blank_node,measure_name_node,comparator_bnode,goal_gap_size)
         
 
     
 
-    return input_graph
+    return performer_graph
 
-def annotate_peer_comparator(a,s16,measure_Name,o16):
-    p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000095')
-    a.add((s16,p15,o15))
-    p16=URIRef('http://example.com/slowmo#RegardingComparator')
-    a.add((s16,p16,o16))
-    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
-    o17=measure_Name
-    a.add((s16,p17,o17))
-    return a
-def annotate_peer_average_comparator(a,s16,measure_Name,o16):
-    p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000126')
-    a.add((s16,p15,o15))
-    p16=URIRef('http://example.com/slowmo#RegardingComparator')
-    a.add((s16,p16,o16))
-    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
-    o17=measure_Name
-    a.add((s16,p17,o17))
-    return a
+def annotate_peer_comparator(performer_graph,blank_node,measure_Name,comparator_bnode):
+    performer_graph.add((blank_node,RDF.type,URIRef('http://purl.obolibrary.org/obo/PSDO_0000095')))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
+    return performer_graph
 
-def annotate_performance_peer_gap(a,s16,measure_Name,o16):
-    p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000106')
-    a.add((s16,p15,o15))
-    p16=URIRef('http://example.com/slowmo#RegardingComparator')
-    a.add((s16,p16,o16))
-    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
-    o17=measure_Name
-    a.add((s16,p17,o17))
-    return a
+def annotate_peer_average_comparator(performer_graph,blank_node,measure_Name,comparator_bnode):
+    performer_graph.add((blank_node,RDF.type,URIRef('http://purl.obolibrary.org/obo/PSDO_0000126')))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
+    return performer_graph
 
-def annotate_positive_peer_gap(a,s16,measure_Name,o16,goal_gap_size):
+def annotate_performance_peer_gap(performer_graph,blank_node,measure_Name,comparator_bnode):
+    performer_graph.add((blank_node,RDF.type,URIRef('http://purl.obolibrary.org/obo/PSDO_0000106')))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
+    return performer_graph
+
+def annotate_positive_peer_gap(performer_graph,blank_node,measure_Name,comparator_bnode,goal_gap_size):
     # print("entered here")
-    p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000104')
-    a.add((s16,p15,o15))
-    p16=URIRef('http://example.com/slowmo#RegardingComparator')
-    a.add((s16,p16,o16))
-    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
-    o17=measure_Name
-    a.add((s16,p17,o17))
-    p18=URIRef('http://example.com/slowmo#PerformanceGapSize')
-    o18=goal_gap_size
-    a.add((s16,p18,o18))
-    return a
+    performer_graph.add((blank_node,RDF.type,URIRef('http://purl.obolibrary.org/obo/PSDO_0000104')))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#PerformanceGapSize'),goal_gap_size))
+    return performer_graph
 
-def annotate_negative_peer_gap(a,s16,measure_Name,o16,goal_gap_size):
-    p15=RDF.type
-    o15=URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')
-    a.add((s16,p15,o15))
-    p16=URIRef('http://example.com/slowmo#RegardingComparator')
-    a.add((s16,p16,o16))
-    p17=URIRef('http://example.com/slowmo#RegardingMeasure')
-    o17=measure_Name
-    a.add((s16,p17,o17))
-    p18=URIRef('http://example.com/slowmo#PerformanceGapSize')
-    o18=goal_gap_size
-    a.add((s16,p18,o18))
-    return a
+def annotate_negative_peer_gap(performer_graph,blank_node,measure_Name,comparator_bnode,goal_gap_size):
+    performer_graph.add((blank_node,RDF.type,URIRef('http://purl.obolibrary.org/obo/PSDO_0000105')))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
+    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#PerformanceGapSize'),goal_gap_size))
+    return performer_graph
