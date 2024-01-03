@@ -518,7 +518,7 @@ class Esteemer():
             df_final = df_final.append(df_merged, ignore_index = True)
             logger.debug(f'DF_Final is:\n{df_final}')   # Inside loop over spo 5, spo5 represents candidates? Doesn't seem to be the case...
             #logger.debug(f'\nS5:\n{s5}\n\nP5:\n{p5}\no5:\n{o5}\n')
-            # print(df_merged)
+            logger.debug(f'df_merged is:\n{df_merged}')
             # print("\n")
         
         
@@ -530,9 +530,9 @@ class Esteemer():
         
         index_list=[]
         df_final1=df_final.iloc[df_final.score.argmax()]
-        # print(df_final1)
+        print(df_final1)
         if df_final1['accept_path']=="Social better":
-            # print("yes")
+            
             rslt_df = df_final.loc[df_final['accept_path'] == "Social better"]
             if "Measure" not in rslt_df.columns:
                 rslt_df["Measure"]=np.nan
@@ -546,13 +546,14 @@ class Esteemer():
             rslt_df = rslt_df.drop('Measure_x', axis=1)
             rslt_df = rslt_df.drop('Measure_y', axis=1)
             rslt_df ['Measures1'] = [','.join(map(str, l)) for l in rslt_df['Measures']]
-            # print(rslt_df)
+           
             if (rslt_df['signed_Gaps'] > 0).all():
                 # print("yes")
-                result=rslt_df.groupby('accept_path')['score'].nsmallest(2).droplevel(0).iloc[1]
-                # print(result)
+                result=rslt_df.groupby('accept_path')['score'].nsmallest(2).droplevel(0).iloc[0]
+                
                 Kew=[k for k, v in score_dict.items() if result in v]
-                self.node=Kew[0]
+
+                self.node=random.choice(Kew)
                 return self.node,self.spek_tp
             if (rslt_df['signed_Gaps'] == 0.00).any():
                 # print("yes")
@@ -570,8 +571,10 @@ class Esteemer():
                 # print(new_df)
                 comp_node_list = new_df['comp_node'].tolist()
                 # print(*comp_node_list)
+                final_x=0
                 for x in comp_node_list:
                     x=BNode(x)
+                    # print(x)
                     # print(type(x))
                     p5=URIRef("http://example.com/slowmo#RegardingComparator")
                     p22=URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
@@ -580,8 +583,14 @@ class Esteemer():
                         for sa,pa,oa in self.spek_tp.triples((s1234,p22, None)):
                             if oa == top_10:
                                 final_x= x
-                final_x=str(final_x)            
+                # print(final_x)
+                
+                if final_x == 0:
+                    final_x= random.choice(comp_node_list)
+                else:
+                    final_x=str(final_x)            
                 Kew1=[k for k, v in comp_node_dict.items() if final_x in v]
+                # print(*Kew1)
                 self.node=Kew1[0]
                 return self.node,self.spek_tp 
                         
