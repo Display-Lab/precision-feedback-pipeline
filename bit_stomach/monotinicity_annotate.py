@@ -3,7 +3,7 @@
 from rdflib import Literal, URIRef, BNode
 from rdflib.namespace import RDF
 
-
+#Determine monotonicity
 def monotonic_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
     back_up_df=latest_measure_df
     latest_measure_df=latest_measure_df.reset_index(drop=True)
@@ -32,19 +32,20 @@ def monotonic_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnod
     #back_up_df.to_csv('slope22.csv')
     #print(trend_sign)
     return performer_graph
-
+#annotate non monotonic trend
 def annotate_non_monotonic_trend(performer_graph,blank_node,measure_Name,comparator_bnode):
     performer_graph.add((blank_node,RDF.type,URIRef('http://example.com/slowmo#NonMonotonicTrend')))
     performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
     performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
     return performer_graph
+#annotate monotonic trend with numbers
 def annotate_monotonic_trend(performer_graph,blank_node,measure_Name,comparator_bnode,intervals):
     performer_graph.add((blank_node,RDF.type,URIRef('http://example.com/slowmo#MonotonicTrend')))
     performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
     performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
     performer_graph.add((blank_node,URIRef('http://example.com/slowmo#Timeofmonotonicity'),Literal(intervals)))
     return performer_graph
-
+#calculate number of months
 def find_number(backup_df,trend_sign1):
     if(trend_sign1=="negative"):
         x=2
