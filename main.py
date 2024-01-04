@@ -166,8 +166,8 @@ async def createprecisionfeedback(info:Request):
         )
         sys.exit(4)
 
-    BS=bs.annotate()
-    op=BS.serialize(format='json-ld', indent=4)
+    performer_graph=bs.annotate()
+    op=performer_graph.serialize(format='json-ld', indent=4)
     if settings.outputs == True and settings.log_level == "DEBUG":
         folderName = "outputs"
         os.makedirs(folderName, exist_ok=True)
@@ -180,7 +180,7 @@ async def createprecisionfeedback(info:Request):
     
     #CandidateSmasher
     logger.info(f"Calling CandidateSmasher from main...")
-    cs=CandidateSmasher(BS,templates)
+    cs=CandidateSmasher(performer_graph,templates)
     df_graph,goal_types,df_graph,top_10_types,top_25_types=cs.get_graph_type()
     df_template,df_1,df_2,df_3,df16=cs.get_template_data()
     #create top_10
