@@ -222,61 +222,31 @@ class CandidateSmasher:
        
 
     def get_template_data(self):
-        
         for sq,pq,oq in self.templates.triples((None,URIRef('http://schema.org/name'),None)):
             self.templates_list.append(str(sq))
-
-        
-        a26_dicts={}
-        a27_dicts={}
-        a278_dicts={}
+        Text_dicts={}
+        Name_dicts={}
         templatetype_dicts={}
         for x in range(len(self.templates_list)):
             template_node=URIRef(self.templates_list[x])
-            
-            af=[]
-            ab=[]
-            # for s29,p29,o29 in self.b.triples((s24,self.display_format,None)):
-            #     a253=str(o29)
-            #     af.append(a253)
-            # afd=tuple(af)
-            # a25_dicts[s24]=afd
-        #     for s30,p30,o30 in self.b.triples((s24,self.pq14,None)):
-        #         a26_dicts[self.ac[x]]=str(o30)
+            isabout_type=[]
             for s30,p30,o30 in self.templates.triples((template_node,URIRef("https://schema.metadatacenter.org/properties/6b9dfdf9-9c8a-4d85-8684-a24bee4b85a8"),None)):
-                # print(str(o30))
-                a26_dicts[template_node]=str(o30)
+                Text_dicts[template_node]=str(o30)
             for s31,p31,o31 in self.templates.triples((template_node,URIRef("http://schema.org/name"),None)):
-                a27_dicts[template_node]=str(o31)
-            for s322,p322,o322 in self.templates.triples((template_node,URIRef("https://schema.metadatacenter.org/properties/6b9dfdf9-9c8a-4d85-8684-a24bee4b85a8123"),None)):
-                a278_dicts[template_node]=str(o322)
-
+                Name_dicts[template_node]=str(o31)
             for s,p,o in self.templates.triples((template_node,URIRef("http://purl.obolibrary.org/obo/IAO_0000136"),None)):
                 templatetype=str(o)
-                ab.append(templatetype)
-            #     s25=o
-            #     for s,p,o in self.b.triples((s25,self.p25,None)):
-            #         templatetype=str(o)
-            #         ab.append(templatetype)
-            ad=tuple(ab)
-            # print(s24)
-            # print(ad)
-            templatetype_dicts[template_node]=ad
+                isabout_type.append(templatetype)
+            isabout_type_tuple=tuple(isabout_type)
+            templatetype_dicts[template_node]=isabout_type_tuple
            
-        
-          
-        # display_dicts=a25_dicts
-        text_dicts=a26_dicts
-        name_dicts=a27_dicts
-        # display_dicts=a278_dicts
+        text_dicts=Text_dicts
+        name_dicts=Name_dicts
         template_type_dicts=templatetype_dicts
-        # for k,v in text_dicts.items():
-        #     print(k,v)
+        
         self.df_text = pd.DataFrame.from_dict(text_dicts,orient='index')
         self.df_text = self.df_text.rename({0:"text"}, axis=1)
-        # self.df_display_dicts=pd.DataFrame.from_dict(display_dicts,orient='index')
-        # self.df_display_dicts = self.df_display_dicts.rename({0:"display"}, axis=1)
-        # self.df_display_dicts = self.df_display_dicts.rename({1:"display2"}, axis=1)
+        
         self.df_name_dicts=pd.DataFrame.from_dict(name_dicts,orient='index')
         self.df_name_dicts = self.df_name_dicts.rename({0:"name"}, axis=1)
         self.df_template_type_dicts=pd.DataFrame.from_dict(template_type_dicts,orient='index')
@@ -290,11 +260,6 @@ class CandidateSmasher:
             self.df_template_type_dicts  = self.df_template_type_dicts .rename({5:"template_type_dicts5"}, axis=1)
             self.df_template_type_dicts  = self.df_template_type_dicts .rename({6:"template_type_dicts6"}, axis=1)
         self.df=pd.concat([self.df_text,self.df_name_dicts,self.df_template_type_dicts], axis=1)
-       
-        # self.df = self.df.rename({1:"template_type_dicts1"}, axis=1)
-        # self.df = self.df.rename({2:"template_type_dicts2"}, axis=1)
-        # self.df = self.df.rename({3:"template_type_dicts3"}, axis=1)
-        # self.df = self.df.rename({4:"template_type_dicts4"}, axis=1)
         self.df = self.df.fillna(0)
         self.df = self.df.reset_index()
         
@@ -307,30 +272,31 @@ class CandidateSmasher:
             self.df["template_type_dicts3"]=0
         if "template_type_dicts4" in self.df.columns:
             self.df["template_type_dicts4"]=0
+
         self.df1=self.df.loc[self.df['template_type_dicts'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
         self.df2=self.df.loc[self.df['template_type_dicts1'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
         self.df3=self.df.loc[self.df['template_type_dicts2'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
         self.df4=self.df.loc[self.df['template_type_dicts3'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
         self.df5=self.df.loc[self.df['template_type_dicts4'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
-        # self.df6=self.df.loc[self.df['template_type_dicts5'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
-        # self.df7=self.df.loc[self.df['template_type_dicts6'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
         self.df_1 = pd.concat([self.df1,self.df2,self.df3,self.df4,self.df5], ignore_index=True, sort=False)
+        
+        #Access all the annotations with peer average 
         self.df6=self.df.loc[self.df['template_type_dicts'] == "http://purl.obolibrary.org/obo/PSDO_0000128"]
         self.df7=self.df.loc[self.df['template_type_dicts1'] == "http://purl.obolibrary.org/obo/PSDO_0000128"]
         self.df8=self.df.loc[self.df['template_type_dicts2'] == "http://purl.obolibrary.org/obo/PSDO_0000128"]
         self.df9=self.df.loc[self.df['template_type_dicts3'] == "http://purl.obolibrary.org/obo/PSDO_0000128"]
         self.df10=self.df.loc[self.df['template_type_dicts4'] == "http://purl.obolibrary.org/obo/PSDO_0000128"]
-        # self.df2=self.df.loc[self.df['template_type_dicts1'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
         self.df_2 = pd.concat([self.df6,self.df7,self.df8,self.df9,self.df10], ignore_index=True, sort=False)
        
+        #Access all the annotations with peer average       
         self.df11=self.df.loc[self.df['template_type_dicts'] == "http://purl.obolibrary.org/obo/PSDO_0000126"]
         self.df12=self.df.loc[self.df['template_type_dicts1'] == "http://purl.obolibrary.org/obo/PSDO_0000126"]
         self.df13=self.df.loc[self.df['template_type_dicts2'] == "http://purl.obolibrary.org/obo/PSDO_0000126"]
         self.df14=self.df.loc[self.df['template_type_dicts3'] == "http://purl.obolibrary.org/obo/PSDO_0000126"]
         self.df15=self.df.loc[self.df['template_type_dicts4'] == "http://purl.obolibrary.org/obo/PSDO_0000126"]
-        # self.df2=self.df.loc[self.df['template_type_dicts1'] == "http://purl.obolibrary.org/obo/PSDO_0000129"]
         self.df_3 = pd.concat([self.df11,self.df12,self.df13,self.df14,self.df15], ignore_index=True, sort=False)
 
+        #Access all the annotations with top 10
         self.df16=self.df.loc[(self.df.template_type_dicts != "http://purl.obolibrary.org/obo/PSDO_0000129") & (self.df.template_type_dicts != "http://purl.obolibrary.org/obo/PSDO_0000128")& (self.df.template_type_dicts != "http://purl.obolibrary.org/obo/PSDO_0000126")
         & (self.df.template_type_dicts1 != "http://purl.obolibrary.org/obo/PSDO_0000129") & (self.df.template_type_dicts1 != "http://purl.obolibrary.org/obo/PSDO_0000128") & (self.df.template_type_dicts1 != "http://purl.obolibrary.org/obo/PSDO_0000126")&
         (self.df.template_type_dicts2 != "http://purl.obolibrary.org/obo/PSDO_0000129")&(self.df.template_type_dicts2 != "http://purl.obolibrary.org/obo/PSDO_0000128")&(self.df.template_type_dicts2 != "http://purl.obolibrary.org/obo/PSDO_0000126")&
