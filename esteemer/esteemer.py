@@ -10,6 +10,12 @@ from rdflib import Literal, URIRef, BNode
 from rdflib.namespace import RDF
 from decimal import *
 import numpy as np
+#from process_history import retrieve_history_data, rank_history_component  # Having issues with this...
+import sys
+from loguru import logger
+
+logger.remove()
+logger.add(sys.stdout, level='TRACE', format="<b><level>{level}</></> \t{message}")
 
 
 
@@ -25,48 +31,58 @@ warnings.filterwarnings("ignore")
 # Read graph and convert to dataframe
 start_time = time.time()
 class Esteemer():
-    def __init__(self, spek_tp,measure_list, preferences , history,mpm_df):
+    def __init__(self, spek_tp, measure_list, preferences, history, mpm_df):
+        # Empty dicts, lists, arrays
         self.y=[]
-        self.spek_tp=spek_tp
-        self.preferences=preferences
-        self.history=history
-        self.mpm_df=mpm_df
-        self.s=URIRef("http://example.com/app#display-lab")
-        self.p=URIRef("http://example.com/slowmo#HasCandidate")
-        self.p1=URIRef("slowmo:acceptable_by")
-        self.p2=URIRef('http://example.com/slowmo#Score')
-        self.o2=Literal(1)
+        self.measure_gap_list=[]
+        self.measure_gap_list_new=[]
+        self.measure_trend_list=[]
+        self.measure_trend_list_new=[]
+        self.measure_acheivement_list=[]        # spelling
+        self.measure_acheivement_list_new=[]    # spelling
+        self.measure_loss_list=[]
+        self.measure_loss_list_new=[]
         self.gap_dicts={}
         self.trend_slopes={}
         self.losses={}
-        self.acheivements={}
-        self.measure_list=measure_list
-        self.measure_gap_list=[]
-        self.measure_gap_list_new=[]
-        # self.measure_gap_list.append("gaps")
-        self.measure_trend_list=[]
-        self.measure_trend_list_new=[]
-        # self.measure_trend_list.append("slopes")
-        self.measure_acheivement_list=[]
-        self.measure_acheivement_list_new=[]
-        # self.measure_acheivement_list.append("acheivement")
-        self.measure_loss_list=[]
-        self.measure_loss_list_new=[]
-        # self.measure_loss_list.append("loss")
+        self.acheivements={}    # spelling
         self.gap_dict={}
         self.trend_dict={}
-        self.acheivement_dict={}
+        self.acheivement_dict={}    # spelling
         self.loss_dict={}
         self.message_recency={}
         self.message_received_count={}
         self.measure_recency={}
         self.preferences={}
-        for s,p,o in self.spek_tp.triples( (self.s, self.p, None) ):
-            s1= o
-            for s,p,o in self.spek_tp.triples((s1,self.p1,None)):
-                self.spek_tp.add((s,self.p2,self.o2))
+
+        # External objects being written to self
+        self.spek_tp=spek_tp
+        self.preferences=preferences
+        self.history=history
+        self.mpm_df=mpm_df
+        self.measure_list=measure_list
+        
+        # New variables (none are currently required?)
+        self.display_lab_app_uri=URIRef("http://example.com/app#display-lab")       # one ref
+        self.slowmo_has_candidate=URIRef("http://example.com/slowmo#HasCandidate")  # one ref
+        self.slowmo_acceptable_by=URIRef("slowmo:acceptable_by")                    # one ref
+        self.slowmo_score=URIRef('http://example.com/slowmo#Score')                 # one ref
+        #self.o2=Literal(1)     # Replace with direct reference, just one usage
+        
+        ## 
+        for s,p,o in self.spek_tp.triples( (self.display_lab_app_uri, self.slowmo_has_candidate, None) ):
+            s1 = o   #?
+            for s,p,o in self.spek_tp.triples((s1, self.slowmo_acceptable_by, None)):
+                self.spek_tp.add((s, self.slowmo_score, Literal(1)))
                 self.y.append(s)
-                # print(s)
+                
+        logger.trace('Esteemer initialized')
+        logger.debug(f'MPM DF is:\n{mpm_df}')
+        logger.debug(f'Measure_list is:\n{measure_list}')
+        #logger.debug(f'Var "s" adds to dict "y", forming y as:\n{self.y}')
+
+
+    ## Process annotations from thinkpudding
     def process_spek(self):
         # print(*self.y)
         sh=BNode("p1")
@@ -84,27 +100,20 @@ class Esteemer():
         ph10=URIRef("http://example.com/slowmo#PerformanceTrendSlope")
         ph11=URIRef("http://example.com/slowmo#TimeSinceLastLoss")
         ph12=URIRef("http://example.com/slowmo#TimeSinceLastAcheivement")
+
         loss=[]
-        # loss.append("loss")
         acheivement=[]
-        # acheivement.append("acheivement")
         gaps=[]
-        
         trend_slope=[]
+
         self.measure_gap_list=[]
-        # self.measure_gap_list.append("gaps")
         self.measure_trend_list=[]
-        # self.measure_trend_list.append("slopes")
         self.measure_acheivement_list=[]
-        # self.measure_acheivement_list.append("acheivement")
         self.measure_loss_list=[]
-        # self.measure_loss_list.append("loss")
         
-        Measure4=None
         Measure =None
-        Measure1=None
-        Measure2=None
-        Measure3=None
+
+        ## Iterate through measures, add annotations to new lists (why?)
         for x in self.measure_list:
             Measure =x
             for ss,ps,os in self.spek_tp.triples((sh,ph,None)):
@@ -114,12 +123,9 @@ class Esteemer():
                         for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
                             o124=str(o124)
                             if o124 ==Measure:
-                                # print(Measure)
                                 gaps.clear()
                                 for s1234,p1234,o1234 in self.spek_tp.triples((s6,p5,None)):
-                                    # print(o1234)
                                     for s125,p125,o125 in self.spek_tp.triples((s6,ph9,None)):
-                                        # print(str(o125))
                                         gaps.append(str(o1234))
                                         gaps.append(Measure)
 
@@ -191,55 +197,96 @@ class Esteemer():
             self.measure_gap_list_new.append(x)
         print(*self.measure_gap_list_new)                        
                            
+
+    ## Pull in history component of input message from dict to dataframe for calculations:
     def process_history(self):
-        def extract(a):
-    #recursive algorithm for extracting items from a list of lists and items
-            if type(a) is list:
-                l = []
-                for item in a:
-                    l+=extract(item)
-                return l
+        logger.trace('Running esteemer.retrieve_history_data...')
+        # Define blank output matrix as a list of dictionaries
+        history_component_matrix = []
+
+
+        # Iterate through items in 'History'
+        for month, data in self.history.items():
+            if data:  # Check if the month has data
+
+                # Create a dictionary for each row in the output matrix per month in history
+                output_matrix_row = {
+                    'Month': month,
+                    'Measure': data.get('measure', ''),
+                    'Template Name': data.get('message_template_name', ''),
+                    'Message Instance ID': data.get('message_instance_id', ''),
+                    'Message datetime': data.get('message_generated_datetime', ''),
+                }
+                # Append the row to the output matrix
+                history_component_matrix.append(output_matrix_row)
+
+        # Convert the list of dictionaries to a pandas DataFrame
+        outcome_matrix = pd.DataFrame(history_component_matrix)
+
+        # Print the DataFrame (optional, for debugging)
+        logger.debug(f'History matrix is\n{outcome_matrix}')
+
+        return outcome_matrix
+
+
+
+    ## Determine values for history components (measure recency, message recency):
+    def rank_history_component(self, history_matrix, acceptable_candidates):
+        logger.trace('Running esteemer.rank_history_component...')
+        # where history_matrix = retrieve_history_data(acceptable_candidate)
+
+        # 1) Assign time 0 (current feedback month) | Once MPOG generating 'current_month', pull through from spek instead of latest month in dataframe...
+        this_month = pd.to_datetime(latest_month = history_matrix['Month'].idxmax())    #acceptable_candidate['current_month']) # Trace back acceptable candidate in spek_tp, pull key through to spek
+
+        # 2) Define dicts for data output
+        message_recency_dict = {}
+        measure_recency_dict = {}
+        
+
+        # 3) Compare row 'month' to t0, convert to integers representing time in months between extant feedback and current month
+        history_matrix['Time_Since_t0'] = (
+            pd.to_datetime(history_matrix['Month']) - this_month
+        ).astype('<m8[M]').astype(int)
+
+        # 4) Calculate message recency
+        for candidate in acceptable_candidates:
+
+            # Filter matrix for the specific candidate
+            candidate_rows = history_matrix[
+                (history_matrix['message_template_name'] == candidate['message_template_name']) &
+                (history_matrix['Measure'] == candidate['measure'])
+            ]
+
+            # Calculate months since last occurrence of same message
+            if not candidate_rows.empty:
+                last_occurrence = candidate_rows['Distance_From_t0'].max()
+                message_recency_dict[candidate['message_template_name']] = last_occurrence
             else:
-                return [a]
-        
-        Message_received_count=[]
-        causal_pathways=[]
-        causal_pathways1=[]
-        message_recency={}
-        a=[]
-        i=0
-        for k,v in self.history.items():
-            
-            i=i+1
-            for k1,v1 in v.items():
-                # print(k)
-                # print(k1)
-                if k1 == "Text":
-                    Message_received_count.append(v1)
-                if k1=="Causal_pathways":
-                    causal_pathways.append(v1)
-                    # i=i+1
-                    message_recency[i]=v1
-                 
-        causal_pathways=extract(causal_pathways)
-        # print(*causal_pathways)
-        for x in causal_pathways:
-            x=x.replace("social ","")
-            x=x.replace("goal ","")
-            causal_pathways1.append(x)
+                message_recency_dict[candidate['message_template_name']] = None
 
-            # print(x)
-            # print("\n")
-        # print(*causal_pathways1)
-        my_dict = {i:causal_pathways1.count(i) for i in causal_pathways1}
+        # 5) Calculate measure recency
+        for candidate in acceptable_candidates:
+            candidate_measure = candidate['measure']
+
+            # Filter matrix for the specific candidate measure
+            candidate_rows = history_matrix[history_matrix['Measure'] == candidate_measure]
+
+            # Calculate months since last occurrence of same measure
+            if not candidate_rows.empty:
+                last_occurrence = candidate_rows['Distance_From_t0'].max()
+                measure_recency_dict[candidate['measure']] = last_occurrence
+            else:
+                measure_recency_dict[candidate['measure']] = None
+
+        # Print the recency dictionaries
+        logger.debug("Message Recency:", message_recency_dict)
+        logger.debug("Measure Recency:", measure_recency_dict)
         
-        
-        # for k2,v2 in my_dict.items():
-        #     print(k2,v2)
+        self.message_recency_dict = message_recency_dict
+        self.measure_recency_dict = measure_recency_dict
 
 
-        
-        # f.close()
+
 
     ### Process MPM dict    
     def process_mpm(self):
@@ -469,7 +516,9 @@ class Esteemer():
             # print(i)
             # print(score_list)
             df_final = df_final.append(df_merged, ignore_index = True)
-            print(df_merged)
+            logger.debug(f'DF_Final is:\n{df_final}')   # Inside loop over spo 5, spo5 represents candidates? Doesn't seem to be the case...
+            #logger.debug(f'\nS5:\n{s5}\n\nP5:\n{p5}\no5:\n{o5}\n')
+            logger.debug(f'df_merged is:\n{df_merged}')
             # print("\n")
         
         
@@ -668,12 +717,14 @@ class Esteemer():
                     a=i
             s_m["comparator_type"]=a            
             return s_m
+
+
     
 # logging.critical("--score and select %s seconds ---" % (time.time() - start_time1))
 # print(finalData)
 
 # time_taken = time.time()-start_time
-logging.critical("---total esteemer run time according python script %s seconds ---" % (time.time() - start_time))
+logging.debug("---Esteemer run time: %s seconds ---" % (time.time() - start_time))
 
 """with open('data.json', 'a') as f:
     f.write(finalData + '\n')"""

@@ -1,4 +1,4 @@
-from rdflib import Graph, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
+from rdflib import Graph #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
 from candidatesmasher.candidatesmasher import CandidateSmasher
 from graph_operations import read_graph, create_performer_graph
 from fastapi import FastAPI, Request, HTTPException
@@ -24,7 +24,7 @@ logger.remove()
 logger.add(sys.stdout, colorize=True, format="{level}|  {message}", level=settings.log_level)
 
 ## Log of instance configuration
-logger.info(f"Startup configuration for this instance:")
+logger.info("Startup configuration for this instance:")
 for attribute in dir(settings):
     if not attribute.startswith("__"):
         value = getattr(settings, attribute)
@@ -33,7 +33,7 @@ for attribute in dir(settings):
 
 ### Create RDFlib graph from locally saved json files
 def local_to_graph(thisDirectory, thisGraph):
-    logger.debug(f'Starting function local_to_graph...')
+    logger.debug('Starting function local_to_graph...')
 
     # Scrape directory, filter to only JSON files, build list of paths to the files (V2)
     json_only = [entry.path for entry in os.scandir(thisDirectory) if entry.name.endswith('.json')]
@@ -48,7 +48,7 @@ def local_to_graph(thisDirectory, thisGraph):
 
 ### Create RDFlib graph from remote knowledgebase JSON files
 def remote_to_graph(contentURL, thisGraph):
-    logger.debug(f"Starting function remote_to_graph...")
+    logger.debug("Starting function remote_to_graph...")
     
     # Fetch JSON content from URL (directory)
     response = requests.get(contentURL)
@@ -65,7 +65,7 @@ def remote_to_graph(contentURL, thisGraph):
                 logger.debug(f'Graphed file {file_name}')
                 thisGraph += temp_graph
 
-    except json.JSONDecodeError as e:
+    except json.JSONDecodeError:
         raise Exception("Failed parsing JSON content.")
         
     return thisGraph
@@ -153,7 +153,7 @@ async def createprecisionfeedback(info:Request):
     performer_graph=create_performer_graph(measure_details)
     
     #BitStomach
-    logger.info(f"Calling BitStomach from main...")
+    logger.info("Calling BitStomach from main...")
     
     # Trying another strategy for graceful exit:    
     try:
@@ -192,7 +192,7 @@ async def createprecisionfeedback(info:Request):
     #create goal
     CS=cs.create_candidates(goal_types,df16)
     oc=CS.serialize(format='json-ld', indent=4)
-    if settings.outputs == True and settings.log_level == "DEBUG":
+    if settings.outputs is True and settings.log_level == "DEBUG":
         folderName = "outputs"
         os.makedirs(folderName, exist_ok=True)
         f = open("outputs/spek_cs.json", "w")
@@ -200,14 +200,14 @@ async def createprecisionfeedback(info:Request):
         f.close()
     
     #Thinkpuddung
-    logger.info(f"Calling ThinkPudding from main...")
+    logger.info("Calling ThinkPudding from main...")
     tp=Thinkpudding(CS,causal_pathways)
     tp.process_causalpathways()
     tp.process_spek()
     tp.matching()
     spek_tp=tp.insert()
     ot=spek_tp.serialize(format='json-ld', indent=4)
-    if settings.outputs == True and settings.log_level == "DEBUG":
+    if settings.outputs is True and settings.log_level == "DEBUG":
         folderName = "outputs"
         os.makedirs(folderName, exist_ok=True)
         f = open("outputs/spek_tp.json", "w")
@@ -216,15 +216,16 @@ async def createprecisionfeedback(info:Request):
 
 
     # #Esteemer
-    logger.info(f"Calling Esteemer from main...")
+    logger.info("Calling Esteemer from main...")
     measure_list=performance_data_df["measure"].drop_duplicates()
     # print(*measure_list)
     es=Esteemer(spek_tp,measure_list,preferences,history,mpm_df)
     # # es.apply_preferences()
     # # es.apply_history()
-    es.process_spek()
-    es.process_history()
-    es.process_mpm()
+    es.process_spek()           # Parse annotations
+    history_df = es.process_history()        # Process history dict to dataframe
+    #es.rank_history_component(history_df, )
+    es.process_mpm()            # Parse MPM
     node,spek_es=es.score()
     # node,spek_es=es.select()
     selected_message=es.get_selected_message()
@@ -232,7 +233,7 @@ async def createprecisionfeedback(info:Request):
     
 
     ### Pictoralist 2, now on the Nintendo DS: ###
-    logger.info(f"Calling Pictoralist from main...")
+    logger.info("Calling Pictoralist from main...")
     if selected_message["message_text"]!= "No message selected":        
         ## Initialize and run message and display generation:
         pc=Pictoralist(performance_data_df, p_df, selected_message, settings, message_instance_id)
