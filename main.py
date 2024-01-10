@@ -203,11 +203,11 @@ async def createprecisionfeedback(info:Request):
     logger.info("Calling ThinkPudding from main...")
     tp=Thinkpudding(CS,causal_pathways)
     tp.process_causalpathways()
-    tp.process_spek()
+    tp.process_performer_graph()
     tp.matching()
-    spek_tp=tp.insert()
-    ot=spek_tp.serialize(format='json-ld', indent=4)
+    performer_graph=tp.insert()
     if settings.outputs is True and settings.log_level == "DEBUG":
+        ot=performer_graph.serialize(format='json-ld', indent=4)
         folderName = "outputs"
         os.makedirs(folderName, exist_ok=True)
         f = open("outputs/spek_tp.json", "w")
@@ -219,7 +219,7 @@ async def createprecisionfeedback(info:Request):
     logger.info("Calling Esteemer from main...")
     measure_list=performance_data_df["measure"].drop_duplicates()
     # print(*measure_list)
-    es=Esteemer(spek_tp,measure_list,preferences,history,mpm_df)
+    es=Esteemer(performer_graph,measure_list,preferences,history,mpm_df)
     # # es.apply_preferences()
     # # es.apply_history()
     es.process_spek()           # Parse annotations
