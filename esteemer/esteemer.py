@@ -10,45 +10,34 @@ from rdflib import Literal, URIRef, BNode
 from rdflib.namespace import RDF
 from decimal import *
 import numpy as np
-#from process_history import retrieve_history_data, rank_history_component  # Having issues with this...
 import sys
 from loguru import logger
 
 logger.remove()
 logger.add(sys.stdout, level='TRACE', format="<b><level>{level}</></> \t{message}")
 
-
-
-
-# from .load_for_real import load
-# from load import read, transform,read_contenders,read_measures,read_comparators
-# from score import score, select,apply_indv_preferences,apply_history_message
-
-# load()
-
 warnings.filterwarnings("ignore")
-# TODO: process command line args if using graph_from_file()
-# Read graph and convert to dataframe
+
 start_time = time.time()
 class Esteemer():
-    def __init__(self, spek_tp, measure_list, preferences, history, mpm_df):
+    def __init__(self, performer_graph, measure_list, preferences, history, mpm_df):
         # Empty dicts, lists, arrays
-        self.y=[]
+        self.acceptable_by_candidates=[]
         self.measure_gap_list=[]
         self.measure_gap_list_new=[]
         self.measure_trend_list=[]
         self.measure_trend_list_new=[]
-        self.measure_acheivement_list=[]        # spelling
-        self.measure_acheivement_list_new=[]    # spelling
+        self.measure_achievement_list=[]        
+        self.measure_achievement_list_new=[]   
         self.measure_loss_list=[]
         self.measure_loss_list_new=[]
         self.gap_dicts={}
         self.trend_slopes={}
         self.losses={}
-        self.acheivements={}    # spelling
+        self.achievements={}    
         self.gap_dict={}
         self.trend_dict={}
-        self.acheivement_dict={}    # spelling
+        self.achievement_dict={}   
         self.loss_dict={}
         self.message_recency={}
         self.message_received_count={}
@@ -56,76 +45,45 @@ class Esteemer():
         self.preferences={}
 
         # External objects being written to self
-        self.spek_tp=spek_tp
+        self.performer_graph=performer_graph
         self.preferences=preferences
         self.history=history
         self.mpm_df=mpm_df
         self.measure_list=measure_list
         
-        # New variables (none are currently required?)
-        self.display_lab_app_uri=URIRef("http://example.com/app#display-lab")       # one ref
-        self.slowmo_has_candidate=URIRef("http://example.com/slowmo#HasCandidate")  # one ref
-        self.slowmo_acceptable_by=URIRef("slowmo:acceptable_by")                    # one ref
-        self.slowmo_score=URIRef('http://example.com/slowmo#Score')                 # one ref
-        #self.o2=Literal(1)     # Replace with direct reference, just one usage
-        
-        ## 
-        for s,p,o in self.spek_tp.triples( (self.display_lab_app_uri, self.slowmo_has_candidate, None) ):
-            s1 = o   #?
-            for s,p,o in self.spek_tp.triples((s1, self.slowmo_acceptable_by, None)):
-                self.spek_tp.add((s, self.slowmo_score, Literal(1)))
-                self.y.append(s)
+       
+       
+        for s,p,o in self.performer_graph.triples( (URIRef("http://example.com/app#display-lab"), URIRef("http://example.com/slowmo#HasCandidate"), None) ):
+            s1 = o   
+            for s,p,o in self.performer_graph.triples((s1, URIRef("slowmo:acceptable_by"), None)):
+                self.performer_graph.add((s, URIRef('http://example.com/slowmo#Score'), Literal(1)))
+                self.acceptable_by_candidates.append(s)
                 
         logger.trace('Esteemer initialized')
         logger.debug(f'MPM DF is:\n{mpm_df}')
         logger.debug(f'Measure_list is:\n{measure_list}')
-        #logger.debug(f'Var "s" adds to dict "y", forming y as:\n{self.y}')
+      
 
-
-    ## Process annotations from thinkpudding
+    ## Obtain moderators from performer graph
     def process_spek(self):
-        # print(*self.y)
-        sh=BNode("p1")
-        ph=URIRef("http://purl.obolibrary.org/obo/RO_0000091")
-        p4=URIRef("http://example.com/slowmo#RegardingMeasure")
-        p5=URIRef("http://example.com/slowmo#RegardingComparator")
-        ph33=URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
-        ph3=URIRef("http://purl.obolibrary.org/obo/PSDO_0000099")
-        ph4=URIRef("http://purl.obolibrary.org/obo/PSDO_0000100")
-        ph5=URIRef("http://purl.obolibrary.org/obo/PSDO_0000105")
-        ph6=URIRef("http://purl.obolibrary.org/obo/PSDO_0000104")
-        ph7=URIRef("http://purl.obolibrary.org/obo/PSDO_0000113")
-        ph8=URIRef("http://purl.obolibrary.org/obo/PSDO_0000112")
-        ph9=URIRef("http://example.com/slowmo#PerformanceGapSize")
-        ph10=URIRef("http://example.com/slowmo#PerformanceTrendSlope")
-        ph11=URIRef("http://example.com/slowmo#TimeSinceLastLoss")
-        ph12=URIRef("http://example.com/slowmo#TimeSinceLastAcheivement")
-
         loss=[]
         acheivement=[]
         gaps=[]
         trend_slope=[]
-
-        self.measure_gap_list=[]
-        self.measure_trend_list=[]
         self.measure_acheivement_list=[]
-        self.measure_loss_list=[]
-        
         Measure =None
-
-        ## Iterate through measures, add annotations to new lists (why?)
         for x in self.measure_list:
             Measure =x
-            for ss,ps,os in self.spek_tp.triples((sh,ph,None)):
+            for ss,ps,os in self.performer_graph.triples((BNode("p1"),URIRef("http://purl.obolibrary.org/obo/RO_0000091"),None)):
                 s6=os
-                for s123,p123,o123 in self.spek_tp.triples((s6,ph33,None)):
-                    if o123 == ph5 or o123 == ph6:
-                        for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
+                for s123,p123,o123 in self.performer_graph.triples((s6,URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),None)):
+                    if o123 == URIRef("http://purl.obolibrary.org/obo/PSDO_0000105") or o123 == URIRef("http://purl.obolibrary.org/obo/PSDO_0000104"):
+                        for s124,p124,o124 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingMeasure"),None)):
                             o124=str(o124)
                             if o124 ==Measure:
                                 gaps.clear()
-                                for s1234,p1234,o1234 in self.spek_tp.triples((s6,p5,None)):
-                                    for s125,p125,o125 in self.spek_tp.triples((s6,ph9,None)):
+                                for s1234,p1234,o1234 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
+                                    for s125,p125,o125 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#PerformanceGapSize"),None)):
                                         gaps.append(str(o1234))
                                         gaps.append(Measure)
 
@@ -133,27 +91,27 @@ class Esteemer():
                                         gaps.append(float(o125))
                                         gaps_tuples=tuple(gaps)
                                         self.measure_gap_list.append(gaps_tuples)
-                    if o123 == ph3 or o123 ==ph4:
-                        for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
+                    if o123 == URIRef("http://purl.obolibrary.org/obo/PSDO_0000099") or o123 ==URIRef("http://purl.obolibrary.org/obo/PSDO_0000100"):
+                        for s124,p124,o124 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingMeasure"),None)):
                             o124=str(o124)
                             if o124 ==Measure:
                                 trend_slope.clear() 
-                                for s1234,p1234,o1234 in self.spek_tp.triples((s6,p5,None)):
-                                    for s125,p125,o125 in self.spek_tp.triples((s6,ph10,None)):
+                                for s1234,p1234,o1234 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
+                                    for s125,p125,o125 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#PerformanceTrendSlope"),None)):
                                         
                                         trend_slope.append(str(o1234))
                                         trend_slope.append(Measure)
                                         trend_slope.append(float(o125))
                                         trend_tuples=tuple(trend_slope)
                                         self.measure_trend_list.append(trend_tuples)
-                    if o123 == ph8 :
-                        for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
+                    if o123 == URIRef("http://purl.obolibrary.org/obo/PSDO_0000112") :
+                        for s124,p124,o124 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingMeasure"),None)):
                             o124=str(o124)
                             if o124 ==Measure:
                                 acheivement.clear() 
                                 # print(Measure)
-                                for s1234,p1234,o1234 in self.spek_tp.triples((s6,p5,None)):
-                                    for s125,p125,o125 in self.spek_tp.triples((s6,ph12,None)):
+                                for s1234,p1234,o1234 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
+                                    for s125,p125,o125 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#TimeSinceLastAcheivement"),None)):
                                         # print(str(o1234))
                                         acheivement.append(str(o1234))
                                         acheivement.append(Measure)
@@ -161,13 +119,13 @@ class Esteemer():
                                         acheivement_tuples=tuple(acheivement)
                                         self.measure_acheivement_list.append(acheivement_tuples)
                     
-                    if o123 == ph7 :
-                        for s124,p124,o124 in self.spek_tp.triples((s6,p4,None)):
+                    if o123 == URIRef("http://purl.obolibrary.org/obo/PSDO_0000113") :
+                        for s124,p124,o124 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingMeasure"),None)):
                             o124=str(o124)
                             if o124 ==Measure:
                                 loss.clear() 
-                                for s1234,p1234,o1234 in self.spek_tp.triples((s6,p5,None)):
-                                    for s125,p125,o125 in self.spek_tp.triples((s6,ph11,None)):
+                                for s1234,p1234,o1234 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
+                                    for s125,p125,o125 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#TimeSinceLastLoss"),None)):
                                         # print(str(o125))
                                         loss.append(str(o1234))
                                         loss.append(Measure)
@@ -178,24 +136,21 @@ class Esteemer():
         for x in self.measure_loss_list:
             x=list(x)
             self.measure_loss_list_new.append(x)
-        # print(*self.measure_loss_list_new)
-        # print(*self.measure_loss_list)
+       
         self.measure_acheivement_list = list(set(self.measure_acheivement_list))
         for x in self.measure_acheivement_list:
             x=list(x)
-            # self.measure_acheivement_list_new.append(x)
-        # print(*self.measure_acheivement_list_new)
-        # print(*self.measure_acheivement_list) 
+            
         self.measure_trend_list = list(set(self.measure_trend_list))
         for x in self.measure_trend_list:
             x=list(x)
             self.measure_trend_list_new.append(x)
-        # print(*self.measure_trend_list_new)                 
+                        
         self.measure_gap_list = list(set(self.measure_gap_list))
         for x in self.measure_gap_list:
             x=list(x)
             self.measure_gap_list_new.append(x)
-        print(*self.measure_gap_list_new)                        
+                               
                            
 
     ## Pull in history component of input message from dict to dataframe for calculations:
@@ -288,7 +243,7 @@ class Esteemer():
 
 
 
-    ### Process MPM dict    
+    # Obtain MPM values    
     def process_mpm(self):
         # for col in self.mpm_df:
         #     print(col)
@@ -308,38 +263,21 @@ class Esteemer():
 
     ### Score candidates individually
     def score(self):
-        # print(*self.measure_gap_list) 
-        j_new=()
         a_new=[]
         score_dict={}
         comp_node_dict={}
         df_final = pd.DataFrame()
-        # print("acceptable by")
-        # print(*self.y)
-        ## Makes candidate list, iterates through candidates
-        for i in self.y:
+        
+        for i in self.acceptable_by_candidates:
             a_full_list=[]
             a_full_list1=[]
             b_full_list=[]
             
-            # print(i)
+            
             s = i
-            pwed = URIRef("slowmo:acceptable_by")
-            p3=URIRef("http://purl.obolibrary.org/obo/RO_0000091")
-            ph33=URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
-            ph5=URIRef("http://purl.obolibrary.org/obo/PSDO_0000105")
-            ph6=URIRef("http://purl.obolibrary.org/obo/PSDO_0000104")
-            ph3=URIRef("http://purl.obolibrary.org/obo/PSDO_0000099")
-            ph4=URIRef("http://purl.obolibrary.org/obo/PSDO_0000100")
-            p4=URIRef("http://example.com/slowmo#RegardingComparator")
-            ph7=URIRef("http://purl.obolibrary.org/obo/PSDO_0000113")
-            ph8=URIRef("http://purl.obolibrary.org/obo/PSDO_0000112")
-
-            # for s2we,p2we,o2we in self.spek_tp.triples((s,pwed,None)):
-            #     print(o2we)
-                # o2wea.append(o2we)
-            for s5,p5,o5 in self.spek_tp.triples((s,p3,None)):
-                for s2we,p2we,o2we in self.spek_tp.triples((s,pwed,None)):
+            
+            for s5,p5,o5 in self.performer_graph.triples((s,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),None)):
+                for s2we,p2we,o2we in self.performer_graph.triples((s,URIRef("slowmo:acceptable_by"),None)):
                     o2we=str(o2we)
                     accept_path=o2we
                     if "Gain" in str(o2we):
@@ -357,16 +295,13 @@ class Esteemer():
                     s6=o5
                     # for s8,p8,o8 in self.spek_tp.triples((s6,p5,None)):
                     #             print(s6)
-                    for s7,p7,o7 in self.spek_tp.triples((s6,ph33,None)):
+                    for s7,p7,o7 in self.performer_graph.triples((s6,URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),None)):
                         #gap_multiplication
-                        if o7==ph5 or o7==ph6:
-                            for s7,p7,o7 in self.spek_tp.triples((s6,p4,None)):
+                        if o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000105") or o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000104"):
+                            for s7,p7,o7 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
 
                                 a=[item for item in self.measure_gap_list_new if str(o7) in item]
-                                # a_new = a
-                                # a_new.append(accept_path)
-                                
-                                # print("cal")
+                               
                                 for k,v in self.gap_dict.items():
                                     if k == o2we:
                                         for j in a:
@@ -377,36 +312,18 @@ class Esteemer():
                                             if j[2] !=abs_val:
                                                 j[2]=abs_val
                                             j[2]=j[2]*v
-                                # a.append(i)
-                                # a_new.append(accept_path)
-                                # a.append(accept_path)
+                               
                                 a_full_list.append(a)
 
                                 a_new=a[:]
                                 a_new.append(accept_path)
                                 a_full_list1.append(a_new)
-                                # print(*a_new)
-                                # a_new.append(accept_path)
-                                # print(*a_new)
-                                # print(accept_path)
-                                # print(*a)
-                            # print(*a_full_list)
-                            # print("\n")
-                                # df_a= pd.DataFrame(a, columns = ['measure', 'node'])
-                                # print(df_a)
-                                # print("\n")
-                                # size = len(a)
-                                # print(size)
-                        #     a_full_list.append(a)
-                        # a_full_list = list(set(a_full_list))
-                        # print(*a_full_list)
-                        # print(len(a_full_list))
+                                
                         #trend multiplication
-                        if o7==ph3 or o7==ph4:    
-                            for s8,p8,o8 in self.spek_tp.triples((s6,p4,None)):
+                        if o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000099") or o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000100"):    
+                            for s8,p8,o8 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
                                 b=[item for item in self.measure_trend_list_new if str(o8) in item]
-                                # print(*b)
-                                # print("before")
+                                
                                 for k,v in self.trend_dict.items():
                                     if k == o2we:
                                         for j in b:
@@ -415,69 +332,49 @@ class Esteemer():
                                             v= float(v)
                                             
                                             j[2]=j[2]*v
-                                            # j.append(i)
-                                # b.append(i)
+                                           
                                 b_full_list.append(b)
-                                # print(*b)
-                                # print("\n")
-                        # print(o2we)
-                        if o7==ph8:
-                            # print(o7)
-                            # print(ph7)
-                            # # print(ph7)
-                            # print(o2we)   
-                            for s9,p9,o9 in self.spek_tp.triples((s6,p4,None)):
+                                
+                        
+                        if o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000112"):
+                            
+                            for s9,p9,o9 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
                                 c=[item for item in self.measure_acheivement_list_new if str(o9) in item]
-                                # print(*c)
-                                # print("multiplication")
+                                
                                 for k,v in self.acheivement_dict.items():
-                                    # print(o2we)
-                                    # print(k)
-                                    # print(o2we)
+                                   
                                     if k == o2we:
-                                        # print(k)
-                                        # print(o2we)
-                                        # print(o2we)
+                                      
                                         for j in c:
-                                            # print(*j)
+                                           
                                             if v == "--":
                                                 v=0
                                             v= float(v)
                                             j[2]=j[2]*v
-                                            # j.append(i)
+                                           
                                 c.append(i)
-                                # print(*c)
-                                # print("\n")
-                        if o7==ph7:
-                            # print(o2we)    
-                            for s10,p10,o10 in self.spek_tp.triples((s6,p4,None)):
+                                
+                        if o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000113"):
+                                
+                            for s10,p10,o10 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
                                 d=[item for item in self.measure_loss_list_new if str(o10) in item]
-                                # print(*d)
+                                
                                 for k,v in self.loss_dict.items():
                                     if k == o2we:
-                                        # print(k)
-                                        # print(o2we)
-                                        # print(o2we)
+                                       
                                         for j in d:
-                                            # print(*j)
+                                           
                                             if v == "--":
                                                 v=0
                                             v= float(v)
                                             j[2]=j[2]*v
-                                            # j.append(i)
+                                           
                                 d.append(i)
-                                # print(*d)
-                                # print("\n")
-                                # print(*d)
-                       
-            # print("outer loop")
-            # print(*a_full_list)
-            # print(*a_full_list1)
+                                
             flat_list = [item for sublist in a_full_list1 for item in sublist]
             flat_list1=[]
             flatlist2=[]
-            # print(*flat_list)
-            # flat_list1 = [item for sublist in flat_list for item in sublist]
+           
             for x in flat_list:
                 if type(x) == list:
                     flat_list1=x[:]
@@ -487,19 +384,15 @@ class Esteemer():
             res = []
             [res.append(x) for x in flatlist2 if x not in res]
             res1=[res[:]]
-            # print(*res1)
-            # print(*flatlist2)
-            # print(*a_full_list)
+            
             df_a = pd.DataFrame(res1, columns=['Gaps'])
-            # print(df_a.loc[[0]])
-            # print(df_a)
+           
             df_b =pd.DataFrame(b_full_list,columns=['Trends'])
-            # print(df_b)
+            
             df_a_new=pd.DataFrame(df_a["Gaps"].to_list(), columns=['comp_node', 'Measure','Gaps','signed_Gaps','accept_path'])
-            # df_a_new=pd.DataFrame(df_a["accept_path"].to_list(), columns=['comp_node', 'Measure','Gaps','signed_Gaps','accept_path'])
+            
             df_b_new =pd.DataFrame(df_b["Trends"].to_list(),columns=['comp_node','Measure','Trends'])
-            # print(df_a_new.loc[[0]])
-            # print(df_b_new)
+            
             if df_b_new.empty:
                 df_merged=df_a_new
                 df_merged["score"] = df_merged['Gaps']
@@ -509,28 +402,26 @@ class Esteemer():
             score_list = df_merged['score'].tolist()
             comp_node_list=df_merged["comp_node"].tolist()
 
-            # score_max = max(score_list)
-            # print(score_max)
+            
             score_dict[i]=score_list
             comp_node_dict[i]=comp_node_list
-            # print(i)
-            # print(score_list)
+            
             df_final = df_final.append(df_merged, ignore_index = True)
             logger.debug(f'DF_Final is:\n{df_final}')   # Inside loop over spo 5, spo5 represents candidates? Doesn't seem to be the case...
-            #logger.debug(f'\nS5:\n{s5}\n\nP5:\n{p5}\no5:\n{o5}\n')
+           
             logger.debug(f'df_merged is:\n{df_merged}')
-            # print("\n")
+            
         
         
         Keymax = max(zip(score_dict.values(), score_dict.keys()))[1]
-        # Valuemax= max(zip(score_dict.values(), score_dict.keys()))[0]
+        
 
-        for k2,v2 in score_dict.items():
-            print(k2,v2)
+        # for k2,v2 in score_dict.items():
+        #     print(k2,v2)
         
         index_list=[]
         df_final1=df_final.iloc[df_final.score.argmax()]
-        print(df_final1)
+        # print(df_final1)
         if df_final1['accept_path']=="Social better":
             
             rslt_df = df_final.loc[df_final['accept_path'] == "Social better"]
@@ -554,9 +445,9 @@ class Esteemer():
                 Kew=[k for k, v in score_dict.items() if result in v]
 
                 self.node=random.choice(Kew)
-                return self.node,self.spek_tp
+                return self.node,self.performer_graph
             if (rslt_df['signed_Gaps'] == 0.00).any():
-                # print("yes")
+                
                 rsdf=rslt_df.sample(n=1)
                 # print(rsdf)
                 #rdf=rslt_df.loc[rslt_df['Measures'] == rsdf["Measures"].values]
@@ -574,14 +465,10 @@ class Esteemer():
                 final_x=0
                 for x in comp_node_list:
                     x=BNode(x)
-                    # print(x)
-                    # print(type(x))
-                    p5=URIRef("http://example.com/slowmo#RegardingComparator")
-                    p22=URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
-                    top_10=URIRef("http://purl.obolibrary.org/obo/PSDO_0000129")
-                    for s1234,p1234,o1234 in self.spek_tp.triples((None,p5,x)):
-                        for sa,pa,oa in self.spek_tp.triples((s1234,p22, None)):
-                            if oa == top_10:
+                   
+                    for s1234,p1234,o1234 in self.performer_graph.triples((None,URIRef("http://example.com/slowmo#RegardingComparator"),x)):
+                        for sa,pa,oa in self.performer_graph.triples((s1234,URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), None)):
+                            if oa == URIRef("http://purl.obolibrary.org/obo/PSDO_0000129"):
                                 final_x= x
                 # print(final_x)
                 
@@ -592,30 +479,14 @@ class Esteemer():
                 Kew1=[k for k, v in comp_node_dict.items() if final_x in v]
                 # print(*Kew1)
                 self.node=Kew1[0]
-                return self.node,self.spek_tp 
+                return self.node,self.performer_graph 
                         
 
             
         self.node=Keymax
             
-        return self.node,self.spek_tp
-        # for k,v in score_dict.items():print(k, v)
-    # # def select(self):
-    #     self.scores=[]
-    #     nodes=[]
-    #     # print(*self.y)
-    #     if len(self.y)!=0:
-    #         self.node=random.choice(self.y)
-    #     else:
-    #         self.node="No message selected"
-
-    #     if self.node== "No message selected":
-    #         return self.node,self.spek_tp
-    #     else:
-    #         o2=URIRef("http://example.com/slowmo#selected")
-    #         self.spek_tp.add((self.node,RDF.type,o2))
-    #         return self.node,self.spek_tp
-
+        return self.node,self.performer_graph
+        
     def get_selected_message(self):
         s_m={}
         a=0
@@ -625,19 +496,7 @@ class Esteemer():
             return s_m 
         else:
             s=self.node
-            p1=URIRef("psdo:PerformanceSummaryTextualEntity")
-            pwed=URIRef("slowmo:acceptable_by")
-            p3=URIRef("http://purl.obolibrary.org/obo/RO_0000091")
-            p4=URIRef("http://example.com/slowmo#RegardingMeasure")
-            p8=URIRef("http://example.com/slowmo#name")
-            p10= URIRef("http://purl.org/dc/terms/title")
-            p12=URIRef("http://purl.obolibrary.org/obo/PSDO_0000128")
-            p13=URIRef("http://purl.obolibrary.org/obo/PSDO_0000129")
-            p14=URIRef("http://purl.obolibrary.org/obo/PSDO_0000126")
-            p15=URIRef("http://purl.obolibrary.org/obo/PSDO_0000094")
-            p20=URIRef("http://example.com/slowmo#AncestorTemplate")
-            pqd=URIRef("http://example.com/slowmo#PerformanceGapSize")
-            pqw=URIRef("http://example.com/slowmo#PerformanceTrendSlope")
+           
             
             temp_name = URIRef("http://example.com/slowmo#name")   # URI of template name?
             
@@ -646,38 +505,23 @@ class Esteemer():
             comparator_types=["Top 25","Top 10","Peers","Goal"]
             sw=0
             o2wea=[]
-            # spek_out_dicts={}
-            # s=URIRef("http://example.com/app#display-lab")
-            # p=URIRef("http://example.com/slowmo#HasCandidate")
-            # p1=URIRef("http://purl.obolibrary.org/obo/RO_0000091")
-            # i=0
-            # a=[]
-            # for s,p,o in spek_tp.triples( (s, p, None) ):
-            #     s1= o
-            #     y=[o for s,p,o in spek_tp.triples((s1,p1,None))]
-            #     # print(*y)
-            #     for i in range(len(y)):
-            #         s=y[i]
-            #         for s,p,o in spek_cs.triples((s,RDF.type,None)):
-            #             a.append(o)
-            #             y[i]=o
-            #     spek_out_dicts[s1] = y
+            
             
             ## Format selected_candidate to return for pictoralist-ing
-            for s21,p21,o21 in self.spek_tp.triples((s,p20,None)):
+            for s21,p21,o21 in self.performer_graph.triples((s,URIRef("http://example.com/slowmo#AncestorTemplate"),None)):
                 s_m["template_id"] = o21
             # Duplicate logic above and use to pull template name
-            for s21,p21,o21 in self.spek_tp.triples((s,temp_name,None)):
+            for s21,p21,o21 in self.performer_graph.triples((s,temp_name,None)):
                 s_m["template_name"] = o21
             
-            for s2,p2,o2 in self.spek_tp.triples((s,p1,None)):
+            for s2,p2,o2 in self.performer_graph.triples((s,URIRef("psdo:PerformanceSummaryTextualEntity"),None)):
                 s_m["message_text"] = o2
             # for s212,p212,o212 in self.spek_tp.triples((s,p232,None)):
                
             s_m["display"]=random.choice(Display)
             # for s9,p9,o9 in self.spek_tp.triples((s,p8,None)):
             #     s_m["Comparator Type"] = o9
-            for s2we,p2we,o2we in self.spek_tp.triples((s,pwed,None)):
+            for s2we,p2we,o2we in self.performer_graph.triples((s,URIRef("slowmo:acceptable_by"),None)):
                 o2wea.append(o2we)
             # print(*o2wea)
             s_m["acceptable_by"] = o2wea
@@ -690,26 +534,26 @@ class Esteemer():
                 
             comparator_list=[]
 
-            for s5,p5,o5 in self.spek_tp.triples((s,p3,None)):
+            for s5,p5,o5 in self.performer_graph.triples((s,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),None)):
                 s6=o5
                 #print(o5)
-                for s7,p7,o7 in self.spek_tp.triples((s6,p4,None)):
+                for s7,p7,o7 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingMeasure"),None)):
                     s_m["measure_name"]=o7
                     s10= BNode(o7)
-                    for s11,p11,o11 in self.spek_tp.triples((s10,p10,None)):
+                    for s11,p11,o11 in self.performer_graph.triples((s10, URIRef("http://purl.org/dc/terms/title"),None)):
                         s_m["measure_title"]=o11
-                for s14,p14,o14 in self.spek_tp.triples((s6,RDF.type,None)):
+                for s14,p14,o14 in self.performer_graph.triples((s6,RDF.type,None)):
                     #print(o14)
-                    if o14==p12:
+                    if o14==URIRef("http://purl.obolibrary.org/obo/PSDO_0000128"):
                         comparator_list.append("Top 25")
                         # s_m["comparator_type"]="Top 25"                        
-                    if o14==p13:
+                    if o14==URIRef("http://purl.obolibrary.org/obo/PSDO_0000129"):
                         comparator_list.append("Top 10")
                         # s_m["comparator_type"]="Top 10"
-                    if o14==p14:
+                    if o14==URIRef("http://purl.obolibrary.org/obo/PSDO_0000126"):
                         comparator_list.append("Peers")
                         # s_m["comparator_type"]="Peers"
-                    if o14==p15:
+                    if o14==URIRef("http://purl.obolibrary.org/obo/PSDO_0000094"):
                         comparator_list.append("Goal")
                         # s_m["comparator_type"]="Goal"
             for i in comparator_list:
