@@ -1,9 +1,6 @@
-
-
 import warnings
 import time
-import logging
-
+from settings import logger
 from rdflib import Graph
 
 
@@ -16,7 +13,7 @@ def read_graph(file):
     g.parse(data=file,
             format='json-ld')
     
-    logging.critical(" reading graph--- %s seconds ---" % (time.time() - start_time)) 
+    logger.debug(" graph_operations: reading graph--- %s sec ---" % (time.time() - start_time)) 
     return g
 
 def create_base_graph(g1,g2,g3,g4):

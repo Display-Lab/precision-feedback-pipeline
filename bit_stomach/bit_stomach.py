@@ -3,10 +3,8 @@ from rdflib.namespace import RDF
 from loguru import logger
 import pandas as pd
 import sys
+from settings import settings
 
-## Logging setup
-logger.remove()
-logger.add(sys.stdout, colorize=True, format="{level} | {message}")
 from bit_stomach.prepare_data_annotate import Prepare_data_annotate
 from bit_stomach.student_t_cleaner import student_t_cleaner
 
@@ -92,16 +90,16 @@ class Bit_stomach:
                 s3=o2
                 for s4,p4,o4 in self.performer_graph.triples((s3,URIRef('http://schema.org/name'),None)):
                     if str(o4)=="top_10":
-                        #print(o2)
+                        #logger.debug(o2)
                         self.top_10_dicts[s1]=o2
                     if str(o4)=="top_25":
-                        #print(o2)
+                        #logger.debug(o2)
                         self.top_25_dicts[s1]=o2
                     if str(o4)=="goal":
-                        #print(o2)
+                        #logger.debug(o2)
                         self.goal_dicts[s1]=o2
                     if str(o4)=="peers":
-                        #print(o2)
+                        #logger.debug(o2)
                         self.peer_dicts[s1]=o2
 
                    

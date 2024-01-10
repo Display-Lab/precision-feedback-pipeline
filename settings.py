@@ -5,7 +5,7 @@ import os
 
 ## Logging setup
 logger.remove()
-logger.add(sys.stdout, colorize=True, format="{level} | {message}")
+logger.add(sys.stdout, format="<b><level>{level}</></> \t{message}")
 
 ## Control switch for production and dev configurations
 # User specifies custom env var set to use on startup, else errors out at loading 'templates'
@@ -38,3 +38,6 @@ class Settings:
 
 # Instantiate
 settings = Settings()
+
+## Set logger level based on settings
+logger.level(settings.log_level)

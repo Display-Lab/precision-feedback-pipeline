@@ -1,14 +1,8 @@
 import warnings
-
-
-import warnings
-
-
 import pandas as pd
 from rdflib import Graph, Literal, URIRef, BNode
 from rdflib.namespace import RDF
-
-
+from settings import logger
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 class CandidateSmasher:
@@ -33,7 +27,7 @@ class CandidateSmasher:
                 s3=o2
                 
                 for s4,p4,o4 in self.performer_graph.triples((s3,URIRef('http://schema.org/name'),None)):
-                        #print(o4)
+                        #logger.debug(o4)
                         if str(o4)=="peers":
                             self.peer_dicts[s1]=o2
                         if str(o4)=="goal":
@@ -312,22 +306,22 @@ class CandidateSmasher:
         
         
         for rowIndex,row in df_template.iterrows():
-            # print(row)
+            # logger.debug(row)
             for rowIndex1, row1 in df_spek.iterrows():
-                # print(row1)
-                # print(row1["comparator_type"])
+                # logger.debug(row1)
+                # logger.debug(row1["comparator_type"])
                 measure_name=row1["measure"]
                 # oxcv=BNode(row1["Comparator_Node"][0])
-                # print(row)
-                # print(row1)
+                # logger.debug(row)
+                # logger.debug(row1)
                 oq=BNode()
                 
-        #print(row1)
+        #logger.debug(row1)
                 # ah=BNode(row1["Comparator_Node"])
                 if "graph_type1" in df_spek.columns:
                     if (row1["graph_type1"] != 0):
                         count=count+1
-                        # print(row1["graph_type1"])
+                        # logger.debug(row1["graph_type1"])
                         ag=Literal(measure_name)
                         self.performer_graph.add((URIRef("http://example.com/app#display-lab"),URIRef("http://example.com/slowmo#HasCandidate"),oq) )
                         self.performer_graph.add((oq,RDF.type,URIRef("http://purl.obolibrary.org/obo/cpo_0000053")))
@@ -403,7 +397,7 @@ class CandidateSmasher:
                                 Output[y] = [x]
                         
                         # Printing Output
-                        # print(str(Output))
+                        # logger.debug(str(Output))
                         for k,v in Output.items():
                             ov=BNode()
                             self.performer_graph.add((oq,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
@@ -411,7 +405,7 @@ class CandidateSmasher:
                             self.performer_graph.add((ov,RDF.type,a33))
                             for x in range(len(v)):
                                 self.performer_graph.add((ov,URIRef("http://example.com/slowmo#RegardingComparator"),v[x]))
-                                #print(v[x])
+                                #logger.debug(v[x])
                             self.performer_graph.add((ov,URIRef("http://example.com/slowmo#RegardingMeasure"),ag))
                         a35=BNode("-p1")
                         self.performer_graph.add((oq,URIRef("http://example.com/slowmo#AncestorPerformer"),a35))

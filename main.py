@@ -7,8 +7,8 @@ from bit_stomach.bit_stomach import Bit_stomach
 from pictoralist.pictoralist import Pictoralist
 from esteemer.esteemer import Esteemer
 from requests_file import FileAdapter
-from settings import settings
-from loguru import logger
+from settings import settings, logger
+#from loguru import logger
 from io import BytesIO
 import pandas as pd
 import webbrowser
@@ -18,10 +18,8 @@ import sys
 import os
 
 global templates, pathways, measures
-
-### Logging module setup (using loguru module)
-logger.remove()
-logger.add(sys.stdout, colorize=True, format="{level}|  {message}", level=settings.log_level)
+## Set logger level for all scripts here based on settings
+logger.level(settings.log_level)
 
 ## Log of instance configuration
 logger.info("Startup configuration for this instance:")
@@ -103,7 +101,7 @@ async def startup_event():
         templates =templates
         
     except Exception as e:
-        print("Startup aborted, see traceback:")
+        logger.info("Startup aborted, see traceback:")
         raise e
     
 @app.get("/")
@@ -149,7 +147,7 @@ async def createprecisionfeedback(info:Request):
     mpm=f5json
     #print(type(mpm))
     mpm_df=pd.read_csv(BytesIO(mpm))
-    # print(df1)
+    # logger.info(df1)
     performer_graph=create_performer_graph(measure_details)
     
     #BitStomach
@@ -174,12 +172,12 @@ async def createprecisionfeedback(info:Request):
         f = open("outputs/spek_bs.json", "w")
         f.write(op)
         f.close()
-        # print(settings.outputs)
-        # print(settings.log_level)
+        # logger.info(settings.outputs)
+        # logger.info(settings.log_level)
     
     
     #CandidateSmasher
-    logger.info(f"Calling CandidateSmasher from main...")
+    logger.info("Calling CandidateSmasher from main...")
     cs=CandidateSmasher(performer_graph,templates)
     df_graph,goal_types,peer_types,top_10_types,top_25_types=cs.get_graph_type()
     df_template,df_1,df_2,df_3,df16=cs.get_template_data()
@@ -218,7 +216,7 @@ async def createprecisionfeedback(info:Request):
     # #Esteemer
     logger.info("Calling Esteemer from main...")
     measure_list=performance_data_df["measure"].drop_duplicates()
-    # print(*measure_list)
+    # logger.info(*measure_list)
     es=Esteemer(performer_graph,measure_list,preferences,history,mpm_df)
     # # es.apply_preferences()
     # # es.apply_history()
