@@ -11,67 +11,57 @@ def read(file):
     #start_time = time.time()
     g = Graph()
     g.parse(data=file,format="json-ld")
-    #logging.critical(" reading graph--- %s seconds ---" % (time.time() - start_time)) 
+    
     return g
-
+#reading annotations from causal pathways
 def process_causalpathways(causal_pathways):
     start_time = time.time()
-    
     caus_type_dicts_final={}
-    
-    caus_p = URIRef("http://schema.org/name")
-    precdn=URIRef("http://purl.bioontology.org/ontology/SNOMEDCT/has_precondition")
-    
-    for s,p,o in causal_pathways.triples((None,caus_p,None)):
+    for s,p,o in causal_pathways.triples((None,URIRef("http://schema.org/name"),None)):
         # print(s)
         pre_list=[]
-        for s,p,o in causal_pathways.triples((s,precdn,None)):
+        for s,p,o in causal_pathways.triples((s,URIRef("http://purl.bioontology.org/ontology/SNOMEDCT/has_precondition"),None)):
             pre_list.append(o)
-            # print(o)
-        # print(*pre_list)
+            
         caus_type_dicts_final[s]=pre_list
     return caus_type_dicts_final
 
-def process_spek(spek_cs):
-    spek_out_dicts={}
-    #s=URIRef("http://example.com/app#mpog-aspire") 
-    s=URIRef("http://example.com/app#display-lab")
-    p=URIRef("http://example.com/slowmo#HasCandidate")
-    p1=URIRef("http://purl.obolibrary.org/obo/RO_0000091")
+#reading annotation types from performer graph
+def process_performer_graph(performer_graph):
+    performer_graph_out_dicts={}
     i=0
-    a=[]
-    for s,p,o in spek_cs.triples( (s, p, None) ):
+    for s,p,o in performer_graph.triples( (URIRef("http://example.com/app#display-lab"), URIRef("http://example.com/slowmo#HasCandidate"), None) ):
         s1= o
-        y=[o for s,p,o in spek_cs.triples((s1,p1,None))]
-        # print(*y)
-        for i in range(len(y)):
-            s=y[i]
-            for s,p,o in spek_cs.triples((s,RDF.type,None)):
-                a.append(o)
-                y[i]=o
-        spek_out_dicts[s1] = y
-    return spek_out_dicts
+        graph_type_list=[o for s,p,o in performer_graph.triples((s1,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),None))]
+        for i in range(len(graph_type_list)):
+            s=graph_type_list[i]
+            for s,p,o in performer_graph.triples((s,RDF.type,None)):
+                graph_type_list[i]=o
+        performer_graph_out_dicts[s1] = graph_type_list
+    return performer_graph_out_dicts
 
-def matching(spek_out_dicts,caus_out_dict_final):
-    fg=list(caus_out_dict_final.values())
-    fr=list(spek_out_dicts.values())
-    sjs=[]
-    pjs=[]
-    ysd=[]
+#matching the annotations from performer graph and causal_pathways
+def matching(performer_graph_out_dicts,caus_out_dict_final):
+    causal_pathway_types=list(caus_out_dict_final.values())
+    performergraph_types=list(performer_graph_out_dicts.values())
+    candidate_id_list=[]
+    causal_pathway_id_list=[]
+    combined_list=[]
    
-    for i in range(len(fg)):
-        for x in range(len (fr)):
-            result =  all(elem in fr[x]  for elem in fg[i])
+    for i in range(len(causal_pathway_types)):
+        for x in range(len (performergraph_types)):
+            result =  all(elem in performergraph_types[x]  for elem in causal_pathway_types[i])
             if result == True :
-                l=[k for k,v in spek_out_dicts.items() if v == fr[x]]
-                # print(l)
-                y=[k for k,v in caus_out_dict_final.items() if v == fg[i]]
-                # print(y)
-                sjs.append(y)
-                pjs.append(l)
+                #candidate id
+                l=[k for k,v in performer_graph_out_dicts.items() if v == performergraph_types[x]]
+                #causal_pathway id
+                y=[k for k,v in caus_out_dict_final.items() if v == causal_pathway_types[i]]
                
-    ysd=[(sjs[i], pjs[i]) for i in range(0, len(pjs))]
+                candidate_id_list.append(y)
+                causal_pathway_id_list.append(l)
+               
+    combined_list=[(candidate_id_list[i], causal_pathway_id_list[i]) for i in range(0, len(causal_pathway_id_list))]
     res = []
-    [res.append(x) for x in ysd if x not in res]
-    # print(*res)
+    [res.append(x) for x in combined_list if x not in res]
+    
     return res
