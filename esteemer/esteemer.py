@@ -330,8 +330,8 @@ class Esteemer():
                         
                         if o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000112"):
                             for s9,p9,o9 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
-                                c=[item for item in self.measure_acheivement_list_new if str(o9) in item]
-                                for k,v in self.acheivement_dict.items():
+                                c=[item for item in self.measure_achievement_list_new if str(o9) in item]
+                                for k,v in self.achievement_dict.items():
                                    if k == o2we:
                                         for j in c:
                                             if v == "--":
@@ -410,7 +410,7 @@ class Esteemer():
             rslt_df = rslt_df.drop('Measure_y', axis=1)
             rslt_df ['Measures1'] = [','.join(map(str, l)) for l in rslt_df['Measures']]
            
-            if (rslt_df['signed_Gaps'] > 0).all():
+            if (rslt_df['signed_Gaps'] > 0).all() :
                 result=rslt_df.groupby('accept_path')['score'].nsmallest(2).droplevel(0).iloc[0]
                 Kew=[k for k, v in score_dict.items() if result in v]
                 self.node=random.choice(Kew)
