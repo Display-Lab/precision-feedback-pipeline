@@ -77,6 +77,7 @@ class Esteemer():
             for ss,ps,os in self.performer_graph.triples((BNode("p1"),URIRef("http://purl.obolibrary.org/obo/RO_0000091"),None)):
                 s6=os
                 for s123,p123,o123 in self.performer_graph.triples((s6,URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),None)):
+                    #get gap sizes
                     if o123 == URIRef("http://purl.obolibrary.org/obo/PSDO_0000105") or o123 == URIRef("http://purl.obolibrary.org/obo/PSDO_0000104"):
                         for s124,p124,o124 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingMeasure"),None)):
                             o124=str(o124)
@@ -91,6 +92,7 @@ class Esteemer():
                                         gaps.append(float(o125))
                                         gaps_tuples=tuple(gaps)
                                         self.measure_gap_list.append(gaps_tuples)
+                    #get trend slopes
                     if o123 == URIRef("http://purl.obolibrary.org/obo/PSDO_0000099") or o123 ==URIRef("http://purl.obolibrary.org/obo/PSDO_0000100"):
                         for s124,p124,o124 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingMeasure"),None)):
                             o124=str(o124)
@@ -104,6 +106,7 @@ class Esteemer():
                                         trend_slope.append(float(o125))
                                         trend_tuples=tuple(trend_slope)
                                         self.measure_trend_list.append(trend_tuples)
+                    #get number of months since last loss
                     if o123 == URIRef("http://purl.obolibrary.org/obo/PSDO_0000112") :
                         for s124,p124,o124 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingMeasure"),None)):
                             o124=str(o124)
@@ -118,7 +121,7 @@ class Esteemer():
                                         acheivement.append(float(o125))
                                         acheivement_tuples=tuple(acheivement)
                                         self.measure_acheivement_list.append(acheivement_tuples)
-                    
+                    #get number of months since last loss
                     if o123 == URIRef("http://purl.obolibrary.org/obo/PSDO_0000113") :
                         for s124,p124,o124 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingMeasure"),None)):
                             o124=str(o124)
@@ -132,20 +135,21 @@ class Esteemer():
                                         loss.append(float(o125))
                                         loss_tuples=tuple(loss)
                                         self.measure_loss_list.append(loss_tuples)
+        #consolidate loss moderator
         self.measure_loss_list = list(set(self.measure_loss_list))
         for x in self.measure_loss_list:
             x=list(x)
             self.measure_loss_list_new.append(x)
-       
-        self.measure_acheivement_list = list(set(self.measure_acheivement_list))
-        for x in self.measure_acheivement_list:
+        #consolidate achievement moderator
+        self.measure_achievement_list = list(set(self.measure_achievement_list))
+        for x in self.measure_achievement_list:
             x=list(x)
-            
+        #consolidate trend moderator    
         self.measure_trend_list = list(set(self.measure_trend_list))
         for x in self.measure_trend_list:
             x=list(x)
             self.measure_trend_list_new.append(x)
-                        
+        #consolidate gap moderator                
         self.measure_gap_list = list(set(self.measure_gap_list))
         for x in self.measure_gap_list:
             x=list(x)
@@ -272,10 +276,7 @@ class Esteemer():
             a_full_list=[]
             a_full_list1=[]
             b_full_list=[]
-            
-            
             s = i
-            
             for s5,p5,o5 in self.performer_graph.triples((s,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),None)):
                 for s2we,p2we,o2we in self.performer_graph.triples((s,URIRef("slowmo:acceptable_by"),None)):
                     o2we=str(o2we)
@@ -290,11 +291,7 @@ class Esteemer():
                         o2we="Loss"
                     if "Approach" in str(o2we):
                         o2we="Approach"
-                    # print(o5)
-                    
                     s6=o5
-                    # for s8,p8,o8 in self.spek_tp.triples((s6,p5,None)):
-                    #             print(s6)
                     for s7,p7,o7 in self.performer_graph.triples((s6,URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),None)):
                         #gap_multiplication
                         if o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000105") or o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000104"):
@@ -312,9 +309,7 @@ class Esteemer():
                                             if j[2] !=abs_val:
                                                 j[2]=abs_val
                                             j[2]=j[2]*v
-                               
                                 a_full_list.append(a)
-
                                 a_new=a[:]
                                 a_new.append(accept_path)
                                 a_full_list1.append(a_new)
@@ -323,52 +318,38 @@ class Esteemer():
                         if o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000099") or o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000100"):    
                             for s8,p8,o8 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
                                 b=[item for item in self.measure_trend_list_new if str(o8) in item]
-                                
                                 for k,v in self.trend_dict.items():
                                     if k == o2we:
                                         for j in b:
                                             if v == "--":
                                                 v=0
                                             v= float(v)
-                                            
                                             j[2]=j[2]*v
-                                           
                                 b_full_list.append(b)
                                 
                         
                         if o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000112"):
-                            
                             for s9,p9,o9 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
                                 c=[item for item in self.measure_acheivement_list_new if str(o9) in item]
-                                
                                 for k,v in self.acheivement_dict.items():
-                                   
-                                    if k == o2we:
-                                      
+                                   if k == o2we:
                                         for j in c:
-                                           
                                             if v == "--":
                                                 v=0
                                             v= float(v)
                                             j[2]=j[2]*v
-                                           
                                 c.append(i)
                                 
                         if o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000113"):
-                                
                             for s10,p10,o10 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
                                 d=[item for item in self.measure_loss_list_new if str(o10) in item]
-                                
                                 for k,v in self.loss_dict.items():
                                     if k == o2we:
-                                       
-                                        for j in d:
-                                           
+                                       for j in d:
                                             if v == "--":
                                                 v=0
                                             v= float(v)
                                             j[2]=j[2]*v
-                                           
                                 d.append(i)
                                 
             flat_list = [item for sublist in a_full_list1 for item in sublist]
@@ -386,11 +367,8 @@ class Esteemer():
             res1=[res[:]]
             
             df_a = pd.DataFrame(res1, columns=['Gaps'])
-           
             df_b =pd.DataFrame(b_full_list,columns=['Trends'])
-            
             df_a_new=pd.DataFrame(df_a["Gaps"].to_list(), columns=['comp_node', 'Measure','Gaps','signed_Gaps','accept_path'])
-            
             df_b_new =pd.DataFrame(df_b["Trends"].to_list(),columns=['comp_node','Measure','Trends'])
             
             if df_b_new.empty:
@@ -407,23 +385,17 @@ class Esteemer():
             comp_node_dict[i]=comp_node_list
             
             df_final = df_final.append(df_merged, ignore_index = True)
-            logger.debug(f'DF_Final is:\n{df_final}')   # Inside loop over spo 5, spo5 represents candidates? Doesn't seem to be the case...
            
-            logger.debug(f'df_merged is:\n{df_merged}')
             
-        
-        
         Keymax = max(zip(score_dict.values(), score_dict.keys()))[1]
+        logger.debug(f'DF_Final is:\n{df_final}')   
+           
+        logger.debug(f'df_merged is:\n{df_merged}')
         
-
-        # for k2,v2 in score_dict.items():
-        #     print(k2,v2)
-        
+        #Business Rules of issue 106
         index_list=[]
         df_final1=df_final.iloc[df_final.score.argmax()]
-        # print(df_final1)
         if df_final1['accept_path']=="Social better":
-            
             rslt_df = df_final.loc[df_final['accept_path'] == "Social better"]
             if "Measure" not in rslt_df.columns:
                 rslt_df["Measure"]=np.nan
@@ -439,54 +411,35 @@ class Esteemer():
             rslt_df ['Measures1'] = [','.join(map(str, l)) for l in rslt_df['Measures']]
            
             if (rslt_df['signed_Gaps'] > 0).all():
-                # print("yes")
                 result=rslt_df.groupby('accept_path')['score'].nsmallest(2).droplevel(0).iloc[0]
-                
                 Kew=[k for k, v in score_dict.items() if result in v]
-
                 self.node=random.choice(Kew)
                 return self.node,self.performer_graph
+            
             if (rslt_df['signed_Gaps'] == 0.00).any():
-                
                 rsdf=rslt_df.sample(n=1)
-                # print(rsdf)
-                #rdf=rslt_df.loc[rslt_df['Measures'] == rsdf["Measures"].values]
-
-                # result=rslt_df
                 measure_selected=rsdf["Measures"].values[0]
-                # print(type(measure_selected))
                 measure_selected=" ".join(map(str,measure_selected))
-                # print(type(measure_selected))
-                # print(rslt_df)
                 new_df = rslt_df[(rslt_df['Measures1']==measure_selected )]
-                # print(new_df)
                 comp_node_list = new_df['comp_node'].tolist()
-                # print(*comp_node_list)
                 final_x=0
                 for x in comp_node_list:
                     x=BNode(x)
-                   
                     for s1234,p1234,o1234 in self.performer_graph.triples((None,URIRef("http://example.com/slowmo#RegardingComparator"),x)):
                         for sa,pa,oa in self.performer_graph.triples((s1234,URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), None)):
                             if oa == URIRef("http://purl.obolibrary.org/obo/PSDO_0000129"):
                                 final_x= x
-                # print(final_x)
-                
                 if final_x == 0:
                     final_x= random.choice(comp_node_list)
                 else:
                     final_x=str(final_x)            
                 Kew1=[k for k, v in comp_node_dict.items() if final_x in v]
-                # print(*Kew1)
                 self.node=Kew1[0]
                 return self.node,self.performer_graph 
-                        
-
-            
         self.node=Keymax
-            
         return self.node,self.performer_graph
-        
+
+    #get selected message   
     def get_selected_message(self):
         s_m={}
         a=0
@@ -496,10 +449,7 @@ class Esteemer():
             return s_m 
         else:
             s=self.node
-           
-            
             temp_name = URIRef("http://example.com/slowmo#name")   # URI of template name?
-            
             p232= URIRef("psdo:PerformanceSummaryDisplay")
             Display=["text only", "bar chart", "line graph"]
             comparator_types=["Top 25","Top 10","Peers","Goal"]
@@ -526,12 +476,6 @@ class Esteemer():
             # print(*o2wea)
             s_m["acceptable_by"] = o2wea
 
-            
-            
-            
-
-            
-                
             comparator_list=[]
 
             for s5,p5,o5 in self.performer_graph.triples((s,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),None)):
