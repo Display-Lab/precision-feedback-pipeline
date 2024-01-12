@@ -128,3 +128,140 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 - Enable with environmental variable "pictoraless", boolean logical
 - Var alters instantiation behavior of Pictoralist, should stop the script from starting ready to generate an image
     - This implementaition should be slightly more efficient than controlling all of the logic from the main script  
+# Version 0.0.0.15
+2/6/2023 
+**Improvement:** 
+- Implement alice message templates and alice causal pathway.
+- Implemented Alice endpoint
+- Also implemented preferences in the esteemer algorithm
+- Major change in the Bit-stomach where the nodes for comparator nodes (peer,goal,top 10,top25)are removed in measure_details.json
+- The blank nodes for the comparator nodes(peer,goal,top10,top25) are added in the performer graph
+- Get the comparator nodes from performer graph and use it in prepared_data.py
+
+# Version 0.0.0.14
+2/6/2023 
+**Improvement:** 
+- Implement alice message templates and alice causal pathway.
+- Implemented Alice endpoint
+- Also implemented preferences in the esteemer algorithm
+- Major change in the Bit-stomach where the nodes for comparator nodes (peer,goal,top 10,top25)are removed in measure_details.json
+- The blank nodes for the comparator nodes(peer,goal,top10,top25) are added in the performer graph
+- Get the comparator nodes from performer graph and use it in prepared_data.py
+# Version 0.0.0.13
+2/6/2023 
+**Improvement:** 
+- Implement alice message templates and alice causal pathway.
+- Implemented Alice endpoint
+- Also implemented preferences in the esteemer algorithm
+- Major change in the Bit-stomach where the nodes for comparator nodes (peer,goal,top 10,top25)are removed in measure_details.json
+- The blank nodes for the comparator nodes(peer,goal,top10,top25) are added in the performer graph
+- Get the comparator nodes from performer graph and use it in prepared_data.py
+
+# Version 0.0.0.12
+1/31/2023 
+**Improvement:** 
+- Implement alice message templates and alice causal pathway.
+- Both Alice message templates and  alice causal pathways are uploaded into the repository.
+- Testing candidate smasher.Accessing the templates annotation into the pipeline
+- Getting motivation information from the performer graph in candidate smasher
+- The candidate smasher script got decided.
+
+# Version 0.0.0.11
+1/27/2023 
+**Improvement:** 
+- update esteemer to give selected message.
+- created "createprecisionfeedback/alice" endpoint which is a precursor to "
+"createprecisionfeedback/" endpoint
+- The code contains backbone structure used in the endpoint in the main.py
+
+# Version 0.0.0.10
+1/27/2023 
+**Improvement:** 
+- update esteemer to give selected message.
+- created "createprecisionfeedback/alice" endpoint which is a precursor to "
+"createprecisionfeedback/" endpoint
+- The code contains backbone structure used in the endpoint in the main.py
+
+# Version 0.0.0.9
+1/25/2023 
+**Improvement:** 
+- Added basic read me doc. 
+- It consists of details how to test the pipeline locally
+- Also how to test the pipeline on heroku
+- updated poetry.lock 
+- updated with requirements.txt
+- updated requirements.txt for heroku deployment.
+
+
+
+# Version 0.0.0.8
+1/25/2023 
+**Improvement:** 
+- Added basic read me doc. 
+- It consists of details how to test the pipeline locally
+- Also how to test the pipeline on heroku
+- updated poetry.lock 
+- updated with requirements.txt
+# Version 0.0.0.7
+1/24/2023
+**Improvement:** 
+- Added esteemer stub, that randomly chooses the one of the acceptable by causal pathways into the pipeline.
+- Tested the pipeline.Updated the requirements.txt. 
+- added poetry packaging tool into the pipeline .
+
+
+## Version 0.0.0.6  
+
+1/24/2023
+**Improvement:** 
+- Added esteemer stub, that randomly chooses the one of the acceptable by causal pathways into the pipeline.
+- Tested the pipeline.Updated the requirements.txt. 
+- added poetry packaging tool into the pipeline .
+
+## Version 0.0.0.5  
+
+1/23/2023
+**Improvement:** 
+-Intergrated candidate smasher into the pipeline.The candidate smasher is designed that way that used all 4 benchmarks into a single candidate.
+-This design was the result of long discussion with the team. 
+-Intergrated Thinkpudding into the pipeline. 
+-Tested the pipeline and made sure that all the stages are working fine.
+
+## Version 0.0.0.4  
+
+1/16/2023
+**Improvement:** 
+-Intergrating Bit-stomach into the pipeline.
+-Intergrated acheivement_loss.py,consecutive_gap.py,gap_annotate.py,monotinicity_annotate.py,prepare_data_annotate.py,trend_annotate.py
+-where each files(cheivement_loss.py,consecutive_gap.py,gap_annotate.py,monotinicity_annotate.py,trend_annotate.py) add the functionality of annotating into the pipeline
+-Prepare_data_annotate.py prepares the data that required by the annotation methods and calls them as required.
+-Intergrated into main and tested it.
+
+
+## Version 0.0.0.3  
+
+12/31/2022
+**Improvement:** 
+-Created Base graph 
+-Created performer graph.
+-Made sure that the causal pathways 
+-templates are imported with read graph method using rdflib method. 
+-The skeletal structure of the main.py was made.
+
+## Version 0.0.0.2  
+
+12/29/2022
+**Improvement:** 
+-Deploying the pipeline in Heroku cloud environment.
+-Created requirements.txt.
+-added uvicorn worker and 
+-gitignore file.
+
+
+## Version 0.0.0.1  
+
+12/29/2023
+**Improvement:** 
+-First commit of the precision feedback pipeline.
+- This commit consists of consolidated bitstomach,candidate-smasher,thinkpudding and pictoralist in python using FAST API and graphs.
+-This is the first commit of consolidated pipeline
