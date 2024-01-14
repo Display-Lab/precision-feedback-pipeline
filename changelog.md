@@ -128,25 +128,32 @@ This changelog format is based on [Keep a Changelog](https://keepachangelog.com/
 - Enable with environmental variable "pictoraless", boolean logical
 - Var alters instantiation behavior of Pictoralist, should stop the script from starting ready to generate an image
     - This implementaition should be slightly more efficient than controlling all of the logic from the main script  
-# Version 0.0.0.15
-2/6/2023 
+# Version 0.0.0.16
+2/14/2023 
 **Improvement:** 
-- Implement alice message templates and alice causal pathway.
-- Implemented Alice endpoint
-- Also implemented preferences in the esteemer algorithm
-- Major change in the Bit-stomach where the nodes for comparator nodes (peer,goal,top 10,top25)are removed in measure_details.json
-- The blank nodes for the comparator nodes(peer,goal,top10,top25) are added in the performer graph
-- Get the comparator nodes from performer graph and use it in prepared_data.py
+- Complete implementing preferences into the esteemer
+- Preferences are implemented based on causal-pathways 
+- The preferences were implemented from surveys,each causal pathway will have a number
+
+
+# Version 0.0.0.15
+2/13/2023 
+**Improvement:** 
+- Intergrated pictoralist basic code into the pipeline, 
+- it was not well designed because Zach wanted our concentration mostly on the other stages of the pipeline
+- The final picture that got generated is converted to base64 code
+- The created picture file is stored in the cached folder
+- The basics of output message is created here.
+- An example picture was created in the pipeline
+-Applying history into the esteemer algorithm
 
 # Version 0.0.0.14
-2/6/2023 
+2/7/2023 
 **Improvement:** 
-- Implement alice message templates and alice causal pathway.
-- Implemented Alice endpoint
-- Also implemented preferences in the esteemer algorithm
-- Major change in the Bit-stomach where the nodes for comparator nodes (peer,goal,top 10,top25)are removed in measure_details.json
-- The blank nodes for the comparator nodes(peer,goal,top10,top25) are added in the performer graph
-- Get the comparator nodes from performer graph and use it in prepared_data.py
+- Complete implementing preferences into the esteemer
+- Preferences are implemented based on causal-pathways 
+- The preferences were implemented from surveys,each causal pathway will have a number
+
 # Version 0.0.0.13
 2/6/2023 
 **Improvement:** 
