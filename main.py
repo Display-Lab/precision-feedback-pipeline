@@ -226,7 +226,7 @@ async def createprecisionfeedback(info:Request):
     history_df = es.process_history()        # Process history dict to dataframe
     #es.rank_history_component(history_df, )
     es.process_mpm()            # Parse MPM
-    node,spek_es,score_df,candidate_df=es.score()
+    node,spek_es,score_df,candidate_df,comp_dict=es.score()
     #applying business rules
     es.business_rules()
     # node,spek_es=es.select()

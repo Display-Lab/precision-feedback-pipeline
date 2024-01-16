@@ -46,6 +46,7 @@ class Esteemer():
         self.df_final= pd.DataFrame()
         self.score_dict_df=pd.DataFrame()
         self.score_dict={}
+        self.comp_node_dict={}
 
 
         # External objects being written to self
@@ -273,7 +274,7 @@ class Esteemer():
     def score(self):
         a_new=[]
         score_dict={}
-        comp_node_dict={}
+        # comp_node_dict={}
         df_final = pd.DataFrame()
         
         for i in self.acceptable_by_candidates:
@@ -386,7 +387,7 @@ class Esteemer():
 
             
             self.score_dict[i]=score_list
-            comp_node_dict[i]=comp_node_list
+            self.comp_node_dict[i]=comp_node_list
             
             self.df_final = self.df_final.append(df_merged, ignore_index = True)
            
@@ -403,15 +404,17 @@ class Esteemer():
         score_flat_list = [item for sublist in score_list for item in sublist] 
         self.score_dict_df['score']=score_flat_list
         self.node=Keymax
-        return self.node,self.performer_graph,self.df_final,self.score_dict_df
+        return self.node,self.performer_graph,self.df_final,self.score_dict_df,self.comp_node_dict
 
     
     def business_rules(self):
         # print(self.df_final)
         # print(self.score_dict_df)
         df_final1=self.df_final.iloc[self.df_final.score.argmax()]
+        print(df_final1)
         if df_final1['accept_path']=="Social better":
             rslt_df =self.df_final.loc[self.df_final['accept_path'] == "Social better"]
+            print(rslt_df)
             if "Measure" not in rslt_df.columns:
                 rslt_df["Measure"]=np.nan
             if "Measure_x" not in rslt_df.columns:
@@ -424,11 +427,38 @@ class Esteemer():
             rslt_df = rslt_df.drop('Measure_x', axis=1)
             rslt_df = rslt_df.drop('Measure_y', axis=1)
             rslt_df ['Measures1'] = [','.join(map(str, l)) for l in rslt_df['Measures']]
-            # print(rslt_df)
+            
             if ((rslt_df['signed_Gaps'] > 0).all() or (rslt_df['signed_Gaps'] == 0.00).any()):
                 result=rslt_df.groupby('accept_path')['score'].nsmallest(2).droplevel(0).iloc[0]
+                
                 Kew=[k for k, v in self.score_dict.items() if result in v]
-                self.node=random.choice(Kew)
+                # print(*Kew)
+                final_x=0
+                if ((rslt_df['signed_Gaps'] == 0.00).all()):
+                    rsdf=rslt_df.sample(n=1)
+                    measure_selected=rsdf["Measures"].values[0]
+                    measure_selected=" ".join(map(str,measure_selected))
+                    new_df = rslt_df[(rslt_df['Measures1']==measure_selected )]
+                    comp_node_list = new_df['comp_node'].tolist()
+                    for x in comp_node_list:
+                        x=BNode(x)
+                        for s1234,p1234,o1234 in self.performer_graph.triples((None,URIRef("http://example.com/slowmo#RegardingComparator"),x)):
+                            
+                            for sa,pa,oa in self.performer_graph.triples((s1234,URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), None)):
+                                
+                                if oa == URIRef("http://purl.obolibrary.org/obo/PSDO_0000129"):
+                                    
+                                    final_x= x
+                    
+                    
+                if final_x == 0:
+                    self.node= random.choice(Kew)
+                else:
+                    final_x=str(final_x)            
+                    Kew1=[k for k, v in self.comp_node_dict.items() if final_x in v]
+                    self.node=Kew1[0]    
+                
+                # self.node=random.choice(Kew)
                 return self.node,self.performer_graph
 
 
