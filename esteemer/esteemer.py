@@ -43,6 +43,11 @@ class Esteemer():
         self.message_received_count={}
         self.measure_recency={}
         self.preferences={}
+        self.df_final= pd.DataFrame()
+        self.score_dict_df=pd.DataFrame()
+        self.score_dict={}
+        self.comp_node_dict={}
+
 
         # External objects being written to self
         self.performer_graph=performer_graph
@@ -269,7 +274,7 @@ class Esteemer():
     def score(self):
         a_new=[]
         score_dict={}
-        comp_node_dict={}
+        # comp_node_dict={}
         df_final = pd.DataFrame()
         
         for i in self.acceptable_by_candidates:
@@ -381,63 +386,28 @@ class Esteemer():
             comp_node_list=df_merged["comp_node"].tolist()
 
             
-            score_dict[i]=score_list
-            comp_node_dict[i]=comp_node_list
+            self.score_dict[i]=score_list
+            self.comp_node_dict[i]=comp_node_list
             
-            df_final = df_final.append(df_merged, ignore_index = True)
+            self.df_final = self.df_final.append(df_merged, ignore_index = True)
            
             
-        Keymax = max(zip(score_dict.values(), score_dict.keys()))[1]
-        logger.debug(f'DF_Final is:\n{df_final}')   
-           
-        logger.debug(f'df_merged is:\n{df_merged}')
+        Keymax = max(zip(self.score_dict.values(), self.score_dict.keys()))[1]
+        logger.debug(f'DF_Final is:\n{self.df_final}') 
         
-        #Business Rules of issue 106
-        index_list=[]
-        df_final1=df_final.iloc[df_final.score.argmax()]
-        if df_final1['accept_path']=="Social better":
-            rslt_df = df_final.loc[df_final['accept_path'] == "Social better"]
-            if "Measure" not in rslt_df.columns:
-                rslt_df["Measure"]=np.nan
-            if "Measure_x" not in rslt_df.columns:
-                rslt_df["Measure_x"]=np.nan
-            if "Measure_y" not in rslt_df.columns:
-                rslt_df["Measure_y"]=np.nan
-            cols = ['Measure', 'Measure_y']
-            rslt_df["Measures"] = [[e for e in row if e==e] for row in rslt_df[cols].values]
-            rslt_df = rslt_df.drop('Measure', axis=1)
-            rslt_df = rslt_df.drop('Measure_x', axis=1)
-            rslt_df = rslt_df.drop('Measure_y', axis=1)
-            rslt_df ['Measures1'] = [','.join(map(str, l)) for l in rslt_df['Measures']]
-           
-            if (rslt_df['signed_Gaps'] > 0).all() :
-                result=rslt_df.groupby('accept_path')['score'].nsmallest(2).droplevel(0).iloc[0]
-                Kew=[k for k, v in score_dict.items() if result in v]
-                self.node=random.choice(Kew)
-                return self.node,self.performer_graph
-            
-            if (rslt_df['signed_Gaps'] == 0.00).any():
-                rsdf=rslt_df.sample(n=1)
-                measure_selected=rsdf["Measures"].values[0]
-                measure_selected=" ".join(map(str,measure_selected))
-                new_df = rslt_df[(rslt_df['Measures1']==measure_selected )]
-                comp_node_list = new_df['comp_node'].tolist()
-                final_x=0
-                for x in comp_node_list:
-                    x=BNode(x)
-                    for s1234,p1234,o1234 in self.performer_graph.triples((None,URIRef("http://example.com/slowmo#RegardingComparator"),x)):
-                        for sa,pa,oa in self.performer_graph.triples((s1234,URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), None)):
-                            if oa == URIRef("http://purl.obolibrary.org/obo/PSDO_0000129"):
-                                final_x= x
-                if final_x == 0:
-                    final_x= random.choice(comp_node_list)
-                else:
-                    final_x=str(final_x)            
-                Kew1=[k for k, v in comp_node_dict.items() if final_x in v]
-                self.node=Kew1[0]
-                return self.node,self.performer_graph 
+        self.score_dict_df=pd.DataFrame(self.score_dict.items())
+        self.score_dict_df = self.score_dict_df.rename(columns={0: 'candidate_id', 1: 'score'})
+        score_list=self.score_dict_df['score'].tolist()
+
+        
+        self.score_dict_df = self.score_dict_df.drop('score', axis=1)
+        score_flat_list = [item for sublist in score_list for item in sublist] 
+        self.score_dict_df['score']=score_flat_list
         self.node=Keymax
-        return self.node,self.performer_graph
+        return self.node,self.performer_graph,self.df_final,self.score_dict_df,self.comp_node_dict
+
+    
+   
 
     #get selected message   
     def get_selected_message(self):
