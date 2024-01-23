@@ -10,7 +10,7 @@ def insert(merged_list,performer_graph,causal_pathways):
     for x in merged_list:
         for z in x[0]:
             o=id_name[z]
-            print(o)
+            # print(o)
             causal_p= str(o)
             for i in x[1]:
                 s=i
@@ -20,12 +20,12 @@ def insert(merged_list,performer_graph,causal_pathways):
                             if  o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000104"):
                                 for s7,p7,o8 in performer_graph.triples((o5,URIRef("http://example.com/slowmo#RegardingMeasure"),None)):
                                     if o8 in measure_list:
-                                        print("yes")
+                                        # print("yes")
                                         
                                         for s7,p7,o9 in performer_graph.triples((o5,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
                                             for s10,p10,o10 in performer_graph.triples((o9,URIRef("http://purl.org/dc/terms/title"),None)):
                                                 title_name=str(o10)
-                                                print(title_name)
+                                                # print(title_name)
                                                 if title_name == "TOP_25":
                                                     continue
                                                 else:
