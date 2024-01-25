@@ -6,6 +6,7 @@ import json
 import rdflib
 from rdflib import Graph, Literal, Namespace, URIRef,BNode
 from rdflib.serializer import Serializer
+import numpy as np
 
 
 
@@ -243,7 +244,9 @@ class Trend_annotateTestcase(unittest.TestCase):
     
     
     
-    
+    # @patch('trend_annotate.theil_reg')
+    # @patch('trend_annotate.annotate_positive_trend')
+    # @patch('trend_annotate.annotate_negative_trend')
     # def test_trend_annotate(self):
     #     #create test data
     #     #test data1
@@ -254,4 +257,18 @@ class Trend_annotateTestcase(unittest.TestCase):
     #     back_up_df.loc[1] = ["BP03","2023-11-01",85,88,96,0.85,0.90]
     #     back_up_df.loc[2] = ["BP03","2023-11-01",85,88,96,0.85,0.90]
     #     back_up_df.loc[3] = ["BP03","2023-12-01",85,88,96,0.85,0.90]
+    #     back_up_df["month"]=back_up_df["month"].astype('datetime64')
+    #     file_json=open("./bit_stomach/tests/tests_inputs/trend_test.json")
+    #     file_json1=json.load(file_json)
+    #     performergraphjson=json.dumps(file_json1)
+    #     performer_graph = Graph()
+    #     performer_graph.parse(data=performergraphjson,format="json-ld")
+    #     p1_node=URIRef("_:p1")
+    #     comparator_bnode=BNode("_:N23cd5c14a87644ac9b3366bae5213861")
+    #     mock_thiel_reg= Mock()
+    #     data = np.array([0.0, 0.85, 0.0, 0.0, 0.0])
+    #     out=  pd.Series(data)
+    #     mock_thiel_reg.return_value=out
+    #     mock_annotate_positive_trend= Mock()
+
     
