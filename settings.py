@@ -35,6 +35,8 @@ class Settings:
         # Instance display settings
         self.display_window = config('display_window', cast=int, default=6)
         self.plot_goal_line = config('plot_goal_line', cast=bool, default=True)
+        
+        self.esteemer2 = config('esteemer2', cast=bool, default=False)
 
 # Instantiate
 settings = Settings()
