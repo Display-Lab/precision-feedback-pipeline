@@ -109,4 +109,65 @@ class Trend_annotateTestcase(unittest.TestCase):
         #assert if intervals is added correctly
         assert Resultant_Intervals == Expected_Intervals
 
- 
+    def test_annotate_negative_trend(self):
+            #create test data
+            file_json=open("./bit_stomach/tests/tests_inputs/trend_negative_test.json")
+            file_json1=json.load(file_json)
+            performergraphjson=json.dumps(file_json1)
+            performer_graph = Graph()
+            performer_graph.parse(data=performergraphjson,format="json-ld")
+            blank_node=BNode("_:Nef4605383e534edb90633a3c30587157")
+            measure_Name=Literal("_:BP03")
+            comparator_bnode=BNode("_:N23cd5c14a87644ac9b3366bae5213861")
+            trend_slope=-1.1574074074074085e-17
+            intervals=2
+
+            #call method of test
+            Resultant_graph=trend_annotate.annotate_negative_trend(performer_graph,blank_node,measure_Name,comparator_bnode,trend_slope,intervals)
+            for s,p,o in Resultant_graph.triples((blank_node,URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),None)):
+                Resultant_positive_annotation=str(o)
+            for s,p,o in Resultant_graph.triples((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),None)):
+                Resultant_comparator_node= str(o)
+            for s,p,o in Resultant_graph.triples((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),None)):
+                Resultant_Measure= str(o)
+            for s,p,o in Resultant_graph.triples((blank_node,URIRef('http://example.com/slowmo#PerformanceTrendSlope'),None)):
+                Resultant_Trend_slope= str(o)
+            for s,p,o in Resultant_graph.triples((blank_node,URIRef('http://example.com/slowmo#numberofmonths'),None)):
+                Resultant_Intervals= str(o)
+
+            #converting resultant graph to json object
+            Resultant_graph_json=Resultant_graph.serialize(format='json-ld', indent=4)
+            #writing resultant output
+            f = open("./bit_stomach/tests/test_outputs/Trend_negative_output.json", "w")
+            f.write(Resultant_graph_json)
+            f.close()
+
+
+            #loading expected output
+            file_json1=open("./bit_stomach/tests/expected_tests_outputs/expected_trend_negative_test.json")
+            expected_graph_json=json.load(file_json1)
+            expected_graphjson=json.dumps(expected_graph_json)
+            expected_graph = Graph()
+            expected_graph.parse(data=expected_graphjson,format="json-ld")
+            # expected_graph_json_list=list(itertools.chain.from_iterable(expected_graph_json))
+            for s,p,o in expected_graph.triples((blank_node,URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),None)):
+                Expected_positive_annotation=str(o)
+            for s,p,o in expected_graph.triples((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),None)):
+                Expected_comparator_node= str(o)
+            for s,p,o in expected_graph.triples((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),None)):
+                Expected_Measure= str(o)
+            for s,p,o in expected_graph.triples((blank_node,URIRef('http://example.com/slowmo#PerformanceTrendSlope'),None)):
+                Expected_Trend_slope= str(o)
+            for s,p,o in expected_graph.triples((blank_node,URIRef('http://example.com/slowmo#numberofmonths'),None)):
+                Expected_Intervals= str(o)
+            
+            #assert if positive trend annotation is added
+            assert Expected_positive_annotation == Resultant_positive_annotation
+            #assert if comparator_node is added correctly
+            assert Expected_comparator_node == Resultant_comparator_node
+            #assert if Measure is added correctly
+            assert Expected_Measure == Resultant_Measure
+            #assert if trend slope is added correctly
+            assert Expected_Trend_slope == Resultant_Trend_slope
+            #assert if intervals is added correctly
+            assert Resultant_Intervals == Expected_Intervals

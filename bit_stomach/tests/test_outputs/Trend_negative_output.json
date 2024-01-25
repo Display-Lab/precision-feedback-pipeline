@@ -2,11 +2,11 @@
     {
         "@id": "_:_:Nef4605383e534edb90633a3c30587157",
         "@type": [
-            "http://purl.obolibrary.org/obo/PSDO_0000099"
+            "http://purl.obolibrary.org/obo/PSDO_0000100"
         ],
         "http://example.com/slowmo#PerformanceTrendSlope": [
             {
-                "@value": 1.1574074074074085e-17
+                "@value": -1.1574074074074085e-17
             }
         ],
         "http://example.com/slowmo#RegardingComparator": [
@@ -29,7 +29,7 @@
         "@id": "_:_:N23cd5c14a87644ac9b3366bae5213861"
     },
     {
-        "@id": "_:Nd86cf91174e544498e0df0edf6be1868",
+        "@id": "_:N38e7ae581a5942a9a1df65160e3d4c78",
         "http://example.com/slowmo#IsAboutMeasure": [
             {
                 "@id": "_:BP03"

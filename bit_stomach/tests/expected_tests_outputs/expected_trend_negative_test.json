@@ -1,35 +1,6 @@
 [
     {
-        "@id": "_:_:Nef4605383e534edb90633a3c30587157",
-        "@type": [
-            "http://purl.obolibrary.org/obo/PSDO_0000099"
-        ],
-        "http://example.com/slowmo#PerformanceTrendSlope": [
-            {
-                "@value": 1.1574074074074085e-17
-            }
-        ],
-        "http://example.com/slowmo#RegardingComparator": [
-            {
-                "@id": "_:_:N23cd5c14a87644ac9b3366bae5213861"
-            }
-        ],
-        "http://example.com/slowmo#RegardingMeasure": [
-            {
-                "@value": "_:BP03"
-            }
-        ],
-        "http://example.com/slowmo#numberofmonths": [
-            {
-                "@value": 2
-            }
-        ]
-    },
-    {
-        "@id": "_:_:N23cd5c14a87644ac9b3366bae5213861"
-    },
-    {
-        "@id": "_:Nd86cf91174e544498e0df0edf6be1868",
+        "@id": "_:N1ec96cc08d3e4b9c996fb17f34d41830",
         "http://example.com/slowmo#IsAboutMeasure": [
             {
                 "@id": "_:BP03"
@@ -104,5 +75,34 @@
                 "@id": "_:BP03"
             }
         ]
+    },
+    {
+        "@id": "_:_:Nef4605383e534edb90633a3c30587157",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000100"
+        ],
+        "http://example.com/slowmo#PerformanceTrendSlope": [
+            {
+                "@value": -1.1574074074074085e-17
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:_:N23cd5c14a87644ac9b3366bae5213861"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "_:BP03"
+            }
+        ],
+        "http://example.com/slowmo#numberofmonths": [
+            {
+                "@value": 2
+            }
+        ]
+    },
+    {
+        "@id": "_:_:N23cd5c14a87644ac9b3366bae5213861"
     }
 ]
