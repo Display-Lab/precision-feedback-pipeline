@@ -1,4 +1,4 @@
-from rdflib import Graph #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
+from rdflib import Graph, RDF, URIRef #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
 from candidatesmasher.candidatesmasher import CandidateSmasher
 from graph_operations import read_graph, create_performer_graph
 from fastapi import FastAPI, Request, HTTPException
@@ -217,21 +217,11 @@ async def createprecisionfeedback(info:Request):
 
     # #Esteemer
     logger.info("Calling Esteemer from main...")
-    measure_list=performance_data_df["measure"].drop_duplicates()
-    # print(*measure_list)
-    es=Esteemer(performer_graph,measure_list,preferences,history,mpm_df)
-    # # es.apply_preferences()
-    # # es.apply_history()
-    es.process_spek()           # Parse annotations
-    history_df = es.process_history()        # Process history dict to dataframe
-    #es.rank_history_component(history_df, )
-    es.process_mpm()            # Parse MPM
-    node,spek_es,score_df,candidate_df,comp_dict=es.score()
-    # #applying business rules
-    # es.business_rules()
-    # node,spek_es=es.select()
-    selected_message=es.get_selected_message()
-    # # es.apply_history()
+    
+    selected_message = esteemer1(performance_data_df, history, preferences, mpm_df, performer_graph)
+
+    if settings.esteemer2 is True:        
+        esteemer2()
     
 
     ### Pictoralist 2, now on the Nintendo DS: ###
@@ -247,3 +237,24 @@ async def createprecisionfeedback(info:Request):
         full_selected_message   = pc.prepare_selected_message()
     
     return full_selected_message
+
+def esteemer1(performance_data_df, history, preferences, mpm_df, performer_graph):
+    measure_list=performance_data_df["measure"].drop_duplicates()
+    # print(*measure_list)
+    es=Esteemer(performer_graph,measure_list,preferences,history,mpm_df)
+    # # es.apply_preferences()
+    # # es.apply_history()
+    es.process_spek()           # Parse annotations
+    history_df = es.process_history()        # Process history dict to dataframe
+    #es.rank_history_component(history_df, )
+    es.process_mpm()            # Parse MPM
+    node,spek_es,score_df,candidate_df,comp_dict=es.score()
+    # #applying business rules
+    # es.business_rules()
+    # node,spek_es=es.select()
+    selected_message=es.get_selected_message()
+    # # es.apply_history()
+    return selected_message
+
+def esteemer2():
+    logger.info("esteemer 2 called")
