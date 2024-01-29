@@ -1,0 +1,113 @@
+[
+
+    {
+                "@context": {
+                    "@vocab": "http://schema.org/",
+                    "slowmo": "http://example.com/slowmo#",
+                    "csvw": "http://www.w3.org/ns/csvw#",
+                    "dc": "http://purl.org/dc/terms/",
+                    "PSDO": "http://purl.obolibrary.org/obo/",
+                    "slowmo:Measure": "http://example.com/slowmo#Measure",
+                    "slowmo:IsAboutPerformer": "http://example.com/slowmo#IsAboutPerformer",
+                    "slowmo:ColumnUse": "http://example.com/slowmo#ColumnUse",
+                    "slowmo:IsAboutTemplate": "http://example.com/slowmo#IsAboutTemplate",
+                    "slowmo:spek": "http://example.com/slowmo#spek",
+                    "slowmo:IsAboutCausalPathway": "http://example.com/slowmo#IsAboutCausalPathway",
+                    "slowmo:IsAboutOrganization": "http://example.com/slowmo#IsAboutOrganization",
+                    "slowmo:IsAboutMeasure": "http://example.com/slowmo#IsAboutMeasure",
+                    "slowmo:InputTable": "http://example.com/slowmo#InputTable",
+                    "slowmo:WithComparator": "http://example.com/slowmo#WithComparator",
+                    "has_part": "http://purl.obolibrary.org/obo/bfo#BFO_0000051",
+                    "has_disposition": "http://purl.obolibrary.org/obo/RO_0000091"
+                }},
+            
+            
+                
+            {
+                    "http://example.com/slowmo#IsAboutMeasure": [
+                    {
+                        "@id": "_:BP03"
+                    }
+                ],
+              
+                "http://example.com/slowmo#IsAboutPerformer": [
+                    {
+                        "@id": "_:p1"
+                    }
+                ]
+            },
+         
+           
+            {
+                "@id": "_:BP03",
+                "@type": [
+                    "http://purl.obolibrary.org/obo/PSDO_0000102"
+                ],
+                "http://example.com/slowmo#WithComparator": [
+                   
+                    {
+                        "@id": "_:N23cd5c14a87644ac9b3366bae5213861"
+                    }
+                ],
+                "http://purl.org/dc/terms/title": [
+                    {
+                        "@value": "Low MAP Prevention < 65"
+                    }
+                ],
+                "http://schema.org/identifier": [
+                    {
+                        "@value": "BP03"
+                    }
+                ]
+            },
+         
+            {
+                "@id": "_:N23cd5c14a87644ac9b3366bae5213861",
+                "@type": [
+                    "http://purl.obolibrary.org/obo/PSDO_0000094"
+                ],
+                "http://purl.org/dc/terms/title": [
+                    {
+                        "@value": "GOAL"
+                    }
+                ],
+                "http://schema.org/name": [
+                    {
+                        "@value": "goal"
+                    }
+                ]
+            },
+            {
+                "@id": "_:p1",
+                "@type": [
+                    "http://purl.obolibrary.org/obo/psdo_0000085"
+                ],
+                "http://purl.obolibrary.org/obo/RO_0000091": [
+                    {
+                        "@id": "_:N2aaaa98aab4240c7a2f7af57a30625e7"
+                    }
+                   
+                ]
+            },
+            {
+                "@id": "_:N2aaaa98aab4240c7a2f7af57a30625e7",
+                "@type": [
+                    "http://purl.obolibrary.org/obo/PSDO_0000094"
+                ],
+                "http://example.com/slowmo#RegardingComparator": [
+                    {
+                        "@id": "_:N23cd5c14a87644ac9b3366bae5213861"
+                    }
+                ],
+                "http://example.com/slowmo#RegardingMeasure": [
+                    {
+                        "@id": "_:BP03"
+                    }
+                ]
+            }
+           
+          
+        
+        
+        
+    ]

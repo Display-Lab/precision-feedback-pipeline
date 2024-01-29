@@ -11,6 +11,8 @@ from rdflib.namespace import RDF
 
 
 def trend_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
+    # print(latest_measure_df)
+
     back_up_df=latest_measure_df
     latest_measure_df=latest_measure_df.reset_index(drop=True)
     idx= latest_measure_df.groupby(['measure'])['month'].nlargest(2) .reset_index()
@@ -102,5 +104,6 @@ def find_number(backup_df,trend_sign1):
 def theil_reg(df, xcol, ycol):
 
    model = stats.theilslopes(df[ycol],df[xcol])
+#    print(pd.Series(model))
    return pd.Series(model)
 

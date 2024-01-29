@@ -1,0 +1,108 @@
+[
+    {
+        "@id": "_:Ne3899b5cefb0465b95a267b736bba599",
+        "http://example.com/slowmo#IsAboutMeasure": [
+            {
+                "@id": "_:BP03"
+            }
+        ],
+        "http://example.com/slowmo#IsAboutPerformer": [
+            {
+                "@id": "_:p1"
+            }
+        ]
+    },
+    {
+        "@id": "_:BP03",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000102"
+        ],
+        "http://example.com/slowmo#WithComparator": [
+            {
+                "@id": "_:N23cd5c14a87644ac9b3366bae5213861"
+            }
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "Low MAP Prevention < 65"
+            }
+        ],
+        "http://schema.org/identifier": [
+            {
+                "@value": "BP03"
+            }
+        ]
+    },
+    {
+        "@id": "_:N23cd5c14a87644ac9b3366bae5213861",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000094"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "GOAL"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "goal"
+            }
+        ]
+    },
+    {
+        "@id": "_:p1",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000085"
+        ],
+        "http://purl.obolibrary.org/obo/RO_0000091": [
+            {
+                "@id": "_:N2aaaa98aab4240c7a2f7af57a30625e7"
+            }
+        ]
+    },
+    {
+        "@id": "_:N2aaaa98aab4240c7a2f7af57a30625e7",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000094"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N23cd5c14a87644ac9b3366bae5213861"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:BP03"
+            }
+        ]
+    },
+    {
+        "@id": "_:_:Nef4605383e534edb90633a3c30587157",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000100"
+        ],
+        "http://example.com/slowmo#PerformanceTrendSlope": [
+            {
+                "@value": -1.1574074074074085e-17
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:_:N23cd5c14a87644ac9b3366bae5213861"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "_:BP03"
+            }
+        ],
+        "http://example.com/slowmo#numberofmonths": [
+            {
+                "@value": 2
+            }
+        ]
+    },
+    {
+        "@id": "_:_:N23cd5c14a87644ac9b3366bae5213861"
+    }
+]
