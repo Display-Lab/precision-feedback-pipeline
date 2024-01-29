@@ -270,5 +270,21 @@ class Trend_annotateTestcase(unittest.TestCase):
     #     out=  pd.Series(data)
     #     mock_thiel_reg.return_value=out
     #     mock_annotate_positive_trend= Mock()
+    #     file_json=open("./bit_stomach/tests/expected_tests_outputs/expected_trend_positive_test.json")
+    #     file_json1=json.load(file_json)
+    #     positivetrendjson=json.dumps(file_json1)
+    #     positivetrend_graph = Graph()
+    #     positivetrend_graph.parse(data=positivetrendjson,format="json-ld")
+    #     mock_annotate_positive_trend.return_value=positivetrend_graph
+    #     mock_annotate_negative_trend= Mock()
+    #     file_json=open("./bit_stomach/tests/expected_tests_outputs/expected_trend_negative_test.json")
+    #     file_json1=json.load(file_json)
+    #     negativetrendjson=json.dumps(file_json1)
+    #     negativetrend_graph = Graph()
+    #     negativetrend_graph.parse(data=negativetrendjson,format="json-ld")
+    #     mock_annotate_negative_trend.return_value=negativetrend_graph
+
+    #     #test method
+    #     trend_annotate.trend_annotate(performer_graph,p1_node,back_up_df,comparator_bnode)
 
     
