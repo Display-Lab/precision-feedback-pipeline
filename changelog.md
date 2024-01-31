@@ -9,41 +9,25 @@ This project follows
 
 **Improvement:** Pictoralist: Display functionality fixes 
 - Changed strategy for generating annotations on bar chart performance, now using distinct truncated dataframes as in line graphs
-- Fixed duplicate logging statements
-- Fixed set_timeframe, now functions as intended
-- Added conditional annoatation formatting in line and bar displays for low-performance values
-- Goal line on bar charts now behind bars
-
-**Changed:** Pictoralist: Display formatting for line graphs and bar charts  
+- Pictoralist: Display formatting for line graphs and bar charts  
 - Fixed resolution at 500x250 w/ 300 dpi  
-- Adjusted scaling of visual elements to match new resolution 
-- Added alpha channel to figure (testing fully transparent for email implementation)  
-
-**Improvement** Esteemer: Rank candidates for social comparators based on highest comparator performance level 
+- Esteemer: Rank candidates for social comparators based on highest comparator performance level 
 - When Esteemer finds more than one candidate to be acceptable by social better, select the candidate with the highest comparator performance level 
 
 ## Version 0.0.0.21
 ### Release date: 11/9/23
-**Changed:** Settings handling for builds  
+- Settings handling for builds  
 - Seperated local and remote env files  
 - Created 'settings.py' to handle configuration setting on startup outside main.py  
 - Added python-decouple to build requirements (requirements.txt)  
 - Removed python-dotenv: requirements, poetry requirements, and settings.py  
 - Updated readme with information on setting up a dev .env file and configuring pipeline instances  
-
-
-
 **Improvement:** Visual display tweaks to pictoralist
 - Changed output to 1 precision float in text message
 - Various visual changes to line graph format
 - Added functionality to graph data voids with thin dashed lines between continuous data per request
 - Various changes to bar chart display format
-
-
-
-
-
-**Changed:** Pictoralist (major rework)
+**Pictoralist** 
 - Maintain class-based architecture, but operate procedurally
 - Implemented data cleanup function to simplify dataframe for plotting
 - Implemented gap filling function
@@ -58,13 +42,9 @@ This project follows
 - Added input messages to the test case folder orginating from MPOG data flow
 
 ## Version 0.0.0.19
-**Patch:** Improvements to local file startup infrastructure
-- Switched from os.listdir to os.scandir for increased effciency
-- Note: when specifying local directories for causal pathways and message templates, .env requires the path to be specified without the 'file://' prefix for correct functionality
 
 **Improvement** : Added comprehensive test suite of input messages
 - Added test_cases: /pathway_specific and /personas directories
-    - Readmes denote structural information about the test cases, as well as expected acceptable candidates and selected candidates by measure for each input message
 - CPtests and persona tests can be automatically verified for correctness of overall output using Leakdown Tester
 
 ## Version 0.0.0.17
@@ -74,27 +54,18 @@ This project follows
 - Compliance <3
 
 **Improvement:** Revised startup behavior; data imports, setup operations of knowledge graphs, environmental variables
-
 - Added comment information to describe the operations on startup from pydantic settings through RDFlib graphing
-
 - Refactored startup graph operations
-
 - Added dotenv support for setting environmental variables from .env file
-
 - Added functionality to scrape github for JSON content on startup
-    - Refactored source code for local startup operations is intact (for rollback)
-
 - Removed startup folder now that online knowledge transfer is successful
-
 - Confirmed revised main.py operates as-is on Darwin and Windows OSes, removed windows-specific main.py
-    - Have removed need to work with the disperate file systems of OSes by reading from remote data on startup
-
 - Regenerated dependencies in requirements.txt and poetry toml, lock, requirements files
 
 **Improvement:** Enabled pipeline to create precision fieedback without generating images (Pictoraless functionality)  
 - Enable with environmental variable "pictoraless", boolean logical
 - Var alters instantiation behavior of Pictoralist, should stop the script from starting ready to generate an image
-    - This implementaition should be slightly more efficient than controlling all of the logic from the main script  
+    
 # Version 0.0.0.16
 2/14/2023 
 **Improvement:** 
