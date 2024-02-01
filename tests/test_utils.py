@@ -3,13 +3,13 @@ from esteemer2 import utils
 
 
 def test_measures():
-    measures = utils.measures(get_graph("outputs/spek_tp.json"))
+    measures = utils.measures(get_graph("tests/spek_tp.json"))
     blank_nodes = [BNode("PONV05"), BNode("SUS04"), BNode("TRAN04")]
     assert measures == blank_nodes
 
 
 def test_measure_acceptable_candidates():
-    graph = get_graph("outputs/spek_tp.json")
+    graph = get_graph("tests/spek_tp.json")
     measure_acceptable_candidates = utils.measure_acceptable_candidates(
         graph, BNode("SUS04")
     )
@@ -24,12 +24,11 @@ def test_measure_acceptable_candidates():
 
     assert id_values == [
         "N0fefdf2588e640068f19c40cd4dcb7ce",
-        "N14f02942683f4712894a2c997baee53d",
     ]
 
 
 def test_measure_candidates():
-    graph = get_graph("outputs/spek_tp.json")
+    graph = get_graph("tests/spek_tp.json")
     measure_candidates = utils.measure_candidates(graph, BNode("PONV05"))
 
     # Extract @id values for each BNode in the list
@@ -41,13 +40,12 @@ def test_measure_candidates():
             id_values.append(id_value)
 
     assert id_values == [
-        "N53e6f7cfe6264b319099fc6080808331",
         "N3840ed1cab81487f928030dbd6ac4489",
     ]
 
 
 def test_apply_measure_business_rules():
-    graph = get_graph("outputs/spek_tp.json")
+    graph = get_graph("tests/spek_tp.json")
     candidate_list = [
         BNode("N53e6f7cfe6264b319099fc6080808331"),
         BNode("N3840ed1cab81487f928030dbd6ac4489"),

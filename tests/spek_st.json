@@ -923,11 +923,6 @@
                 "@id": "https://repo.metadatacenter.org/template-instances/f8ad0835-29de-4605-a1eb-1288475a1612"
             }
         ],
-        "http://example.com/slowmo#HasScore": [
-            {
-                "@value": "126"
-            }
-        ],
         "http://example.com/slowmo#RegardingMeasure": [
             {
                 "@id": "_:PONV05"
@@ -1370,11 +1365,6 @@
         "http://example.com/slowmo#AncestorTemplate": [
             {
                 "@id": "https://repo.metadatacenter.org/template-instances/9e71ec9e-26f3-442a-8278-569bcd58e708"
-            }
-        ],
-        "http://example.com/slowmo#HasScore": [
-            {
-                "@value": "126"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
