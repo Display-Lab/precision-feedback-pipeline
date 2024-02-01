@@ -316,21 +316,20 @@ class CandidateSmasher:
             for rowIndex1, row1 in df_spek.iterrows():
                 # print(row1)
                 # print(row1["comparator_type"])
-                measure_name=row1["measure"]
+                measure: BNode = row1["measure"] 
                 # oxcv=BNode(row1["Comparator_Node"][0])
                 # print(row)
                 # print(row1)
-                oq=BNode()
+                candidate=BNode()
                 
         #print(row1)
                 # ah=BNode(row1["Comparator_Node"])
                 if "graph_type1" in df_spek.columns:
                     if (row1["graph_type1"] != 0):
                         count=count+1
-                        # print(row1["graph_type1"])
-                        ag=Literal(measure_name)
-                        self.performer_graph.add((URIRef("http://example.com/app#display-lab"),URIRef("http://example.com/slowmo#HasCandidate"),oq) )
-                        self.performer_graph.add((oq,RDF.type,URIRef("http://purl.obolibrary.org/obo/cpo_0000053")))
+                        # print(row1["graph_type1"]) 
+                        self.performer_graph.add((URIRef("http://example.com/app#display-lab"),URIRef("http://example.com/slowmo#HasCandidate"),candidate) )
+                        self.performer_graph.add((candidate,RDF.type,URIRef("http://purl.obolibrary.org/obo/cpo_0000053")))
                         a25=Literal(row["text"])
                         a27=Literal(row["name"])
                         # a288= Literal(row["display"])
@@ -341,53 +340,53 @@ class CandidateSmasher:
                             if(row["template_type_dicts1"] != 0):
                                 a29=URIRef(row["template_type_dicts1"])
                 
-                        self.performer_graph.add((oq,URIRef("psdo:PerformanceSummaryTextualEntity"),a25))
-                        self.performer_graph.add((oq,URIRef("http://example.com/slowmo#name"),a27))
+                        self.performer_graph.add((candidate,URIRef("psdo:PerformanceSummaryTextualEntity"),a25))
+                        self.performer_graph.add((candidate,URIRef("http://example.com/slowmo#name"),a27))
                         # self.a.add((oq,self.cp3,a288))
                         # self.a.add((oq,self.cp3,a26))
                         # self.a.add((oq,self.cp3,a261))
-                        self.performer_graph.add((oq,RDF.type,URIRef("http://example.com/slowmo#Candidate")))
-                        self.performer_graph.add((oq, URIRef("http://example.com/slowmo#RegardingMeasure"), row1["measure"]))
+                        self.performer_graph.add((candidate,RDF.type,URIRef("http://example.com/slowmo#Candidate")))
+                        self.performer_graph.add((candidate, URIRef("http://example.com/slowmo#RegardingMeasure"), measure))
 
                         if "template_type_dicts" in df_template.columns:
                             if(row["template_type_dicts"] != 0):
                                 ov=BNode()
-                                self.performer_graph.add((oq,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
+                                self.performer_graph.add((candidate,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
                                 self.performer_graph.add((ov,RDF.type,a28))
                         if "template_type_dicts1" in df_template.columns:
                             if(row["template_type_dicts1"] != 0):
                                 ov=BNode()
-                                self.performer_graph.add((oq,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
+                                self.performer_graph.add((candidate,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
                                 self.performer_graph.add((ov,RDF.type,a29))
                         if "template_type_dicts2" in df_template.columns:
                             if (row["template_type_dicts2"] != 0):
                                 a30=URIRef(row["template_type_dicts2"])
                                 ov=BNode()
-                                self.performer_graph.add((oq,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
+                                self.performer_graph.add((candidate,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
                                 self.performer_graph.add((ov,RDF.type,a30))
                         if "template_type_dicts3" in df_template.columns:
                             if (row["template_type_dicts3"] != 0):
                                 a31=URIRef(row["template_type_dicts3"])
                                 ov=BNode()
-                                self.performer_graph.add((oq,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
+                                self.performer_graph.add((candidate,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
                                 self.performer_graph.add((ov,RDF.type,a31))
                         if "template_type_dicts4" in df_template.columns:
                             if (row["template_type_dicts4"] != 0):
                                 a32=URIRef(row["template_type_dicts4"])
                                 ov=BNode()
-                                self.performer_graph.add((oq,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
+                                self.performer_graph.add((candidate,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
                                 self.performer_graph.add((ov,RDF.type,a32))
                         if "template_type_dicts5" in df_template.columns:
                             if (row["template_type_dicts5"] != 0):
                                 a32=URIRef(row["template_type_dicts5"])
                                 ov=BNode()
-                                self.performer_graph.add((oq,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
+                                self.performer_graph.add((candidate,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
                                 self.performer_graph.add((ov,RDF.type,a32))
                         if "template_type_dicts6" in df_template.columns:
                             if (row["template_type_dicts6"] != 0):
                                 a32=URIRef(row["template_type_dicts6"])
                                 ov=BNode()
-                                self.performer_graph.add((oq,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
+                                self.performer_graph.add((candidate,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
                                 self.performer_graph.add((ov,RDF.type,a32))
                 
                         idx=df_spek[df_spek["graph_type1"]==row1["graph_type1"]].index.values
@@ -408,17 +407,17 @@ class CandidateSmasher:
                         # print(str(Output))
                         for k,v in Output.items():
                             ov=BNode()
-                            self.performer_graph.add((oq,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
+                            self.performer_graph.add((candidate,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),ov))
                             a33=URIRef(k)
                             self.performer_graph.add((ov,RDF.type,a33))
                             for x in range(len(v)):
                                 self.performer_graph.add((ov,URIRef("http://example.com/slowmo#RegardingComparator"),v[x]))
                                 #print(v[x])
-                            self.performer_graph.add((ov,URIRef("http://example.com/slowmo#RegardingMeasure"),ag))
+                            self.performer_graph.add((ov,URIRef("http://example.com/slowmo#RegardingMeasure"),Literal(measure)))
                         a35=BNode("-p1")
-                        self.performer_graph.add((oq,URIRef("http://example.com/slowmo#AncestorPerformer"),a35))
+                        self.performer_graph.add((candidate,URIRef("http://example.com/slowmo#AncestorPerformer"),a35))
                         self.a36=URIRef(row["index"])
-                        self.performer_graph.add((oq,URIRef("http://example.com/slowmo#AncestorTemplate"),self.a36))
+                        self.performer_graph.add((candidate,URIRef("http://example.com/slowmo#AncestorTemplate"),self.a36))
         return self.performer_graph
             
 
