@@ -1,4 +1,4 @@
-from rdflib import Graph, RDF, URIRef #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
+from rdflib import BNode, Graph, RDF, URIRef #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
 from candidatesmasher.candidatesmasher import CandidateSmasher
 from graph_operations import read_graph, create_performer_graph
 from fastapi import FastAPI, Request, HTTPException
@@ -9,6 +9,7 @@ from esteemer.esteemer import Esteemer
 from requests_file import FileAdapter
 from settings import settings
 from loguru import logger
+from typing import List
 from io import BytesIO
 import pandas as pd
 import webbrowser
@@ -16,6 +17,8 @@ import requests
 import json
 import sys
 import os
+
+from esteemer2 import utils, esteemer2
 
 global templates, pathways, measures
 
@@ -214,15 +217,31 @@ async def createprecisionfeedback(info:Request):
         f.write(ot)
         f.close()
 
-
     # #Esteemer
     logger.info("Calling Esteemer from main...")
+      
+    if settings.esteemer2 is True:
+        candidates: List[BNode]
+        for measure in utils.measures(performer_graph): #
+            candidates = utils.measure_acceptable_candidates(performer_graph, measure)
+            for candidate in candidates:
+                esteemer2.score(performer_graph, candidate, history, preferences)
+        selected_candidate = esteemer2.select_candidate(performer_graph)
+        selected_message = utils.render(performer_graph, selected_candidate)
+        
+        #print updated graph by esteemer2
+        if settings.outputs is True and settings.log_level == "DEBUG":
+            st=performer_graph.serialize(format='json-ld', indent=4)
+            folderName = "outputs"
+            os.makedirs(folderName, exist_ok=True)
+            f = open("outputs/spek_st.json", "w")
+            f.write(st)
+            f.close()
     
-    selected_message = esteemer1(performance_data_df, history, preferences, mpm_df, performer_graph)
-
-    if settings.esteemer2 is True:        
-        esteemer2()
-    
+    else: 
+        selected_message = esteemer1(
+            performance_data_df, history, preferences, mpm_df, performer_graph
+            )  
 
     ### Pictoralist 2, now on the Nintendo DS: ###
     logger.info("Calling Pictoralist from main...")
@@ -239,22 +258,24 @@ async def createprecisionfeedback(info:Request):
     return full_selected_message
 
 def esteemer1(performance_data_df, history, preferences, mpm_df, performer_graph):
-    measure_list=performance_data_df["measure"].drop_duplicates()
+    measure_list = performance_data_df["measure"].drop_duplicates()
     # print(*measure_list)
-    es=Esteemer(performer_graph,measure_list,preferences,history,mpm_df)
+    es = Esteemer(performer_graph, measure_list, preferences, history, mpm_df)
     # # es.apply_preferences()
     # # es.apply_history()
-    es.process_spek()           # Parse annotations
-    history_df = es.process_history()        # Process history dict to dataframe
-    #es.rank_history_component(history_df, )
-    es.process_mpm()            # Parse MPM
-    node,spek_es,score_df,candidate_df,comp_dict=es.score()
+    es.process_spek()  # Parse annotations
+    history_df = es.process_history()  # Process history dict to dataframe
+    # es.rank_history_component(history_df, )
+    es.process_mpm()  # Parse MPM
+    node, spek_es, score_df, candidate_df, comp_dict = es.score()
     # #applying business rules
     # es.business_rules()
     # node,spek_es=es.select()
-    selected_message=es.get_selected_message()
+    selected_message = es.get_selected_message()
     # # es.apply_history()
     return selected_message
 
-def esteemer2():
-    logger.info("esteemer 2 called")
+
+
+    
+
