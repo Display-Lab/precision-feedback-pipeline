@@ -34,10 +34,9 @@ def measure_acceptable_candidates(
     Returns:
     List[BNode]: returns list of acceptible candidates.
     """
-    # extract the list of candidates for a measure
+    # extract the list of acceptible candidates for a measure
     candidate_list = measure_candidates(performer_graph, measure)
 
-    # filter acceptible candidates
 
     # apply measure business rules
     candidate_list = apply_measure_business_rules(performer_graph, candidate_list)
@@ -47,7 +46,7 @@ def measure_acceptable_candidates(
 
 def measure_candidates(performer_graph: Graph, measure: BNode) -> List[BNode]:
     """
-    returns candidate messages for given measure.
+    returns acceptible candidate messages for given measure.
 
     Parameters:
     - performer_graph (Graph): The performer_graph.
@@ -62,8 +61,12 @@ def measure_candidates(performer_graph: Graph, measure: BNode) -> List[BNode]:
             predicate=URIRef("http://example.com/slowmo#RegardingMeasure"),
             object=measure,
         )
-        if (subject, RDF.type, URIRef("http://example.com/slowmo#Candidate"))
-        in performer_graph
+        if(
+            (subject, RDF.type, URIRef("http://example.com/slowmo#Candidate"))
+            in performer_graph
+            and (subject, URIRef("slowmo:acceptable_by"), None)
+            in performer_graph
+        )
     ]
     return candidate_messages
 
