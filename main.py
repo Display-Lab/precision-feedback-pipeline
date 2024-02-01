@@ -222,7 +222,7 @@ async def createprecisionfeedback(info:Request):
       
     if settings.esteemer2 is True:
         candidates: List[BNode]
-        for measure in utils.measures(performer_graph): #
+        for measure in utils.measures(performer_graph): 
             candidates = utils.measure_acceptable_candidates(performer_graph, measure)
             for candidate in candidates:
                 esteemer2.score(performer_graph, candidate, history, preferences)
