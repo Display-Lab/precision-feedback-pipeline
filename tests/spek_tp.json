@@ -1,0 +1,1471 @@
+[
+    {
+        "@id": "http://example.com/app#display-lab",
+        "@type": [
+            "http://example.com/slowmo#spek"
+        ],
+        "http://example.com/slowmo#HasCandidate": [
+            {
+                "@id": "_:N53e6f7cfe6264b319099fc6080808331"
+            },
+            {
+                "@id": "_:N0fefdf2588e640068f19c40cd4dcb7ce"
+            },
+            {
+                "@id": "_:N3840ed1cab81487f928030dbd6ac4489"
+            },
+            {
+                "@id": "_:N14f02942683f4712894a2c997baee53d"
+            }
+        ],
+        "http://example.com/slowmo#IsAboutMeasure": [
+            {
+                "@id": "_:PONV05"
+            },
+            {
+                "@id": "_:SUS04"
+            },
+            {
+                "@id": "_:TRAN04"
+            }
+        ],
+        "http://example.com/slowmo#IsAboutOrganization": [
+            {
+                "@id": "_:N7f67fa6ee1e2418395955dc15484be3a"
+            }
+        ],
+        "http://example.com/slowmo#IsAboutPerformer": [
+            {
+                "@id": "_:p1"
+            }
+        ]
+    },
+    {
+        "@id": "_:N7f67fa6ee1e2418395955dc15484be3a",
+        "@type": [
+            "http://schema.org/Organization"
+        ],
+        "http://schema.org/address": [
+            {
+                "@id": "_:N5eacdb299ffc4095859a99bba01e04e6"
+            }
+        ]
+    },
+    {
+        "@id": "_:N5eacdb299ffc4095859a99bba01e04e6",
+        "@type": [
+            "http://schema.org/PostalAddress"
+        ],
+        "http://schema.org/addressCountry": [
+            {
+                "@value": "USA"
+            }
+        ],
+        "http://schema.org/addressRegion": [
+            {
+                "@value": "MI"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "DisplayLab"
+            }
+        ],
+        "http://schema.org/postalCode": [
+            {
+                "@value": "48109"
+            }
+        ],
+        "http://schema.org/streetAddress": [
+            {
+                "@value": "DLHS, 1161 NIB, 300 N Ingalls St."
+            }
+        ]
+    },
+    {
+        "@id": "_:PONV05",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000102"
+        ],
+        "http://example.com/slowmo#WithComparator": [
+            {
+                "@id": "_:N30c844d628d649a7abea94b85e194167"
+            },
+            {
+                "@id": "_:N15c0d10b6ad545e6a090feb7022ecada"
+            },
+            {
+                "@id": "_:Nbf509e6bc7b5423f93a82d5a1e426e18"
+            },
+            {
+                "@id": "_:N2214e0c371464e2ea4d16b25245a55dc"
+            }
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "PONV Prophylaxis: Adults"
+            }
+        ],
+        "http://schema.org/identifier": [
+            {
+                "@value": "PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N30c844d628d649a7abea94b85e194167",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000129"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP_10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top_10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N15c0d10b6ad545e6a090feb7022ecada",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000128"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP_25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top_25"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nbf509e6bc7b5423f93a82d5a1e426e18",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000126"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "PEERS"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "peers"
+            }
+        ]
+    },
+    {
+        "@id": "_:N2214e0c371464e2ea4d16b25245a55dc",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000094"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "GOAL"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "goal"
+            }
+        ]
+    },
+    {
+        "@id": "_:SUS04",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000102"
+        ],
+        "http://example.com/slowmo#WithComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
+            },
+            {
+                "@id": "_:N0bdcde0015bc4f5e85e52da5e937be9b"
+            },
+            {
+                "@id": "_:Na7a708f5d88b4aabba3ffb1710cbfd0e"
+            },
+            {
+                "@id": "_:N5607fecdbf4640d98723ec4b51fe25b5"
+            }
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "Fresh Gas Flow, less than or equal to 2L/min"
+            }
+        ],
+        "http://schema.org/identifier": [
+            {
+                "@value": "SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N604241796fe648d8ad2d7d21dd515390",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000129"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP_10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top_10"
+            }
+        ]
+    },
+    {
+        "@id": "_:N0bdcde0015bc4f5e85e52da5e937be9b",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000128"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP_25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top_25"
+            }
+        ]
+    },
+    {
+        "@id": "_:Na7a708f5d88b4aabba3ffb1710cbfd0e",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000126"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "PEERS"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "peers"
+            }
+        ]
+    },
+    {
+        "@id": "_:N5607fecdbf4640d98723ec4b51fe25b5",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000094"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "GOAL"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "goal"
+            }
+        ]
+    },
+    {
+        "@id": "_:TRAN04",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000102"
+        ],
+        "http://example.com/slowmo#WithComparator": [
+            {
+                "@id": "_:N36e611bacd0a4e458f711cb9d3735543"
+            },
+            {
+                "@id": "_:Nebe1230af31d4d3987578f51c0d7c700"
+            },
+            {
+                "@id": "_:N8df96b1358e94a83b15eb131e2661172"
+            },
+            {
+                "@id": "_:N1e0cdb2e109c4ce19b807de9f429461b"
+            }
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "Peds: Overtransfusion"
+            }
+        ],
+        "http://schema.org/identifier": [
+            {
+                "@value": "TRAN04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N36e611bacd0a4e458f711cb9d3735543",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000129"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP_10"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top_10"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nebe1230af31d4d3987578f51c0d7c700",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000128"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "TOP_25"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "top_25"
+            }
+        ]
+    },
+    {
+        "@id": "_:N8df96b1358e94a83b15eb131e2661172",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000126"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "PEERS"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "peers"
+            }
+        ]
+    },
+    {
+        "@id": "_:N1e0cdb2e109c4ce19b807de9f429461b",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000094"
+        ],
+        "http://purl.org/dc/terms/title": [
+            {
+                "@value": "GOAL"
+            }
+        ],
+        "http://schema.org/name": [
+            {
+                "@value": "goal"
+            }
+        ]
+    },
+    {
+        "@id": "_:p1",
+        "@type": [
+            "http://purl.obolibrary.org/obo/psdo_0000085"
+        ],
+        "http://purl.obolibrary.org/obo/RO_0000091": [
+            {
+                "@id": "_:Ne1c0c84abf9548ba90ddb83bbe8d1368"
+            },
+            {
+                "@id": "_:N24ec351b607748eea6dbc4fb7eb7ad3c"
+            },
+            {
+                "@id": "_:N7befa613cdc943fe8560539da16a1bd6"
+            },
+            {
+                "@id": "_:Nff7198e474f949f799a45cfd9b58beda"
+            },
+            {
+                "@id": "_:N2199bcd16e3044b291fc602131292917"
+            },
+            {
+                "@id": "_:N1951f91d9ca64841952c87a4c59f97e0"
+            },
+            {
+                "@id": "_:N11a4c9755811476498fdf8db2f8e8d28"
+            },
+            {
+                "@id": "_:N76812aa3edf749bc8b9af487ad38961a"
+            },
+            {
+                "@id": "_:N2f137594d25346f385e4367c35a27399"
+            },
+            {
+                "@id": "_:Nad42fe7939d84793978d5b6cdbf7e12d"
+            },
+            {
+                "@id": "_:N93d0622a25644c4faa96c1e12827e007"
+            },
+            {
+                "@id": "_:N6f0d203984ec43ccadadfc7fc82265b2"
+            },
+            {
+                "@id": "_:Nf45ad1274e264c80a6e17a8bb390f146"
+            },
+            {
+                "@id": "_:N26c4a7dbfa6c4d7592f63eedf00f52c2"
+            },
+            {
+                "@id": "_:N3c45ebce58214b7dacc219c16c4f0bb6"
+            },
+            {
+                "@id": "_:N373566e932c14340b5f0a50f12d46553"
+            },
+            {
+                "@id": "_:Nfa12824fb097458e962c6777fe2d3e41"
+            },
+            {
+                "@id": "_:N39645d484c0440a896ccf575932c63f6"
+            },
+            {
+                "@id": "_:Neafe0684a7c8426789c30dc8dc4f99b9"
+            },
+            {
+                "@id": "_:Nb789f1ed0dae487392724a9230d9ef67"
+            },
+            {
+                "@id": "_:N2ec93f73e10742d0bfaa87be3b7f1b27"
+            },
+            {
+                "@id": "_:N241d92b42a4a4b8f8601e5893da2b614"
+            },
+            {
+                "@id": "_:Nee8b55b552c648ae92e3bbfa23e3e810"
+            },
+            {
+                "@id": "_:N937d02beb4c247e18a39da5b83e6ae8e"
+            },
+            {
+                "@id": "_:Nb43492eb7bc541cfaf4169bc2e631604"
+            }
+        ]
+    },
+    {
+        "@id": "_:Ne1c0c84abf9548ba90ddb83bbe8d1368",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000094"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N2214e0c371464e2ea4d16b25245a55dc"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N24ec351b607748eea6dbc4fb7eb7ad3c",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000106"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N2214e0c371464e2ea4d16b25245a55dc"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N7befa613cdc943fe8560539da16a1bd6",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000104"
+        ],
+        "http://example.com/slowmo#PerformanceGapSize": [
+            {
+                "@value": 0.04999999999999993
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N2214e0c371464e2ea4d16b25245a55dc"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nff7198e474f949f799a45cfd9b58beda",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000126"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:Nbf509e6bc7b5423f93a82d5a1e426e18"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N2199bcd16e3044b291fc602131292917",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000106"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:Nbf509e6bc7b5423f93a82d5a1e426e18"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N1951f91d9ca64841952c87a4c59f97e0",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000104"
+        ],
+        "http://example.com/slowmo#PerformanceGapSize": [
+            {
+                "@value": 0.04999999999999993
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:Nbf509e6bc7b5423f93a82d5a1e426e18"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N11a4c9755811476498fdf8db2f8e8d28",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000129"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N30c844d628d649a7abea94b85e194167"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N76812aa3edf749bc8b9af487ad38961a",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000106"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N30c844d628d649a7abea94b85e194167"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N2f137594d25346f385e4367c35a27399",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000105"
+        ],
+        "http://example.com/slowmo#PerformanceGapSize": [
+            {
+                "@value": -0.010000000000000009
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N30c844d628d649a7abea94b85e194167"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nad42fe7939d84793978d5b6cdbf7e12d",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000128"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N15c0d10b6ad545e6a090feb7022ecada"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N93d0622a25644c4faa96c1e12827e007",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000106"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N15c0d10b6ad545e6a090feb7022ecada"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N6f0d203984ec43ccadadfc7fc82265b2",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000104"
+        ],
+        "http://example.com/slowmo#PerformanceGapSize": [
+            {
+                "@value": 0.029999999999999916
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N15c0d10b6ad545e6a090feb7022ecada"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nf45ad1274e264c80a6e17a8bb390f146",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000094"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N5607fecdbf4640d98723ec4b51fe25b5"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N26c4a7dbfa6c4d7592f63eedf00f52c2",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000106"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N5607fecdbf4640d98723ec4b51fe25b5"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N3c45ebce58214b7dacc219c16c4f0bb6",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000104"
+        ],
+        "http://example.com/slowmo#PerformanceGapSize": [
+            {
+                "@value": 0.05999999999999994
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N5607fecdbf4640d98723ec4b51fe25b5"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N373566e932c14340b5f0a50f12d46553",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000126"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:Na7a708f5d88b4aabba3ffb1710cbfd0e"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nfa12824fb097458e962c6777fe2d3e41",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000106"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:Na7a708f5d88b4aabba3ffb1710cbfd0e"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N39645d484c0440a896ccf575932c63f6",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000104"
+        ],
+        "http://example.com/slowmo#PerformanceGapSize": [
+            {
+                "@value": 0.05999999999999994
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:Na7a708f5d88b4aabba3ffb1710cbfd0e"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:Neafe0684a7c8426789c30dc8dc4f99b9",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000129"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nb789f1ed0dae487392724a9230d9ef67",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000106"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N2ec93f73e10742d0bfaa87be3b7f1b27",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000104"
+        ],
+        "http://example.com/slowmo#PerformanceGapSize": [
+            {
+                "@value": 0.0
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N241d92b42a4a4b8f8601e5893da2b614",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000104"
+        ],
+        "http://example.com/slowmo#PerformanceGapSize": [
+            {
+                "@value": 0.0
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nee8b55b552c648ae92e3bbfa23e3e810",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095",
+            "http://purl.obolibrary.org/obo/PSDO_0000128"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N0bdcde0015bc4f5e85e52da5e937be9b"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N937d02beb4c247e18a39da5b83e6ae8e",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000106"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N0bdcde0015bc4f5e85e52da5e937be9b"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nb43492eb7bc541cfaf4169bc2e631604",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000104"
+        ],
+        "http://example.com/slowmo#PerformanceGapSize": [
+            {
+                "@value": 0.039999999999999925
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N0bdcde0015bc4f5e85e52da5e937be9b"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N53e6f7cfe6264b319099fc6080808331",
+        "@type": [
+            "http://purl.obolibrary.org/obo/cpo_0000053",
+            "http://example.com/slowmo#Candidate"
+        ],
+        "http://example.com/slowmo#AncestorPerformer": [
+            {
+                "@id": "_:-p1"
+            }
+        ],
+        "http://example.com/slowmo#AncestorTemplate": [
+            {
+                "@id": "https://repo.metadatacenter.org/template-instances/f8ad0835-29de-4605-a1eb-1288475a1612"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:PONV05"
+            }
+        ],
+        "http://example.com/slowmo#name": [
+            {
+                "@value": "Congratulations High Performance"
+            }
+        ],
+        "http://purl.obolibrary.org/obo/RO_0000091": [
+            {
+                "@id": "_:N59892e69af634a3aaf9fe076409019e6"
+            },
+            {
+                "@id": "_:N886b153775844233ac643c88833713a1"
+            },
+            {
+                "@id": "_:N66919d7e30fa426f83f6a5df54f9a858"
+            },
+            {
+                "@id": "_:N56f67332332244bc9ef82a0a0e3e6b16"
+            },
+            {
+                "@id": "_:N3d6b18a1f5ce4442b53fa678dc5fb3a7"
+            },
+            {
+                "@id": "_:N800fc492b2e544ec90dad236053a023a"
+            },
+            {
+                "@id": "_:N71527662fea249cd8a2fd0d0512f4cc3"
+            }
+        ],
+        "psdo:PerformanceSummaryTextualEntity": [
+            {
+                "@value": "Congratulations on your high performance for the measure [measure name]. Your performance was [recipient performance level] last month."
+            }
+        ]
+    },
+    {
+        "@id": "_:N59892e69af634a3aaf9fe076409019e6",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000129"
+        ]
+    },
+    {
+        "@id": "_:N886b153775844233ac643c88833713a1",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000117"
+        ]
+    },
+    {
+        "@id": "_:N66919d7e30fa426f83f6a5df54f9a858",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000045"
+        ]
+    },
+    {
+        "@id": "_:N56f67332332244bc9ef82a0a0e3e6b16",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N30c844d628d649a7abea94b85e194167"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N3d6b18a1f5ce4442b53fa678dc5fb3a7",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000129"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N30c844d628d649a7abea94b85e194167"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N800fc492b2e544ec90dad236053a023a",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000106"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N30c844d628d649a7abea94b85e194167"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N71527662fea249cd8a2fd0d0512f4cc3",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000105"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N30c844d628d649a7abea94b85e194167"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:-p1"
+    },
+    {
+        "@id": "_:N0fefdf2588e640068f19c40cd4dcb7ce",
+        "@type": [
+            "http://purl.obolibrary.org/obo/cpo_0000053",
+            "http://example.com/slowmo#Candidate"
+        ],
+        "http://example.com/slowmo#AncestorPerformer": [
+            {
+                "@id": "_:-p1"
+            }
+        ],
+        "http://example.com/slowmo#AncestorTemplate": [
+            {
+                "@id": "https://repo.metadatacenter.org/template-instances/f8ad0835-29de-4605-a1eb-1288475a1612"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ],
+        "http://example.com/slowmo#name": [
+            {
+                "@value": "Congratulations High Performance"
+            }
+        ],
+        "http://purl.obolibrary.org/obo/RO_0000091": [
+            {
+                "@id": "_:Nf9aee7a83f2f4a4c9dfac49011c52a4d"
+            },
+            {
+                "@id": "_:Nda3a04c6960346719bf4fe9cfcc0ae53"
+            },
+            {
+                "@id": "_:Na7c6a7aa1b524946a4a34535fb941520"
+            },
+            {
+                "@id": "_:N6062249fdb9a4af59b8b362bb5b93bc9"
+            },
+            {
+                "@id": "_:N8a2cb7d7b5394b9483af354f116cdb3d"
+            },
+            {
+                "@id": "_:N9101088351d34a929914cbcbf560b4b4"
+            },
+            {
+                "@id": "_:N94f6d5ead87a45f8900108b2908ec329"
+            }
+        ],
+        "psdo:PerformanceSummaryTextualEntity": [
+            {
+                "@value": "Congratulations on your high performance for the measure [measure name]. Your performance was [recipient performance level] last month."
+            }
+        ],
+        "slowmo:acceptable_by": [
+            {
+                "@value": "Social better"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nf9aee7a83f2f4a4c9dfac49011c52a4d",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000129"
+        ]
+    },
+    {
+        "@id": "_:Nda3a04c6960346719bf4fe9cfcc0ae53",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000117"
+        ]
+    },
+    {
+        "@id": "_:Na7c6a7aa1b524946a4a34535fb941520",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000045"
+        ]
+    },
+    {
+        "@id": "_:N6062249fdb9a4af59b8b362bb5b93bc9",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N8a2cb7d7b5394b9483af354f116cdb3d",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000129"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N9101088351d34a929914cbcbf560b4b4",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000106"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N94f6d5ead87a45f8900108b2908ec329",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000104"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N3840ed1cab81487f928030dbd6ac4489",
+        "@type": [
+            "http://purl.obolibrary.org/obo/cpo_0000053",
+            "http://example.com/slowmo#Candidate"
+        ],
+        "http://example.com/slowmo#AncestorPerformer": [
+            {
+                "@id": "_:-p1"
+            }
+        ],
+        "http://example.com/slowmo#AncestorTemplate": [
+            {
+                "@id": "https://repo.metadatacenter.org/template-instances/9e71ec9e-26f3-442a-8278-569bcd58e708"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:PONV05"
+            }
+        ],
+        "http://example.com/slowmo#name": [
+            {
+                "@value": "Opportunity to Improve Top 10 Peer Benchmark"
+            }
+        ],
+        "http://purl.obolibrary.org/obo/RO_0000091": [
+            {
+                "@id": "_:Nd0d63916f9604c3aab7ebf1ec609b85a"
+            },
+            {
+                "@id": "_:Naa926cb5d0e14abca7df041fce8746ef"
+            },
+            {
+                "@id": "_:N5688960dfc4345aaa527c2d87da80080"
+            },
+            {
+                "@id": "_:N9e57d14578f443e387cd2e8ff5e80a92"
+            },
+            {
+                "@id": "_:Nef48011e948b40fb8dc12528ab2f2fc5"
+            },
+            {
+                "@id": "_:N86cceaeff2df42aea614d905df9cf430"
+            },
+            {
+                "@id": "_:N9823f0f767694e739b0b9a3f6f0e5728"
+            }
+        ],
+        "psdo:PerformanceSummaryTextualEntity": [
+            {
+                "@value": "You may have an opportunity to improve for the measure [measure name]. Your performance was [recipient performance level], below the top 10% peer benchmark, which was [comparator performance level] this month."
+            }
+        ],
+        "slowmo:acceptable_by": [
+            {
+                "@value": "Social Worse"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nd0d63916f9604c3aab7ebf1ec609b85a",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000116"
+        ]
+    },
+    {
+        "@id": "_:Naa926cb5d0e14abca7df041fce8746ef",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000129"
+        ]
+    },
+    {
+        "@id": "_:N5688960dfc4345aaa527c2d87da80080",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000045"
+        ]
+    },
+    {
+        "@id": "_:N9e57d14578f443e387cd2e8ff5e80a92",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N30c844d628d649a7abea94b85e194167"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nef48011e948b40fb8dc12528ab2f2fc5",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000129"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N30c844d628d649a7abea94b85e194167"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N86cceaeff2df42aea614d905df9cf430",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000106"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N30c844d628d649a7abea94b85e194167"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N9823f0f767694e739b0b9a3f6f0e5728",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000105"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N30c844d628d649a7abea94b85e194167"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "PONV05"
+            }
+        ]
+    },
+    {
+        "@id": "_:N14f02942683f4712894a2c997baee53d",
+        "@type": [
+            "http://purl.obolibrary.org/obo/cpo_0000053",
+            "http://example.com/slowmo#Candidate"
+        ],
+        "http://example.com/slowmo#AncestorPerformer": [
+            {
+                "@id": "_:-p1"
+            }
+        ],
+        "http://example.com/slowmo#AncestorTemplate": [
+            {
+                "@id": "https://repo.metadatacenter.org/template-instances/9e71ec9e-26f3-442a-8278-569bcd58e708"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ],
+        "http://example.com/slowmo#name": [
+            {
+                "@value": "Opportunity to Improve Top 10 Peer Benchmark"
+            }
+        ],
+        "http://purl.obolibrary.org/obo/RO_0000091": [
+            {
+                "@id": "_:Nb71e1a6c1527484880d4a9b8b4a0c4e7"
+            },
+            {
+                "@id": "_:N468213db1f5d4d3e9da3b3e9e4a64921"
+            },
+            {
+                "@id": "_:Nb554f11b651b412bac2fe14cb134084c"
+            },
+            {
+                "@id": "_:N8bc8636444fd4c279848337ee029974f"
+            },
+            {
+                "@id": "_:Nf771597fd24e4cf394735956c7831a9e"
+            },
+            {
+                "@id": "_:N0ab8dd930b7c47dc917f4e4324159e57"
+            },
+            {
+                "@id": "_:N280bc24c33204809b867fefa9af6e71e"
+            }
+        ],
+        "psdo:PerformanceSummaryTextualEntity": [
+            {
+                "@value": "You may have an opportunity to improve for the measure [measure name]. Your performance was [recipient performance level], below the top 10% peer benchmark, which was [comparator performance level] this month."
+            }
+        ]
+    },
+    {
+        "@id": "_:Nb71e1a6c1527484880d4a9b8b4a0c4e7",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000116"
+        ]
+    },
+    {
+        "@id": "_:N468213db1f5d4d3e9da3b3e9e4a64921",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000129"
+        ]
+    },
+    {
+        "@id": "_:Nb554f11b651b412bac2fe14cb134084c",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000045"
+        ]
+    },
+    {
+        "@id": "_:N8bc8636444fd4c279848337ee029974f",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000095"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nf771597fd24e4cf394735956c7831a9e",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000129"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N0ab8dd930b7c47dc917f4e4324159e57",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000106"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:N280bc24c33204809b867fefa9af6e71e",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000104"
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@value": "SUS04"
+            }
+        ]
+    }
+]

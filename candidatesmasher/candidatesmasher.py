@@ -347,6 +347,8 @@ class CandidateSmasher:
                         # self.a.add((oq,self.cp3,a26))
                         # self.a.add((oq,self.cp3,a261))
                         self.performer_graph.add((oq,RDF.type,URIRef("http://example.com/slowmo#Candidate")))
+                        self.performer_graph.add((oq, URIRef("http://example.com/slowmo#RegardingMeasure"), row1["measure"]))
+
                         if "template_type_dicts" in df_template.columns:
                             if(row["template_type_dicts"] != 0):
                                 ov=BNode()
