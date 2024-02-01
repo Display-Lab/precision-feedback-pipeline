@@ -101,7 +101,7 @@ def update_candidate_score(performer_graph: Graph, candidate: BNode, score: floa
 
 def select_candidate(performer_graph: Graph) -> BNode:
     """
-    selects the candidate based on scores.
+    applies between measure business rules and selects the candidate based on scores.
 
     Parameters:
     - performer_graph (Graph): The performer_graph .
@@ -109,9 +109,9 @@ def select_candidate(performer_graph: Graph) -> BNode:
     Returns:
     BNode: selected candidate.
     """
-    # apply between measure business rules (future)
-    # select candidate
-
+    # 1. apply between measure business rules (future)
+    
+    # 2. select candidate
     scores = [
         performer_graph.value(
             subject=candidate, predicate=URIRef("http://example.com/slowmo#HasScore")
