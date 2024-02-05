@@ -112,37 +112,13 @@ def select_candidate(performer_graph: Graph) -> BNode:
     # 1. apply between measure business rules (future)
     
     # 2. select candidate
-    scores = [
-        performer_graph.value(
-            subject=candidate, predicate=URIRef("http://example.com/slowmo#HasScore")
-        ).toPython()
-        for candidate in performer_graph.subjects(
-            predicate=RDF.type, object=URIRef("http://example.com/slowmo#Candidate")
-        )
-        if performer_graph.value(
-            subject=candidate, predicate=URIRef("http://example.com/slowmo#HasScore")
-        )
-        is not None
-    ]
+    
+    # Find the max score
+    max_score = max([score for _, score in performer_graph.subject_objects(URIRef("http://example.com/slowmo#HasScore"))], default=None)
 
-    if not scores:
-        return None  # No candidates found in the list
-
-    # Find the maximum score
-    max_score = max(scores)
-
-    # Retrieve candidates with the known maximum score
-    candidates_with_max_score = [
-        candidate
-        for candidate in performer_graph.subjects(
-            predicate=RDF.type, object=URIRef("http://example.com/slowmo#Candidate")
-        )
-        if performer_graph.value(
-            subject=candidate, predicate=URIRef("http://example.com/slowmo#HasScore")
-        )
-        == Literal(str(max_score))
-    ]
-
+    candidates_with_max_score = [(candidate) for candidate, score in performer_graph.subject_objects(URIRef("http://example.com/slowmo#HasScore"))
+                        if score == max_score]
+    
     # Randomly select one of the candidates with the known maximum score
     selected_candidate = random.choice(candidates_with_max_score)
 

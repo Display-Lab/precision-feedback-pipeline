@@ -27,9 +27,9 @@ def test_measure_acceptable_candidates():
     ]
 
 
-def test_measure_candidates():
+def test_candidates_method1():
     graph = get_graph("tests/spek_tp.json")
-    measure_candidates = utils.measure_candidates(graph, BNode("PONV05"))
+    measure_candidates = utils.candidates(graph, BNode("PONV05"), True)
 
     # Extract @id values for each BNode in the list
     id_values = []
@@ -42,6 +42,43 @@ def test_measure_candidates():
     assert id_values == [
         "N3840ed1cab81487f928030dbd6ac4489",
     ]
+    
+def test_candidates_method2():
+    graph = get_graph("tests/spek_tp.json")
+    measure_candidates = utils.candidates(graph, None, True)
+
+    # Extract @id values for each BNode in the list
+    id_values = []
+    for bnode in measure_candidates:
+        # Query the graph for the @id value of the BNode
+        id_value = str(bnode)
+        if id_value:
+            id_values.append(id_value)
+    
+    assert sorted(id_values) == [
+        "N0fefdf2588e640068f19c40cd4dcb7ce",
+        "N3840ed1cab81487f928030dbd6ac4489",
+    ]
+    
+def test_candidates_method3():
+    graph = get_graph("tests/spek_tp.json")
+    measure_candidates = utils.candidates(graph, None, False)
+
+    # Extract @id values for each BNode in the list
+    id_values = []
+    for bnode in measure_candidates:
+        # Query the graph for the @id value of the BNode
+        id_value = str(bnode)
+        if id_value:
+            id_values.append(id_value)
+    
+    assert sorted(id_values) == [
+        "N0fefdf2588e640068f19c40cd4dcb7ce",
+        "N14f02942683f4712894a2c997baee53d",
+        "N3840ed1cab81487f928030dbd6ac4489",
+        "N53e6f7cfe6264b319099fc6080808331",        
+    ]
+    
 
 
 def test_apply_measure_business_rules():
@@ -54,7 +91,7 @@ def test_apply_measure_business_rules():
     assert candidate_list == updated_candidate_list
 
 
-def get_graph(file):
+def get_graph(file): #simplify this
     # Specify the path to your JSON-LD file
     json_ld_file_path = file
 

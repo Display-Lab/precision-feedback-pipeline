@@ -20,7 +20,37 @@ def measures(performer_graph: Graph) -> List[BNode]:
     measure_list = list(measures)
     return measure_list
 
+def candidates(performer_graph: Graph, measure: BNode = None, filter_acceptable: bool = False) -> List[BNode]:
+    """
+    Retrieve a list of candidates from the performer graph.
 
+    Parameters:
+        performer_graph (Graph): The performer_graph.
+        measure (BNode, optional): The measure to filter candidates. Defaults to None.
+        filter_acceptable (bool, optional): Whether to filter candidates based on acceptability. Defaults to False.
+
+    Returns:
+        List[BNode]: A list of candidate BNodes.
+    """
+    candidates = [
+        subject
+        for subject in performer_graph.subjects(
+            predicate=URIRef("http://example.com/slowmo#RegardingMeasure"),
+            object=measure,
+        )
+        if(
+            (subject, RDF.type, URIRef("http://example.com/slowmo#Candidate"))
+            in performer_graph
+            and (subject, URIRef("slowmo:acceptable_by") if filter_acceptable else None, None)
+            in performer_graph
+        )
+    ]
+    
+    return list(candidates)
+
+
+#create an acceptable method
+#use triples.triples 
 def measure_acceptable_candidates(
     performer_graph: Graph, measure: BNode
 ) -> List[BNode]:
@@ -35,40 +65,12 @@ def measure_acceptable_candidates(
     List[BNode]: returns list of acceptible candidates.
     """
     # extract the list of acceptible candidates for a measure
-    candidate_list = measure_candidates(performer_graph, measure)
-
+    candidate_list=candidates(performer_graph,filter_acceptable=True,measure=measure)
 
     # apply measure business rules
     candidate_list = apply_measure_business_rules(performer_graph, candidate_list)
 
     return candidate_list
-
-
-def measure_candidates(performer_graph: Graph, measure: BNode) -> List[BNode]:
-    """
-    returns acceptible candidate messages for given measure.
-
-    Parameters:
-    - performer_graph (Graph): The performer_graph.
-    - measure (BNode): The measure.
-
-    Returns:
-    List[BNode]: returns list of candidate messages of a measure.
-    """
-    candidate_messages = [
-        subject
-        for subject in performer_graph.subjects(
-            predicate=URIRef("http://example.com/slowmo#RegardingMeasure"),
-            object=measure,
-        )
-        if(
-            (subject, RDF.type, URIRef("http://example.com/slowmo#Candidate"))
-            in performer_graph
-            and (subject, URIRef("slowmo:acceptable_by"), None)
-            in performer_graph
-        )
-    ]
-    return candidate_messages
 
 
 def apply_measure_business_rules(
