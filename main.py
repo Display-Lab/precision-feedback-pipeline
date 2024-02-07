@@ -260,12 +260,7 @@ async def createprecisionfeedback(info:Request):
         pc.graph_controller()           # Select and run graphing based on display type
         full_selected_message   = pc.prepare_selected_message()
         if settings.log_level == "DEBUG":
-            candidates_representation = utils.representation(
-            performer_graph,
-            utils.candidates(performer_graph),
-            settings.candidate_representation
-            )   
-            full_selected_message["candidates"] = candidates_representation
+            full_selected_message["candidates"] = utils.candidates_as_dictionary(performer_graph)   
     
     return full_selected_message
 
