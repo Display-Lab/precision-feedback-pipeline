@@ -8,7 +8,7 @@ def test_score():
     candidate = BNode("N0fefdf2588e640068f19c40cd4dcb7ce")
     esteemer2.score(graph, candidate, None, None)
     scores = graph.objects(
-        subject=candidate, predicate=URIRef("http://example.com/slowmo#HasScore")
+        subject=candidate, predicate=URIRef("http://example.com/slowmo#Score")
     )
     scores_list = list(scores)
     assert scores_list[0].value == "129"
@@ -40,7 +40,7 @@ def test_update_candidate_score():
     candidate = BNode("N0fefdf2588e640068f19c40cd4dcb7ce")
     esteemer2.update_candidate_score(graph, candidate, 130)
     scores = graph.objects(
-        subject=candidate, predicate=URIRef("http://example.com/slowmo#HasScore")
+        subject=candidate, predicate=URIRef("http://example.com/slowmo#Score")
     )
     scores_list = list(scores)
     assert scores_list[0].value == "130"

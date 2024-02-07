@@ -1,5 +1,6 @@
 import random
 from typing import List
+
 from rdflib import RDF, BNode, Graph, URIRef
 
 
@@ -20,7 +21,10 @@ def measures(performer_graph: Graph) -> List[BNode]:
     measure_list = list(measures)
     return measure_list
 
-def candidates(performer_graph: Graph, measure: BNode = None, filter_acceptable: bool = False) -> List[BNode]:
+
+def candidates(
+    performer_graph: Graph, measure: BNode = None, filter_acceptable: bool = False
+) -> List[BNode]:
     """
     Retrieve a list of candidates from the performer graph.
 
@@ -38,19 +42,23 @@ def candidates(performer_graph: Graph, measure: BNode = None, filter_acceptable:
             predicate=URIRef("http://example.com/slowmo#RegardingMeasure"),
             object=measure,
         )
-        if(
+        if (
             (subject, RDF.type, URIRef("http://example.com/slowmo#Candidate"))
             in performer_graph
-            and (subject, URIRef("slowmo:acceptable_by") if filter_acceptable else None, None)
+            and (
+                subject,
+                URIRef("slowmo:acceptable_by") if filter_acceptable else None,
+                None,
+            )
             in performer_graph
         )
     ]
-    
+
     return list(candidates)
 
 
-#create an acceptable method
-#use triples.triples 
+# create an acceptable method
+# use triples.triples
 def measure_acceptable_candidates(
     performer_graph: Graph, measure: BNode
 ) -> List[BNode]:
@@ -65,7 +73,9 @@ def measure_acceptable_candidates(
     List[BNode]: returns list of acceptible candidates.
     """
     # extract the list of acceptible candidates for a measure
-    candidate_list=candidates(performer_graph,filter_acceptable=True,measure=measure)
+    candidate_list = candidates(
+        performer_graph, filter_acceptable=True, measure=measure
+    )
 
     # apply measure business rules
     candidate_list = apply_measure_business_rules(performer_graph, candidate_list)
@@ -89,7 +99,7 @@ def apply_measure_business_rules(
     return candidate_list
 
 
-def render(performer_graph: Graph, candidate: BNode) -> BNode:
+def render(performer_graph: Graph, candidate: BNode) -> dict:
     """
     creates selected message from a selected candidate.
 
@@ -107,7 +117,6 @@ def render(performer_graph: Graph, candidate: BNode) -> BNode:
         s_m["message_text"] = "No message selected"
         return s_m
     else:
-        s = candidate
         temp_name = URIRef("http://example.com/slowmo#name")  # URI of template name?
         p232 = URIRef("psdo:PerformanceSummaryDisplay")
         Display = ["text only", "bar chart", "line graph"]
@@ -117,15 +126,15 @@ def render(performer_graph: Graph, candidate: BNode) -> BNode:
 
         ## Format selected_candidate to return for pictoralist-ing
         for s21, p21, o21 in performer_graph.triples(
-            (s, URIRef("http://example.com/slowmo#AncestorTemplate"), None)
+            (candidate, URIRef("http://example.com/slowmo#AncestorTemplate"), None)
         ):
             s_m["template_id"] = o21
         # Duplicate logic above and use to pull template name
-        for s21, p21, o21 in performer_graph.triples((s, temp_name, None)):
+        for s21, p21, o21 in performer_graph.triples((candidate, temp_name, None)):
             s_m["template_name"] = o21
 
         for s2, p2, o2 in performer_graph.triples(
-            (s, URIRef("psdo:PerformanceSummaryTextualEntity"), None)
+            (candidate, URIRef("psdo:PerformanceSummaryTextualEntity"), None)
         ):
             s_m["message_text"] = o2
         # for s212,p212,o212 in self.spek_tp.triples((s,p232,None)):
@@ -134,7 +143,7 @@ def render(performer_graph: Graph, candidate: BNode) -> BNode:
         # for s9,p9,o9 in self.spek_tp.triples((s,p8,None)):
         #     s_m["Comparator Type"] = o9
         for s2we, p2we, o2we in performer_graph.triples(
-            (s, URIRef("slowmo:acceptable_by"), None)
+            (candidate, URIRef("slowmo:acceptable_by"), None)
         ):
             o2wea.append(o2we)
         # print(*o2wea)
@@ -143,7 +152,7 @@ def render(performer_graph: Graph, candidate: BNode) -> BNode:
         comparator_list = []
 
         for s5, p5, o5 in performer_graph.triples(
-            (s, URIRef("http://purl.obolibrary.org/obo/RO_0000091"), None)
+            (candidate, URIRef("http://purl.obolibrary.org/obo/RO_0000091"), None)
         ):
             s6 = o5
             # print(o5)
@@ -175,3 +184,40 @@ def render(performer_graph: Graph, candidate: BNode) -> BNode:
                 a = i
         s_m["comparator_type"] = a
         return s_m
+
+
+def candidates_as_dictionary(performer_graph: Graph) -> dict:
+    """
+    provides the representation of candidates as a dictionary.
+
+    Parameters:
+    - performer_graph (Graph): The performer_graph.
+
+    Returns:
+    dict: The representation of candidates as a dictionary.
+    """
+    candidate_list = []
+    
+    for a_candidate in candidates(performer_graph):
+        representation = candidate_as_dictionary(a_candidate, performer_graph)
+        candidate_list.append(representation)
+    return candidate_list
+
+def candidate_as_dictionary(a_candidate: BNode, performer_graph: Graph) -> dict:
+    representation = {}
+    representation["score"] = performer_graph.value(
+            a_candidate, URIRef("http://example.com/slowmo#Score"), None
+        )
+
+    representation["measure"] = performer_graph.value(
+            a_candidate, URIRef("http://example.com/slowmo#RegardingMeasure"), None
+        )
+    representation["name"] = performer_graph.value(
+            a_candidate, URIRef("http://example.com/slowmo#name"), None
+        )
+    representation["acceptable_by"] = list(performer_graph.objects(
+            a_candidate, URIRef("slowmo:acceptable_by"), None
+        )) #converting to list ro allow repeated access
+    representation["selected"] = performer_graph.value(a_candidate, URIRef("slowmo:selected"), None)
+           
+    return representation

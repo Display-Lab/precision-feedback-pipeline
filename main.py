@@ -1,4 +1,4 @@
-from rdflib import BNode, Graph, RDF, URIRef #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
+from rdflib import BNode, Graph, Literal, URIRef #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
 from candidatesmasher.candidatesmasher import CandidateSmasher
 from graph_operations import read_graph, create_performer_graph
 from fastapi import FastAPI, Request, HTTPException
@@ -218,16 +218,16 @@ async def createprecisionfeedback(info:Request):
         f.close()
 
     # #Esteemer
-    logger.info("Calling Esteemer from main...")
       
     if settings.esteemer2 is True:
+        logger.info("Calling Esteemer 2 from main...")
+
         candidates: List[BNode]
         for measure in utils.measures(performer_graph): 
             candidates = utils.measure_acceptable_candidates(performer_graph, measure)
             for candidate in candidates:
                 esteemer2.score(performer_graph, candidate, history, preferences)
         selected_candidate = esteemer2.select_candidate(performer_graph)
-        selected_message = utils.render(performer_graph, selected_candidate)
         
         #print updated graph by esteemer2
         if settings.outputs is True and settings.log_level == "DEBUG":
@@ -237,8 +237,13 @@ async def createprecisionfeedback(info:Request):
             f = open("outputs/spek_st.json", "w")
             f.write(st)
             f.close()
+                    
+        selected_message = utils.render(performer_graph, selected_candidate)
+        
     
     else: 
+        logger.info("Calling Esteemer 1 from main...")
+
         selected_message = esteemer1(
             performance_data_df, history, preferences, mpm_df, performer_graph
             )  
@@ -254,10 +259,12 @@ async def createprecisionfeedback(info:Request):
         pc.finalize_text()              # Finalize text message and labels
         pc.graph_controller()           # Select and run graphing based on display type
         full_selected_message   = pc.prepare_selected_message()
+        if settings.log_level == "DEBUG":
+            full_selected_message["candidates"] = utils.candidates_as_dictionary(performer_graph)   
     
     return full_selected_message
 
-def esteemer1(performance_data_df, history, preferences, mpm_df, performer_graph):
+def esteemer1(performance_data_df, history, preferences, mpm_df, performer_graph: Graph):
     measure_list = performance_data_df["measure"].drop_duplicates()
     # print(*measure_list)
     es = Esteemer(performer_graph, measure_list, preferences, history, mpm_df)
@@ -268,6 +275,7 @@ def esteemer1(performance_data_df, history, preferences, mpm_df, performer_graph
     # es.rank_history_component(history_df, )
     es.process_mpm()  # Parse MPM
     node, spek_es, score_df, candidate_df, comp_dict = es.score()
+    performer_graph.add((node, URIRef("slowmo:selected"), Literal(True)))
     # #applying business rules
     # es.business_rules()
     # node,spek_es=es.select()
