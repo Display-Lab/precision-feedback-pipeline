@@ -95,7 +95,7 @@ def update_candidate_score(performer_graph: Graph, candidate: BNode, score: floa
     Returns:
     """
     performer_graph.add(
-        (candidate, URIRef("http://example.com/slowmo#HasScore"), Literal(str(score)))
+        (candidate, URIRef("http://example.com/slowmo#Score"), Literal(str(score)))
     )
 
 
@@ -114,9 +114,9 @@ def select_candidate(performer_graph: Graph) -> BNode:
     # 2. select candidate
     
     # Find the max score
-    max_score = max([score for _, score in performer_graph.subject_objects(URIRef("http://example.com/slowmo#HasScore"))], default=None)
+    max_score = max([score for _, score in performer_graph.subject_objects(URIRef("http://example.com/slowmo#Score"))], default=None)
 
-    candidates_with_max_score = [(candidate) for candidate, score in performer_graph.subject_objects(URIRef("http://example.com/slowmo#HasScore"))
+    candidates_with_max_score = [(candidate) for candidate, score in performer_graph.subject_objects(URIRef("http://example.com/slowmo#Score"))
                         if score == max_score]
     
     # Randomly select one of the candidates with the known maximum score

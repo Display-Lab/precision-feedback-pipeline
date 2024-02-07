@@ -3,8 +3,6 @@ from typing import List
 
 from rdflib import RDF, BNode, Graph, URIRef
 
-from settings import representations
-
 
 def measures(performer_graph: Graph) -> List[BNode]:
     """
@@ -188,54 +186,38 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
         return s_m
 
 
-def representation(
-    performer_graph: Graph,
-    candidates_list: List[BNode],
-    type: representations,
-) -> dict:
+def candidates_as_dictionary(performer_graph: Graph) -> dict:
     """
-    provides the representation of candidates .
+    provides the representation of candidates as a dictionary.
 
     Parameters:
     - performer_graph (Graph): The performer_graph.
-    - candidates_list (List[BNode]): The list of candidates.
-    - selected_candidate (BNode): The selected candidate.
-    - type (representations): The type of representation (short or long).
 
     Returns:
-    dict: The representation of candidates.
+    dict: The representation of candidates as a dictionary.
     """
-    candidates = []
-    for a_candidate in candidates_list:
-        # candidates.append("score: " + str(performer_graph.objects(a_candidate, URIRef("http://example.com/slowmo#HasScore"))) )
-        score = performer_graph.value(
-            a_candidate, URIRef("http://example.com/slowmo#HasScore"), None
+    candidate_list = []
+    
+    for a_candidate in candidates(performer_graph):
+        representation = candidate_as_dictionary(a_candidate, performer_graph)
+        candidate_list.append(representation)
+    return candidate_list
+
+def candidate_as_dictionary(a_candidate: BNode, performer_graph: Graph) -> dict:
+    representation = {}
+    representation["score"] = performer_graph.value(
+            a_candidate, URIRef("http://example.com/slowmo#Score"), None
         )
 
-        measure = performer_graph.value(
+    representation["measure"] = performer_graph.value(
             a_candidate, URIRef("http://example.com/slowmo#RegardingMeasure"), None
         )
-        message_title = performer_graph.value(
+    representation["name"] = performer_graph.value(
             a_candidate, URIRef("http://example.com/slowmo#name"), None
         )
-        accepted_by = performer_graph.value(
+    representation["acceptable_by"] = list(performer_graph.objects(
             a_candidate, URIRef("slowmo:acceptable_by"), None
-        )
-        selected = performer_graph.value(a_candidate, URIRef("slowmo:selected"), None)
-        representation = {}
-        if type == representations.SHORT:
-            representation["selected"] = selected
-            representation["score"] = score
-            representation["measure"] = measure
-            representation["title"] = message_title
-            representation["accepted by"] = accepted_by
-            candidates.append(representation)
-        else:
-            representation["selected"] = selected
-            representation["score"] = score
-            representation["measure"] = measure
-            representation["title"] = message_title
-            representation["accepted by"] = accepted_by
-            candidates.append(representation)
-
-    return candidates
+        )) #converting to list ro allow repeated access
+    representation["selected"] = performer_graph.value(a_candidate, URIRef("slowmo:selected"), None)
+           
+    return representation
