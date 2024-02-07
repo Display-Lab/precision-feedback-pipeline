@@ -122,4 +122,6 @@ def select_candidate(performer_graph: Graph) -> BNode:
     # Randomly select one of the candidates with the known maximum score
     selected_candidate = random.choice(candidates_with_max_score)
 
+    performer_graph.add((selected_candidate, URIRef("slowmo:selected"), Literal(True)))
+
     return selected_candidate

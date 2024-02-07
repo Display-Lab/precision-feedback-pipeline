@@ -1,7 +1,13 @@
+from enum import Enum
 from decouple import Config, RepositoryEnv, config
 from loguru import logger
 import sys
 import os
+
+
+class representations(Enum):
+    SHORT = 1
+    LONG = 2
 
 ## Logging setup
 logger.remove()
@@ -37,6 +43,7 @@ class Settings:
         self.plot_goal_line = config('plot_goal_line', cast=bool, default=True)
         
         self.esteemer2 = config('esteemer2', cast=bool, default=False)
+        self.candidate_representation = config('candidate_representation', cast=representations, default=representations.SHORT)
 
 # Instantiate
 settings = Settings()
