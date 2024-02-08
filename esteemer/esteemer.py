@@ -23,6 +23,7 @@ class Esteemer():
     def __init__(self, performer_graph, measure_list, preferences, history, mpm_df):
         # Empty dicts, lists, arrays
         self.acceptable_by_candidates=[]
+        self.candidate_moderator_dict={}
         self.measure_gap_list=[]
         self.measure_gap_list_new=[]
         self.measure_trend_list=[]
@@ -63,6 +64,9 @@ class Esteemer():
             for s,p,o in self.performer_graph.triples((s1, URIRef("slowmo:acceptable_by"), None)):
                 self.performer_graph.add((s, URIRef('http://example.com/slowmo#Score'), Literal(1)))
                 self.acceptable_by_candidates.append(s)
+                for s2,p2,o2 in self.performer_graph.triples((s1,URIRef("slowmo:moderator"),None)):
+                    self.candidate_moderator_dict[s]=o2
+               
                 
         logger.trace('Esteemer initialized')
         logger.debug(f'MPM DF is:\n{mpm_df}')
@@ -375,13 +379,17 @@ class Esteemer():
             df_b =pd.DataFrame(b_full_list,columns=['Trends'])
             df_a_new=pd.DataFrame(df_a["Gaps"].to_list(), columns=['comp_node', 'Measure','Gaps','signed_Gaps','accept_path'])
             df_b_new =pd.DataFrame(df_b["Trends"].to_list(),columns=['comp_node','Measure','Trends'])
-            
-            if df_b_new.empty:
+            if (Literal('gap size'))and not(Literal('trend slope')) in self.candidate_moderator_dict[i]:
                 df_merged=df_a_new
                 df_merged["score"] = df_merged['Gaps']
-            else:
+            if (Literal('trend slope'))and not(Literal('gap size')) in self.candidate_moderator_dict[i]:
+                df_merged=df_b_new
+                df_merged["score"] = df_merged['Trends'] 
+            if (Literal('trend slope'))and (Literal('gap size')) in self.candidate_moderator_dict[i]:
                 df_merged=pd.merge(df_a_new, df_b_new, on='comp_node')
-                df_merged["score"] = df_merged['Gaps'] + df_merged['Trends'] 
+                df_merged["score"] = df_merged['Gaps'] + df_merged['Trends']
+            
+             
             score_list = df_merged['score'].tolist()
             comp_node_list=df_merged["comp_node"].tolist()
 

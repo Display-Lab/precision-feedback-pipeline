@@ -1,16 +1,18 @@
 
-from rdflib import URIRef
+from rdflib import URIRef,Literal
 
-def insert(merged_list,performer_graph,causal_pathways):
+def insert(merged_list,performer_graph,causal_pathways,mod_list):
     id_name={}
     measure_list=[]
     for sqe,pqe,oqe in causal_pathways.triples((None,URIRef("https://schema.metadatacenter.org/properties/4a88e066-a289-4a09-a0fc-a24c28c65215"),None)):
         id_name[sqe]=oqe
     p=URIRef("slowmo:acceptable_by")
+    p1=URIRef("slowmo:moderator")
     for x in merged_list:
         for z in x[0]:
             o=id_name[z]
-            # print(o)
+            o1=Literal(mod_list[z])
+            # print(z)
             causal_p= str(o)
             for i in x[1]:
                 s=i
@@ -29,10 +31,18 @@ def insert(merged_list,performer_graph,causal_pathways):
                                                 if title_name == "TOP_25":
                                                     continue
                                                 else:
-                                                    performer_graph.add((s, p, o,))
+                                                    performer_graph.add((s, p, o))
+                                                    # print(o1)
+                                                    performer_graph.add((s, p1, o1))
                                     else:
                                         performer_graph.add((s, p, o,))
+                                        # print(o1)
+                                        performer_graph.add((s, p1, o1))
                                     measure_list.append(o8)
                 else:
                     performer_graph.add((s, p, o,))
+                    # print(o1)
+                    performer_graph.add((s, p1, o1))
+    
+    
     return performer_graph

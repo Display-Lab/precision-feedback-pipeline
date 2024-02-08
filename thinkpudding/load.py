@@ -17,14 +17,22 @@ def read(file):
 def process_causalpathways(causal_pathways):
     start_time = time.time()
     caus_type_dicts_final={}
+    mod_type_dicts_final={}
     for s,p,o in causal_pathways.triples((None,URIRef("http://schema.org/name"),None)):
         # print(s)
         pre_list=[]
+        mod_list=[]
         for s,p,o in causal_pathways.triples((s,URIRef("http://purl.bioontology.org/ontology/SNOMEDCT/has_precondition"),None)):
             pre_list.append(o)
+        for s1,p1,o1 in causal_pathways.triples((s,URIRef("https://schema.metadatacenter.org/properties/c93ed038-0c67-4add-99c8-d1a0f1c0a864"),None)):
+            # print(o1)
+            mod_list.append(o1)
             
         caus_type_dicts_final[s]=pre_list
-    return caus_type_dicts_final
+        mod_type_dicts_final[s]=mod_list
+    
+    
+    return caus_type_dicts_final,mod_type_dicts_final
 
 #reading annotation types from performer graph
 def process_performer_graph(performer_graph):
