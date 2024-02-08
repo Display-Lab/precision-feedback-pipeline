@@ -216,7 +216,7 @@ def candidate_as_dictionary(a_candidate: BNode, performer_graph: Graph) -> dict:
             a_candidate, URIRef("http://example.com/slowmo#name"), None
         )
     representation["acceptable_by"] = list(performer_graph.objects(
-            a_candidate, URIRef("slowmo:acceptable_by"), None
+            a_candidate, URIRef("slowmo:acceptable_by")
         )) #converting to list ro allow repeated access
     representation["selected"] = performer_graph.value(a_candidate, URIRef("slowmo:selected"), None)
            
