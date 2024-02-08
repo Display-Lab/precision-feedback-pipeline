@@ -7,7 +7,7 @@ def insert(merged_list,performer_graph,causal_pathways,mod_list):
     for sqe,pqe,oqe in causal_pathways.triples((None,URIRef("https://schema.metadatacenter.org/properties/4a88e066-a289-4a09-a0fc-a24c28c65215"),None)):
         id_name[sqe]=oqe
     p=URIRef("slowmo:acceptable_by")
-    p1=URIRef("slomo:moderator")
+    p1=URIRef("slowmo:moderator")
     for x in merged_list:
         for z in x[0]:
             o=id_name[z]
