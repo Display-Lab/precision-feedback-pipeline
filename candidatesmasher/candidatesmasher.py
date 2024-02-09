@@ -391,6 +391,12 @@ class CandidateSmasher:
                 
                         idx=df_spek[df_spek["graph_type1"]==row1["graph_type1"]].index.values
                         row_list = df_spek.loc[idx, :].values.flatten().tolist()
+                        
+                        if len(row_list)>0:
+                            comparator: BNode = row_list[1][0]
+                            self.performer_graph.add((candidate, URIRef("http://example.com/slowmo#RegardingComparator"), comparator))
+
+                        
                         # row_list = [item for item in row_list if not item.isdigit()]
                         row_list1=[]
                         for x in range(len(row_list)):
