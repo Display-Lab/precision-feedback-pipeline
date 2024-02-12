@@ -7,6 +7,8 @@ from rdflib.namespace import RDF
 def goal_gap_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
     latest_measure_df=latest_measure_df.reset_index(drop=True)
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['goal_comparison_value']
+    gap_size=Normalize(gap_size,latest_measure_df['goal_comparison_value'])
+    # print(gap_size)
     measure_name_node=BNode(latest_measure_df["measure"][0])
     goal_gap_size=gap_size[0]
     goal_gap_size=Literal(goal_gap_size)
@@ -56,6 +58,8 @@ def annotate_negative_goal_gap(performer_graph,blank_node,measure_Name,comparato
 def peer_gap_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
     latest_measure_df=latest_measure_df.reset_index(drop=True)
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_average_comparator']
+    gap_size=Normalize(gap_size,latest_measure_df['peer_average_comparator'])
+    # print(gap_size)
     measure_name_node=BNode(latest_measure_df["measure"][0])
     peer_gap_size=gap_size[0]
     peer_gap_size=Literal(peer_gap_size)
@@ -87,6 +91,7 @@ def annotate_top_10_percentile(performer_graph,blank_node,measure_Name,comparato
 def top_10_gap_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
     latest_measure_df=latest_measure_df.reset_index(drop=True)
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_90th_percentile_benchmark']
+    gap_size=Normalize(gap_size,latest_measure_df['peer_90th_percentile_benchmark'])
     measure_name_node=BNode(latest_measure_df["measure"][0])
     goal_gap_size=gap_size[0]
     goal_gap_size=Literal(goal_gap_size)
@@ -125,6 +130,8 @@ def annotate_top_25_percentile(performer_graph,blank_node,measure_Name,comparato
 def top_25_gap_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
     latest_measure_df=latest_measure_df.reset_index(drop=True)
     gap_size=latest_measure_df['Performance_Rate']-latest_measure_df['peer_75th_percentile_benchmark']
+    gap_size=Normalize(gap_size,latest_measure_df['peer_90th_percentile_benchmark'])
+    # print(gap_size)
     measure_name_node=BNode(latest_measure_df["measure"][0])
     goal_gap_size=gap_size[0]
     goal_gap_size=Literal(goal_gap_size)
@@ -146,6 +153,15 @@ def top_25_gap_annotate(performer_graph,p1_node,latest_measure_df,comparator_bno
         performer_graph=annotate_negative_peer_gap(performer_graph,blank_node,measure_name_node,comparator_bnode,goal_gap_size)
     return performer_graph
 
+def Normalize(gap_size,max_value):
+    # x=[-1,1]
+    gap_size=abs(gap_size)
+    x1=(2*((gap_size-0)/((max_value*100)-0)))-1
+    # print(gap_size)
+    # print(max_value*100)
+    print("normalized value")
+    print(x1)
+    return x1
 #annotate peer comparator
 def annotate_peer_comparator(performer_graph,blank_node,measure_Name,comparator_bnode):
     performer_graph.add((blank_node,RDF.type,URIRef('http://purl.obolibrary.org/obo/PSDO_0000095')))

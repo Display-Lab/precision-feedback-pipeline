@@ -112,6 +112,7 @@ class Esteemer():
                                         
                                         trend_slope.append(str(o1234))
                                         trend_slope.append(Measure)
+                                        trend_slope.append(float(abs(o125)))
                                         trend_slope.append(float(o125))
                                         trend_tuples=tuple(trend_slope)
                                         self.measure_trend_list.append(trend_tuples)
@@ -285,6 +286,7 @@ class Esteemer():
             a_full_list=[]
             a_full_list1=[]
             b_full_list=[]
+            b_full_list1=[]
             s = i
             for s5,p5,o5 in self.performer_graph.triples((s,URIRef("http://purl.obolibrary.org/obo/RO_0000091"),None)):
                 for s2we,p2we,o2we in self.performer_graph.triples((s,URIRef("slowmo:acceptable_by"),None)):
@@ -318,6 +320,7 @@ class Esteemer():
                                             if j[2] !=abs_val:
                                                 j[2]=abs_val
                                             j[2]=j[2]*v
+                                            j[3]=j[3]*v
                                 a_full_list.append(a)
                                 a_new=a[:]
                                 a_new.append(accept_path)
@@ -333,8 +336,16 @@ class Esteemer():
                                             if v == "--":
                                                 v=0
                                             v= float(v)
+                                            abs_val=abs(j[3])
+                                            # print(abs_val)
+                                            if j[2] !=abs_val:
+                                                j[2]=abs_val
                                             j[2]=j[2]*v
+                                            j[3]=j[3]*v
                                 b_full_list.append(b)
+                                b_new=b[:]
+                                b_new.append(accept_path)
+                                b_full_list1.append(b_new)
                                 
                         
                         if o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000112"):
@@ -364,6 +375,10 @@ class Esteemer():
             flat_list = [item for sublist in a_full_list1 for item in sublist]
             flat_list1=[]
             flatlist2=[]
+            if b_full_list1:
+                flat_list3 = [item for sublist in b_full_list1 for item in sublist]
+                flat_list4=[]
+                flatlist5=[]
            
             for x in flat_list:
                 if type(x) == list:
@@ -371,25 +386,45 @@ class Esteemer():
                 else:
                     flat_list1.append(x)
                 flatlist2.append(flat_list1)
+            # print(flat_list3)
+            if b_full_list1:
+                for x in flat_list3:
+                    if type(x) == list:
+                        flat_list4=x[:]
+                    else:
+                        flat_list4.append(x)
+                    flatlist5.append(flat_list4)
+
             res = []
             [res.append(x) for x in flatlist2 if x not in res]
             res1=[res[:]]
             
             df_a = pd.DataFrame(res1, columns=['Gaps'])
-            df_b =pd.DataFrame(b_full_list,columns=['Trends'])
             df_a_new=pd.DataFrame(df_a["Gaps"].to_list(), columns=['comp_node', 'Measure','Gaps','signed_Gaps','accept_path'])
-            df_b_new =pd.DataFrame(df_b["Trends"].to_list(),columns=['comp_node','Measure','Trends'])
+            if b_full_list1:
+                res2 = []
+                [res2.append(x) for x in flatlist5 if x not in res2]
+                res3=[res2[:]]
+            if b_full_list1:
+                df_b =pd.DataFrame(res3,columns=['Trends'])
+                df_b_new =pd.DataFrame(df_b["Trends"].to_list(),columns=['comp_node','Measure','Trends','signed_trends','accept_path'])
             if (Literal('gap size'))and not(Literal('trend slope')) in self.candidate_moderator_dict[i]:
                 df_merged=df_a_new
-                df_merged["score"] = df_merged['Gaps']
+                # df_merged["gap_score"]=df_merged['Gaps']
+                df_merged["score"] = df_merged['signed_Gaps']
             if (Literal('trend slope'))and not(Literal('gap size')) in self.candidate_moderator_dict[i]:
                 df_merged=df_b_new
                 df_merged["score"] = df_merged['Trends'] 
             if (Literal('trend slope'))and (Literal('gap size')) in self.candidate_moderator_dict[i]:
-                df_merged=pd.merge(df_a_new, df_b_new, on='comp_node')
-                df_merged["score"] = df_merged['Gaps'] + df_merged['Trends']
+                if not b_full_list1:
+                    df_merged=df_a_new
+                    # df_merged["gap_score"]=df_merged['Gaps']
+                    df_merged["score"] = df_merged['signed_Gaps']
+                else:
+                    df_merged=pd.merge(df_a_new, df_b_new, on='comp_node')
+                    df_merged["score"] = df_merged['Gaps'] + df_merged['Trends']
             
-             
+            # gap_score_list= df_merged['gap_score']
             score_list = df_merged['score'].tolist()
             comp_node_list=df_merged["comp_node"].tolist()
 
@@ -398,19 +433,15 @@ class Esteemer():
             self.comp_node_dict[i]=comp_node_list
             
             self.df_final = self.df_final.append(df_merged, ignore_index = True)
-           
+            
             
         Keymax = max(zip(self.score_dict.values(), self.score_dict.keys()))[1]
         logger.debug(f'DF_Final is:\n{self.df_final}') 
+        for k,v in self.score_dict.items():
+            print(k)
+            print(v)
         
-        self.score_dict_df=pd.DataFrame(self.score_dict.items())
-        self.score_dict_df = self.score_dict_df.rename(columns={0: 'candidate_id', 1: 'score'})
-        score_list=self.score_dict_df['score'].tolist()
-
         
-        self.score_dict_df = self.score_dict_df.drop('score', axis=1)
-        score_flat_list = [item for sublist in score_list for item in sublist] 
-        self.score_dict_df['score']=score_flat_list
         self.node=Keymax
         return self.node,self.performer_graph,self.df_final,self.score_dict_df,self.comp_node_dict
 
