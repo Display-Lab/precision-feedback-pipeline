@@ -159,6 +159,7 @@ class Esteemer():
         for x in self.measure_trend_list:
             x=list(x)
             self.measure_trend_list_new.append(x)
+        # print(*self.measure_trend_list_new)
         #consolidate gap moderator                
         self.measure_gap_list = list(set(self.measure_gap_list))
         for x in self.measure_gap_list:
@@ -264,7 +265,7 @@ class Esteemer():
         self.gap_dict = dict(zip(self.mpm_df.Causal_pathway, self.mpm_df.Comparison_size))
         # for k,v in self.gap_dict.items():print(k, v)
         self.trend_dict = dict(zip(self.mpm_df.Causal_pathway, self.mpm_df.Trend_slope))
-        # for k,v in self.gap_dict.items():print(k, v)
+        # for k,v in self.trend_dict.items():print(k, v)
         self.acheivement_dict = dict(zip(self.mpm_df.Causal_pathway, self.mpm_df.Measure_achievement_recency))
         # for k,v in self.acheivement_dict.items():print(k, v)
         self.loss_dict=dict(zip(self.mpm_df.Causal_pathway, self.mpm_df.Loss_recency))
@@ -296,7 +297,7 @@ class Esteemer():
                         o2we= "Achievement"
                     if "better" in str(o2we):
                         o2we="Better"
-                    if "Worse" in str(o2we):
+                    if "Worse" == str(o2we):
                         o2we="Worse"
                     if "loss" in str(o2we):
                         o2we="Loss"
@@ -330,6 +331,7 @@ class Esteemer():
                         if o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000099") or o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000100"):    
                             for s8,p8,o8 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
                                 b=[item for item in self.measure_trend_list_new if str(o8) in item]
+                                
                                 for k,v in self.trend_dict.items():
                                     if k == o2we:
                                         for j in b:
@@ -338,15 +340,18 @@ class Esteemer():
                                             v= float(v)
                                             abs_val=abs(j[3])
                                             # print(abs_val)
+                                            
                                             if j[2] !=abs_val:
                                                 j[2]=abs_val
                                             j[2]=j[2]*v
                                             j[3]=j[3]*v
+                                
+                                            
                                 b_full_list.append(b)
                                 b_new=b[:]
                                 b_new.append(accept_path)
                                 b_full_list1.append(b_new)
-                                
+                                # print(*b_new)
                         
                         if o7==URIRef("http://purl.obolibrary.org/obo/PSDO_0000112"):
                             for s9,p9,o9 in self.performer_graph.triples((s6,URIRef("http://example.com/slowmo#RegardingComparator"),None)):
@@ -375,6 +380,7 @@ class Esteemer():
             flat_list = [item for sublist in a_full_list1 for item in sublist]
             flat_list1=[]
             flatlist2=[]
+            # print(*b_full_list1)
             if b_full_list1:
                 flat_list3 = [item for sublist in b_full_list1 for item in sublist]
                 flat_list4=[]
@@ -411,7 +417,7 @@ class Esteemer():
             if (Literal('gap size'))and not(Literal('trend slope')) in self.candidate_moderator_dict[i]:
                 df_merged=df_a_new
                 # df_merged["gap_score"]=df_merged['Gaps']
-                df_merged["score"] = df_merged['signed_Gaps']
+                df_merged["score"] = df_merged['Gaps']
             if (Literal('trend slope'))and not(Literal('gap size')) in self.candidate_moderator_dict[i]:
                 df_merged=df_b_new
                 df_merged["score"] = df_merged['Trends'] 
@@ -419,27 +425,29 @@ class Esteemer():
                 if not b_full_list1:
                     df_merged=df_a_new
                     # df_merged["gap_score"]=df_merged['Gaps']
-                    df_merged["score"] = df_merged['signed_Gaps']
+                    df_merged["score"] = df_merged['Gaps']
                 else:
                     df_merged=pd.merge(df_a_new, df_b_new, on='comp_node')
                     df_merged["score"] = df_merged['Gaps'] + df_merged['Trends']
             
             # gap_score_list= df_merged['gap_score']
+            # print(df_b_new)
             score_list = df_merged['score'].tolist()
             comp_node_list=df_merged["comp_node"].tolist()
-
+             
             
             self.score_dict[i]=score_list
             self.comp_node_dict[i]=comp_node_list
             
             self.df_final = self.df_final.append(df_merged, ignore_index = True)
             
-            
+          
         Keymax = max(zip(self.score_dict.values(), self.score_dict.keys()))[1]
         logger.debug(f'DF_Final is:\n{self.df_final}') 
-        for k,v in self.score_dict.items():
-            print(k)
-            print(v)
+        # print(self.df_final)
+        # for k,v in self.score_dict.items():
+        #     print(k)
+        #     print(v)
         
         
         self.node=Keymax
