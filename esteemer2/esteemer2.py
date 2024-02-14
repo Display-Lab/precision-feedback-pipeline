@@ -47,9 +47,26 @@ def calculate_motivating_info_score(performer_graph: Graph, candidate: BNode) ->
     Returns:
     float: motivating info sub score.
     """
-    gap_size, gap_type = get_gap_size_for_candidate(candidate, performer_graph)
-    return gap_size
-
+    c = performer_graph.resource(candidate) #move this one as far as possibly you can
+    causal_pathway = list(c.objects(URIRef("slowmo:acceptable_by")))[0]
+    
+    match  causal_pathway.value:
+        case "Social Worse":
+            gap_size, gap_type = get_gap_size_for_candidate(candidate, performer_graph)
+            score = abs(gap_size)
+        case "Social better":
+            gap_size, gap_type = get_gap_size_for_candidate(candidate, performer_graph)
+            score = gap_size
+        case "Improving":
+            score = 3
+        case "Worsening":
+            score = 4
+        case _:
+            score = 0
+    return score
+    #gap_size, gap_type = get_gap_size_for_candidate(candidate, performer_graph)
+    #return gap_size
+    # use case with an option per causal pathway
 
 def calculate_history_score(
     performer_graph: Graph, candidate: BNode, history: json
