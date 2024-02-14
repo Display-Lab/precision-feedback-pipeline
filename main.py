@@ -1,13 +1,13 @@
 from rdflib import BNode, Graph, Literal, URIRef #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
 from candidatesmasher.candidatesmasher import CandidateSmasher
-from graph_operations import read_graph, create_performer_graph
+from utils.graph_operations import read_graph, create_performer_graph
 from fastapi import FastAPI, Request, HTTPException
 from thinkpudding.thinkpudding import Thinkpudding
 from bit_stomach.bit_stomach import Bit_stomach
 from pictoralist.pictoralist import Pictoralist
 from esteemer.esteemer import Esteemer
 from requests_file import FileAdapter
-from settings import settings
+from utils.settings import settings
 from loguru import logger
 from typing import List
 from io import BytesIO
