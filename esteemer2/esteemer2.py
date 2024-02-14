@@ -53,7 +53,7 @@ def calculate_motivating_info_score(performer_graph: Graph, candidate: BNode) ->
     match  causal_pathway.value:
         case "Social Worse":
             gap_size, gap_type = get_gap_size_for_candidate(candidate, performer_graph)
-            score = abs(gap_size)
+            score = gap_size
         case "Social better":
             gap_size, gap_type = get_gap_size_for_candidate(candidate, performer_graph)
             score = gap_size
