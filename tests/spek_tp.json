@@ -818,7 +818,7 @@
         ],
         "http://example.com/slowmo#PerformanceGapSize": [
             {
-                "@value": 0.0
+                "@value": 0.00009
             }
         ],
         "http://example.com/slowmo#RegardingComparator": [
@@ -921,6 +921,11 @@
         "http://example.com/slowmo#AncestorTemplate": [
             {
                 "@id": "https://repo.metadatacenter.org/template-instances/f8ad0835-29de-4605-a1eb-1288475a1612"
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N30c844d628d649a7abea94b85e194167"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -1061,6 +1066,11 @@
         "http://example.com/slowmo#AncestorTemplate": [
             {
                 "@id": "https://repo.metadatacenter.org/template-instances/f8ad0835-29de-4605-a1eb-1288475a1612"
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [
@@ -1205,6 +1215,11 @@
                 "@id": "https://repo.metadatacenter.org/template-instances/9e71ec9e-26f3-442a-8278-569bcd58e708"
             }
         ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N30c844d628d649a7abea94b85e194167"
+            }
+        ],
         "http://example.com/slowmo#RegardingMeasure": [
             {
                 "@id": "_:PONV05"
@@ -1345,6 +1360,11 @@
         "http://example.com/slowmo#AncestorTemplate": [
             {
                 "@id": "https://repo.metadatacenter.org/template-instances/9e71ec9e-26f3-442a-8278-569bcd58e708"
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
             }
         ],
         "http://example.com/slowmo#RegardingMeasure": [

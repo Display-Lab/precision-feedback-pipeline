@@ -2,6 +2,7 @@ import json
 import random
 
 from rdflib import RDF, BNode, Graph, Literal, URIRef
+from rdflib.resource import Resource
 
 
 def score(performer_graph: Graph, candidate: BNode, history: json, preferences: json):
@@ -47,26 +48,28 @@ def calculate_motivating_info_score(performer_graph: Graph, candidate: BNode) ->
     Returns:
     float: motivating info sub score.
     """
-    c = performer_graph.resource(candidate) #move this one as far as possibly you can
-    causal_pathway = list(c.objects(URIRef("slowmo:acceptable_by")))[0]
-    
-    match  causal_pathway.value:
+    candidate_resource = performer_graph.resource(
+        candidate
+    )  # move this one as far as possibly you can
+    causal_pathway = list(candidate_resource.objects(URIRef("slowmo:acceptable_by")))[0]
+
+    match causal_pathway.value:
         case "Social Worse":
-            gap_size, gap_type = get_gap_size_for_candidate(candidate, performer_graph)
+            gap_size, gap_type = get_gap_size(candidate_resource)
             score = gap_size
         case "Social better":
-            gap_size, gap_type = get_gap_size_for_candidate(candidate, performer_graph)
+            gap_size, gap_type = get_gap_size(candidate_resource)
             score = gap_size
         case "Improving":
-            score = 3
+            trend_size, gap_type = get_trend_size(candidate_resource)
+            score = trend_size
         case "Worsening":
-            score = 4
+            trend_size, gap_type = get_trend_size(candidate_resource)
+            score = trend_size
         case _:
             score = 0
     return score
-    #gap_size, gap_type = get_gap_size_for_candidate(candidate, performer_graph)
-    #return gap_size
-    # use case with an option per causal pathway
+
 
 def calculate_history_score(
     performer_graph: Graph, candidate: BNode, history: json
@@ -158,16 +161,17 @@ def select_candidate(performer_graph: Graph) -> BNode:
     return selected_candidate
 
 
-def get_gap_size_for_candidate(candidate: BNode, performer_graph: Graph):
-    measure = performer_graph.value(
-        candidate, URIRef("http://example.com/slowmo#RegardingMeasure"), None
+def get_gap_size(candidate_resource: Resource):
+    performer_graph = candidate_resource.graph
+    measure = candidate_resource.value(
+        URIRef("http://example.com/slowmo#RegardingMeasure")
     )
 
-    comparator = performer_graph.value(
-        candidate, URIRef("http://example.com/slowmo#RegardingComparator"), None
+    comparator = candidate_resource.value(
+        URIRef("http://example.com/slowmo#RegardingComparator")
     )
 
-    dispositions = [
+    dispositions: list[Resource] = [
         disposition
         for disposition in performer_graph.objects(
             subject=BNode("p1"),
@@ -177,13 +181,13 @@ def get_gap_size_for_candidate(candidate: BNode, performer_graph: Graph):
             (
                 disposition,
                 URIRef("http://example.com/slowmo#RegardingComparator"),
-                comparator,
+                comparator.identifier,
             )
             in performer_graph
             and (
                 disposition,
                 URIRef("http://example.com/slowmo#RegardingMeasure"),
-                measure,
+                measure.identifier,
             )
             in performer_graph
             and (
@@ -214,3 +218,51 @@ def get_gap_size_for_candidate(candidate: BNode, performer_graph: Graph):
         dispositions[0], RDF.type, None
     )  # use gap_type.n3() to see the value
     return gap_size, gap_type
+
+
+def get_trend_size(candidate_resource: Resource):
+    performer_graph: Graph = candidate_resource.graph
+    measure = candidate_resource.value(
+        URIRef("http://example.com/slowmo#RegardingMeasure")
+    )
+
+    p1 = performer_graph.resource(BNode("p1"))
+
+    dispositions: list[Resource] = [
+        disposition
+        for disposition in p1[URIRef("http://purl.obolibrary.org/obo/RO_0000091")]
+        if (
+            (
+                disposition.identifier,
+                URIRef("http://example.com/slowmo#RegardingMeasure"),
+                measure.identifier,
+            )
+            in performer_graph
+            and (
+                (
+                    disposition.identifier,
+                    RDF.type,
+                    URIRef("http://purl.obolibrary.org/obo/PSDO_0000099"),
+                )
+                in performer_graph
+                or (
+                    disposition.identifier,
+                    RDF.type,
+                    URIRef("http://purl.obolibrary.org/obo/PSDO_0000100"),
+                )
+                in performer_graph
+            )
+        )
+    ]
+
+    if len(dispositions) == 0:
+        return 0, None
+
+    trend_size = performer_graph.value(
+        dispositions[0].identifier,
+        URIRef("http://example.com/slowmo#PerformanceTrendSlope"),
+        None,
+    ).value
+
+    trend_type = performer_graph.value(dispositions[0].identifier, RDF.type, None)
+    return trend_size, trend_type
