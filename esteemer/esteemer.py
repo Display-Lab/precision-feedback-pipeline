@@ -282,7 +282,7 @@ class Esteemer():
         score_dict={}
         # comp_node_dict={}
         df_final = pd.DataFrame()
-        
+        candidate_list=[]
         for i in self.acceptable_by_candidates:
             a_full_list=[]
             a_full_list1=[]
@@ -434,22 +434,33 @@ class Esteemer():
             # print(df_b_new)
             score_list = df_merged['score'].tolist()
             comp_node_list=df_merged["comp_node"].tolist()
-             
+            candidate_list.append(i)
             
             self.score_dict[i]=score_list
             self.comp_node_dict[i]=comp_node_list
             
             self.df_final = self.df_final.append(df_merged, ignore_index = True)
             
-          
-        Keymax = max(zip(self.score_dict.values(), self.score_dict.keys()))[1]
+       
+        #calculate gap max
+        self.df_final['candidate_id']=candidate_list
+        final_list=[]
+        gap_df=self.df_final[self.df_final[['Gaps']].notnull().all(1)]
+        gap_df = gap_df[['candidate_id', 'score']]
+        index = gap_df.nlargest(1, 'score')
+        gapmax=index['candidate_id'][1]
+        final_list.append(gapmax)
+        #calculate trend max
+        trend_df=self.df_final[(self.df_final[['Gaps']].isna().all(1))]
+        trend_df = trend_df[['candidate_id', 'score']]
+        trend_df = trend_df.reset_index()
+        index = trend_df.nlargest(1,'score')
+        trendmax=index['candidate_id'][1]
+        final_list.append(trendmax)
+        #choose random node between gapmax and trendmax
+        Keymax=random.choice(final_list)
+        # Keymax = max(zip(self.score_dict.values(), self.score_dict.keys()))[1]
         logger.debug(f'DF_Final is:\n{self.df_final}') 
-        # print(self.df_final)
-        # for k,v in self.score_dict.items():
-        #     print(k)
-        #     print(v)
-        
-        
         self.node=Keymax
         return self.node,self.performer_graph,self.df_final,self.score_dict_df,self.comp_node_dict
 
