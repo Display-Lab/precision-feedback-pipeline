@@ -12,14 +12,14 @@ def test_score():
         subject=candidate, predicate=URIRef("http://example.com/slowmo#Score")
     )
     scores_list = list(scores)
-    assert scores_list[0].value == 0.00009
+    assert scores_list[0].value == 0.0001
 
 
 def test_calculate_motivating_info_score():
     graph = get_graph("tests/spek_tp.json")
     candidate = BNode("N0fefdf2588e640068f19c40cd4dcb7ce")
 
-    assert esteemer2.calculate_motivating_info_score(graph, candidate) == 0.00009
+    assert esteemer2.calculate_motivating_info_score(graph, candidate)["score"] == 0.0001
 
 
 def test_calculate_history_score():
@@ -39,7 +39,7 @@ def test_calculate_preference_score():
 def test_update_candidate_score():
     graph = get_graph("tests/spek_tp.json")
     candidate = BNode("N0fefdf2588e640068f19c40cd4dcb7ce")
-    esteemer2.update_candidate_score(graph, candidate, 130)
+    esteemer2.update_candidate_score(graph, candidate, 130,3)
     scores = graph.objects(
         subject=candidate, predicate=URIRef("http://example.com/slowmo#Score")
     )

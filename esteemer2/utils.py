@@ -209,7 +209,7 @@ def candidate_as_dictionary(a_candidate: BNode, performer_graph: Graph) -> dict:
             a_candidate, URIRef("http://example.com/slowmo#Score"), None
         )
     if score:
-        score = round(score.value,2)
+        score = score.value
     representation["score"]=score
     
 

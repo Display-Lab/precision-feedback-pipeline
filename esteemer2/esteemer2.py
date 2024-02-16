@@ -53,19 +53,20 @@ def calculate_motivating_info_score(performer_graph: Graph, candidate: BNode) ->
     )  # move this one as far as possibly you can
     causal_pathway = list(candidate_resource.objects(URIRef("slowmo:acceptable_by")))[0]
 
+    # our scoring function right now takes the absolute value of moderator for each causal pathway
     match causal_pathway.value:
         case "Social Worse":
             gap_size, type, number_of_months = get_gap_size(candidate_resource)
-            score = gap_size
+            score = round(abs(gap_size),4)   
         case "Social better":
             gap_size, type, number_of_months = get_gap_size(candidate_resource)
-            score = gap_size
+            score = round(abs(gap_size),4)
         case "Improving":
             trend_size, type, number_of_months = get_trend_info(candidate_resource)
-            score = trend_size
+            score = round(abs(trend_size),4)
         case "Worsening":
             trend_size, type, number_of_months = get_trend_info(candidate_resource)
-            score = trend_size
+            score = round(abs(trend_size),4)
         case _:
             score = 0
     return {"score": score, "type": type.n3(), "number_of_months": number_of_months }

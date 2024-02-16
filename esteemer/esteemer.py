@@ -437,7 +437,7 @@ class Esteemer():
             
             self.score_dict[i]=score_list
             
-            self.performer_graph.add((i, URIRef('http://example.com/slowmo#Score'), Literal(score_list[0])))
+            self.performer_graph.add((i, URIRef('http://example.com/slowmo#Score'), Literal(round(score_list[0],4))))
 
             self.comp_node_dict[i]=comp_node_list
             
