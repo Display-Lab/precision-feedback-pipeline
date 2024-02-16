@@ -450,14 +450,14 @@ class Esteemer():
         gap_df=self.df_final[self.df_final[['Gaps']].notnull().all(1)]
         gap_df = gap_df[['candidate_id', 'score']]
         index = gap_df.nlargest(1, 'score')
-        gapmax=index['candidate_id'][1]
+        gapmax=index['candidate_id'][0]
         final_list.append(gapmax)
         #calculate trend max
-        trend_df=self.df_final[(self.df_final[['Gaps']].isna().all(1))]
+        trend_df=self.df_final[(self.df_final[['Trends']].notnull().all(1))]
         trend_df = trend_df[['candidate_id', 'score']]
         trend_df = trend_df.reset_index()
         index = trend_df.nlargest(1,'score')
-        trendmax=index['candidate_id'][1]
+        trendmax=index['candidate_id'][0]
         final_list.append(trendmax)
         #choose random node between gapmax and trendmax
         Keymax=random.choice(final_list)
