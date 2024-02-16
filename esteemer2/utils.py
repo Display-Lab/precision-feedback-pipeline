@@ -211,6 +211,11 @@ def candidate_as_dictionary(a_candidate: BNode, performer_graph: Graph) -> dict:
     if score:
         score = round(score.value,2)
     representation["score"]=score
+    
+
+    representation["number_of_months"]= performer_graph.value(
+            a_candidate, URIRef("http://example.com/slowmo#number_of_months"), None
+        )
 
     representation["measure"] = performer_graph.value(
             a_candidate, URIRef("http://example.com/slowmo#RegardingMeasure"), None
