@@ -498,6 +498,11 @@
                 "@value": 0.04999999999999993
             }
         ],
+        "http://example.com/slowmo#PerformanceGapSize2": [
+            {
+                "@value": 0.04999999999999993
+            }
+        ],
         "http://example.com/slowmo#RegardingComparator": [
             {
                 "@id": "_:N2214e0c371464e2ea4d16b25245a55dc"
@@ -548,6 +553,11 @@
             "http://purl.obolibrary.org/obo/PSDO_0000104"
         ],
         "http://example.com/slowmo#PerformanceGapSize": [
+            {
+                "@value": 0.04999999999999993
+            }
+        ],
+        "http://example.com/slowmo#PerformanceGapSize2": [
             {
                 "@value": 0.04999999999999993
             }
@@ -606,6 +616,11 @@
                 "@value": -0.010000000000000009
             }
         ],
+        "http://example.com/slowmo#PerformanceGapSize2": [
+            {
+                "@value": -0.010000000000000009
+            }
+        ],
         "http://example.com/slowmo#RegardingComparator": [
             {
                 "@id": "_:N30c844d628d649a7abea94b85e194167"
@@ -660,6 +675,11 @@
                 "@value": 0.029999999999999916
             }
         ],
+        "http://example.com/slowmo#PerformanceGapSize2": [
+            {
+                "@value": 0.029999999999999916
+            }
+        ],
         "http://example.com/slowmo#RegardingComparator": [
             {
                 "@id": "_:N15c0d10b6ad545e6a090feb7022ecada"
@@ -709,6 +729,11 @@
             "http://purl.obolibrary.org/obo/PSDO_0000104"
         ],
         "http://example.com/slowmo#PerformanceGapSize": [
+            {
+                "@value": 0.05999999999999994
+            }
+        ],
+        "http://example.com/slowmo#PerformanceGapSize2": [
             {
                 "@value": 0.05999999999999994
             }
@@ -767,6 +792,11 @@
                 "@value": 0.05999999999999994
             }
         ],
+        "http://example.com/slowmo#PerformanceGapSize2": [
+            {
+                "@value": 0.05999999999999994
+            }
+        ],
         "http://example.com/slowmo#RegardingComparator": [
             {
                 "@id": "_:Na7a708f5d88b4aabba3ffb1710cbfd0e"
@@ -821,6 +851,11 @@
                 "@value": 0.00009
             }
         ],
+        "http://example.com/slowmo#PerformanceGapSize2": [
+            {
+                "@value": 0.00009
+            }
+        ],
         "http://example.com/slowmo#RegardingComparator": [
             {
                 "@id": "_:N604241796fe648d8ad2d7d21dd515390"
@@ -838,6 +873,11 @@
             "http://purl.obolibrary.org/obo/PSDO_0000104"
         ],
         "http://example.com/slowmo#PerformanceGapSize": [
+            {
+                "@value": 0.0
+            }
+        ],
+        "http://example.com/slowmo#PerformanceGapSize2": [
             {
                 "@value": 0.0
             }
@@ -892,6 +932,11 @@
             "http://purl.obolibrary.org/obo/PSDO_0000104"
         ],
         "http://example.com/slowmo#PerformanceGapSize": [
+            {
+                "@value": 0.039999999999999925
+            }
+        ],
+        "http://example.com/slowmo#PerformanceGapSize2": [
             {
                 "@value": 0.039999999999999925
             }

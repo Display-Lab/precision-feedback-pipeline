@@ -21,7 +21,7 @@ def trend_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
     trend_sign=latest_measure_df["Performance_Rate"][1]-latest_measure_df["Performance_Rate"][0]
     
     # trend_slope2 must match the sign of trend_sign, e.g. if this month was positive we can't report a negative trend slope for 3 month
-    trend_slope2 = back_up_df.groupby('measure').apply(calculate_trend, xcol='month', ycol='Performance_Rate')[0]
+    trend_slope2 = back_up_df.groupby('measure').apply(calculate_trend,'month', 'Performance_Rate')[0]
     
     if trend_sign<0:
         measure_name_node=BNode(latest_measure_df["measure"][0])
@@ -112,12 +112,15 @@ def theil_reg(df, xcol, ycol):
 #    print(pd.Series(model))
    return pd.Series(model)
 
-def calculate_trend(df, xcol, ycol):
-    last_four_month = list(df.tail(4)[ycol])
+def calculate_trend(df, month, performance_rate):
+    performance_rates = list(df[performance_rate])
+    last_index= len(performance_rates) - 1 
+    change_this_month = performance_rates[last_index ] - performance_rates[last_index - 1]
+    change_last_month = performance_rates[last_index - 1] - performance_rates[last_index - 2]
     
-    if len(last_four_month) < 4:
+    if change_this_month * change_last_month < 0:
         return 0   
-   
-    return (last_four_month[3] - last_four_month[0]) / 4    
+    
+    return (performance_rates[last_index ] - performance_rates[last_index - 2]) / 2
     
     
