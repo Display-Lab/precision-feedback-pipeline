@@ -205,12 +205,12 @@ def candidates_as_dictionary(performer_graph: Graph) -> dict:
 
 def candidate_as_dictionary(a_candidate: BNode, performer_graph: Graph) -> dict:
     representation = {}
-    score = performer_graph.value(
+    score: float = performer_graph.value(
             a_candidate, URIRef("http://example.com/slowmo#Score"), None
         )
-    if score:
-        score = score.value
-    representation["score"]=score
+    if score is not None: # Literal('0.0') tests as false, so test for None explicitly
+        score = float(score.value)  # and we are explicit floating to eliminate numpy types that give teh json decoder problems
+    representation["score"] = score
     
 
     representation["number_of_months"]= performer_graph.value(
@@ -223,9 +223,11 @@ def candidate_as_dictionary(a_candidate: BNode, performer_graph: Graph) -> dict:
     representation["name"] = performer_graph.value(
             a_candidate, URIRef("http://example.com/slowmo#name"), None
         )
-    representation["acceptable_by"] = list(performer_graph.objects(
-            a_candidate, URIRef("slowmo:acceptable_by")
-        )) #converting to list ro allow repeated access
-    representation["selected"] = performer_graph.value(a_candidate, URIRef("slowmo:selected"), None)
-           
+    representation["acceptable_by"] = list(
+        performer_graph.objects(a_candidate, URIRef("slowmo:acceptable_by"))
+    )  # converting to list ro allow repeated access
+    representation["selected"] = performer_graph.value(
+        a_candidate, URIRef("slowmo:selected"), None
+    )
+
     return representation

@@ -6,7 +6,7 @@ import io
 import pandas as pd
 #from asyncore import read
 from io import StringIO
-from rdflib import Literal, URIRef, BNode
+from rdflib import XSD, Literal, URIRef, BNode
 from rdflib.namespace import RDF
 from decimal import *
 import numpy as np
@@ -437,7 +437,7 @@ class Esteemer():
             
             self.score_dict[i]=score_list
             
-            self.performer_graph.add((i, URIRef('http://example.com/slowmo#Score'), Literal(round(score_list[0],4))))
+            self.performer_graph.add((i, URIRef('http://example.com/slowmo#Score'), Literal(round(score_list[0],4),datatype=XSD.double)))
 
             self.comp_node_dict[i]=comp_node_list
             

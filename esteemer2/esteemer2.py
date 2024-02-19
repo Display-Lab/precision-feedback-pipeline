@@ -1,7 +1,7 @@
 import json
 import random
 
-from rdflib import RDF, BNode, Graph, Literal, URIRef
+from rdflib import RDF, XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
 
@@ -34,7 +34,9 @@ def score(performer_graph: Graph, candidate: BNode, history: json, preferences: 
     final_score = motivating_info["score"] + history_score + preference_score
 
     # update the candidate with the score
-    update_candidate_score(performer_graph, candidate, final_score,motivating_info["number_of_months"])
+    update_candidate_score(
+        performer_graph, candidate, final_score, motivating_info["number_of_months"]
+    )
 
 
 def calculate_motivating_info_score(performer_graph: Graph, candidate: BNode) -> dict:
@@ -57,19 +59,19 @@ def calculate_motivating_info_score(performer_graph: Graph, candidate: BNode) ->
     match causal_pathway.value:
         case "Social Worse":
             gap_size, type, number_of_months = get_gap_size(candidate_resource)
-            score = round(abs(gap_size),4)   
+            score = round(abs(gap_size), 4)
         case "Social better":
             gap_size, type, number_of_months = get_gap_size(candidate_resource)
-            score = round(abs(gap_size),4)
+            score = round(abs(gap_size), 4)
         case "Improving":
             trend_size, type, number_of_months = get_trend_info(candidate_resource)
-            score = round(abs(trend_size),4)
+            score = round(abs(trend_size), 4)
         case "Worsening":
             trend_size, type, number_of_months = get_trend_info(candidate_resource)
-            score = round(abs(trend_size),4)
+            score = round(abs(trend_size), 4)
         case _:
-            score = 0
-    return {"score": score, "type": type.n3(), "number_of_months": number_of_months }
+            score = 0.0
+    return {"score": score, "type": type.n3(), "number_of_months": number_of_months}
 
 
 def calculate_history_score(
@@ -105,7 +107,9 @@ def calculate_preference_score(
     return 0
 
 
-def update_candidate_score(performer_graph: Graph, candidate: BNode, score: float, number_of_months: int):
+def update_candidate_score(
+    performer_graph: Graph, candidate: BNode, score: float, number_of_months: int
+):
     """
     updates candidate score
 
@@ -118,11 +122,19 @@ def update_candidate_score(performer_graph: Graph, candidate: BNode, score: floa
     Returns:
     """
     performer_graph.add(
-        (candidate, URIRef("http://example.com/slowmo#Score"), Literal(score))
+        (
+            candidate,
+            URIRef("http://example.com/slowmo#Score"),
+            Literal(score, datatype=XSD.double),
+        )
     )
-    
+
     performer_graph.add(
-        (candidate, URIRef("http://example.com/slowmo#number_of_months"), Literal(number_of_months))
+        (
+            candidate,
+            URIRef("http://example.com/slowmo#number_of_months"),
+            Literal(number_of_months),
+        )
     )
 
 
@@ -167,7 +179,7 @@ def select_candidate(performer_graph: Graph) -> BNode:
     return selected_candidate
 
 
-def get_gap_size(candidate_resource: Resource) -> tuple[float, URIRef, None] :
+def get_gap_size(candidate_resource: Resource) -> tuple[float, URIRef, None]:
     performer_graph = candidate_resource.graph
     measure = candidate_resource.value(
         URIRef("http://example.com/slowmo#RegardingMeasure")
@@ -269,7 +281,7 @@ def get_trend_info(candidate_resource: Resource) -> tuple[float, URIRef, int]:
         URIRef("http://example.com/slowmo#PerformanceTrendSlope2"),
         None,
     ).value
-    
+
     number_of_months = performer_graph.value(
         dispositions[0].identifier,
         URIRef("http://example.com/slowmo#numberofmonths"),
