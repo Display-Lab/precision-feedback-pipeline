@@ -62,6 +62,7 @@ class Esteemer():
         for s,p,o in self.performer_graph.triples( (URIRef("http://example.com/app#display-lab"), URIRef("http://example.com/slowmo#HasCandidate"), None) ):
             s1 = o   
             for s,p,o in self.performer_graph.triples((s1, URIRef("slowmo:acceptable_by"), None)):
+                self.performer_graph.add((s, URIRef('http://example.com/slowmo#Score'), Literal(1)))
                 self.acceptable_by_candidates.append(s)
                 for s2,p2,o2 in self.performer_graph.triples((s1,URIRef("slowmo:moderator"),None)):
                     self.candidate_moderator_dict[s]=o2
@@ -416,7 +417,7 @@ class Esteemer():
             if (Literal('gap size'))and not(Literal('trend slope')) in self.candidate_moderator_dict[i]:
                 df_merged=df_a_new
                 # df_merged["gap_score"]=df_merged['Gaps']
-                df_merged["score"] = df_merged['Gaps']
+                df_merged["score"] = df_merged['signed_Gaps']
             if (Literal('trend slope'))and not(Literal('gap size')) in self.candidate_moderator_dict[i]:
                 df_merged=df_b_new
                 df_merged["score"] = df_merged['Trends'] 
@@ -424,10 +425,10 @@ class Esteemer():
                 if not b_full_list1:
                     df_merged=df_a_new
                     # df_merged["gap_score"]=df_merged['Gaps']
-                    df_merged["score"] = df_merged['Gaps']
+                    df_merged["score"] = df_merged['signed_Gaps']
                 else:
                     df_merged=pd.merge(df_a_new, df_b_new, on='comp_node')
-                    df_merged["score"] = df_merged['Gaps'] + df_merged['Trends']
+                    df_merged["score"] = df_merged['signed_Gaps'] + df_merged['Trends']
             
             # gap_score_list= df_merged['gap_score']
             # print(df_b_new)
@@ -436,9 +437,6 @@ class Esteemer():
             candidate_list.append(i)
             
             self.score_dict[i]=score_list
-            
-            self.performer_graph.add((i, URIRef('http://example.com/slowmo#Score'), Literal(score_list[0])))
-
             self.comp_node_dict[i]=comp_node_list
             
             self.df_final = self.df_final.append(df_merged, ignore_index = True)
@@ -449,17 +447,27 @@ class Esteemer():
         final_list=[]
         gap_df=self.df_final[self.df_final[['Gaps']].notnull().all(1)]
         gap_df = gap_df[['candidate_id', 'score']]
+        gap_df_s=pd.Series(gap_df.score)
+        print(gap_df_s)
+        index1=gap_df_s.max()
+        gap_max=gap_df.loc[gap_df['score'] == index1, 'candidate_id'].iloc[0]
+        print(gap_max)
         index = gap_df.nlargest(1, 'score')
-        gapmax=index['candidate_id'][0]
-        final_list.append(gapmax)
-        #calculate trend max
-        trend_df=self.df_final[(self.df_final[['Trends']].notnull().all(1))]
-        trend_df = trend_df[['candidate_id', 'score']]
-        trend_df = trend_df.reset_index()
-        index = trend_df.nlargest(1,'score')
-        trendmax=index['candidate_id'][0]
-        final_list.append(trendmax)
-        #choose random node between gapmax and trendmax
+        # gapmax=index['candidate_id'][1]
+        # print(gapmax)
+        final_list.append(gap_max)
+        # #calculate trend max
+        trend_df=self.df_final[(self.df_final[['Gaps']].isna().all(1))]
+        if not trend_df.empty:
+            trend_df = trend_df[['candidate_id', 'score']]
+            trend_df_s=pd.Series(trend_df.score)
+            print(trend_df_s)
+            index2=trend_df_s.max()
+            trend_max=trend_df.loc[trend_df['score'] == index2, 'candidate_id'].iloc[0]
+            print(trend_max)
+            # trendmax=index['candidate_id'][1]
+            final_list.append(trend_max)
+        
         Keymax=random.choice(final_list)
         # Keymax = max(zip(self.score_dict.values(), self.score_dict.keys()))[1]
         logger.debug(f'DF_Final is:\n{self.df_final}') 
