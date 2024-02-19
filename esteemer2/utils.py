@@ -205,11 +205,11 @@ def candidates_as_dictionary(performer_graph: Graph) -> dict:
 
 def candidate_as_dictionary(a_candidate: BNode, performer_graph: Graph) -> dict:
     representation = {}
-    score: float = performer_graph.value(
+    score = performer_graph.value(
             a_candidate, URIRef("http://example.com/slowmo#Score"), None
         )
     if score is not None: # Literal('0.0') tests as false, so test for None explicitly
-        score = float(score.value)  # and we are explicit floating to eliminate numpy types that give teh json decoder problems
+        score = float(score.value)  # and we are explicit floating to eliminate numpy types that give the json decoder problems
     representation["score"] = score
     
 

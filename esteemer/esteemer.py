@@ -62,7 +62,6 @@ class Esteemer():
         for s,p,o in self.performer_graph.triples( (URIRef("http://example.com/app#display-lab"), URIRef("http://example.com/slowmo#HasCandidate"), None) ):
             s1 = o   
             for s,p,o in self.performer_graph.triples((s1, URIRef("slowmo:acceptable_by"), None)):
-                self.performer_graph.add((s, URIRef('http://example.com/slowmo#Score'), Literal(1)))
                 self.acceptable_by_candidates.append(s)
                 for s2,p2,o2 in self.performer_graph.triples((s1,URIRef("slowmo:moderator"),None)):
                     self.candidate_moderator_dict[s]=o2
