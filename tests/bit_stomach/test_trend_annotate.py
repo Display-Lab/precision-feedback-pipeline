@@ -77,6 +77,7 @@ class Trend_annotateTestcase(unittest.TestCase):
         measure_Name = Literal("_:BP03")
         comparator_bnode = BNode("_:N23cd5c14a87644ac9b3366bae5213861")
         trend_slope = 1.1574074074074085e-17
+        trend_slope2 = 0
         intervals = 2
 
         # call method of test
@@ -86,6 +87,7 @@ class Trend_annotateTestcase(unittest.TestCase):
             measure_Name,
             comparator_bnode,
             trend_slope,
+            trend_slope2,
             intervals,
         )
         for s, p, o in Resultant_graph.triples(
@@ -184,6 +186,7 @@ class Trend_annotateTestcase(unittest.TestCase):
         measure_Name = Literal("_:BP03")
         comparator_bnode = BNode("_:N23cd5c14a87644ac9b3366bae5213861")
         trend_slope = -1.1574074074074085e-17
+        trend_slope2 = 0
         intervals = 2
 
         # call method of test
@@ -193,6 +196,7 @@ class Trend_annotateTestcase(unittest.TestCase):
             measure_Name,
             comparator_bnode,
             trend_slope,
+            trend_slope2,
             intervals,
         )
         for s, p, o in Resultant_graph.triples(

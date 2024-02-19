@@ -1,7 +1,7 @@
 import json
 import random
 
-from rdflib import RDF, BNode, Graph, Literal, URIRef
+from rdflib import RDF, XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
 
@@ -20,7 +20,7 @@ def score(performer_graph: Graph, candidate: BNode, history: json, preferences: 
     """
     # calculate sub-score
     # 1. based on motivating info
-    motivating_info_score = calculate_motivating_info_score(performer_graph, candidate)
+    motivating_info = calculate_motivating_info_score(performer_graph, candidate)
 
     # 2. based on history
     history_score = calculate_history_score(performer_graph, candidate, history)
@@ -31,13 +31,15 @@ def score(performer_graph: Graph, candidate: BNode, history: json, preferences: 
     )
 
     # calculate final score = function of sub-scores
-    final_score = motivating_info_score + history_score + preference_score
+    final_score = motivating_info["score"] + history_score + preference_score
 
     # update the candidate with the score
-    update_candidate_score(performer_graph, candidate, final_score)
+    update_candidate_score(
+        performer_graph, candidate, final_score, motivating_info["number_of_months"]
+    )
 
 
-def calculate_motivating_info_score(performer_graph: Graph, candidate: BNode) -> float:
+def calculate_motivating_info_score(performer_graph: Graph, candidate: BNode) -> dict:
     """
     calculates motivating info sub-score.
 
@@ -46,29 +48,30 @@ def calculate_motivating_info_score(performer_graph: Graph, candidate: BNode) ->
     - candidate (BNode): The candidate message.
 
     Returns:
-    float: motivating info sub score.
+    dict: motivating info.
     """
     candidate_resource = performer_graph.resource(
         candidate
     )  # move this one as far as possibly you can
     causal_pathway = list(candidate_resource.objects(URIRef("slowmo:acceptable_by")))[0]
 
+    # our scoring function right now takes the absolute value of moderator for each causal pathway
     match causal_pathway.value:
         case "Social Worse":
-            gap_size, gap_type = get_gap_size(candidate_resource)
-            score = gap_size
+            gap_size, type, number_of_months = get_gap_size(candidate_resource)
+            score = round(abs(gap_size), 4)
         case "Social better":
-            gap_size, gap_type = get_gap_size(candidate_resource)
-            score = gap_size
+            gap_size, type, number_of_months = get_gap_size(candidate_resource)
+            score = round(abs(gap_size), 4)
         case "Improving":
-            trend_size, gap_type = get_trend_size(candidate_resource)
-            score = trend_size
+            trend_size, type, number_of_months = get_trend_info(candidate_resource)
+            score = round(abs(trend_size), 4)
         case "Worsening":
-            trend_size, gap_type = get_trend_size(candidate_resource)
-            score = trend_size
+            trend_size, type, number_of_months = get_trend_info(candidate_resource)
+            score = round(abs(trend_size), 4)
         case _:
-            score = 0
-    return score
+            score = 0.0
+    return {"score": score, "type": type.n3(), "number_of_months": number_of_months}
 
 
 def calculate_history_score(
@@ -104,7 +107,9 @@ def calculate_preference_score(
     return 0
 
 
-def update_candidate_score(performer_graph: Graph, candidate: BNode, score: float):
+def update_candidate_score(
+    performer_graph: Graph, candidate: BNode, score: float, number_of_months: int
+):
     """
     updates candidate score
 
@@ -112,11 +117,24 @@ def update_candidate_score(performer_graph: Graph, candidate: BNode, score: floa
     - performer_graph (Graph): The graph to add the score to.
     - candidate (BNode): The candidate message.
     - score (float): The score.
+    - number_of_months (int): The number of months.
 
     Returns:
     """
     performer_graph.add(
-        (candidate, URIRef("http://example.com/slowmo#Score"), Literal(score))
+        (
+            candidate,
+            URIRef("http://example.com/slowmo#Score"),
+            Literal(score, datatype=XSD.double),
+        )
+    )
+
+    performer_graph.add(
+        (
+            candidate,
+            URIRef("http://example.com/slowmo#number_of_months"),
+            Literal(number_of_months),
+        )
     )
 
 
@@ -161,7 +179,7 @@ def select_candidate(performer_graph: Graph) -> BNode:
     return selected_candidate
 
 
-def get_gap_size(candidate_resource: Resource):
+def get_gap_size(candidate_resource: Resource) -> tuple[float, URIRef, None]:
     performer_graph = candidate_resource.graph
     measure = candidate_resource.value(
         URIRef("http://example.com/slowmo#RegardingMeasure")
@@ -211,16 +229,16 @@ def get_gap_size(candidate_resource: Resource):
         return 0, None
 
     gap_size = performer_graph.value(
-        dispositions[0], URIRef("http://example.com/slowmo#PerformanceGapSize"), None
+        dispositions[0], URIRef("http://example.com/slowmo#PerformanceGapSize2"), None
     ).value
 
     gap_type = performer_graph.value(
         dispositions[0], RDF.type, None
     )  # use gap_type.n3() to see the value
-    return gap_size, gap_type
+    return gap_size, gap_type, None
 
 
-def get_trend_size(candidate_resource: Resource):
+def get_trend_info(candidate_resource: Resource) -> tuple[float, URIRef, int]:
     performer_graph: Graph = candidate_resource.graph
     measure = candidate_resource.value(
         URIRef("http://example.com/slowmo#RegardingMeasure")
@@ -260,9 +278,15 @@ def get_trend_size(candidate_resource: Resource):
 
     trend_size = performer_graph.value(
         dispositions[0].identifier,
-        URIRef("http://example.com/slowmo#PerformanceTrendSlope"),
+        URIRef("http://example.com/slowmo#PerformanceTrendSlope2"),
+        None,
+    ).value
+
+    number_of_months = performer_graph.value(
+        dispositions[0].identifier,
+        URIRef("http://example.com/slowmo#numberofmonths"),
         None,
     ).value
 
     trend_type = performer_graph.value(dispositions[0].identifier, RDF.type, None)
-    return trend_size, trend_type
+    return trend_size, trend_type, number_of_months
