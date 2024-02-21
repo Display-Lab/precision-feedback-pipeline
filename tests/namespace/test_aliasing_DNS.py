@@ -2,7 +2,7 @@ import pytest
 from rdflib import Namespace, URIRef
 
 from utils.namespace import (
-    AliasingDefinedNamespace,  # Replace with the actual module name
+    AliasingDefinedNamespace,
 )
 
 
@@ -76,7 +76,6 @@ def test_alias_without_attribute():
         
     # Test alias without attribute
     # No need to add alias to _extras, non-attribute alias is handled directly
-    NS._alias["baz"] = "FOO"
     assert NS.baz in NS
     assert NS.baz == NS.FOO
         

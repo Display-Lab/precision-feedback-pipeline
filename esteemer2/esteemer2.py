@@ -3,7 +3,7 @@ import random
 
 from rdflib import RDF, XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
-
+from utils.namespace import PSDO
 
 def score(performer_graph: Graph, candidate: BNode, history: json, preferences: json):
     """
@@ -212,13 +212,13 @@ def get_gap_size(candidate_resource: Resource) -> tuple[float, URIRef, None]:
                 (
                     disposition,
                     RDF.type,
-                    URIRef("http://purl.obolibrary.org/obo/PSDO_0000104"),
+                    PSDO.positive_performance_gap_content,
                 )
                 in performer_graph
                 or (
                     disposition,
                     RDF.type,
-                    URIRef("http://purl.obolibrary.org/obo/PSDO_0000105"),
+                    PSDO.negative_performance_gap_content,
                 )
                 in performer_graph
             )
