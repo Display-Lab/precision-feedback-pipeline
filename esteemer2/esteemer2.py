@@ -61,13 +61,13 @@ def calculate_motivating_info_score(performer_graph: Graph, candidate: BNode) ->
     match causal_pathway.value:
         case "Social Worse":
             gap_size, type, number_of_months = get_gap_size(candidate_resource)
-            score = round(abs(gap_size), 4)
+            score = round(abs(gap_size), 4) / 5 - 0.02
         case "Social better":
             gap_size, type, number_of_months = get_gap_size(candidate_resource)
-            score = round(abs(gap_size), 4)
+            score = round(abs(gap_size), 4) + 0.02
         case "Improving":
             trend_size, type, number_of_months = get_trend_info(candidate_resource)
-            score = round(abs(trend_size), 4)
+            score = round(abs(trend_size), 4) * 5
         case "Worsening":
             trend_size, type, number_of_months = get_trend_info(candidate_resource)
             score = round(abs(trend_size), 4)

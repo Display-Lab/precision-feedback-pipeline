@@ -37,7 +37,7 @@ class Settings:
         self.display_window = config('display_window', cast=int, default=6)
         self.plot_goal_line = config('plot_goal_line', cast=bool, default=True)
         
-        self.esteemer2 = config('esteemer2', cast=bool, default=False)
+        self.esteemer2 = config('esteemer2', cast=bool, default=True)
 
 # Instantiate
 settings = Settings()
