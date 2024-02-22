@@ -4,6 +4,8 @@ import random
 from rdflib import RDF, XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
+from utils.namespace import PSDO, SLOWMO, RO
+
 
 def score(performer_graph: Graph, candidate: BNode, history: json, preferences: json):
     """
@@ -124,7 +126,7 @@ def update_candidate_score(
     performer_graph.add(
         (
             candidate,
-            URIRef("http://example.com/slowmo#Score"),
+            SLOWMO.Score,
             Literal(score, datatype=XSD.double),
         )
     )
@@ -132,7 +134,7 @@ def update_candidate_score(
     performer_graph.add(
         (
             candidate,
-            URIRef("http://example.com/slowmo#number_of_months"),
+            SLOWMO.numberofmonths,
             Literal(number_of_months),
         )
     )
@@ -154,20 +156,13 @@ def select_candidate(performer_graph: Graph) -> BNode:
 
     # Find the max score
     max_score = max(
-        [
-            score
-            for _, score in performer_graph.subject_objects(
-                URIRef("http://example.com/slowmo#Score")
-            )
-        ],
+        [score for _, score in performer_graph.subject_objects(SLOWMO.Score)],
         default=None,
     )
 
     candidates_with_max_score = [
         (candidate)
-        for candidate, score in performer_graph.subject_objects(
-            URIRef("http://example.com/slowmo#Score")
-        )
+        for candidate, score in performer_graph.subject_objects(SLOWMO.Score)
         if score == max_score
     ]
 
@@ -181,30 +176,26 @@ def select_candidate(performer_graph: Graph) -> BNode:
 
 def get_gap_size(candidate_resource: Resource) -> tuple[float, URIRef, None]:
     performer_graph = candidate_resource.graph
-    measure = candidate_resource.value(
-        URIRef("http://example.com/slowmo#RegardingMeasure")
-    )
+    measure = candidate_resource.value(SLOWMO.RegardingMeasure)
 
-    comparator = candidate_resource.value(
-        URIRef("http://example.com/slowmo#RegardingComparator")
-    )
+    comparator = candidate_resource.value(SLOWMO.RegardingComparator)
 
     dispositions: list[Resource] = [
         disposition
         for disposition in performer_graph.objects(
             subject=BNode("p1"),
-            predicate=URIRef("http://purl.obolibrary.org/obo/RO_0000091"),
+            predicate=RO.has_disposition,
         )
         if (
             (
                 disposition,
-                URIRef("http://example.com/slowmo#RegardingComparator"),
+                SLOWMO.RegardingComparator,
                 comparator.identifier,
             )
             in performer_graph
             and (
                 disposition,
-                URIRef("http://example.com/slowmo#RegardingMeasure"),
+                SLOWMO.RegardingMeasure,
                 measure.identifier,
             )
             in performer_graph
@@ -212,13 +203,13 @@ def get_gap_size(candidate_resource: Resource) -> tuple[float, URIRef, None]:
                 (
                     disposition,
                     RDF.type,
-                    URIRef("http://purl.obolibrary.org/obo/PSDO_0000104"),
+                    PSDO.positive_performance_gap_content,
                 )
                 in performer_graph
                 or (
                     disposition,
                     RDF.type,
-                    URIRef("http://purl.obolibrary.org/obo/PSDO_0000105"),
+                    PSDO.negative_performance_gap_content,
                 )
                 in performer_graph
             )
@@ -229,7 +220,7 @@ def get_gap_size(candidate_resource: Resource) -> tuple[float, URIRef, None]:
         return 0, None
 
     gap_size = performer_graph.value(
-        dispositions[0], URIRef("http://example.com/slowmo#PerformanceGapSize2"), None
+        dispositions[0], SLOWMO.PerformanceGapSize2, None
     ).value
 
     gap_type = performer_graph.value(
@@ -240,19 +231,17 @@ def get_gap_size(candidate_resource: Resource) -> tuple[float, URIRef, None]:
 
 def get_trend_info(candidate_resource: Resource) -> tuple[float, URIRef, int]:
     performer_graph: Graph = candidate_resource.graph
-    measure = candidate_resource.value(
-        URIRef("http://example.com/slowmo#RegardingMeasure")
-    )
+    measure = candidate_resource.value(SLOWMO.RegardingMeasure)
 
     p1 = performer_graph.resource(BNode("p1"))
 
     dispositions: list[Resource] = [
         disposition
-        for disposition in p1[URIRef("http://purl.obolibrary.org/obo/RO_0000091")]
+        for disposition in p1[RO.has_disposition]
         if (
             (
                 disposition.identifier,
-                URIRef("http://example.com/slowmo#RegardingMeasure"),
+                SLOWMO.RegardingMeasure,
                 measure.identifier,
             )
             in performer_graph
@@ -260,13 +249,13 @@ def get_trend_info(candidate_resource: Resource) -> tuple[float, URIRef, int]:
                 (
                     disposition.identifier,
                     RDF.type,
-                    URIRef("http://purl.obolibrary.org/obo/PSDO_0000099"),
+                    PSDO.positive_performance_trend_content,
                 )
                 in performer_graph
                 or (
                     disposition.identifier,
                     RDF.type,
-                    URIRef("http://purl.obolibrary.org/obo/PSDO_0000100"),
+                    PSDO.negative_performance_trend_content,
                 )
                 in performer_graph
             )
@@ -278,15 +267,15 @@ def get_trend_info(candidate_resource: Resource) -> tuple[float, URIRef, int]:
 
     trend_size = performer_graph.value(
         dispositions[0].identifier,
-        URIRef("http://example.com/slowmo#PerformanceTrendSlope2"),
+        SLOWMO.PerformanceTrendSlope2,
         None,
     ).value
 
     number_of_months = performer_graph.value(
         dispositions[0].identifier,
-        URIRef("http://example.com/slowmo#numberofmonths"),
+        SLOWMO.numberofmonths,
         None,
     ).value
 
     trend_type = performer_graph.value(dispositions[0].identifier, RDF.type, None)
-    return trend_size, trend_type, number_of_months
+    return float(trend_size), trend_type, number_of_months

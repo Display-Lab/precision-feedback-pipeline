@@ -20,10 +20,11 @@ requests_file = "1.5.1"
 python-decouple = "^3.8"
 loguru = "^0.7.2"
 
+
 [tool.poetry.dev-dependencies]
 uvicorn = "^0.20.0"
 pytest = "^8.0.0"
-
+python-slugify = "^8.0.4"
 
 [build-system]
 requires = ["poetry-core"]
