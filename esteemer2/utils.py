@@ -3,6 +3,8 @@ from typing import List
 
 from rdflib import RDF, BNode, Graph, URIRef
 
+from utils.namespace import PSDO, SLOWMO, RO
+
 
 def measures(performer_graph: Graph) -> List[BNode]:
     """
@@ -16,7 +18,7 @@ def measures(performer_graph: Graph) -> List[BNode]:
     """
     measures = performer_graph.objects(
         URIRef("http://example.com/app#display-lab"),
-        URIRef("http://example.com/slowmo#IsAboutMeasure"),
+        SLOWMO.IsAboutMeasure,
     )
     measure_list = list(measures)
     return measure_list
@@ -39,12 +41,11 @@ def candidates(
     candidates = [
         subject
         for subject in performer_graph.subjects(
-            predicate=URIRef("http://example.com/slowmo#RegardingMeasure"),
+            predicate=SLOWMO.RegardingMeasure,
             object=measure,
         )
         if (
-            (subject, RDF.type, URIRef("http://example.com/slowmo#Candidate"))
-            in performer_graph
+            (subject, RDF.type, SLOWMO.Candidate) in performer_graph
             and (
                 subject,
                 URIRef("slowmo:acceptable_by") if filter_acceptable else None,
@@ -117,7 +118,7 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
         s_m["message_text"] = "No message selected"
         return s_m
     else:
-        temp_name = URIRef("http://example.com/slowmo#name")  # URI of template name?
+        temp_name = SLOWMO.name  # URI of template name?
         p232 = URIRef("psdo:PerformanceSummaryDisplay")
         Display = ["text only", "bar chart", "line graph"]
         comparator_types = ["Top 25", "Top 10", "Peers", "Goal"]
@@ -126,7 +127,7 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
 
         ## Format selected_candidate to return for pictoralist-ing
         for s21, p21, o21 in performer_graph.triples(
-            (candidate, URIRef("http://example.com/slowmo#AncestorTemplate"), None)
+            (candidate, SLOWMO.AncestorTemplate, None)
         ):
             s_m["template_id"] = o21
         # Duplicate logic above and use to pull template name
@@ -152,12 +153,12 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
         comparator_list = []
 
         for s5, p5, o5 in performer_graph.triples(
-            (candidate, URIRef("http://purl.obolibrary.org/obo/RO_0000091"), None)
+            (candidate, RO.has_disposition, None)
         ):
             s6 = o5
             # print(o5)
             for s7, p7, o7 in performer_graph.triples(
-                (s6, URIRef("http://example.com/slowmo#RegardingMeasure"), None)
+                (s6, SLOWMO.RegardingMeasure, None)
             ):
                 s_m["measure_name"] = o7
                 s10 = BNode(o7)
@@ -167,16 +168,16 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
                     s_m["measure_title"] = o11
             for s14, p14, o14 in performer_graph.triples((s6, RDF.type, None)):
                 # print(o14)
-                if o14 == URIRef("http://purl.obolibrary.org/obo/PSDO_0000128"):
+                if o14 == PSDO.peer_75th_percentile_benchmark:
                     comparator_list.append("Top 25")
                     # s_m["comparator_type"]="Top 25"
-                if o14 == URIRef("http://purl.obolibrary.org/obo/PSDO_0000129"):
+                if o14 == PSDO.peer_90th_percentile_benchmark:
                     comparator_list.append("Top 10")
                     # s_m["comparator_type"]="Top 10"
-                if o14 == URIRef("http://purl.obolibrary.org/obo/PSDO_0000126"):
+                if o14 == PSDO.peer_average_comparator:
                     comparator_list.append("Peers")
                     # s_m["comparator_type"]="Peers"
-                if o14 == URIRef("http://purl.obolibrary.org/obo/PSDO_0000094"):
+                if o14 == PSDO.goal_comparator_content:
                     comparator_list.append("Goal")
                     # s_m["comparator_type"]="Goal"
         for i in comparator_list:
@@ -197,32 +198,30 @@ def candidates_as_dictionary(performer_graph: Graph) -> dict:
     dict: The representation of candidates as a dictionary.
     """
     candidate_list = []
-    
+
     for a_candidate in candidates(performer_graph):
         representation = candidate_as_dictionary(a_candidate, performer_graph)
         candidate_list.append(representation)
     return candidate_list
 
+
 def candidate_as_dictionary(a_candidate: BNode, performer_graph: Graph) -> dict:
     representation = {}
-    score = performer_graph.value(
-            a_candidate, URIRef("http://example.com/slowmo#Score"), None
-        )
-    if score is not None: # Literal('0.0') tests as false, so test for None explicitly
-        score = float(score.value)  # and we are explicit floating to eliminate numpy types that give the json decoder problems
+    score = performer_graph.value(a_candidate, SLOWMO.Score, None)
+    if score is not None:  # Literal('0.0') tests as false, so test for None explicitly
+        score = float(
+            score.value
+        )  # and we are explicit floating to eliminate numpy types that give the json decoder problems
     representation["score"] = score
-    
 
-    representation["number_of_months"]= performer_graph.value(
-            a_candidate, URIRef("http://example.com/slowmo#number_of_months"), None
-        )
+    representation["number_of_months"] = performer_graph.value(
+        a_candidate, SLOWMO.numberofmonths, None
+    )
 
     representation["measure"] = performer_graph.value(
-            a_candidate, URIRef("http://example.com/slowmo#RegardingMeasure"), None
-        )
-    representation["name"] = performer_graph.value(
-            a_candidate, URIRef("http://example.com/slowmo#name"), None
-        )
+        a_candidate, SLOWMO.RegardingMeasure, None
+    )
+    representation["name"] = performer_graph.value(a_candidate, SLOWMO.name, None)
     representation["acceptable_by"] = list(
         performer_graph.objects(a_candidate, URIRef("slowmo:acceptable_by"))
     )  # converting to list ro allow repeated access
