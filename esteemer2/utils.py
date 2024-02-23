@@ -3,7 +3,7 @@ from typing import List
 
 from rdflib import RDF, BNode, Graph, URIRef
 
-from utils.namespace import PSDO, SLOWMO, RO
+from utils.namespace import PSDO, RO, SLOWMO
 
 
 def measures(performer_graph: Graph) -> List[BNode]:
@@ -209,9 +209,10 @@ def candidate_as_dictionary(a_candidate: BNode, performer_graph: Graph) -> dict:
     representation = {}
     score = performer_graph.value(a_candidate, SLOWMO.Score, None)
     if score is not None:  # Literal('0.0') tests as false, so test for None explicitly
-        score = float(
-            score.value
+        score = round(
+            float(score.value), 4
         )  # and we are explicit floating to eliminate numpy types that give the json decoder problems
+
     representation["score"] = score
 
     representation["number_of_months"] = performer_graph.value(

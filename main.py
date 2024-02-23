@@ -226,7 +226,8 @@ async def createprecisionfeedback(info:Request):
         for measure in utils.measures(performer_graph): 
             candidates = utils.measure_acceptable_candidates(performer_graph, measure)
             for candidate in candidates:
-                esteemer2.score(performer_graph, candidate, history, preferences)
+                candidate_resource = performer_graph.resource(candidate)  
+                esteemer2.score(candidate_resource, history, preferences)
         selected_candidate = esteemer2.select_candidate(performer_graph)
         
         #print updated graph by esteemer2
