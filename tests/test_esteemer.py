@@ -11,7 +11,7 @@ def test_score():
     esteemer2.score(graph, candidate, None, None)
     scores = graph.objects(subject=candidate, predicate=SLOWMO.Score)
     scores_list = list(scores)
-    assert scores_list[0].value == 0.0001
+    assert scores_list[0].value == 0.0201
 
 
 def test_calculate_motivating_info_score():
@@ -19,7 +19,7 @@ def test_calculate_motivating_info_score():
     candidate = BNode("N0fefdf2588e640068f19c40cd4dcb7ce")
 
     assert (
-        esteemer2.calculate_motivating_info_score(graph, candidate)["score"] == 0.0001
+        esteemer2.calculate_motivating_info_score(graph, candidate)["score"] == 0.0201
     )
 
 

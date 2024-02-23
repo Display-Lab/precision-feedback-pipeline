@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, Mock
-from bit_stomach import trend_annotate,prepare_data_annotate,score
+from bit_stomach import trend_annotate,prepare_data_annotate
 import pandas as pd
 import json
 import rdflib
