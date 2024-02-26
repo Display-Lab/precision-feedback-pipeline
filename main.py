@@ -222,12 +222,10 @@ async def createprecisionfeedback(info:Request):
     if settings.esteemer2 is True:
         logger.info("Calling Esteemer 2 from main...")
 
-        candidates: List[BNode]
         for measure in utils.measures(performer_graph): 
-            candidates = utils.measure_acceptable_candidates(performer_graph, measure)
+            candidates = utils.candidates(performer_graph, filter_acceptable=True, measure=measure)
             for candidate in candidates:
-                candidate_resource = performer_graph.resource(candidate)  
-                esteemer2.score(candidate_resource, history, preferences)
+                esteemer2.score(candidate, history, preferences)
         selected_candidate = esteemer2.select_candidate(performer_graph)
         
         #print updated graph by esteemer2

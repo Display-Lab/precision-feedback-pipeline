@@ -2,6 +2,7 @@ import random
 from typing import List
 
 from rdflib import RDF, BNode, Graph, URIRef
+from rdflib.resource import Resource
 
 from utils.namespace import PSDO, RO, SLOWMO
 
@@ -26,9 +27,9 @@ def measures(performer_graph: Graph) -> List[BNode]:
 
 def candidates(
     performer_graph: Graph, measure: BNode = None, filter_acceptable: bool = False
-) -> List[BNode]:
+) -> List[Resource]:
     """
-    Retrieve a list of candidates from the performer graph.
+    Retrieve a list of candidate resources from the performer graph.
 
     Parameters:
         performer_graph (Graph): The performer_graph.
@@ -36,68 +37,26 @@ def candidates(
         filter_acceptable (bool, optional): Whether to filter candidates based on acceptability. Defaults to False.
 
     Returns:
-        List[BNode]: A list of candidate BNodes.
+        List[Resource]: A list of candidate BNodes.
     """
+    
+  
     candidates = [
-        subject
-        for subject in performer_graph.subjects(
-            predicate=SLOWMO.RegardingMeasure,
-            object=measure,
-        )
-        if (
-            (subject, RDF.type, SLOWMO.Candidate) in performer_graph
-            and (
-                subject,
-                URIRef("slowmo:acceptable_by") if filter_acceptable else None,
-                None,
-            )
-            in performer_graph
-        )
+        performer_graph.resource(subject)
+        for subject in performer_graph.subjects(RDF.type,SLOWMO.Candidate )       
     ]
-
-    return list(candidates)
-
-
-# create an acceptable method
-# use triples.triples
-def measure_acceptable_candidates(
-    performer_graph: Graph, measure: BNode
-) -> List[BNode]:
-    """
-    extracts the list of acceptable candidates for a measure and applies measure business rules.
-
-    Parameters:
-    - performer_graph (Graph): The performer_graph.
-    - measure (BNode): The measure.
-
-    Returns:
-    List[BNode]: returns list of acceptible candidates.
-    """
-    # extract the list of acceptible candidates for a measure
-    candidate_list = candidates(
-        performer_graph, filter_acceptable=True, measure=measure
-    )
-
-    # apply measure business rules
-    candidate_list = apply_measure_business_rules(performer_graph, candidate_list)
-
-    return candidate_list
-
-
-def apply_measure_business_rules(
-    performer_graph: Graph, candidate_list: List[BNode]
-) -> List[BNode]:
-    """
-    applies measure business rules on candidate messages of a measure.
-
-    Parameters:
-    - performer_graph (Graph): The performer_graph.
-    - candidate_list (List[BNode]): The candidate list.
-
-    Returns:
-    List[BNode]: returns the updated candidate list.
-    """
-    return candidate_list
+    
+    candidates = [
+        candidate
+        for candidate in candidates    
+        if(
+            (measure is None or candidate.value(SLOWMO.RegardingMeasure).identifier == measure)  
+           and
+            (not filter_acceptable or candidate.value(URIRef("slowmo:acceptable_by")) is not None)
+           ) 
+    ]
+    
+    return candidates
 
 
 def render(performer_graph: Graph, candidate: BNode) -> dict:
@@ -200,14 +159,14 @@ def candidates_as_dictionary(performer_graph: Graph) -> dict:
     candidate_list = []
 
     for a_candidate in candidates(performer_graph):
-        representation = candidate_as_dictionary(a_candidate, performer_graph)
+        representation = candidate_as_dictionary(a_candidate)
         candidate_list.append(representation)
     return candidate_list
 
 
-def candidate_as_dictionary(a_candidate: BNode, performer_graph: Graph) -> dict:
+def candidate_as_dictionary(a_candidate: Resource) -> dict:
     representation = {}
-    score = performer_graph.value(a_candidate, SLOWMO.Score, None)
+    score = a_candidate.value(SLOWMO.Score) 
     if score is not None:  # Literal('0.0') tests as false, so test for None explicitly
         score = round(
             float(score.value), 4
@@ -215,19 +174,11 @@ def candidate_as_dictionary(a_candidate: BNode, performer_graph: Graph) -> dict:
 
     representation["score"] = score
 
-    representation["number_of_months"] = performer_graph.value(
-        a_candidate, SLOWMO.numberofmonths, None
-    )
+    representation["number_of_months"] = a_candidate.value(SLOWMO.numberofmonths)
 
-    representation["measure"] = performer_graph.value(
-        a_candidate, SLOWMO.RegardingMeasure, None
-    )
-    representation["name"] = performer_graph.value(a_candidate, SLOWMO.name, None)
-    representation["acceptable_by"] = list(
-        performer_graph.objects(a_candidate, URIRef("slowmo:acceptable_by"))
-    )  # converting to list ro allow repeated access
-    representation["selected"] = performer_graph.value(
-        a_candidate, URIRef("slowmo:selected"), None
-    )
+    representation["measure"] = a_candidate.value(SLOWMO.RegardingMeasure).identifier
+    representation["name"] = a_candidate.value( SLOWMO.name)
+    representation["acceptable_by"] =  a_candidate.value( URIRef("slowmo:acceptable_by"))
+    representation["selected"] = a_candidate.value( URIRef("slowmo:selected"))
 
     return representation
