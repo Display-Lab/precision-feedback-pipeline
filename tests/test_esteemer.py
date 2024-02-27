@@ -1,12 +1,15 @@
-from rdflib import BNode
+import pytest
+from rdflib import BNode, Graph
 
 from esteemer2 import esteemer2
-from tests.test_utils import get_graph
 from utils.namespace import SLOWMO
 
 
-def test_score():
-    graph = get_graph("tests/spek_tp.json")
+@pytest.fixture
+def graph():
+    return Graph().parse("tests/spek_tp.json")
+
+def test_score(graph):
     candidate = BNode("N0fefdf2588e640068f19c40cd4dcb7ce")
     candidate_resource = graph.resource(candidate)
     esteemer2.score(candidate_resource, None, None)
@@ -15,8 +18,7 @@ def test_score():
     assert scores_list[0].value == 0.0201
 
 
-def test_calculate_motivating_info_score():
-    graph = get_graph("tests/spek_tp.json")
+def test_calculate_motivating_info_score(graph):
     candidate = BNode("N0fefdf2588e640068f19c40cd4dcb7ce")
     candidate_resource = graph.resource(candidate)
 
@@ -25,24 +27,21 @@ def test_calculate_motivating_info_score():
     )
 
 
-def test_calculate_history_score():
-    graph = get_graph("tests/spek_tp.json")
+def test_calculate_history_score(graph):
     candidate = BNode("N0fefdf2588e640068f19c40cd4dcb7ce")
     candidate_resource = graph.resource(candidate)
 
     assert esteemer2.calculate_history_score(candidate_resource, None) == 0
 
 
-def test_calculate_preference_score():
-    graph = get_graph("tests/spek_tp.json")
+def test_calculate_preference_score(graph):
     candidate = BNode("N0fefdf2588e640068f19c40cd4dcb7ce")
     candidate_resource = graph.resource(candidate)
 
     assert esteemer2.calculate_preference_score(candidate_resource, None) == 0
 
 
-def test_update_candidate_score():
-    graph = get_graph("tests/spek_tp.json")
+def test_update_candidate_score(graph):
     candidate = BNode("N0fefdf2588e640068f19c40cd4dcb7ce")
     candidate_resource = graph.resource(candidate)
 
@@ -53,9 +52,8 @@ def test_update_candidate_score():
 
 
 def test_select_candidate():
-    graph = get_graph(
-        "tests/spek_st.json"
-    )  # get graph that has candidates scored by esteemer
+    graph = Graph().parse("tests/spek_st.json")
+    # get graph that has candidates scored by esteemer
     selected_candidate = esteemer2.select_candidate(graph)
     assert str(selected_candidate) in [
         "N0fefdf2588e640068f19c40cd4dcb7ce",
@@ -63,8 +61,7 @@ def test_select_candidate():
     ]
 
 
-def test_get_gap_info():
-    graph = get_graph("tests/spek_tp.json")
+def test_get_gap_info(graph):
     candidate = BNode("N0fefdf2588e640068f19c40cd4dcb7ce")
     candidate_resource = graph.resource(candidate)
     gap_size, type, number_of_months = esteemer2.get_gap_info(candidate_resource)
@@ -73,8 +70,7 @@ def test_get_gap_info():
     assert number_of_months is None
 
 
-def test_get_trend_info():
-    graph = get_graph("tests/spek_tp.json")
+def test_get_trend_info(graph):
     candidate = BNode("N0fefdf2588e640068f19c40cd4dcb7ce")
     candidate_resource = graph.resource(candidate)
     trend_size, type, number_of_months = esteemer2.get_trend_info(candidate_resource)
