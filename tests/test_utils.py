@@ -1,7 +1,7 @@
 import pytest
 from rdflib import BNode, Graph
 
-from esteemer2 import utils
+from esteemer import utils
 
 
 @pytest.fixture

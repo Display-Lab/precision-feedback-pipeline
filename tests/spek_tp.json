@@ -495,13 +495,8 @@
         "@id": "_:N7befa613cdc943fe8560539da16a1bd6",
         "@type": [
             "http://purl.obolibrary.org/obo/PSDO_0000104"
-        ],
+        ],        
         "http://example.com/slowmo#PerformanceGapSize": [
-            {
-                "@value": 0.04999999999999993
-            }
-        ],
-        "http://example.com/slowmo#PerformanceGapSize2": [
             {
                 "@value": 0.04999999999999993
             }
@@ -555,12 +550,8 @@
         "@type": [
             "http://purl.obolibrary.org/obo/PSDO_0000104"
         ],
+       
         "http://example.com/slowmo#PerformanceGapSize": [
-            {
-                "@value": 0.04999999999999993
-            }
-        ],
-        "http://example.com/slowmo#PerformanceGapSize2": [
             {
                 "@value": 0.04999999999999993
             }
@@ -614,12 +605,8 @@
         "@type": [
             "http://purl.obolibrary.org/obo/PSDO_0000105"
         ],
+       
         "http://example.com/slowmo#PerformanceGapSize": [
-            {
-                "@value": -0.010000000000000009
-            }
-        ],
-        "http://example.com/slowmo#PerformanceGapSize2": [
             {
                 "@value": -0.010000000000000009
             }
@@ -673,12 +660,8 @@
         "@type": [
             "http://purl.obolibrary.org/obo/PSDO_0000104"
         ],
+       
         "http://example.com/slowmo#PerformanceGapSize": [
-            {
-                "@value": 0.029999999999999916
-            }
-        ],
-        "http://example.com/slowmo#PerformanceGapSize2": [
             {
                 "@value": 0.029999999999999916
             }
@@ -731,12 +714,8 @@
         "@type": [
             "http://purl.obolibrary.org/obo/PSDO_0000104"
         ],
+       
         "http://example.com/slowmo#PerformanceGapSize": [
-            {
-                "@value": 0.05999999999999994
-            }
-        ],
-        "http://example.com/slowmo#PerformanceGapSize2": [
             {
                 "@value": 0.05999999999999994
             }
@@ -790,12 +769,8 @@
         "@type": [
             "http://purl.obolibrary.org/obo/PSDO_0000104"
         ],
+       
         "http://example.com/slowmo#PerformanceGapSize": [
-            {
-                "@value": 0.05999999999999994
-            }
-        ],
-        "http://example.com/slowmo#PerformanceGapSize2": [
             {
                 "@value": 0.05999999999999994
             }
@@ -849,12 +824,8 @@
         "@type": [
             "http://purl.obolibrary.org/obo/PSDO_0000104"
         ],
+        
         "http://example.com/slowmo#PerformanceGapSize": [
-            {
-                "@value": 0.00009
-            }
-        ],
-        "http://example.com/slowmo#PerformanceGapSize2": [
             {
                 "@value": 0.00009
             }
@@ -876,11 +847,6 @@
             "http://purl.obolibrary.org/obo/PSDO_0000099"
         ],
         "http://example.com/slowmo#PerformanceTrendSlope": [
-            {
-                "@value": 0.0034
-            }
-        ],
-        "http://example.com/slowmo#PerformanceTrendSlope2": [
             {
                 "@value": "0.0034"
             }
@@ -905,13 +871,8 @@
         "@id": "_:N241d92b42a4a4b8f8601e5893da2b614",
         "@type": [
             "http://purl.obolibrary.org/obo/PSDO_0000104"
-        ],
+        ],        
         "http://example.com/slowmo#PerformanceGapSize": [
-            {
-                "@value": 0.0
-            }
-        ],
-        "http://example.com/slowmo#PerformanceGapSize2": [
             {
                 "@value": 0.0
             }
@@ -964,13 +925,8 @@
         "@id": "_:Nb43492eb7bc541cfaf4169bc2e631604",
         "@type": [
             "http://purl.obolibrary.org/obo/PSDO_0000104"
-        ],
+        ],       
         "http://example.com/slowmo#PerformanceGapSize": [
-            {
-                "@value": 0.039999999999999925
-            }
-        ],
-        "http://example.com/slowmo#PerformanceGapSize2": [
             {
                 "@value": 0.039999999999999925
             }
