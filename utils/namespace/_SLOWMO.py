@@ -8,8 +8,8 @@ class SLOWMO(AliasingDefinedNamespace):
     # http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
     RegardingMeasure: URIRef
     RegardingComparator: URIRef
-    PerformanceGapSize2: URIRef
-    PerformanceTrendSlope2: URIRef
+    PerformanceGapSize: URIRef
+    PerformanceTrendSlope: URIRef
     numberofmonths: URIRef
     Score: URIRef
     IsAboutMeasure: URIRef

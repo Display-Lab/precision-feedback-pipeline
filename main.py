@@ -5,7 +5,6 @@ from fastapi import FastAPI, Request, HTTPException
 from thinkpudding.thinkpudding import Thinkpudding
 from bit_stomach.bit_stomach import Bit_stomach
 from pictoralist.pictoralist import Pictoralist
-from esteemer.esteemer import Esteemer
 from requests_file import FileAdapter
 from utils.settings import settings
 from loguru import logger
@@ -18,7 +17,7 @@ import json
 import sys
 import os
 
-from esteemer2 import utils, esteemer2
+from esteemer import utils, esteemer
 
 global templates, pathways, measures
 
@@ -218,35 +217,27 @@ async def createprecisionfeedback(info:Request):
         f.close()
 
     # #Esteemer
-      
-    if settings.esteemer2 is True:
-        logger.info("Calling Esteemer 2 from main...")
+    logger.info("Calling Esteemer from main...")
 
-        for measure in utils.measures(performer_graph): 
-            candidates = utils.candidates(performer_graph, filter_acceptable=True, measure=measure)
-            for candidate in candidates:
-                esteemer2.score(candidate, history, preferences)
-        selected_candidate = esteemer2.select_candidate(performer_graph)
-        
-        #print updated graph by esteemer2
-        if settings.outputs is True and settings.log_level == "DEBUG":
-            st=performer_graph.serialize(format='json-ld', indent=4)
-            folderName = "outputs"
-            os.makedirs(folderName, exist_ok=True)
-            f = open("outputs/spek_st.json", "w")
-            f.write(st)
-            f.close()
+    for measure in utils.measures(performer_graph): 
+        candidates = utils.candidates(performer_graph, filter_acceptable=True, measure=measure)
+        for candidate in candidates:
+            esteemer.score(candidate, history, preferences)
+    selected_candidate = esteemer.select_candidate(performer_graph)
+    
+    #print updated graph by esteemer
+    if settings.outputs is True and settings.log_level == "DEBUG":
+        st=performer_graph.serialize(format='json-ld', indent=4)
+        folderName = "outputs"
+        os.makedirs(folderName, exist_ok=True)
+        f = open("outputs/spek_st.json", "w")
+        f.write(st)
+        f.close()
                     
-        selected_message = utils.render(performer_graph, selected_candidate)
+    selected_message = utils.render(performer_graph, selected_candidate)
         
     
-    else: 
-        logger.info("Calling Esteemer 1 from main...")
-
-        selected_message = esteemer1(
-            performance_data_df, history, preferences, mpm_df, performer_graph
-            )  
-
+   
     ### Pictoralist 2, now on the Nintendo DS: ###
     logger.info("Calling Pictoralist from main...")
     if selected_message["message_text"]!= "No message selected":        
@@ -263,24 +254,7 @@ async def createprecisionfeedback(info:Request):
     
     return full_selected_message
 
-def esteemer1(performance_data_df, history, preferences, mpm_df, performer_graph: Graph):
-    measure_list = performance_data_df["measure"].drop_duplicates()
-    # print(*measure_list)
-    es = Esteemer(performer_graph, measure_list, preferences, history, mpm_df)
-    # # es.apply_preferences()
-    # # es.apply_history()
-    es.process_spek()  # Parse annotations
-    history_df = es.process_history()  # Process history dict to dataframe
-    # es.rank_history_component(history_df, )
-    es.process_mpm()  # Parse MPM
-    node, spek_es, score_df, candidate_df, comp_dict = es.score()
-    performer_graph.add((node, URIRef("slowmo:selected"), Literal(True)))
-    # #applying business rules
-    # es.business_rules()
-    # node,spek_es=es.select()
-    selected_message = es.get_selected_message()
-    # # es.apply_history()
-    return selected_message
+
 
 
 

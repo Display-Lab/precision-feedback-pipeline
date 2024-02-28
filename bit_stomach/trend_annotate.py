@@ -20,8 +20,8 @@ def trend_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
     latest_measure_df = latest_measure_df.reset_index(drop=True)
     trend_sign=latest_measure_df["Performance_Rate"][1]-latest_measure_df["Performance_Rate"][0]
     
-    # trend_slope2 must match the sign of trend_sign, e.g. if this month was positive we can't report a negative trend slope for 3 month
-    trend_slope2 = back_up_df.groupby('measure').apply(calculate_trend,'month', 'Performance_Rate')[0]
+    # trend_slope must match the sign of trend_sign, e.g. if this month was positive we can't report a negative trend slope for 3 month
+    trend_slope = back_up_df.groupby('measure').apply(calculate_trend,'month', 'Performance_Rate')[0]
     
     if trend_sign<0:
         measure_name_node=BNode(latest_measure_df["measure"][0])
@@ -30,13 +30,7 @@ def trend_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
         intervals=find_number(back_up_df,"negative")
         idx= back_up_df.groupby(['measure'])['month'].nlargest(intervals) .reset_index()
         l=idx['level_1'].tolist()
-        measure_df =  back_up_df[back_up_df.index.isin(l)]
-        out = latest_measure_df.groupby('measure').apply(theil_reg, xcol='month', ycol='Performance_Rate')
-        df_1=out[0]
-        df_1 = df_1.reset_index()
-        df_1 = df_1.rename({0:"performance_trend_slope"}, axis=1)
-        trend_slope=df_1["performance_trend_slope"][0]
-        performer_graph=annotate_negative_trend(performer_graph,blank_node,measure_name_node,comparator_bnode,trend_slope,trend_slope2,intervals)
+        performer_graph=annotate_negative_trend(performer_graph,blank_node,measure_name_node,comparator_bnode,trend_slope,intervals)
 
     if trend_sign>0:
         measure_name_node=BNode(latest_measure_df["measure"][0])
@@ -45,31 +39,23 @@ def trend_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
         intervals=find_number(back_up_df,"positive")
         idx= back_up_df.groupby(['measure'])['month'].nlargest(intervals) .reset_index()
         l=idx['level_1'].tolist()
-        measure_df =  back_up_df[back_up_df.index.isin(l)]
-        out = latest_measure_df.groupby('measure').apply(theil_reg, xcol='month', ycol='Performance_Rate')
-        df_1=out[0]
-        df_1 = df_1.reset_index()
-        df_1 = df_1.rename({0:"performance_trend_slope"}, axis=1)
-        trend_slope=df_1["performance_trend_slope"][0]
-        performer_graph=annotate_positive_trend(performer_graph,blank_node,measure_name_node,comparator_bnode,trend_slope,trend_slope2,intervals)
+        performer_graph=annotate_positive_trend(performer_graph,blank_node,measure_name_node,comparator_bnode,trend_slope,intervals)
     return performer_graph
 
-def annotate_negative_trend(performer_graph,blank_node,measure_Name,comparator_bnode,trend_slope,trend_slope2,intervals):
+def annotate_negative_trend(performer_graph,blank_node,measure_Name,comparator_bnode,trend_slope,intervals):
     performer_graph.add((blank_node,RDF.type,URIRef('http://purl.obolibrary.org/obo/PSDO_0000100')))
     performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
     performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
     performer_graph.add((blank_node,URIRef('http://example.com/slowmo#PerformanceTrendSlope'),Literal(trend_slope)))
-    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#PerformanceTrendSlope2'),Literal(trend_slope2)))
     performer_graph.add((blank_node,URIRef('http://example.com/slowmo#numberofmonths'),Literal(intervals)))
     
     return performer_graph
 
-def annotate_positive_trend(performer_graph,blank_node,measure_Name,comparator_bnode,trend_slope,trend_slope2,intervals):
+def annotate_positive_trend(performer_graph,blank_node,measure_Name,comparator_bnode,trend_slope,intervals):
     performer_graph.add((blank_node,RDF.type,URIRef('http://purl.obolibrary.org/obo/PSDO_0000099')))
     performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingComparator'),comparator_bnode))
     performer_graph.add((blank_node,URIRef('http://example.com/slowmo#RegardingMeasure'),measure_Name))
     performer_graph.add((blank_node,URIRef('http://example.com/slowmo#PerformanceTrendSlope'),Literal(trend_slope)))
-    performer_graph.add((blank_node,URIRef('http://example.com/slowmo#PerformanceTrendSlope2'),Literal(trend_slope2)))
     performer_graph.add((blank_node,URIRef('http://example.com/slowmo#numberofmonths'),Literal(intervals)))
     return performer_graph
 

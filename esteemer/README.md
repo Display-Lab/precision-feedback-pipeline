@@ -1,7 +1,7 @@
 ## High level Flowchart
 
 ```
-function esteemer2:
+function esteemer:
     for measure in measures:
         candidates = measure_acceptable_candidates(measure)
         for candidate in candidates:
