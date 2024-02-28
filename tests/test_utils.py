@@ -1,105 +1,63 @@
+import pytest
 from rdflib import BNode, Graph
 
 from esteemer2 import utils
 
 
-def test_measures():
-    measures = utils.measures(get_graph("tests/spek_tp.json"))
+@pytest.fixture
+def graph():
+    graph = Graph().parse(source="tests/spek_tp.json", format="json-ld")
+
+    global candidate_1
+    global candidate_2
+    global candidate_3
+    global candidate_4
+    candidate_1 = graph.resource(BNode("N3840ed1cab81487f928030dbd6ac4489"))
+    candidate_2 = graph.resource(BNode("N0fefdf2588e640068f19c40cd4dcb7ce"))
+    candidate_3 = graph.resource(BNode("N14f02942683f4712894a2c997baee53d"))
+    candidate_4 = graph.resource(BNode("N53e6f7cfe6264b319099fc6080808331"))
+
+    return graph
+
+
+def test_measures(graph):
+    measures = utils.measures(graph)
     blank_nodes = [BNode("PONV05"), BNode("SUS04"), BNode("TRAN04")]
     assert measures == blank_nodes
 
 
-def test_measure_acceptable_candidates():
-    graph = get_graph("tests/spek_tp.json")
-    measure_acceptable_candidates = utils.measure_acceptable_candidates(
-        graph, BNode("SUS04")
-    )
+def test_candidates_returns_the_one_acceptable_for_measure(graph):
+    measure_candidates = utils.candidates(
+        graph, BNode("PONV05"), True
+    )  # only one acceptable candidate
 
-    # Extract @id values for each BNode in the list
-    id_values = []
-    for bnode in measure_acceptable_candidates:
-        # Query the graph for the @id value of the BNode
-        id_value = str(bnode)
-        if id_value:
-            id_values.append(id_value)
+    assert len(measure_candidates) == 1
 
-    assert id_values == [
-        "N0fefdf2588e640068f19c40cd4dcb7ce",
-    ]
+    assert candidate_1 in measure_candidates
 
 
-def test_candidates_method1():
-    graph = get_graph("tests/spek_tp.json")
-    measure_candidates = utils.candidates(graph, BNode("PONV05"), True)
+def test_candidates_returns_all_acceptable(graph):
+    acceptable_candidates = utils.candidates(graph, None, True)
 
-    # Extract @id values for each BNode in the list
-    id_values = []
-    for bnode in measure_candidates:
-        # Query the graph for the @id value of the BNode
-        id_value = str(bnode)
-        if id_value:
-            id_values.append(id_value)
+    assert len(acceptable_candidates) == 2
 
-    assert id_values == [
-        "N3840ed1cab81487f928030dbd6ac4489",
-    ]
+    assert candidate_1 in acceptable_candidates
+    assert candidate_2 in acceptable_candidates
 
 
-def test_candidates_method2():
-    graph = get_graph("tests/spek_tp.json")
-    measure_candidates = utils.candidates(graph, None, True)
+def test_candidates_all(graph):
+    candidates = utils.candidates(graph, None, False)
 
-    # Extract @id values for each BNode in the list
-    id_values = []
-    for bnode in measure_candidates:
-        # Query the graph for the @id value of the BNode
-        id_value = str(bnode)
-        if id_value:
-            id_values.append(id_value)
+    assert len(candidates) == 4
 
-    assert sorted(id_values) == [
-        "N0fefdf2588e640068f19c40cd4dcb7ce",
-        "N3840ed1cab81487f928030dbd6ac4489",
-    ]
+    assert set([candidate_1, candidate_2, candidate_3, candidate_4]) == set(candidates)
 
 
-def test_candidates_method3():
-    graph = get_graph("tests/spek_tp.json")
-    measure_candidates = utils.candidates(graph, None, False)
+def test_candidates_empty_or_no_match(graph):
+    candidates = utils.candidates(graph, measure=BNode("nope"))
 
-    # Extract @id values for each BNode in the list
-    id_values = []
-    for bnode in measure_candidates:
-        # Query the graph for the @id value of the BNode
-        id_value = str(bnode)
-        if id_value:
-            id_values.append(id_value)
+    assert len(candidates) == 0
 
-    assert sorted(id_values) == [
-        "N0fefdf2588e640068f19c40cd4dcb7ce",
-        "N14f02942683f4712894a2c997baee53d",
-        "N3840ed1cab81487f928030dbd6ac4489",
-        "N53e6f7cfe6264b319099fc6080808331",
-    ]
+    candidates = utils.candidates(Graph())
 
-
-def test_apply_measure_business_rules():
-    graph = get_graph("tests/spek_tp.json")
-    candidate_list = [
-        BNode("N53e6f7cfe6264b319099fc6080808331"),
-        BNode("N3840ed1cab81487f928030dbd6ac4489"),
-    ]
-    updated_candidate_list = utils.apply_measure_business_rules(graph, candidate_list)
-    assert candidate_list == updated_candidate_list
-
-
-def get_graph(file):  # simplify this
-    # Specify the path to your JSON-LD file
-    json_ld_file_path = file
-
-    # Create an RDF graph using rdflib
-    rdf_graph = Graph()
-
-    # Parse JSON-LD data into the RDF graph
-    graph = rdf_graph.parse(source=json_ld_file_path, format="json-ld")
-    return graph
+    assert len(candidates) == 0

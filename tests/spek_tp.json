@@ -453,6 +453,9 @@
             },
             {
                 "@id": "_:Nb43492eb7bc541cfaf4169bc2e631604"
+            },
+            {
+                "@id": "_:Nf37ec57f2fd74a1b9512b8939598b6dc"
             }
         ]
     },
@@ -864,6 +867,37 @@
         "http://example.com/slowmo#RegardingMeasure": [
             {
                 "@id": "_:SUS04"
+            }
+        ]
+    },
+    {
+        "@id": "_:Nf37ec57f2fd74a1b9512b8939598b6dc",
+        "@type": [
+            "http://purl.obolibrary.org/obo/PSDO_0000099"
+        ],
+        "http://example.com/slowmo#PerformanceTrendSlope": [
+            {
+                "@value": 0.0034
+            }
+        ],
+        "http://example.com/slowmo#PerformanceTrendSlope2": [
+            {
+                "@value": "0.0034"
+            }
+        ],
+        "http://example.com/slowmo#RegardingComparator": [
+            {
+                "@id": "_:N604241796fe648d8ad2d7d21dd515390"
+            }
+        ],
+        "http://example.com/slowmo#RegardingMeasure": [
+            {
+                "@id": "_:SUS04"
+            }
+        ],
+        "http://example.com/slowmo#numberofmonths": [
+            {
+                "@value": 1
             }
         ]
     },
