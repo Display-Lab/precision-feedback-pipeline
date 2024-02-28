@@ -119,10 +119,7 @@ class Trend_annotateTestcase(unittest.TestCase):
 
         # converting resultant graph to json object
         Resultant_graph_json = Resultant_graph.serialize(format="json-ld", indent=4)
-        # writing resultant output
-        f = open("tests/bit_stomach/test_outputs/Trend_positive_output.json", "w")
-        f.write(Resultant_graph_json)
-        f.close()
+
 
         # loading expected output
         file_json1 = open(
@@ -226,10 +223,6 @@ class Trend_annotateTestcase(unittest.TestCase):
 
         # converting resultant graph to json object
         Resultant_graph_json = Resultant_graph.serialize(format="json-ld", indent=4)
-        # writing resultant output
-        f = open("tests/bit_stomach/test_outputs/Trend_negative_output.json", "w")
-        f.write(Resultant_graph_json)
-        f.close()
 
         # loading expected output
         file_json1 = open(
