@@ -1,1 +1,0 @@
-from bitstomach2.comparison_annotation import Comparison
