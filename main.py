@@ -1,4 +1,5 @@
 from rdflib import BNode, Graph, Literal, URIRef #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
+from bitstomach2 import bitstomach
 from candidatesmasher.candidatesmasher import CandidateSmasher
 from utils.graph_operations import read_graph, create_performer_graph
 from fastapi import FastAPI, Request, HTTPException
@@ -178,6 +179,9 @@ async def createprecisionfeedback(info:Request):
         f.close()
         # print(settings.outputs)
         # print(settings.log_level)
+    
+    #BitStomach 2
+    bitstomach.extract_signals(performance_data)
     
     
     #CandidateSmasher
