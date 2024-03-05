@@ -4,7 +4,7 @@ from typing import List
 from rdflib import RDF, BNode, Graph, URIRef
 from rdflib.resource import Resource
 
-from utils.namespace import PSDO, RO, SLOWMO
+from utils import PSDO, RO, SLOWMO
 
 
 def measures(performer_graph: Graph) -> List[BNode]:

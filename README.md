@@ -1,5 +1,6 @@
 # Precision Feedback Pipeline
-This is the pipeline service that implements the Precision Feedback Pipeline.
+This is the pipeline service that implements the Precision Feedback Pipeline. The underlying model of precision feedback is captured in [this information model](https://docs.google.com/drawings/d/1fFkd6n6c4DaL93rgwwbm1vcXGJ1CUVOgYMFPHjwZG8E/edit?usp=sharing).
+
 Read through our [wiki pages](https://github.com/Display-Lab/precision-feedback-pipeline/wiki) to learn how to test the pipeline in a variety of implementations.
 
 - Postman Setup Instructions [here](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Postman-Testing-Workflow)
