@@ -1,9 +1,6 @@
-from rdflib import (
-    BNode,
-    Graph,
-    Literal,
-    URIRef,
-)  # , ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
+from rdflib import BNode, Graph, Literal, URIRef #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
+from bitstomach2 import bitstomach
+
 from candidatesmasher.candidatesmasher import CandidateSmasher
 from utils.graph_operations import read_graph, create_performer_graph
 from fastapi import FastAPI, Request, HTTPException
@@ -205,8 +202,22 @@ async def createprecisionfeedback(info: Request):
         f.close()
         # print(settings.outputs)
         # print(settings.log_level)
+    
+    #BitStomach 2
+    g: Graph = bitstomach.extract_signals(performance_data)
+    performer_graph += g
+    
+    
+    if settings.outputs == True and settings.log_level == "DEBUG":
+        op=performer_graph.serialize(format='json-ld', indent=4)
+        folderName = "outputs"
+        os.makedirs(folderName, exist_ok=True)
+        f = open("outputs/spek_bs2.json", "w")
+        f.write(op)
+        f.close()
 
-    # CandidateSmasher
+    #CandidateSmasher
+
     logger.info(f"Calling CandidateSmasher from main...")
     cs = CandidateSmasher(performer_graph, templates)
     df_graph, goal_types, peer_types, top_10_types, top_25_types = cs.get_graph_type()
