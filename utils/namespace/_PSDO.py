@@ -35,10 +35,19 @@ class PSDO(AliasingDefinedNamespace):
     peer_90th_percentile_benchmark: URIRef
 
     PSDO_0000126: URIRef
-    peer_average_comparator: URIRef    
+
+    peer_average_comparator: URIRef
+
+    PSDO_0000094: URIRef
+    goal_comparator_content: URIRef
+    
+    PSDO_0000095: URIRef
+    social_comparator_content: URIRef
+
 
     _alias = {
         "goal_comparator_content": "PSDO_0000094",
+        "social_comparator_content": "PSDO_0000095",
         "positive_performance_trend_content": "PSDO_0000099",
         "negative_performance_trend_content": "PSDO_0000100",
         "positive_performance_gap_content": "PSDO_0000104",
