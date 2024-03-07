@@ -181,9 +181,18 @@ async def createprecisionfeedback(info:Request):
         # print(settings.log_level)
     
     #BitStomach 2
-    bitstomach.extract_signals(performance_data)
+    g: Graph = bitstomach.extract_signals(performance_data)
+    performer_graph += g
     
     
+    if settings.outputs == True and settings.log_level == "DEBUG":
+        op=performer_graph.serialize(format='json-ld', indent=4)
+        folderName = "outputs"
+        os.makedirs(folderName, exist_ok=True)
+        f = open("outputs/spek_bs2.json", "w")
+        f.write(op)
+        f.close()
+
     #CandidateSmasher
     logger.info(f"Calling CandidateSmasher from main...")
     cs=CandidateSmasher(performer_graph,templates)

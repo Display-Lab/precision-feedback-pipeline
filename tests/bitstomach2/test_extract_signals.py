@@ -27,7 +27,7 @@ def test_returns_performance_content_with_multiple_elements():
                 "peer_90th_percentile_benchmark",
                 "MPOG_goal",
             ],
-            [157, " ", "2022-11-01", 29, 0, 29, 81.7, 100.0, 100.0, 90.0],
+            [157, "SUS04", "2022-11-01", 29, 0, 29, 81.7, 100.0, 100.0, 90.0],
             [157, "PONV05", "2022-11-01", 40, 0, 40, 82.4, 100.0, 100.0, 90.0],
         ]
     )
