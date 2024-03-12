@@ -101,7 +101,35 @@ def test_empty_performance_content_returns_value_error():
     with pytest.raises(ValueError): 
         mi.detect(pd.DataFrame([[]]))
 
+
+def test_to_dict_return_dictionary():
+    g=Graph()
+    comparator = g.resource(BNode())
+    assert isinstance(Comparison.to_moderators([], comparator),dict)     
     
+def test_to_dict_return_dictionary1():
+    gap =23
+    graph = Graph()
+    r = graph.resource(BNode())
+    r.add(RDF.type, PSDO.performance_gap_content)
+    r.add(SLOWMO.PerformanceGapSize, Literal(gap))
+    r.add(
+        RDF.type,
+        PSDO.positive_performance_gap_content
+        if gap >= 0
+        else PSDO.negative_performance_gap_content,
+    )
+    r.add(SLOWMO.RegardingMeasure, BNode("PONV05"))  
+
+    # Add the comparator
+    c = graph.resource(BNode())
+    c.set(RDF.type, PSDO.peer_90th_percentile_benchmark)
+    c.set(RDF.value, Literal(95.0))
+
+    r.add(SLOWMO.RegardingComparator, c)
+    
+    comparison = Comparison.to_moderators([r], PSDO.peer_90th_percentile_benchmark)  
+    assert comparison["gap_size"] == 0.23
          
 
 

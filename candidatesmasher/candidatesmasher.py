@@ -7,7 +7,7 @@ import warnings
 import pandas as pd
 from rdflib import Graph, Literal, URIRef, BNode
 from rdflib.namespace import RDF
-
+from utils.namespace import PSDO, SLOWMO
 
 
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -424,6 +424,14 @@ class CandidateSmasher:
                         self.performer_graph.add((candidate,URIRef("http://example.com/slowmo#AncestorPerformer"),a35))
                         self.a36=URIRef(row["index"])
                         self.performer_graph.add((candidate,URIRef("http://example.com/slowmo#AncestorTemplate"),self.a36))
+                        if PSDO.peer_90th_percentile_benchmark in row.values:
+                            self.performer_graph.add((candidate,SLOWMO.IsAbout, PSDO.peer_90th_percentile_benchmark )) 
+                        if PSDO.peer_75th_percentile_benchmark in row.values:
+                            self.performer_graph.add((candidate,SLOWMO.IsAbout, PSDO.peer_75th_percentile_benchmark )) 
+                        if PSDO.peer_average_comparator in row.values:
+                            self.performer_graph.add((candidate,SLOWMO.IsAbout, PSDO.peer_average_comparator ))
+                        if PSDO.goal_comparator_content in row.values:
+                            self.performer_graph.add((candidate,SLOWMO.IsAbout, PSDO.goal_comparator_content ))
         return self.performer_graph
             
 

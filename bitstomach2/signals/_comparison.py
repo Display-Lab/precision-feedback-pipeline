@@ -1,16 +1,14 @@
 from typing import List, Optional
-from pandas import DataFrame
 
-from rdflib import RDF, BNode, Graph, Literal
+from pandas import DataFrame
+from rdflib import RDF, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
 from utils.namespace import PSDO, SLOWMO
 
 
 class Comparison(Graph):
-    def detect(
-        self, perf_content: DataFrame
-    ) -> Optional[List[Resource]]:
+    def detect(self, perf_content: DataFrame) -> Optional[List[Resource]]:
         """
         Detects comparison signals against any supplied comparators using performance levels in performance content. The signal is calculated as a simple difference. It returns a list of resources representing each signal detected.
 
@@ -18,25 +16,23 @@ class Comparison(Graph):
         - perf_content (DataFrame): The performance content.
 
         Returns:
-        - List[Resource]: The list of signal resources. 
+        - List[Resource]: The list of signal resources.
         """
-        if (
-            perf_content.empty            
-        ):
+        if perf_content.empty:
             raise (ValueError)
 
         level = perf_content["passed_percentage"][-1:].to_list()[0]
-        
+
         resources = []
         comp_cols = [
             "peer_average_comparator",
             "peer_75th_percentile_benchmark",
             "peer_90th_percentile_benchmark",
-            "goal_comparator_content"
+            "goal_comparator_content",
         ]
-        comparators = perf_content[-1:][comp_cols].to_dict(orient='records')[0]
+        comparators = perf_content[-1:][comp_cols].to_dict(orient="records")[0]
         measure = BNode((perf_content["measure"].to_list()[0]))
-        
+
         for key, value in comparators.items():
             gap = self._detect(level, value)
 
@@ -51,7 +47,6 @@ class Comparison(Graph):
                 else PSDO.negative_performance_gap_content,
             )
             r.add(SLOWMO.RegardingMeasure, measure)
-            
 
             # Add the comparator
             c = self.resource(BNode())
@@ -67,4 +62,34 @@ class Comparison(Graph):
     def _detect(self, level, comparator) -> float:
         """Calculate gap (size, comparator) tuples from levels and comparators"""
 
-        return (level - comparator)
+        return level - comparator
+
+    @staticmethod
+    def to_moderators(
+        motivating_informations: List[Resource], comparator_type: URIRef
+    ) -> dict:
+        motivating_info_dict: dict = {}
+        if not motivating_informations:
+            return motivating_info_dict
+
+        for motivating_information in motivating_informations:
+            if (
+                motivating_information.value(
+                    URIRef("http://example.com/slowmo#RegardingComparator") / RDF.type
+                ).identifier
+                == comparator_type
+            ):
+                motivating_info = motivating_information
+
+        motivating_info_dict["gap_size"] = (
+            motivating_info.value(SLOWMO.PerformanceGapSize).value / 100
+        )
+
+        for gap_type in list(motivating_info[RDF.type]):
+            if gap_type.identifier in (
+                PSDO.positive_performance_gap_content,
+                PSDO.negative_performance_gap_content,
+            ):
+                motivating_info_dict["type"] = gap_type
+
+        return motivating_info_dict
