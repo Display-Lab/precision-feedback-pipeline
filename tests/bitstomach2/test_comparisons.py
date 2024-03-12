@@ -129,7 +129,7 @@ def test_to_dict_return_dictionary1():
     r.add(SLOWMO.RegardingComparator, c)
     
     comparison = Comparison.to_moderators([r], PSDO.peer_90th_percentile_benchmark)  
-    assert comparison["gap_size"] == 0.23
+    assert comparison["gap_size"] == 23
          
 
 

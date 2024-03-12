@@ -82,7 +82,7 @@ class Comparison(Graph):
                 motivating_info = motivating_information
 
         motivating_info_dict["gap_size"] = (
-            motivating_info.value(SLOWMO.PerformanceGapSize).value / 100
+            motivating_info.value(SLOWMO.PerformanceGapSize).value 
         )
 
         for gap_type in list(motivating_info[RDF.type]):

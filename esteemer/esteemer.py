@@ -76,7 +76,7 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
             moderators = Comparison.to_moderators(
                 motivating_informations, comparator_type
             )
-            moderators["score"] = round(abs(moderators["gap_size"]), 4) / 5 - 0.02
+            moderators["score"] = round(abs(moderators["gap_size"]/100), 4) / 5 - 0.02
         case "Social better":
             comparator_type = candidate_resource.value(
                 SLOWMO.IsAbout
@@ -84,7 +84,7 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
             moderators = Comparison.to_moderators(
                 motivating_informations, comparator_type
             )
-            moderators["score"] = round(abs(moderators["gap_size"]), 4) + 0.02
+            moderators["score"] = round(abs(moderators["gap_size"]/100), 4) + 0.02
         case "Improving":
             moderators = get_trend_info(candidate_resource)
             moderators["score"] = round(abs(moderators["trend_size"]), 4) * 5
