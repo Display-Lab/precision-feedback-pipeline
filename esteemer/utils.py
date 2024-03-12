@@ -146,7 +146,7 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
         return s_m
 
 
-def candidates_as_dictionary(performer_graph: Graph) -> dict:
+def candidates_records(performer_graph: Graph) -> dict:
     """
     provides the representation of candidates as a dictionary.
 
@@ -156,10 +156,14 @@ def candidates_as_dictionary(performer_graph: Graph) -> dict:
     Returns:
     dict: The representation of candidates as a dictionary.
     """
-    candidate_list = []
+    #candidate_list = []
+    candidate_list = [["staff_number", "measure", "month", "score", "number_of_months", "name", "acceptable_by", "selected"]]
+
 
     for a_candidate in candidates(performer_graph):
-        representation = candidate_as_dictionary(a_candidate)
+        # representation = candidate_as_dictionary(a_candidate)
+        representation = candidate_as_record(a_candidate)
+        
         candidate_list.append(representation)
     return candidate_list
 
@@ -181,4 +185,20 @@ def candidate_as_dictionary(a_candidate: Resource) -> dict:
     representation["acceptable_by"] =  a_candidate.value( URIRef("slowmo:acceptable_by"))
     representation["selected"] = a_candidate.value( URIRef("slowmo:selected"))
 
+    return representation
+
+def candidate_as_record(a_candidate: Resource) -> List:
+    #["staff_number", "measure", "month", "score", "number_of_months", "name", "acceptable_by", "selected"]
+    representation = []
+    
+    representation.append(a_candidate.graph.value(BNode("p1"),URIRef("http://example.com/slowmo#IsAboutPerformer")).value)
+    representation.append(a_candidate.value(SLOWMO.RegardingMeasure).identifier)
+    representation.append("N/A")
+    score = a_candidate.value(SLOWMO.Score) 
+    representation.append(round(float(score.value), 4) if score else None)
+    representation.append(a_candidate.value(SLOWMO.numberofmonths))
+    representation.append(a_candidate.value( SLOWMO.name))
+    representation.append(a_candidate.value( URIRef("slowmo:acceptable_by")))
+    representation.append(a_candidate.value( URIRef("slowmo:selected")))  
+    
     return representation
