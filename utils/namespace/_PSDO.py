@@ -35,7 +35,6 @@ class PSDO(AliasingDefinedNamespace):
     peer_90th_percentile_benchmark: URIRef
 
     PSDO_0000126: URIRef
-
     peer_average_comparator: URIRef
 
     PSDO_0000094: URIRef

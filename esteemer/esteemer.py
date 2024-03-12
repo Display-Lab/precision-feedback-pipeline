@@ -4,6 +4,7 @@ import random
 from rdflib import RDF, XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
+from bitstomach2.signals import Comparison
 from utils.namespace import PSDO, RO, SLOWMO
 
 
@@ -35,7 +36,9 @@ def score(candidate_resource: Resource, history: json, preferences: json):
 
     # update the candidate with the score
     update_candidate_score(
-        candidate_resource, final_score, motivating_info["number_of_months"]
+        candidate_resource,
+        final_score,
+        motivating_info.setdefault("number_of_months", 0),
     )
 
 
@@ -52,24 +55,45 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
     """
 
     causal_pathway = list(candidate_resource.objects(URIRef("slowmo:acceptable_by")))[0]
+    performance_content = candidate_resource.graph.resource(
+        BNode("performance_content")
+    )
+    measure = candidate_resource.value(SLOWMO.RegardingMeasure)
+    motivating_informations = [
+        motivating_info
+        for motivating_info in performance_content[URIRef("motivating_information")]
+        if motivating_info.value(SLOWMO.RegardingMeasure)
+        == measure
+    ]
 
+    moderators = {}
     # our scoring function right now takes the absolute value of moderator for each causal pathway
     match causal_pathway.value:
         case "Social Worse":
-            gap_size, type, number_of_months = get_gap_info(candidate_resource)
-            score = round(abs(gap_size), 4) / 5 - 0.02
+            comparator_type = candidate_resource.value(
+                SLOWMO.IsAbout
+            ).identifier
+            moderators = Comparison.to_moderators(
+                motivating_informations, comparator_type
+            )
+            moderators["score"] = round(abs(moderators["gap_size"]/100), 4) / 5 - 0.02
         case "Social better":
-            gap_size, type, number_of_months = get_gap_info(candidate_resource)
-            score = round(abs(gap_size), 4) + 0.02
+            comparator_type = candidate_resource.value(
+                SLOWMO.IsAbout
+            ).identifier
+            moderators = Comparison.to_moderators(
+                motivating_informations, comparator_type
+            )
+            moderators["score"] = round(abs(moderators["gap_size"]/100), 4) + 0.02
         case "Improving":
-            trend_size, type, number_of_months = get_trend_info(candidate_resource)
-            score = round(abs(trend_size), 4) * 5
+            moderators = get_trend_info(candidate_resource)
+            moderators["score"] = round(abs(moderators["trend_size"]), 4) * 5
         case "Worsening":
-            trend_size, type, number_of_months = get_trend_info(candidate_resource)
-            score = round(abs(trend_size), 4)
+            moderators = get_trend_info(candidate_resource)
+            moderators["score"] = round(abs(moderators["trend_size"]), 4)
         case _:
-            score = 0.0
-    return {"score": score, "type": type.n3(), "number_of_months": number_of_months}
+            moderators["score"] = 0.0
+    return moderators
 
 
 def calculate_history_score(candidate_resource: Resource, history: json) -> float:
@@ -289,4 +313,8 @@ def get_trend_info(candidate_resource: Resource) -> tuple[float, URIRef, int]:
     ).value
 
     trend_type = performer_graph.value(dispositions[0].identifier, RDF.type, None)
-    return float(trend_size), trend_type, number_of_months
+    return {
+        "trend_size": float(trend_size),
+        "type": trend_type,
+        "number_of_months": number_of_months,
+    }

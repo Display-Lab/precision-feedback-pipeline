@@ -17,3 +17,4 @@ class SLOWMO(AliasingDefinedNamespace):
     name: URIRef
     AncestorTemplate: URIRef
     WithComparator: URIRef
+    IsAbout: URIRef
