@@ -1,10 +1,15 @@
+from typing import List, Optional
 import pandas as pd
+from rdflib import RDF, BNode, Graph, Literal
+from rdflib.resource import Resource
+
+from utils import PSDO, SLOWMO
 
 
 class Trend():
     
     @staticmethod
-    def detect(perf_data: pd.DataFrame):
+    def detect(perf_data: pd.DataFrame) -> Optional[List[Resource]]:
         if perf_data.empty:
             raise ValueError
         
@@ -13,7 +18,17 @@ class Trend():
         
         slope = _detect(perf_data)
         
-        return slope if slope else None
+        if not slope:
+            return None
+
+        return [_resource(slope)]
+        
+        
+def _resource(slope):
+    base = Graph().resource(BNode()) 
+    base[RDF.type] = PSDO.performance_trend_content 
+    base[SLOWMO.PerformanceTrendSlope] = Literal(slope)
+    return base
     
 def _detect(perf_data):
     performance_rates = perf_data["passed_percentage"]

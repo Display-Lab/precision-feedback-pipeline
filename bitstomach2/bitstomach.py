@@ -26,7 +26,7 @@ def extract_signals(performance_data) -> Graph:
 
         for s in signals:
             r.add(URIRef("motivating_information"), s.identifier)
-            g += s.graph
+        g += s.graph
     return g
 
 
