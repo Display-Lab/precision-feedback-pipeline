@@ -73,17 +73,22 @@ class Comparison(Graph):
             return motivating_info_dict
 
         for motivating_information in motivating_informations:
+            if PSDO.performance_gap_content not in [
+                t.identifier for t in motivating_information.objects(RDF.type)
+            ]:
+                continue
+
             if (
                 motivating_information.value(
-                    URIRef("http://example.com/slowmo#RegardingComparator") / RDF.type
+                    SLOWMO.RegardingComparator / RDF.type
                 ).identifier
                 == comparator_type
             ):
                 motivating_info = motivating_information
 
-        motivating_info_dict["gap_size"] = (
-            motivating_info.value(SLOWMO.PerformanceGapSize).value 
-        )
+        motivating_info_dict["gap_size"] = motivating_info.value(
+            SLOWMO.PerformanceGapSize
+        ).value
 
         for gap_type in list(motivating_info[RDF.type]):
             if gap_type.identifier in (

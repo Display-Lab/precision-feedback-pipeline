@@ -1,6 +1,6 @@
 from typing import List, Tuple
-import pandas as pd
 
+import pandas as pd
 import pytest
 from rdflib import RDF, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
@@ -16,12 +16,28 @@ def perf_info() -> Tuple[Graph, Resource]:
     r.set(RDF.type, PSDO.performance_content)
     return g, r
 
+
 @pytest.fixture
 def perf_data() -> pd.DataFrame:
-    performance_data = [[ "staff_number", "measure", "month", "passed_percentage", "passed_count", "flagged_count", "denominator", "peer_average_comparator", "peer_75th_percentile_benchmark", "peer_90th_percentile_benchmark", "goal_comparator_content" ],
-  [157, "BP01", "2022-08-01", 85.0, 85.0, 0, 100.0, 84.0, 88.0, 90.0, 99.0],
-  [157, "BP01", "2022-09-01", 90.0, 90.0, 0, 100.0, 85.0, 89.0, 91.0, 100.0]]
+    performance_data = [
+        [
+            "staff_number",
+            "measure",
+            "month",
+            "passed_percentage",
+            "passed_count",
+            "flagged_count",
+            "denominator",
+            "peer_average_comparator",
+            "peer_75th_percentile_benchmark",
+            "peer_90th_percentile_benchmark",
+            "goal_comparator_content",
+        ],
+        [157, "BP01", "2022-08-01", 85.0, 85.0, 0, 100.0, 84.0, 88.0, 90.0, 99.0],
+        [157, "BP01", "2022-09-01", 90.0, 90.0, 0, 100.0, 85.0, 89.0, 91.0, 100.0],
+    ]
     return pd.DataFrame(performance_data[1:], columns=performance_data[0])
+
 
 def test_comp_annotation_creates_minimal_subgraph(perf_data):
     mi = Comparison()
@@ -91,24 +107,27 @@ def test_comparator_node(perf_data):
     signals = signal.detect(perf_data)
 
     expected_comparator_values = [85.0, 89.0, 91.0, 100.0]
-    
+
     for index, signal in enumerate(signals):
-        assert Literal(expected_comparator_values[index]) == signal.value(SLOWMO.RegardingComparator / RDF.value)
-        
+        assert Literal(expected_comparator_values[index]) == signal.value(
+            SLOWMO.RegardingComparator / RDF.value
+        )
+
 
 def test_empty_performance_content_returns_value_error():
     mi = Comparison()
-    with pytest.raises(ValueError): 
+    with pytest.raises(ValueError):
         mi.detect(pd.DataFrame([[]]))
 
 
-def test_to_dict_return_dictionary():
-    g=Graph()
+def test_to_moderators_return_dictionary():
+    g = Graph()
     comparator = g.resource(BNode())
-    assert isinstance(Comparison.to_moderators([], comparator),dict)     
-    
-def test_to_dict_return_dictionary1():
-    gap =23
+    assert isinstance(Comparison.to_moderators([], comparator), dict)
+
+
+def test_to_moderators_return_dictionary1():
+    gap = 23
     graph = Graph()
     r = graph.resource(BNode())
     r.add(RDF.type, PSDO.performance_gap_content)
@@ -119,7 +138,7 @@ def test_to_dict_return_dictionary1():
         if gap >= 0
         else PSDO.negative_performance_gap_content,
     )
-    r.add(SLOWMO.RegardingMeasure, BNode("PONV05"))  
+    r.add(SLOWMO.RegardingMeasure, BNode("PONV05"))
 
     # Add the comparator
     c = graph.resource(BNode())
@@ -127,12 +146,6 @@ def test_to_dict_return_dictionary1():
     c.set(RDF.value, Literal(95.0))
 
     r.add(SLOWMO.RegardingComparator, c)
-    
-    comparison = Comparison.to_moderators([r], PSDO.peer_90th_percentile_benchmark)  
+
+    comparison = Comparison.to_moderators([r], PSDO.peer_90th_percentile_benchmark)
     assert comparison["gap_size"] == 23
-         
-
-
-    
-
-    
