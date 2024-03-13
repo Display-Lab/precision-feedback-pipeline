@@ -83,11 +83,11 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
             moderators["score"] = round(abs(moderators["gap_size"] / 100), 4) + 0.02
         case "Improving":
             mi = Trend.select(motivating_informations)
-
             moderators = Trend.to_moderators(mi)
             moderators["score"] = round(abs(moderators["trend_size"] / 100), 4) * 5
         case "Worsening":
-            moderators = Trend.to_moderators(motivating_informations)
+            mi = Trend.select(motivating_informations)
+            moderators = Trend.to_moderators(mi)
             moderators["score"] = round(abs(moderators["trend_size"] / 100), 4)
         case _:
             moderators["score"] = 0.0
