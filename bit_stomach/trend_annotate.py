@@ -23,6 +23,8 @@ def trend_annotate(performer_graph,p1_node,latest_measure_df,comparator_bnode):
     # trend_slope must match the sign of trend_sign, e.g. if this month was positive we can't report a negative trend slope for 3 month
     trend_slope = back_up_df.groupby('measure').apply(calculate_trend,'month', 'Performance_Rate')[0]
     
+    trend_sign = trend_slope
+    
     if trend_sign<0:
         measure_name_node=BNode(latest_measure_df["measure"][0])
         blank_node=BNode() 
