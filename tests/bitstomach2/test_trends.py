@@ -4,14 +4,13 @@ from rdflib import RDF, BNode, Graph, Literal
 from rdflib.resource import Resource
 
 from bitstomach2.signals import Comparison, Trend
-from bitstomach2.signals._trend import _detect, _resource
 from utils import PSDO, SLOWMO
 
 
 ## Trend resource
 def test_empty_perf_data_raises_value_error():
     with pytest.raises(ValueError):
-        Trend.detect(pd.DataFrame())
+        Trend().detect(pd.DataFrame())
 
 
 def test_no_trend_returns_none():
@@ -25,17 +24,17 @@ def test_no_trend_returns_none():
 
 ## Signal detection tests
 def test_trend_is_detected():
-    slope = _detect(
+    slope = Trend._detect(
         pd.DataFrame(columns=["passed_percentage"], data=[[90], [91], [92]])
     )
     assert slope == 1
 
-    slope = _detect(
+    slope = Trend._detect(
         pd.DataFrame(columns=["passed_percentage"], data=[[90], [92], [94]])
     )
     assert slope == 2
 
-    slope = _detect(
+    slope = Trend._detect(
         pd.DataFrame(columns=["passed_percentage"], data=[[90], [92], [90], [92], [94]])
     )
     assert slope == 2
@@ -48,12 +47,13 @@ def test_trend_as_resource():
 
     assert isinstance(signal, Resource)
 
-    assert signal.value(RDF.type).identifier == PSDO.performance_trend_content
+    assert Trend.is_rdf_type_of(signal)
+    # assert signal.value(RDF.type).identifier == PSDO.performance_trend_content
     assert signal.value(SLOWMO.PerformanceTrendSlope) == Literal(1.0)
 
 
-def test_to_moderators_return_dictionary():
-    assert isinstance(Trend.to_moderators([]), dict)
+def test_to_moderators_returns_dictionary():
+    assert isinstance(Trend.moderators([]), dict)
 
 
 def test_to_moderators_return_dictionary1():
@@ -65,25 +65,25 @@ def test_to_moderators_return_dictionary1():
 
     r.add(SLOWMO.RegardingMeasure, BNode("PONV05"))
 
-    trend = Trend.to_moderators([r])
-    assert trend["trend_size"] == 2.0
+    trend = Trend.moderators([r])
+    assert pytest.approx(2) == trend["trend_size"]
 
     assert PSDO.performance_trend_content in trend["type"]
     assert PSDO.positive_performance_trend_content in trend["type"]
 
 
 def test_resource_selects_pos_or_neg():
-    r = _resource(3.0)
+    r = Trend._resource(3.0)
     types = [t.identifier for t in list(r[RDF.type])]
     assert PSDO.positive_performance_trend_content in types
     assert PSDO.negative_performance_trend_content not in types
 
-    r = _resource(-1.0)
+    r = Trend._resource(-1.0)
     types = [t.identifier for t in list(r[RDF.type])]
     assert PSDO.positive_performance_trend_content not in types
     assert PSDO.negative_performance_trend_content in types
 
-    r = _resource(0.0)
+    r = Trend._resource(0.0)
     types = [t.identifier for t in list(r[RDF.type])]
     assert PSDO.positive_performance_trend_content not in types
     assert PSDO.negative_performance_trend_content not in types
@@ -129,3 +129,24 @@ def test_select():
     selected_mi = Trend.select(r2)
     assert len(selected_mi) == 1
     assert selected_mi == r2
+
+    Trend.signal_type
+
+
+def test_trend_identity():
+    r1 = Trend.detect(
+        pd.DataFrame(
+            {"passed_percentage": [89, 90, 91]},
+        )
+    )
+    r2 = Trend.detect(
+        pd.DataFrame(
+            {"passed_percentage": [89, 90, 91]},
+        )
+    )
+    
+    assert r1 is not r2
+    
+    r1a = Trend.select(r1)
+    
+    assert r1.pop() is r1a.pop()

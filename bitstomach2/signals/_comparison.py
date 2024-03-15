@@ -7,6 +7,7 @@ from rdflib.resource import Resource
 from utils.namespace import PSDO, SLOWMO
 
 
+# TODO: Refactor to `class Comparison(Signal)` 
 class Comparison(Graph):
     def detect(self, perf_content: DataFrame) -> Optional[List[Resource]]:
         """

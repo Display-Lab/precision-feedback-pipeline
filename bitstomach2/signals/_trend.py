@@ -1,13 +1,17 @@
 from typing import List, Optional
 
 import pandas as pd
-from rdflib import RDF, BNode, Graph, Literal
+from rdflib import RDF, Literal
 from rdflib.resource import Resource
 
+from bitstomach2.signals import Signal
 from utils import PSDO, SLOWMO
 
 
-class Trend:
+class Trend(Signal):
+    # TODO: Allow an array of types
+    signal_type = PSDO.performance_trend_content
+
     @staticmethod
     def detect(perf_data: pd.DataFrame) -> Optional[List[Resource]]:
         if perf_data.empty:
@@ -16,65 +20,47 @@ class Trend:
         if perf_data["passed_percentage"].count() < 3:
             return None
 
-        slope = _detect(perf_data)
+        slope = Trend._detect(perf_data)
 
         if not slope:
             return None
 
-        return [_resource(slope)]
+        return [Trend._resource(slope)]
 
-    @staticmethod
-    def to_moderators(motivating_informations: List[Resource]):
-        motivating_info_dict: dict = {}
+    @classmethod
+    def moderators(cls, motivating_informations: List[Resource]):
+        mods = []
 
-        if not motivating_informations:
-            return motivating_info_dict
-        for mi in motivating_informations:
-            if PSDO.performance_trend_content not in [
-                t.identifier for t in mi.objects(RDF.type)
-            ]:
-                continue
-            motivating_info_dict["trend_size"] = mi.value(
+        for signal in super().select(motivating_informations):
+            motivating_info_dict = super().moderators(signal)
+            motivating_info_dict["trend_size"] = signal.value(
                 SLOWMO.PerformanceTrendSlope
             ).value
 
-            motivating_info_dict["type"] = []
-            for trend_type in list(mi[RDF.type]):
-                motivating_info_dict["type"].append(trend_type.identifier)
+            mods.append(motivating_info_dict)
 
-            break
-        return motivating_info_dict
+        return mods.pop() if mods else {}
+
+    @classmethod
+    def _resource(cls, slope):
+        base = super()._resource()
+
+        if slope > 0:
+            base.add(RDF.type, PSDO.positive_performance_trend_content)
+        elif slope < 0:
+            base.add(RDF.type, PSDO.negative_performance_trend_content)
+
+        base[SLOWMO.PerformanceTrendSlope] = Literal(slope)
+
+        return base
 
     @staticmethod
-    def select(motivating_informations: List[Resource]) -> List[Resource]:
-        result = []
-        for mi in motivating_informations:
-            if PSDO.performance_trend_content in [
-                t.identifier for t in mi.objects(RDF.type)
-            ]:
-                result.append(mi)
+    def _detect(perf_data):
+        performance_rates = perf_data["passed_percentage"]
+        change_this_month = performance_rates.iloc[-1] - performance_rates.iloc[-2]
+        change_last_month = performance_rates.iloc[-2] - performance_rates.iloc[-3]
 
-        return result
+        if change_this_month * change_last_month < 0:
+            return 0
 
-
-def _resource(slope):
-    base = Graph().resource(BNode())
-    base.add(RDF.type, PSDO.performance_trend_content)
-    if slope > 0:
-        base.add(RDF.type, PSDO.positive_performance_trend_content)
-    elif slope < 0:
-        base.add(RDF.type, PSDO.negative_performance_trend_content)
-
-    base[SLOWMO.PerformanceTrendSlope] = Literal(slope)
-    return base
-
-
-def _detect(perf_data):
-    performance_rates = perf_data["passed_percentage"]
-    change_this_month = performance_rates.iloc[-1] - performance_rates.iloc[-2]
-    change_last_month = performance_rates.iloc[-2] - performance_rates.iloc[-3]
-
-    if change_this_month * change_last_month < 0:
-        return 0
-
-    return (performance_rates.iloc[-1] - performance_rates.iloc[-3]) / 2
+        return (performance_rates.iloc[-1] - performance_rates.iloc[-3]) / 2
