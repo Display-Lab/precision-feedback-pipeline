@@ -37,20 +37,18 @@ def performance_data_frame():
 def candidate_resource(performance_data_frame):
     graph = Graph()
     candidate_resource = graph.resource(BNode())
-    candidate_resource[SLOWMO.IsAbout] = (
-        PSDO.peer_90th_percentile_benchmark
-    )
+    candidate_resource[SLOWMO.IsAbout] = PSDO.peer_90th_percentile_benchmark
     candidate_resource[URIRef("slowmo:acceptable_by")] = Literal("Social better")
     candidate_resource[SLOWMO.RegardingMeasure] = BNode("PONV05")
 
-    comparison = Comparison()
-    motivating_information = comparison.detect(performance_data_frame)
+    motivating_informations = Comparison.detect(performance_data_frame)
 
     performance_content = graph.resource(BNode("performance_content"))
-    for s in motivating_information:
+    for s in motivating_informations:
+        s[SLOWMO.RegardingMeasure] = BNode("PONV05")
         performance_content.add(URIRef("motivating_information"), s.identifier)
+        graph += s.graph
 
-    graph += comparison
     return candidate_resource
 
 
@@ -89,7 +87,7 @@ def test_select_candidate():
 def test_calculate_gap_motivating_info(candidate_resource):
     score_info = esteemer.calculate_motivating_info_score(candidate_resource)
     assert score_info["score"] == 0.07
-    assert score_info["type"].identifier == PSDO.positive_performance_gap_content
+    assert PSDO.positive_performance_gap_content in score_info["type"]
     assert "number_of_months" not in score_info
 
 

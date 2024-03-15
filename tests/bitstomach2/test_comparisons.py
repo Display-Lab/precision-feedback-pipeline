@@ -40,49 +40,27 @@ def perf_data() -> pd.DataFrame:
 
 
 def test_comp_annotation_creates_minimal_subgraph(perf_data):
-    mi = Comparison()
-
-    comparison = mi.detect(perf_data)
+    comparison = Comparison.detect(perf_data)
     # logger.info(annotation_graph.serialize(format="json-ld"))
-
-    assert isinstance(mi, Graph)
 
     assert isinstance(comparison, List)
     assert isinstance(comparison[0], Resource)
-
-    assert 4 == len(set(mi.subjects(RDF.type, PSDO.performance_gap_content)))
-
-
-def test_node_is_aggregated_in_performance_info(perf_info, perf_data):
-    perf_graph, perf_content = perf_info
-    signal = Comparison()
-
-    # Create a small graph and return the base node(s) as a resource
-    for s in signal.detect(perf_data):
-        perf_content.add(URIRef("motivating_information"), s.identifier)
-
-    # Add the remaining triples (the whole subgraph) to teh perf graph
-    perf_graph += signal
-
-    assert 33 == len(perf_graph)
-
-    assert 4 == len(set(perf_graph.subjects(RDF.type, PSDO.performance_gap_content)))
+    assert 4 == len(comparison)
+    assert 1 == len(
+        set(comparison[0].graph.subjects(RDF.type, PSDO.performance_gap_content))
+    )
 
 
 def test_multiple_signals_from_single_detector(perf_info, perf_data):
     perf_graph, perf_content = perf_info
-    signal_graph = Comparison()
 
-    signals = signal_graph.detect(perf_data)
+    signals = Comparison.detect(perf_data)
 
     assert 4 == len(signals)
 
-    assert 28 == len(signal_graph)
-
     for s in signals:
         perf_content.add(URIRef("motivating_information"), s.identifier)
-
-    perf_graph += signal_graph
+        perf_graph += s.graph
 
     assert 33 == len(perf_graph)
 
@@ -120,13 +98,11 @@ def test_empty_performance_content_returns_value_error():
         mi.detect(pd.DataFrame([[]]))
 
 
-def test_to_moderators_return_dictionary():
-    g = Graph()
-    comparator = g.resource(BNode())
-    assert isinstance(Comparison.to_moderators([], comparator), dict)
+def test_moderators_return_dictionary():
+    assert isinstance(Comparison.moderators([]), List)
 
 
-def test_to_moderators_return_dictionary1():
+def test_moderators_return_dictionary1():
     gap = 23
     graph = Graph()
     r = graph.resource(BNode())
@@ -147,5 +123,12 @@ def test_to_moderators_return_dictionary1():
 
     r.add(SLOWMO.RegardingComparator, c)
 
-    comparison = Comparison.to_moderators([r], PSDO.peer_90th_percentile_benchmark)
-    assert comparison["gap_size"] == 23
+    moderators = Comparison.moderators([r])
+
+    moderator = [
+        moderator
+        for moderator in moderators
+        if moderator["comparator_type"] == PSDO.peer_90th_percentile_benchmark
+    ][0]
+
+    assert moderator["gap_size"] == 23

@@ -1,3 +1,5 @@
+from typing import List
+
 import pandas as pd
 import pytest
 from rdflib import RDF, BNode, Graph, Literal
@@ -53,7 +55,7 @@ def test_trend_as_resource():
 
 
 def test_to_moderators_returns_dictionary():
-    assert isinstance(Trend.moderators([]), dict)
+    assert isinstance(Trend.moderators([]), List)
 
 
 def test_to_moderators_return_dictionary1():
@@ -65,7 +67,7 @@ def test_to_moderators_return_dictionary1():
 
     r.add(SLOWMO.RegardingMeasure, BNode("PONV05"))
 
-    trend = Trend.moderators([r])
+    trend = Trend.moderators([r])[0]
     assert pytest.approx(2) == trend["trend_size"]
 
     assert PSDO.performance_trend_content in trend["type"]
@@ -144,9 +146,9 @@ def test_trend_identity():
             {"passed_percentage": [89, 90, 91]},
         )
     )
-    
+
     assert r1 is not r2
-    
+
     r1a = Trend.select(r1)
-    
+
     assert r1.pop() is r1a.pop()

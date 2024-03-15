@@ -1,7 +1,7 @@
 import pandas as pd
 from rdflib import RDF, BNode, Graph, URIRef
 
-from bitstomach2.signals import Comparison, Trend
+from bitstomach2.signals import SIGNALS
 from utils.namespace import PSDO, SLOWMO
 
 
@@ -21,27 +21,18 @@ def extract_signals(performance_data) -> Graph:
         performance_df = fix_up(performance_data)
 
     measures = performance_df["measure"].unique()
-
     for measure in measures:
-        signal = Comparison()
-        signals = signal.detect(
-            performance_df[performance_df["measure"].isin([measure])]
-        )
+        for signal_type in SIGNALS:
+            signals = signal_type.detect(
+                performance_df[performance_df["measure"].isin([measure])]
+            )
+            if not signals:
+                continue
 
-        for s in signals:
-            r.add(URIRef("motivating_information"), s.identifier)
-        g += s.graph
-
-        signals = Trend.detect(
-            performance_df[performance_df["measure"].isin([measure])]
-        )
-        if not signals:
-            return g
-
-        for s in signals:
-            s.add(SLOWMO.RegardingMeasure, BNode(measure))
-            r.add(URIRef("motivating_information"), s.identifier)
-        g += s.graph
+            for s in signals:
+                s.add(SLOWMO.RegardingMeasure, BNode(measure))
+                r.add(URIRef("motivating_information"), s.identifier)
+                g += s.graph
     return g
 
 

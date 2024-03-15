@@ -65,33 +65,40 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
         if motivating_info.value(SLOWMO.RegardingMeasure) == measure
     ]
 
-    moderators = {}
-    # our scoring function right now takes the absolute value of moderator for each causal pathway
+    mod = {}
     match causal_pathway.value:
         case "Social Worse":
             comparator_type = candidate_resource.value(SLOWMO.IsAbout).identifier
 
-            moderators = Comparison.to_moderators(
-                motivating_informations, comparator_type
-            )
-            moderators["score"] = round(abs(moderators["gap_size"] / 100), 4) / 5 - 0.02
+            moderators = Comparison.moderators(motivating_informations)
+
+            mod = [
+                moderator
+                for moderator in moderators
+                if moderator["comparator_type"] == comparator_type
+            ][0]
+
+            mod["score"] = round(abs(mod["gap_size"] / 100), 4) / 5 - 0.02
         case "Social better":
             comparator_type = candidate_resource.value(SLOWMO.IsAbout).identifier
-            moderators = Comparison.to_moderators(
-                motivating_informations, comparator_type
-            )
-            moderators["score"] = round(abs(moderators["gap_size"] / 100), 4) + 0.02
+            moderators = Comparison.moderators(motivating_informations)
+
+            mod = [
+                moderator
+                for moderator in moderators
+                if moderator["comparator_type"] == comparator_type
+            ][0]
+
+            mod["score"] = round(abs(mod["gap_size"] / 100), 4) + 0.02
         case "Improving":
-            mi = Trend.select(motivating_informations)
-            moderators = Trend.moderators(mi)
-            moderators["score"] = round(abs(moderators["trend_size"] / 100), 4) * 5
+            mod = Trend.moderators(motivating_informations)[0]
+            mod["score"] = round(abs(mod["trend_size"] / 100), 4) * 5
         case "Worsening":
-            mi = Trend.select(motivating_informations)
-            moderators = Trend.moderators(mi)
-            moderators["score"] = round(abs(moderators["trend_size"] / 100), 4)
+            mod = Trend.moderators(motivating_informations)[0]
+            mod["score"] = round(abs(mod["trend_size"] / 100), 4)
         case _:
-            moderators["score"] = 0.0
-    return moderators
+            mod["score"] = 0.0
+    return mod
 
 
 def calculate_history_score(candidate_resource: Resource, history: json) -> float:

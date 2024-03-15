@@ -11,6 +11,9 @@ class Signal:
 
     @classmethod
     def select(cls, motivating_informations: List[Resource]) -> List[Resource]:
+        """
+        select method filters motivating information using the signal type
+        """
         return list(
             filter(
                 cls.is_rdf_type_of,
@@ -20,6 +23,9 @@ class Signal:
 
     @staticmethod
     def moderators(mi: Resource) -> dict:
+        """
+        creates a dictionary of moderators. base calss adds types
+        """
         base_mods = {"type": []}
         for trend_type in mi[RDF.type]:
             base_mods["type"].append(trend_type.identifier)
@@ -28,6 +34,9 @@ class Signal:
 
     @classmethod
     def _resource(cls) -> Resource:
+        """
+        creates the base subgraph and adds general types
+        """
         # TODO: Refactor to allow optional list of tuples (p, o) to ba added to base node
         base = Graph().resource(BNode())
         base.add(RDF.type, PSDO.motivating_information)
@@ -37,6 +46,9 @@ class Signal:
 
     @classmethod
     def is_rdf_type_of(cls, mi: Resource) -> bool:
+        """
+        checks whether motivating information is of the same type of the signal
+        """
         return cls.signal_type in {t.identifier for t in mi[RDF.type]}
         # return mi.graph.resource(cls.signal_type) in mi[RDF.type]
 
@@ -46,7 +58,7 @@ from bitstomach2.signals._trend import Trend  # noqa: E402
 
 __all__ = ["Comparison", "Trend"]
 
-signal_map = {
-    PSDO.performance_gap_content: Comparison,
-    PSDO.performance_trend_content: Trend,
+SIGNALS = {
+    Comparison,
+    Trend,
 }
