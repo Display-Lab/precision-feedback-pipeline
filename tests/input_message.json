@@ -18,7 +18,8 @@
     "has_part": "http://purl.obolibrary.org/obo/bfo#BFO_0000051",
     "has_disposition": "http://purl.obolibrary.org/obo/RO_0000091"
   },
-"message_instance_id":"Example 42",
+"message_instance_id":"c4e32e3e-2d05-15fe-b3f5-fd4829e3fd99",
+"performance_month":"2023-12-01",  
 "Performance_data":[
     ["staff_number","measure","month","passed_count","flagged_count","denominator","peer_average_comparator","peer_75th_percentile_benchmark","peer_90th_percentile_benchmark", "MPOG_goal"],
     [1,"PONV05","2023-01-01",90,10,100,90,92,96,90],
@@ -66,42 +67,48 @@
         "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
         "message_generated_datetime": "2023-10-09T1850.426262",
         "measure":"PUL02",
-        "message_instance_id":"format TBD"
+        "acceptable_by":"Social better",
+        "message_instance_id":"11384451-5dc1-4e5b-9bb2-de73e029420c"
       },
     "2023-11-01":
       {   
        "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
         "message_generated_datetime": "2023-10-09T1850.426262",
         "measure":"NMB02",
-        "message_instance_id":"format TBD"
+        "acceptable_by":"Social worse",
+        "message_instance_id":"d5fc2e3f-f205-46fe-b3f5-bb5559e3fd40"
       },
       "2023-10-01":
       {
        "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
         "message_generated_datetime": "2023-10-09T1850.426262",
         "measure":"PONV04",
-        "message_instance_id":"format TBD"
+        "acceptable_by":"Improving",
+        "message_instance_id":"9f35cf50-96d0-4c19-8e96-dbe28235cca3"
       },
       "2023-09-01":
       {
          "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
         "message_generated_datetime": "2023-10-09T1850.426262",
         "measure":"NMB04",
-        "message_instance_id":"format TBD"
+        "acceptable_by":"Improving",
+        "message_instance_id":"11384451-5dc1-4e5b-9bb2-de73e029420c"
       },
         "2023-08-01":
       {
          "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
         "message_generated_datetime": "2023-10-09T1850.426262",
         "measure":"PUL02",
-        "message_instance_id":"format TBD"
+        "acceptable_by":"Social gain",
+        "message_instance_id":"9f35cf50-96d0-4c19-8e96-dbe28235cca3"
       },
       "2023-07-01":
       {
         "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
         "message_generated_datetime": "2023-10-09T1850.426262",
         "measure":"PONV03",
-        "message_instance_id":"format TBD"
+        "acceptable_by":"Goal approach",
+        "message_instance_id":"d5fc2e3f-f205-46fe-b3f5-bb5559e3fd40"
       }
 },
 "Preferences":{
