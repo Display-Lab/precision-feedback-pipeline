@@ -66,6 +66,7 @@
         "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
         "message_generated_datetime": "2023-10-09T1850.426262",
         "measure":"PUL02",
+        "acceptable_by":"Social better",
         "message_instance_id":"format TBD"
       },
     "2023-11-01":
@@ -73,6 +74,7 @@
        "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
         "message_generated_datetime": "2023-10-09T1850.426262",
         "measure":"NMB02",
+        "acceptable_by":"Social worse",
         "message_instance_id":"format TBD"
       },
       "2023-10-01":
@@ -80,6 +82,7 @@
        "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
         "message_generated_datetime": "2023-10-09T1850.426262",
         "measure":"PONV04",
+        "acceptable_by":"Improving",
         "message_instance_id":"format TBD"
       },
       "2023-09-01":
@@ -87,6 +90,7 @@
          "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
         "message_generated_datetime": "2023-10-09T1850.426262",
         "measure":"NMB04",
+        "acceptable_by":"Improving",
         "message_instance_id":"format TBD"
       },
         "2023-08-01":
@@ -94,6 +98,7 @@
          "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
         "message_generated_datetime": "2023-10-09T1850.426262",
         "measure":"PUL02",
+        "acceptable_by":"Social gain",
         "message_instance_id":"format TBD"
       },
       "2023-07-01":
@@ -101,6 +106,7 @@
         "message_template":"https://repo.metadatacenter.org/template-instances/1effb7ae-2ec9-4832-867e-360d1f035837",
         "message_generated_datetime": "2023-10-09T1850.426262",
         "measure":"PONV03",
+        "acceptable_by":"Goal approach",
         "message_instance_id":"format TBD"
       }
 },
