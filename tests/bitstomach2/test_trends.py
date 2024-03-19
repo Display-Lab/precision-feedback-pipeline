@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, List, Optional
 
 import pandas as pd
 import pytest
@@ -7,6 +7,11 @@ from rdflib.resource import Resource
 
 from bitstomach2.signals import Comparison, Trend
 from utils import PSDO, SLOWMO
+
+from decoy import Decoy
+from decoy.matchers import Anything, IsA
+
+from unittest.mock import MagicMock
 
 
 ## Trend resource
@@ -152,3 +157,33 @@ def test_trend_identity():
     r1a = Trend.select(r1)
 
     assert r1.pop() is r1a.pop()
+
+
+def test_detect_with_magick_mock_calc():
+    Trend._detect = MagicMock(return_value=1.0)
+
+    signal = Trend.detect(
+        pd.DataFrame(
+            {"passed_percentage": [89, 90, 91]},  # slope 1.0
+        )
+    )
+
+    assert signal[0].value(SLOWMO.PerformanceTrendSlope) == Literal(1.0)
+
+
+def test_detect_with_decoy_calc(decoy: Decoy):
+    Trend._detect = decoy.mock(func=Trend._detect)
+
+    decoy.when(Trend._detect(IsA(pd.DataFrame))).then_return(42.0)
+
+    signal = Trend.detect(
+        pd.DataFrame(
+            {"passed_percentage": [89, 90, 91]},  # slope 1.0
+        )
+    )
+
+    assert signal[0].value(SLOWMO.PerformanceTrendSlope) == Literal(42.0)
+
+    decoy.verify(Trend._detect(IsA(pd.DataFrame)))
+
+

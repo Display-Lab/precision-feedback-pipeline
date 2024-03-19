@@ -17,8 +17,8 @@ class History(Signal):
             return None
 
         history = pd.DataFrame.from_dict(message_history, orient="index")
-
         history = history.sort_index()
+        
         occurance = History._detect(history)
 
         return [History._resource(occurance)]

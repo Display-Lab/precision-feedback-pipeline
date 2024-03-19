@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 from rdflib import BNode, Graph, Literal, URIRef
 
-from bitstomach2.signals import Comparison
+from bitstomach2 import Trend, Comparison
 from esteemer import esteemer
 from utils.namespace import PSDO, SLOWMO
 
@@ -54,11 +54,11 @@ def candidate_resource(performance_data_frame):
 
 def test_score(candidate_resource):
     esteemer.score(candidate_resource, None, None)
-    assert candidate_resource.value(SLOWMO.Score).value == 0.07
+    assert candidate_resource.value(SLOWMO.Score).value == pytest.approx(0.07)
 
 
 def test_calculate_motivating_info_score(candidate_resource):
-    assert esteemer.calculate_motivating_info_score(candidate_resource)["score"] == 0.07
+    assert esteemer.calculate_motivating_info_score(candidate_resource)["score"] == pytest.approx(0.07)
 
 
 def test_calculate_history_score(candidate_resource):
@@ -86,15 +86,13 @@ def test_select_candidate():
 
 def test_calculate_gap_motivating_info(candidate_resource):
     score_info = esteemer.calculate_motivating_info_score(candidate_resource)
-    assert score_info["score"] == 0.07
+    assert score_info["score"] == pytest.approx(0.07)
     assert PSDO.positive_performance_gap_content in score_info["type"]
     assert "number_of_months" not in score_info
 
 
-def test_get_trend_info(graph):
-    candidate = BNode("N0fefdf2588e640068f19c40cd4dcb7ce")
-    candidate_resource = graph.resource(candidate)
-    trend_info = esteemer.get_trend_info(candidate_resource)
-    assert trend_info["trend_size"] == 0.0034
-    assert trend_info["type"].n3() == "<http://purl.obolibrary.org/obo/PSDO_0000099>"
-    assert trend_info["number_of_months"] == 1
+def test_get_trend_info():
+    candidate_resource = Trend._resource(0.0034)
+    mods = Trend.moderators([candidate_resource])[0]
+    assert mods["trend_size"] == pytest.approx(0.0034)
+    assert Trend.signal_type in mods["type"]
