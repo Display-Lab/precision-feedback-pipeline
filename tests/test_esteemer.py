@@ -2,14 +2,36 @@ import pandas as pd
 import pytest
 from rdflib import BNode, Graph, Literal, URIRef
 
-from bitstomach2 import Trend, Comparison
+from bitstomach2.signals import Comparison, Trend
 from esteemer import esteemer
 from utils.namespace import PSDO, SLOWMO
 
+TEMPLATE_A = "https://repo.metadatacenter.org/template-instances/9e71ec9e-26f3-442a-8278-569bcd58e708"
 
 @pytest.fixture
 def graph():
     return Graph().parse("tests/spek_tp.json")
+
+@pytest.fixture
+def history():
+    return {
+        "2023-06-01": {
+            "message_template": TEMPLATE_A,
+            "acceptable_by": "Social better",
+        },
+        "2023-07-01": {
+            "message_template": "different template B",
+            "acceptable_by": "Social worse",
+        },
+        "2023-08-01": {
+            "message_template": TEMPLATE_A,
+            "acceptable_by": "Social better",
+        },
+        "2023-09-01": {
+            "message_template": "different template A",
+            "acceptable_by": "Social better",
+        }
+    }
 
 
 @pytest.fixture
@@ -39,6 +61,7 @@ def candidate_resource(performance_data_frame):
     candidate_resource = graph.resource(BNode())
     candidate_resource[SLOWMO.IsAbout] = PSDO.peer_90th_percentile_benchmark
     candidate_resource[URIRef("slowmo:acceptable_by")] = Literal("Social better")
+    candidate_resource[SLOWMO.AncestorTemplate] = URIRef(TEMPLATE_A)
     candidate_resource[SLOWMO.RegardingMeasure] = BNode("PONV05")
 
     motivating_informations = Comparison.detect(performance_data_frame)
@@ -57,21 +80,8 @@ def test_score(candidate_resource):
     assert candidate_resource.value(SLOWMO.Score).value == pytest.approx(0.07)
 
 
-def test_calculate_motivating_info_score(candidate_resource):
-    assert esteemer.calculate_motivating_info_score(candidate_resource)["score"] == pytest.approx(0.07)
-
-
-def test_calculate_history_score(candidate_resource):
-    assert esteemer.calculate_history_score(candidate_resource, None) == 0
-
-
 def test_calculate_preference_score(candidate_resource):
     assert esteemer.calculate_preference_score(candidate_resource, None) == 0
-
-
-def test_update_candidate_score(candidate_resource):
-    esteemer.update_candidate_score(candidate_resource, 130, 3)
-    assert candidate_resource.value(SLOWMO.Score).value == 130
 
 
 def test_select_candidate():
@@ -96,3 +106,17 @@ def test_get_trend_info():
     mods = Trend.moderators([candidate_resource])[0]
     assert mods["trend_size"] == pytest.approx(0.0034)
     assert Trend.signal_type in mods["type"]
+
+
+# History scoring tests
+
+def test_no_history_signal_is_score_0(candidate_resource):
+    assert esteemer.calculate_history_score(candidate_resource,{}) == {"score": 0.0}
+
+    assert esteemer.calculate_history_score(candidate_resource, None) == {"score": 0.0}
+    
+def test_history_with_two_recurrances(candidate_resource, history):
+    info = esteemer.calculate_history_score(candidate_resource, history)
+    
+    assert info['score'] == 2/11
+

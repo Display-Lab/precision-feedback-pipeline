@@ -1,16 +1,15 @@
 import json
 import random
 
-from rdflib import RDF, XSD, BNode, Graph, Literal, URIRef
+from rdflib import XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
 from bitstomach2.signals import Comparison, Trend
-from utils.namespace import PSDO, RO, SLOWMO
-
 from esteemer.signals import History
+from utils.namespace import SLOWMO
 
 
-def score(candidate_resource: Resource, history: json, preferences: json):
+def score(candidate_resource: Resource, history: json, preferences: json) -> Resource:
     """
     calculates score.
 
@@ -28,20 +27,17 @@ def score(candidate_resource: Resource, history: json, preferences: json):
     motivating_info = calculate_motivating_info_score(candidate_resource)
 
     # 2. based on history
-    history_score = calculate_history_score(candidate_resource, history)
+    history_info = calculate_history_score(candidate_resource, history)
 
     # 3. based on preferences
     preference_score = calculate_preference_score(candidate_resource, preferences)
 
     # calculate final score = function of sub-scores
-    final_score = motivating_info["score"] + history_score + preference_score
+    final_score = motivating_info["score"] + -history_info["score"] + preference_score
 
-    # update the candidate with the score
-    update_candidate_score(
-        candidate_resource,
-        final_score,
-        motivating_info.setdefault("number_of_months", 0),
-    )
+    candidate_resource[SLOWMO.Score] = Literal(final_score, datatype=XSD.double)
+
+    return candidate_resource
 
 
 def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
@@ -103,7 +99,7 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
     return mod
 
 
-def calculate_history_score(candidate_resource: Resource, history: json) -> float:
+def calculate_history_score(candidate_resource: Resource, history: dict) -> dict:
     """
     calculates history sub-score.
 
@@ -114,16 +110,24 @@ def calculate_history_score(candidate_resource: Resource, history: json) -> floa
     Returns:
     float: history sub-score.
     """
+    if not history:
+        return {"score": 0}
+
     # turn candidate resource into a 'history' element for the current month
-    
+    current_hist = History.to_element(candidate_resource)
     # add to history
-    
+    history.update(current_hist)
+
     signals = History.detect(history)
-    
-    
-    
-    
-    return 0
+
+    if not signals:
+        return {"score": 0}
+
+    mod = History.moderators(signals)[0]
+
+    mod["score"] = mod["occurance"] / 11
+
+    return mod
 
 
 def calculate_preference_score(
@@ -140,38 +144,6 @@ def calculate_preference_score(
     float: preference sub-score.
     """
     return 0
-
-
-def update_candidate_score(
-    candidate_resource: Resource, score: float, number_of_months: int
-):
-    """
-    updates candidate score
-
-    Parameters:
-    - candidate_resource (Resource): The candidate resource.
-    - score (float): The score.
-    - number_of_months (int): The number of months.
-
-    Returns:
-    """
-    performer_graph: Graph = candidate_resource.graph
-
-    performer_graph.add(
-        (
-            candidate_resource.identifier,
-            SLOWMO.Score,
-            Literal(score, datatype=XSD.double),
-        )
-    )
-
-    performer_graph.add(
-        (
-            candidate_resource.identifier,
-            SLOWMO.numberofmonths,
-            Literal(number_of_months),
-        )
-    )
 
 
 def select_candidate(performer_graph: Graph) -> BNode:
@@ -206,4 +178,3 @@ def select_candidate(performer_graph: Graph) -> BNode:
     performer_graph.add((selected_candidate, URIRef("slowmo:selected"), Literal(True)))
 
     return selected_candidate
-
