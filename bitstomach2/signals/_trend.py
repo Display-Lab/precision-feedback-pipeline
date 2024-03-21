@@ -21,7 +21,7 @@ class Trend(Signal):
         if perf_data.empty:
             raise ValueError
 
-        if perf_data["passed_percentage"].count() < 3:
+        if perf_data["passed_rate"].count() < 3:
             return None
 
         slope = Trend._detect(perf_data)
@@ -57,9 +57,9 @@ class Trend(Signal):
 
         for signal in super().select(motivating_informations):
             motivating_info_dict = super().moderators(signal)
-            motivating_info_dict["trend_size"] = signal.value(
+            motivating_info_dict["trend_size"] = round(abs(signal.value(
                 SLOWMO.PerformanceTrendSlope
-            ).value
+            ).value),4)
 
             mods.append(motivating_info_dict)
 
@@ -70,9 +70,12 @@ class Trend(Signal):
         """
         calcolates the slope of a monotonically increasing or decreasing trend over three month.
         """
-        performance_rates = perf_data["passed_percentage"]
+        performance_rates = perf_data["passed_rate"]
         change_this_month = performance_rates.iloc[-1] - performance_rates.iloc[-2]
         change_last_month = performance_rates.iloc[-2] - performance_rates.iloc[-3]
+
+        if change_this_month == 0:
+            return 0
 
         if change_this_month * change_last_month < 0:
             return 0

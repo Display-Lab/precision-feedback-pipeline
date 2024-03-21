@@ -41,7 +41,7 @@ def performance_data_frame():
             "staff_number",
             "measure",
             "month",
-            "passed_percentage",
+            "passed_rate",
             "passed_count",
             "flagged_count",
             "denominator",
@@ -50,7 +50,7 @@ def performance_data_frame():
             "peer_90th_percentile_benchmark",
             "goal_comparator_content",
         ],
-        [157, "PONV05", "2022-08-01", 95.0, 85.0, 0, 100.0, 84.0, 88.0, 90.0, 99.0],
+        [157, "PONV05", "2022-08-01", 0.95, 85.0, 0, 100.0, 84.0, 88.0, 90.0, 99.0],
     ]
     return pd.DataFrame(performance_data[1:], columns=performance_data[0])
 
@@ -77,7 +77,7 @@ def candidate_resource(performance_data_frame):
 
 def test_score(candidate_resource):
     esteemer.score(candidate_resource, None, None)
-    assert candidate_resource.value(SLOWMO.Score).value == pytest.approx(0.07)
+    assert candidate_resource.value(SLOWMO.Score).value == pytest.approx(0.035)
 
 
 def test_calculate_preference_score(candidate_resource):
@@ -96,7 +96,7 @@ def test_select_candidate():
 
 def test_calculate_gap_motivating_info(candidate_resource):
     score_info = esteemer.calculate_motivating_info_score(candidate_resource)
-    assert score_info["score"] == pytest.approx(0.07)
+    assert score_info["score"] == pytest.approx(0.035)
     assert PSDO.positive_performance_gap_content in score_info["type"]
     assert "number_of_months" not in score_info
 
@@ -118,5 +118,5 @@ def test_no_history_signal_is_score_0(candidate_resource):
 def test_history_with_two_recurrances(candidate_resource, history):
     info = esteemer.calculate_history_score(candidate_resource, history)
     
-    assert info['score'] == 2/11
+    assert info['score'] == round( 2 / 11, 4) * -0.1
 

@@ -20,15 +20,15 @@ class History(Signal):
         history = pd.DataFrame.from_dict(message_history, orient="index")
         history = history.sort_index()
 
-        occurance = History._detect(history)
+        recurrence = History._detect(history)
 
-        return [History._resource(occurance)]
+        return [History._resource(recurrence)]
 
     @classmethod
-    def _resource(cls, occurance: int) -> Resource:
+    def _resource(cls, recurrence_count: int) -> Resource:
         base = super()._resource()
 
-        base[URIRef("occurance")] = Literal(occurance, datatype=XSD.integer)
+        base[URIRef("recurrence_count")] = Literal(recurrence_count, datatype=XSD.integer)
         return base
 
     @classmethod
@@ -37,7 +37,7 @@ class History(Signal):
 
         for signal in super().select(signals):
             history_dict = {}
-            history_dict["occurance"] = signal.value(URIRef("occurance")).value
+            history_dict["recurrence_count"] = round( signal.value(URIRef("recurrence_count")).value / 11, 4) 
             mods.append(history_dict)
 
         return mods

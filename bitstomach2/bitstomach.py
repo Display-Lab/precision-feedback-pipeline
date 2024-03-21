@@ -43,8 +43,8 @@ def fix_up(performance_data):
     performance_df.rename(
         columns={"MPOG_goal": "goal_comparator_content"}, inplace=True
     )
-    performance_df["passed_percentage"] = (
-        performance_df["passed_count"] / performance_df["denominator"] * 100.0
+    performance_df["passed_rate"] = (
+        performance_df["passed_count"] / performance_df["denominator"] 
     )
 
     return performance_df

@@ -21,7 +21,7 @@ def test_empty_perf_data_raises_value_error():
 def test_no_trend_returns_none():
     mi = Trend.detect(
         pd.DataFrame(
-            {"passed_percentage": [90, 90, 90]},
+            {"passed_rate": [90, 90, 90]},
         )
     )
     assert mi is None
@@ -30,24 +30,24 @@ def test_no_trend_returns_none():
 ## Signal detection tests
 def test_trend_is_detected():
     slope = Trend._detect(
-        pd.DataFrame(columns=["passed_percentage"], data=[[90], [91], [92]])
+        pd.DataFrame(columns=["passed_rate"], data=[[90], [91], [92]])
     )
     assert slope == 1
 
     slope = Trend._detect(
-        pd.DataFrame(columns=["passed_percentage"], data=[[90], [92], [94]])
+        pd.DataFrame(columns=["passed_rate"], data=[[90], [92], [94]])
     )
     assert slope == 2
 
     slope = Trend._detect(
-        pd.DataFrame(columns=["passed_percentage"], data=[[90], [92], [90], [92], [94]])
+        pd.DataFrame(columns=["passed_rate"], data=[[90], [92], [90], [92], [94]])
     )
     assert slope == 2
 
 
 def test_trend_as_resource():
     signal = Trend.detect(
-        pd.DataFrame(columns=["passed_percentage"], data=[[90], [91], [92]])
+        pd.DataFrame(columns=["passed_rate"], data=[[90], [91], [92]])
     ).pop()
 
     assert isinstance(signal, Resource)
@@ -99,7 +99,7 @@ def test_select():
         pd.DataFrame(
             columns=[
                 "measure",
-                "passed_percentage",
+                "passed_rate",
                 "peer_average_comparator",
                 "peer_75th_percentile_benchmark",
                 "peer_90th_percentile_benchmark",
@@ -111,7 +111,7 @@ def test_select():
 
     r2 = Trend.detect(
         pd.DataFrame(
-            {"passed_percentage": [89, 90, 91]},
+            {"passed_rate": [89, 90, 91]},
         )
     )
 
@@ -141,12 +141,12 @@ def test_select():
 def test_trend_identity():
     r1 = Trend.detect(
         pd.DataFrame(
-            {"passed_percentage": [89, 90, 91]},
+            {"passed_rate": [89, 90, 91]},
         )
     )
     r2 = Trend.detect(
         pd.DataFrame(
-            {"passed_percentage": [89, 90, 91]},
+            {"passed_rate": [89, 90, 91]},
         )
     )
 
@@ -162,7 +162,7 @@ def test_detect_creates_correct_signal_with_magick_mock_calc():
 
     signal = Trend.detect(
         pd.DataFrame(
-            {"passed_percentage": [89, 90, 91]},  # slope 1.0
+            {"passed_rate": [89, 90, 91]},  # slope 1.0
         )
     )
 
@@ -176,7 +176,7 @@ def test_detect_with_decoy_calc(decoy: Decoy):
 
     signal = Trend.detect(
         pd.DataFrame(
-            {"passed_percentage": [89, 90, 91]},  # slope 1.0
+            {"passed_rate": [89, 90, 91]},  # slope 1.0
         )
     )
 
