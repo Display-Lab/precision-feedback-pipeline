@@ -159,8 +159,8 @@ async def createprecisionfeedback(info: Request):
     performance_data_df = performance_data_df[1:]
     p_df = req_info1["Performance_data"]
     del req_info1["Performance_data"]
-    history = req_info1["History"]
-    del req_info1["History"]
+    history: dict = req_info1.setdefault("History",{})
+    del req_info1["History"]  
     preferences = req_info1["Preferences"]
     ## Pass message instance ID from input message through to pictoralist
     message_instance_id = req_info1.get("message_instance_id")

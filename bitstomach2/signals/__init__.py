@@ -10,14 +10,17 @@ class Signal:
     signal_type: URIRef
 
     @classmethod
-    def select(cls, motivating_informations: List[Resource]) -> List[Resource]:
+    def select(cls, signals: List[Resource]) -> List[Resource]:
         """
         select method filters motivating information using the signal type
         """
+        if not signals:
+            return []
+        
         return list(
             filter(
                 cls.is_rdf_type_of,
-                motivating_informations,
+                signals,
             )
         )
 

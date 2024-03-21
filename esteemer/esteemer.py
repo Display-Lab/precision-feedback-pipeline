@@ -1,14 +1,15 @@
 import json
 import random
 
-from rdflib import RDF, XSD, BNode, Graph, Literal, URIRef
+from rdflib import XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
 from bitstomach2.signals import Comparison, Trend
-from utils.namespace import PSDO, RO, SLOWMO
+from esteemer.signals import History
+from utils.namespace import SLOWMO
 
 
-def score(candidate_resource: Resource, history: json, preferences: json):
+def score(candidate_resource: Resource, history: json, preferences: json) -> Resource:
     """
     calculates score.
 
@@ -26,20 +27,17 @@ def score(candidate_resource: Resource, history: json, preferences: json):
     motivating_info = calculate_motivating_info_score(candidate_resource)
 
     # 2. based on history
-    history_score = calculate_history_score(candidate_resource, history)
+    history_info = calculate_history_score(candidate_resource, history)
 
     # 3. based on preferences
     preference_score = calculate_preference_score(candidate_resource, preferences)
 
     # calculate final score = function of sub-scores
-    final_score = motivating_info["score"] + history_score + preference_score
+    final_score = motivating_info["score"] + -history_info["score"] + preference_score
 
-    # update the candidate with the score
-    update_candidate_score(
-        candidate_resource,
-        final_score,
-        motivating_info.setdefault("number_of_months", 0),
-    )
+    candidate_resource[SLOWMO.Score] = Literal(final_score, datatype=XSD.double)
+
+    return candidate_resource
 
 
 def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
@@ -101,7 +99,7 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
     return mod
 
 
-def calculate_history_score(candidate_resource: Resource, history: json) -> float:
+def calculate_history_score(candidate_resource: Resource, history: dict) -> dict:
     """
     calculates history sub-score.
 
@@ -112,7 +110,24 @@ def calculate_history_score(candidate_resource: Resource, history: json) -> floa
     Returns:
     float: history sub-score.
     """
-    return 0
+    if not history:
+        return {"score": 0}
+
+    # turn candidate resource into a 'history' element for the current month
+    current_hist = History.to_element(candidate_resource)
+    # add to history
+    history.update(current_hist)
+
+    signals = History.detect(history)
+
+    if not signals:
+        return {"score": 0}
+
+    mod = History.moderators(signals)[0]
+
+    mod["score"] = mod["occurance"] / 11
+
+    return mod
 
 
 def calculate_preference_score(
@@ -129,38 +144,6 @@ def calculate_preference_score(
     float: preference sub-score.
     """
     return 0
-
-
-def update_candidate_score(
-    candidate_resource: Resource, score: float, number_of_months: int
-):
-    """
-    updates candidate score
-
-    Parameters:
-    - candidate_resource (Resource): The candidate resource.
-    - score (float): The score.
-    - number_of_months (int): The number of months.
-
-    Returns:
-    """
-    performer_graph: Graph = candidate_resource.graph
-
-    performer_graph.add(
-        (
-            candidate_resource.identifier,
-            SLOWMO.Score,
-            Literal(score, datatype=XSD.double),
-        )
-    )
-
-    performer_graph.add(
-        (
-            candidate_resource.identifier,
-            SLOWMO.numberofmonths,
-            Literal(number_of_months),
-        )
-    )
 
 
 def select_candidate(performer_graph: Graph) -> BNode:
@@ -195,131 +178,3 @@ def select_candidate(performer_graph: Graph) -> BNode:
     performer_graph.add((selected_candidate, URIRef("slowmo:selected"), Literal(True)))
 
     return selected_candidate
-
-
-def get_gap_info(candidate_resource: Resource) -> tuple[float, URIRef, None]:
-    """
-    returns gap size, gap type.
-
-    Parameters:
-    - candidate_resource (Resource): The candidate resource.
-
-
-    Returns:
-    tuple[float, URIRef, None]: [gap size, gap type, None]
-    """
-    performer_graph = candidate_resource.graph
-    measure = candidate_resource.value(SLOWMO.RegardingMeasure)
-    comparator = candidate_resource.value(SLOWMO.RegardingComparator)
-    p1 = performer_graph.resource(BNode("p1"))
-
-    dispositions: list[Resource] = [
-        disposition
-        for disposition in p1[RO.has_disposition]
-        if (
-            (
-                disposition.identifier,
-                SLOWMO.RegardingComparator,
-                comparator.identifier,
-            )
-            in performer_graph
-            and (
-                disposition.identifier,
-                SLOWMO.RegardingMeasure,
-                measure.identifier,
-            )
-            in performer_graph
-            and (
-                (
-                    disposition.identifier,
-                    RDF.type,
-                    PSDO.positive_performance_gap_content,
-                )
-                in performer_graph
-                or (
-                    disposition.identifier,
-                    RDF.type,
-                    PSDO.negative_performance_gap_content,
-                )
-                in performer_graph
-            )
-        )
-    ]
-
-    if len(dispositions) == 0:
-        return 0, None
-
-    gap_size = performer_graph.value(
-        dispositions[0].identifier, SLOWMO.PerformanceGapSize, None
-    ).value
-
-    gap_type = performer_graph.value(
-        dispositions[0].identifier, RDF.type, None
-    )  # use gap_type.n3() to see the value
-    return gap_size, gap_type, None
-
-
-def get_trend_info(candidate_resource: Resource) -> tuple[float, URIRef, int]:
-    """
-    returns trend size, trend type and number of month.
-
-    Parameters:
-    - candidate_resource (Resource): The candidate resource.
-
-
-    Returns:
-    tuple[float, URIRef, None]: [trend size, trend type, number of month]
-    """
-    performer_graph: Graph = candidate_resource.graph
-    measure = candidate_resource.value(SLOWMO.RegardingMeasure)
-
-    p1 = performer_graph.resource(BNode("p1"))
-
-    dispositions: list[Resource] = [
-        disposition
-        for disposition in p1[RO.has_disposition]
-        if (
-            (
-                disposition.identifier,
-                SLOWMO.RegardingMeasure,
-                measure.identifier,
-            )
-            in performer_graph
-            and (
-                (
-                    disposition.identifier,
-                    RDF.type,
-                    PSDO.positive_performance_trend_content,
-                )
-                in performer_graph
-                or (
-                    disposition.identifier,
-                    RDF.type,
-                    PSDO.negative_performance_trend_content,
-                )
-                in performer_graph
-            )
-        )
-    ]
-
-    if len(dispositions) == 0:
-        return 0, None
-
-    trend_size = performer_graph.value(
-        dispositions[0].identifier,
-        SLOWMO.PerformanceTrendSlope,
-        None,
-    ).value
-
-    number_of_months = performer_graph.value(
-        dispositions[0].identifier,
-        SLOWMO.numberofmonths,
-        None,
-    ).value
-
-    trend_type = performer_graph.value(dispositions[0].identifier, RDF.type, None)
-    return {
-        "trend_size": float(trend_size),
-        "type": trend_type,
-        "number_of_months": number_of_months,
-    }

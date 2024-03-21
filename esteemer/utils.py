@@ -146,7 +146,7 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
         return s_m
 
 
-def candidates_records(performer_graph: Graph) -> dict:
+def candidates_records(performer_graph: Graph) -> List[List]:
     """
     provides the representation of candidates as a dictionary.
 
@@ -156,8 +156,7 @@ def candidates_records(performer_graph: Graph) -> dict:
     Returns:
     dict: The representation of candidates as a dictionary.
     """
-    #candidate_list = []
-    candidate_list = [["staff_number", "measure", "month", "score", "number_of_months", "name", "acceptable_by", "selected"]]
+    candidate_list = [["staff_number", "measure", "month", "score", "name", "acceptable_by", "selected"]]
 
 
     for a_candidate in candidates(performer_graph):
@@ -168,27 +167,7 @@ def candidates_records(performer_graph: Graph) -> dict:
     return candidate_list
 
 
-def candidate_as_dictionary(a_candidate: Resource) -> dict:
-    representation = {}
-    score = a_candidate.value(SLOWMO.Score) 
-    if score is not None:  # Literal('0.0') tests as false, so test for None explicitly
-        score = round(
-            float(score.value), 4
-        )  # and we are explicit floating to eliminate numpy types that give the json decoder problems
-
-    representation["score"] = score
-
-    representation["number_of_months"] = a_candidate.value(SLOWMO.numberofmonths)
-
-    representation["measure"] = a_candidate.value(SLOWMO.RegardingMeasure).identifier
-    representation["name"] = a_candidate.value( SLOWMO.name)
-    representation["acceptable_by"] =  a_candidate.value( URIRef("slowmo:acceptable_by"))
-    representation["selected"] = a_candidate.value( URIRef("slowmo:selected"))
-
-    return representation
-
 def candidate_as_record(a_candidate: Resource) -> List:
-    #["staff_number", "measure", "month", "score", "number_of_months", "name", "acceptable_by", "selected"]
     representation = []
     
     representation.append(a_candidate.graph.value(BNode("p1"),URIRef("http://example.com/slowmo#IsAboutPerformer")).value)
@@ -196,7 +175,6 @@ def candidate_as_record(a_candidate: Resource) -> List:
     representation.append("N/A")
     score = a_candidate.value(SLOWMO.Score) 
     representation.append(round(float(score.value), 4) if score else None)
-    representation.append(a_candidate.value(SLOWMO.numberofmonths))
     representation.append(a_candidate.value( SLOWMO.name))
     representation.append(a_candidate.value( URIRef("slowmo:acceptable_by")))
     representation.append(a_candidate.value( URIRef("slowmo:selected")))  
