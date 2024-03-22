@@ -4,7 +4,7 @@ import pandas as pd
 from rdflib import Literal, URIRef, BNode
 from rdflib.namespace import RDF
 #from calc_gaps_slopes import gap_calc,trend_calc,monotonic_pred,mod_collector
-
+from bitstomach2.signals import Trend
 
 
 
@@ -101,14 +101,5 @@ def theil_reg(df, xcol, ycol):
    return pd.Series(model)
 
 def calculate_trend(df, month, performance_rate):
-    performance_rates = list(df[performance_rate])
-    last_index= len(performance_rates) - 1 
-    change_this_month = performance_rates[last_index ] - performance_rates[last_index - 1]
-    change_last_month = performance_rates[last_index - 1] - performance_rates[last_index - 2]
-    
-    if change_this_month * change_last_month < 0:
-        return 0   
-    
-    return (performance_rates[last_index ] - performance_rates[last_index - 2]) / 2
-    
-    
+    df["passed_rate"]=df[performance_rate]
+    return Trend._detect(df)

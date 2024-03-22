@@ -156,7 +156,7 @@ def candidates_records(performer_graph: Graph) -> List[List]:
     Returns:
     dict: The representation of candidates as a dictionary.
     """
-    candidate_list = [["staff_number", "measure", "month", "score", "name", "acceptable_by", "selected"]]
+    candidate_list = [["staff_number", "measure", "month", "score","motivating_score", "history_score", "name", "acceptable_by", "selected"]]
 
 
     for a_candidate in candidates(performer_graph):
@@ -174,7 +174,9 @@ def candidate_as_record(a_candidate: Resource) -> List:
     representation.append(a_candidate.value(SLOWMO.RegardingMeasure).identifier)
     representation.append("N/A")
     score = a_candidate.value(SLOWMO.Score) 
-    representation.append(round(float(score.value), 4) if score else None)
+    representation.append(float(score.value) if score else None)
+    representation.append(float( a_candidate.value(URIRef("motivating_score"))) if score else None)
+    representation.append(float( a_candidate.value(URIRef("history_score"))) if score else None)
     representation.append(a_candidate.value( SLOWMO.name))
     representation.append(a_candidate.value( URIRef("slowmo:acceptable_by")))
     representation.append(a_candidate.value( URIRef("slowmo:selected")))  

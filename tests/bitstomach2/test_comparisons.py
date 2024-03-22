@@ -24,7 +24,7 @@ def perf_data() -> pd.DataFrame:
             "staff_number",
             "measure",
             "month",
-            "passed_percentage",
+            "passed_rate",
             "passed_count",
             "flagged_count",
             "denominator",
@@ -33,8 +33,8 @@ def perf_data() -> pd.DataFrame:
             "peer_90th_percentile_benchmark",
             "goal_comparator_content",
         ],
-        [157, "BP01", "2022-08-01", 85.0, 85.0, 0, 100.0, 84.0, 88.0, 90.0, 99.0],
-        [157, "BP01", "2022-09-01", 90.0, 90.0, 0, 100.0, 85.0, 89.0, 91.0, 100.0],
+        [157, "BP01", "2022-08-01", 0.85, 85.0, 0, 100.0, 84.0, 88.0, 90.0, 99.0],
+        [157, "BP01", "2022-09-01", 0.90, 90.0, 0, 100.0, 85.0, 89.0, 91.0, 100.0],
     ]
     return pd.DataFrame(performance_data[1:], columns=performance_data[0])
 
@@ -72,7 +72,7 @@ def test_multiple_gap_values(perf_data):
 
     assert 4 == len(signals)
 
-    expected_gap_sizes = [5.0, 1.0, -1.0, -10.0]
+    expected_gap_sizes = [0.05, 0.01, -0.01, -0.1]
 
     for index, signal in enumerate(signals):
         v = signal.value(SLOWMO.PerformanceGapSize).value
@@ -84,7 +84,7 @@ def test_comparator_node(perf_data):
 
     signals = signal.detect(perf_data)
 
-    expected_comparator_values = [85.0, 89.0, 91.0, 100.0]
+    expected_comparator_values = [0.85, 0.89, 0.91, 1.0]
 
     for index, signal in enumerate(signals):
         assert Literal(expected_comparator_values[index]) == signal.value(

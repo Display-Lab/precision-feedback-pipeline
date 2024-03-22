@@ -45,7 +45,7 @@ def test_history_detect_returns_list():
 def test_history_detect_signal(history):
     signal = History.detect(history)[0]
 
-    assert signal.value(URIRef("occurance")) == Literal(2)
+    assert signal.value(URIRef("recurrence_count")) == Literal(2)
 
 
 def test_moderators_no_resources_return_empty_list():
@@ -57,7 +57,7 @@ def test_moderators_no_resources_return_empty_list():
 
 def test_single_resource_returns_single_moderator():
     signal = Graph().resource(BNode())
-    signal.add(URIRef("occurance"), Literal(4))
+    signal.add(URIRef("recurrence_count"), Literal(4))
     signal.add(RDF.type, History.signal_type)
     mods = History.moderators([signal])
 
@@ -65,7 +65,7 @@ def test_single_resource_returns_single_moderator():
     assert isinstance(mods[0], dict)
     assert len(mods) == 1
 
-    assert mods[0]["occurance"] == 4
+    assert mods[0]["recurrence_count"] == round(4/11,4)
 
 
 # Supplementary methods

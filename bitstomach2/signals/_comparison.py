@@ -28,7 +28,7 @@ class Comparison(Signal):
         if perf_data.empty:
             raise ValueError
 
-        level = perf_data["passed_percentage"][-1:].to_list()[0]
+        level = perf_data["passed_rate"][-1:].to_list()[0]
 
         resources = []
         comp_cols = [
@@ -37,12 +37,12 @@ class Comparison(Signal):
             "peer_90th_percentile_benchmark",
             "goal_comparator_content",
         ]
-        comparators = perf_data[-1:][comp_cols].to_dict(orient="records")[0]
+        comparators = perf_data[-1:][comp_cols].to_dict(orient="records")[0] 
 
         for key, value in comparators.items():
-            gap = Comparison._detect(level, value)
+            gap = Comparison._detect(level, value / 100)
 
-            r = Comparison._resource(gap, key, value)
+            r = Comparison._resource(gap, key, value / 100)
 
             resources.append(r)
 
@@ -88,9 +88,9 @@ class Comparison(Signal):
 
         for signal in super().select(motivating_informations):
             motivating_info_dict = super().moderators(signal)
-            motivating_info_dict["gap_size"] = signal.value(
+            motivating_info_dict["gap_size"] = round(abs(signal.value(
                 SLOWMO.PerformanceGapSize
-            ).value
+            ).value),4)
             motivating_info_dict["comparator_type"] = signal.value(
                 SLOWMO.RegardingComparator / RDF.type
             ).identifier
