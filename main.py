@@ -1,3 +1,4 @@
+from pathlib import Path
 from rdflib import BNode, Graph, Literal, URIRef #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
 from bitstomach2 import bitstomach
 
@@ -193,28 +194,21 @@ async def createprecisionfeedback(info: Request):
         sys.exit(4)
 
     performer_graph = bs.annotate()
-    op = performer_graph.serialize(format="json-ld", indent=4)
-    if settings.outputs == True and settings.log_level == "DEBUG":
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_bs.json", "w")
-        f.write(op)
-        f.close()
-        # print(settings.outputs)
-        # print(settings.log_level)
+    debug_output_if_set(performer_graph, "outputs/spek_bs.json")
     
-    #BitStomach 2
+    ### Start with cool new super graph
+    
+    cool_new_super_graph = Graph()
+
+    cool_new_super_graph += causal_pathways
+    cool_new_super_graph += measure_details
+
+    # BitStomach 2
     g: Graph = bitstomach.extract_signals(performance_data)
     performer_graph += g
-    
-    
-    if settings.outputs == True and settings.log_level == "DEBUG":
-        op=performer_graph.serialize(format='json-ld', indent=4)
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_bs2.json", "w")
-        f.write(op)
-        f.close()
+    cool_new_super_graph += g
+    debug_output_if_set(performer_graph, "outputs/spek_bs2.json")
+
 
     #CandidateSmasher
 
@@ -230,13 +224,7 @@ async def createprecisionfeedback(info: Request):
     CS = cs.create_candidates(peer_types, df_3)
     # create goal
     CS = cs.create_candidates(goal_types, df16)
-    oc = CS.serialize(format="json-ld", indent=4)
-    if settings.outputs is True and settings.log_level == "DEBUG":
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_cs.json", "w")
-        f.write(oc)
-        f.close()
+    debug_output_if_set(performer_graph, "outputs/spek_cs.json")
 
     # Thinkpuddung
     logger.info("Calling ThinkPudding from main...")
@@ -245,13 +233,7 @@ async def createprecisionfeedback(info: Request):
     tp.process_performer_graph()
     tp.matching()
     performer_graph = tp.insert()
-    if settings.outputs is True and settings.log_level == "DEBUG":
-        ot = performer_graph.serialize(format="json-ld", indent=4)
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_tp.json", "w")
-        f.write(ot)
-        f.close()
+    debug_output_if_set(performer_graph, "outputs/spek_tp.json")
 
     # #Esteemer
     logger.info("Calling Esteemer from main...")
@@ -265,13 +247,7 @@ async def createprecisionfeedback(info: Request):
     selected_candidate = esteemer.select_candidate(performer_graph)
 
     # print updated graph by esteemer
-    if settings.outputs is True and settings.log_level == "DEBUG":
-        st = performer_graph.serialize(format="json-ld", indent=4)
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_st.json", "w")
-        f.write(st)
-        f.close()
+    debug_output_if_set(performer_graph, "outputs/spek_st.json")
 
     selected_message = utils.render(performer_graph, selected_candidate)
 
@@ -294,3 +270,9 @@ async def createprecisionfeedback(info: Request):
             full_selected_message["candidates"] = utils.candidates_records(performer_graph)
 
     return full_selected_message
+
+def debug_output_if_set(performer_graph: Graph, file_location):
+    if settings.outputs is True and settings.log_level == "DEBUG":
+        file_path = Path(file_location)
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        performer_graph.serialize(destination=file_path, format="json-ld", indent=2, auto_compact=True)
