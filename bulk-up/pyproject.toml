@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "bulk-up"
+version = "0.1.0"
+description = ""
+authors = ["pboisver <pboisver@umich.edu>"]
+readme = "README.md"
+packages = [{include = "bulk_up", from = "src"}]
+
+[tool.poetry.scripts]
+bulk-up = "bulk_up.main:app"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+typer = {extras = ["all"], version = "^0.10.0"}
+google-auth = "^2.29.0"
+requests = "^2.31.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
