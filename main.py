@@ -21,6 +21,9 @@ import sys
 import os
 
 from esteemer import utils, esteemer
+from rdflib.resource import Resource
+from utils.namespace import PSDO
+from rdflib import RDFS, RDF
 
 global templates, pathways, measures
 
@@ -199,10 +202,32 @@ async def createprecisionfeedback(info: Request):
     ### Start with cool new super graph
     
     cool_new_super_graph = Graph()
+    
+    peer_75th_percentile_benchmark = cool_new_super_graph.resource(PSDO.peer_75th_percentile_benchmark)
+    peer_75th_percentile_benchmark[RDFS.label] = Literal("Top 25")
+    peer_75th_percentile_benchmark.add(RDF.type, PSDO.comparator_content)
+    peer_75th_percentile_benchmark.add(RDF.type, PSDO.social_comparator_content)
+    
+    peer_90th_percentile_benchmark = cool_new_super_graph.resource(PSDO.peer_90th_percentile_benchmark)
+    peer_90th_percentile_benchmark[RDFS.label] = Literal("Top 10")
+    peer_90th_percentile_benchmark.add(RDF.type, PSDO.comparator_content)
+    peer_90th_percentile_benchmark.add(RDF.type, PSDO.social_comparator_content)
+    
+    peer_average_comparator = cool_new_super_graph.resource(PSDO.peer_average_comparator)
+    peer_average_comparator[RDFS.label] = Literal("Peers")
+    peer_average_comparator.add(RDF.type, PSDO.comparator_content)
+    peer_average_comparator.add(RDF.type, PSDO.social_comparator_content)
+    
+    goal_comparator_content = cool_new_super_graph.resource(PSDO.goal_comparator_content)
+    goal_comparator_content[RDFS.label] = Literal("Goal")
+    goal_comparator_content[RDF.type] = PSDO.comparator_content
+    
+    cool_new_super_graph
 
     cool_new_super_graph += causal_pathways
     cool_new_super_graph += measure_details
-
+    cool_new_super_graph += templates
+    
     # BitStomach 2
     g: Graph = bitstomach.extract_signals(performance_data)
     performer_graph += g
@@ -238,18 +263,20 @@ async def createprecisionfeedback(info: Request):
     # #Esteemer
     logger.info("Calling Esteemer from main...")
 
-    for measure in utils.measures(performer_graph):
+    for measure in utils.measures(cool_new_super_graph):
         candidates = utils.candidates(
             performer_graph, filter_acceptable=True, measure=measure
         )
         for candidate in candidates:
-            esteemer.score(candidate, history, preferences)
-    selected_candidate = esteemer.select_candidate(performer_graph)
+            # temporary shim to get candidates from existing thinkpudding into new graph
+            cool_new_super_candidate = add_candidate_to_super_graph(cool_new_super_graph, candidate)
+            esteemer.score(cool_new_super_candidate, history, preferences)
+    selected_candidate = esteemer.select_candidate(cool_new_super_graph)
 
     # print updated graph by esteemer
     debug_output_if_set(performer_graph, "outputs/spek_st.json")
 
-    selected_message = utils.render(performer_graph, selected_candidate)
+    selected_message = utils.render(cool_new_super_graph, selected_candidate)
 
     ### Pictoralist 2, now on the Nintendo DS: ###
     logger.info("Calling Pictoralist from main...")
@@ -265,9 +292,9 @@ async def createprecisionfeedback(info: Request):
         pc.graph_controller()  # Select and run graphing based on display type
         full_selected_message = pc.prepare_selected_message()
         if settings.log_level == "DEBUG":
-            performer_graph.add((BNode("p1"),URIRef("http://example.com/slowmo#IsAboutPerformer"),Literal(performance_data_df["staff_number"].iloc[0])  ))
+            cool_new_super_graph.add((BNode("p1"),URIRef("http://example.com/slowmo#IsAboutPerformer"),Literal(performance_data_df["staff_number"].iloc[0])  ))
         
-            full_selected_message["candidates"] = utils.candidates_records(performer_graph)
+            full_selected_message["candidates"] = utils.candidates_records(cool_new_super_graph)
 
     return full_selected_message
 
@@ -276,3 +303,10 @@ def debug_output_if_set(performer_graph: Graph, file_location):
         file_path = Path(file_location)
         file_path.parent.mkdir(parents=True, exist_ok=True)
         performer_graph.serialize(destination=file_path, format="json-ld", indent=2, auto_compact=True)
+
+def add_candidate_to_super_graph(cool_new_super_graph: Graph, candidate: Resource) -> Resource:
+    cool_new_super_candidate = cool_new_super_graph.resource(candidate.identifier)
+    for p,o in candidate.predicate_objects():
+        cool_new_super_candidate.add(p.identifier,o)   
+    
+    return cool_new_super_candidate
