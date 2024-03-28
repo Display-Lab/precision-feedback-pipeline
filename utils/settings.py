@@ -26,6 +26,8 @@ class Settings:
         self.pathways  = config('pathways', cast=str)
         self.measures  = config('measures', cast=str)
         self.mpm       = config('mpm', cast=str)
+        self.comparators       = config('comparators', cast=str)
+
 
         # Instance settings
         self.log_level      = config('log_level', cast=str, default='INFO')         # Logging level for instance

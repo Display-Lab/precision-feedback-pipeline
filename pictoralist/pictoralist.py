@@ -26,7 +26,7 @@ class Pictoralist():
         self.template_name      = str(selected_candidate["template_name"])          # Message template name
         self.display_format     = str(selected_candidate["display"])                # Selected display type
         self.message_text       = str(selected_candidate["message_text"])           # Raw message template fulltext (sans 'Additional message text' (changed 11/6))
-        self.comparator_type    = str(selected_candidate["comparator_type"])        # ["Top 25", "Top 10", "Peers", "Goal"] (Peers is peer average?)
+        self.comparator_type    = str(selected_candidate["comparator_type"])        # ["Peer Top 25%", "Peer Top 10%", "Peer Average", "Goal Value"]
         self.acceptable_by      = []                                                # Causal pathway determined to be acceptible by
         for pathway in selected_candidate["acceptable_by"]:
             self.acceptable_by.append(pathway)        # Add string value of rdflib literal to list
@@ -63,24 +63,20 @@ class Pictoralist():
 
         ## Change processing and graphing depending on comparator type:
         # Make changes based on peer 50th percentile benchmark being comparator message "is about"
-        if self.comparator_type == "Peer":
+        if self.comparator_type == "Peer Average":
             self.performance_data["comparator_level"] = self.performance_data["peer_average_benchmark"]*100 # Select which column of data to keep as the 'comparator_level'
-            self.comparator_series_label = "Peer Average"   # Label change for graph legend
         
         # Same as above, but for peer 75th percentile benchmark
-        elif self.comparator_type == "Top 25":
+        elif self.comparator_type == "Peer Top 25%":
             self.performance_data["comparator_level"] = self.performance_data["peer_75th_percentile_benchmark"]*100
-            self.comparator_series_label = "Peer Top 25%"
         
         # Same as above, but for peer 90th percentile benchmark
-        elif self.comparator_type == "Top 10":
+        elif self.comparator_type == "Peer Top 10%":
             self.performance_data["comparator_level"] = self.performance_data["peer_90th_percentile_benchmark"]*100
-            self.comparator_series_label = "Peer Top 10%"
 
         # Same as above, but for goal comparator messages
         else:
             self.performance_data["comparator_level"] = self.performance_data["MPOG_goal"]*100.0
-            self.comparator_series_label = "Goal Value"
 
 
         ## Convert values in selected columns for further processing:
@@ -105,7 +101,7 @@ class Pictoralist():
         all_months = pd.date_range(start_date, end_date, freq='MS')
 
         if len(all_months) != len(self.performance_data['month']):
-            logger.info(f"Data gap(s) detected, filling voids...")
+            logger.info("Data gap(s) detected, filling voids...")
 
             # Reindex the DataFrame with all months and fill missing values
             self.performance_data = self.performance_data.set_index('month').reindex(all_months, fill_value=None).reset_index()
@@ -220,7 +216,7 @@ class Pictoralist():
         plt.plot(x_values, perf_series, label="You", 
             color="#063763", linewidth=1.2, marker='.'
         )
-        plt.plot(x_values, comp_series, label=self.comparator_series_label, 
+        plt.plot(x_values, comp_series, label=self.comparator_type, 
             color="#02b5af", linewidth=1.0, marker='.'
         )
         
@@ -279,7 +275,7 @@ class Pictoralist():
         graphed_denom   = self.performance_data["denominator"][-self.display_timeframe:]
 
         ## If include_goal_line is True, plot the goal line
-        if self.plot_goal_line and self.comparator_series_label != 'Goal Value':
+        if self.plot_goal_line and self.comparator_type != 'Goal Value':
             plt.hlines(y=self.performance_data['goal_percent'][-self.display_timeframe:].values, 
                xmin=0, xmax=len(x_values), linestyle='--', color='black', label="Goal", linewidth=0.5
             )
@@ -288,7 +284,7 @@ class Pictoralist():
         x1 = np.arange(len(x_values)) + bar_width/2    # position for first bar
         x2 = [x + bar_width + bar_spacing for x in x1]      # position for second bar
         plt.bar(x1, graphed_perf, width=bar_width, label="You", color="#00254a")
-        plt.bar(x2, graphed_comp, width=bar_width, label=self.comparator_series_label, color="#4d5458")
+        plt.bar(x2, graphed_comp, width=bar_width, label=self.comparator_type, color="#4d5458")
 
         ## Add data labels for each bar in performance levels
         for month, performance, passed, denom in zip(x1, graphed_perf, graphed_pass, graphed_denom):
@@ -343,22 +339,22 @@ class Pictoralist():
     ### Graphing function control logic (modularized to allow for changes and extra display formats in the future):
     def graph_controller(self):
         if self.display_format == "line graph" and self.generate_image:
-            logger.info(f"Generating line graph from performance data...")
+            logger.info("Generating line graph from performance data...")
             self.generate_linegraph()
         
         elif self.display_format == "bar chart" and self.generate_image:
-            logger.info(f"Generating bar chart from performance data...")
+            logger.info("Generating bar chart from performance data...")
             self.generate_barchart()
         
         else:
-            logger.info(f"Generating text only feedback message, graphing skipped...")
+            logger.info("Generating text only feedback message, graphing skipped...")
 
 
 
 
     ### Prepare selected message as done previously for LDT continuity:
     def prepare_selected_message(self):
-        logger.debug(f"Running pictoralist/prepare_selected_message...")
+        logger.debug("Running pictoralist/prepare_selected_message...")
         candidate={}
         message={}
         candidate["message_template_id"]    =self.template_id
@@ -377,7 +373,7 @@ class Pictoralist():
             "pfp_version":'0.2.1',    # Ditto
             "staff_number":self.staff_ID,
             "selected_candidate":candidate,
-            "selected_comparator":self.comparator_series_label,
+            "selected_comparator":self.comparator_type,
             "performance_month":self.performance_data["month"].iloc[-1].strftime("%B %Y"),   # Becomes string in response, format here
             "performance_data":self.performance_block,
             "message_generated_datetime":self.init_time,

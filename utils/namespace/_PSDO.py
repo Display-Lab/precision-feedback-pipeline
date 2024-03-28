@@ -6,6 +6,9 @@ from utils.namespace import AliasingDefinedNamespace
 class PSDO(AliasingDefinedNamespace):
     _NS = Namespace("http://purl.obolibrary.org/obo/")
 
+    PSDO_0000093: URIRef
+    comparator_content: URIRef
+
     # http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
     PSDO_0000094: URIRef
     goal_comparator_content: URIRef
@@ -18,7 +21,7 @@ class PSDO(AliasingDefinedNamespace):
 
     PSDO_0000100: URIRef
     negative_performance_trend_content: URIRef
-    
+
     PSDO_0000101: URIRef
     performance_trend_content: URIRef
 
@@ -30,7 +33,7 @@ class PSDO(AliasingDefinedNamespace):
 
     PSDO_0000106: URIRef
     performance_gap_content: URIRef
-    
+
     PSDO_0000107: URIRef
     performance_content: URIRef
 
@@ -47,8 +50,8 @@ class PSDO(AliasingDefinedNamespace):
     # TODO: change to `motivating_information_content
     motivating_information: URIRef
 
-
     _alias = {
+        "comparator_content": "PSDO_0000093",
         "goal_comparator_content": "PSDO_0000094",
         "social_comparator_content": "PSDO_0000095",
         "positive_performance_trend_content": "PSDO_0000099",

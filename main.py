@@ -1,27 +1,33 @@
-from rdflib import BNode, Graph, Literal, URIRef #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
-from bitstomach2 import bitstomach
-
-from candidatesmasher.candidatesmasher import CandidateSmasher
-from utils.graph_operations import read_graph, create_performer_graph
-from fastapi import FastAPI, Request, HTTPException
-from thinkpudding.thinkpudding import Thinkpudding
-from bit_stomach.bit_stomach import BitStomach
-from pictoralist.pictoralist import Pictoralist
-from requests_file import FileAdapter
-from utils.settings import settings
-from loguru import logger
-from typing import List
-from io import BytesIO
-import pandas as pd
-import webbrowser
-import requests
 import json
-import sys
 import os
+import sys
+import webbrowser
+from io import BytesIO
+from pathlib import Path
 
-from esteemer import utils, esteemer
+import pandas as pd
+import requests
+from fastapi import FastAPI, HTTPException, Request
+from loguru import logger
+from rdflib import (  #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
+    BNode,
+    Graph,
+    Literal,
+    URIRef,
+)
+from rdflib.resource import Resource
+from requests_file import FileAdapter
 
-global templates, pathways, measures
+from bit_stomach.bit_stomach import BitStomach
+from bitstomach2 import bitstomach
+from candidatesmasher.candidatesmasher import CandidateSmasher
+from esteemer import esteemer, utils
+from pictoralist.pictoralist import Pictoralist
+from thinkpudding.thinkpudding import Thinkpudding
+from utils.graph_operations import create_performer_graph, read_graph
+from utils.settings import settings
+
+global templates, pathways, measures, comparators
 
 ### Logging module setup (using loguru module)
 logger.remove()
@@ -110,12 +116,13 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     try:
-        global measure_details, causal_pathways, templates, f3json, f5json
+        global measure_details, causal_pathways, templates, f3json, f5json, comparators
 
         f3json = se.get(settings.measures).text
         f5json = se.get(settings.mpm).content
         causal_pathways = causal_pathways
         templates = templates
+        comparators = se.get(settings.comparators).text
 
     except Exception as e:
         print("Startup aborted, see traceback:")
@@ -193,32 +200,27 @@ async def createprecisionfeedback(info: Request):
         sys.exit(4)
 
     performer_graph = bs.annotate()
-    op = performer_graph.serialize(format="json-ld", indent=4)
-    if settings.outputs == True and settings.log_level == "DEBUG":
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_bs.json", "w")
-        f.write(op)
-        f.close()
-        # print(settings.outputs)
-        # print(settings.log_level)
+    debug_output_if_set(performer_graph, "outputs/spek_bs.json")
     
-    #BitStomach 2
+    ### Start with cool new super graph
+    
+    cool_new_super_graph = Graph()
+    comparators_graph = read_graph(comparators)
+    cool_new_super_graph += comparators_graph    
+    cool_new_super_graph += causal_pathways
+    cool_new_super_graph += measure_details
+    cool_new_super_graph += templates
+    
+    # BitStomach 2
     g: Graph = bitstomach.extract_signals(performance_data)
     performer_graph += g
-    
-    
-    if settings.outputs == True and settings.log_level == "DEBUG":
-        op=performer_graph.serialize(format='json-ld', indent=4)
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_bs2.json", "w")
-        f.write(op)
-        f.close()
+    cool_new_super_graph += g
+    debug_output_if_set(performer_graph, "outputs/spek_bs2.json")
+
 
     #CandidateSmasher
 
-    logger.info(f"Calling CandidateSmasher from main...")
+    logger.info("Calling CandidateSmasher from main...")
     cs = CandidateSmasher(performer_graph, templates)
     df_graph, goal_types, peer_types, top_10_types, top_25_types = cs.get_graph_type()
     df_template, df_1, df_2, df_3, df16 = cs.get_template_data()
@@ -230,13 +232,7 @@ async def createprecisionfeedback(info: Request):
     CS = cs.create_candidates(peer_types, df_3)
     # create goal
     CS = cs.create_candidates(goal_types, df16)
-    oc = CS.serialize(format="json-ld", indent=4)
-    if settings.outputs is True and settings.log_level == "DEBUG":
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_cs.json", "w")
-        f.write(oc)
-        f.close()
+    debug_output_if_set(performer_graph, "outputs/spek_cs.json")
 
     # Thinkpuddung
     logger.info("Calling ThinkPudding from main...")
@@ -245,35 +241,25 @@ async def createprecisionfeedback(info: Request):
     tp.process_performer_graph()
     tp.matching()
     performer_graph = tp.insert()
-    if settings.outputs is True and settings.log_level == "DEBUG":
-        ot = performer_graph.serialize(format="json-ld", indent=4)
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_tp.json", "w")
-        f.write(ot)
-        f.close()
+    debug_output_if_set(performer_graph, "outputs/spek_tp.json")
 
     # #Esteemer
     logger.info("Calling Esteemer from main...")
 
-    for measure in utils.measures(performer_graph):
+    for measure in utils.measures(cool_new_super_graph):
         candidates = utils.candidates(
             performer_graph, filter_acceptable=True, measure=measure
         )
         for candidate in candidates:
-            esteemer.score(candidate, history, preferences)
-    selected_candidate = esteemer.select_candidate(performer_graph)
+            # temporary shim to get candidates from existing thinkpudding into new graph
+            cool_new_super_candidate = add_candidate_to_super_graph(cool_new_super_graph, candidate)
+            esteemer.score(cool_new_super_candidate, history, preferences)
+    selected_candidate = esteemer.select_candidate(cool_new_super_graph)
 
     # print updated graph by esteemer
-    if settings.outputs is True and settings.log_level == "DEBUG":
-        st = performer_graph.serialize(format="json-ld", indent=4)
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_st.json", "w")
-        f.write(st)
-        f.close()
+    debug_output_if_set(performer_graph, "outputs/spek_st.json")
 
-    selected_message = utils.render(performer_graph, selected_candidate)
+    selected_message = utils.render(cool_new_super_graph, selected_candidate)
 
     ### Pictoralist 2, now on the Nintendo DS: ###
     logger.info("Calling Pictoralist from main...")
@@ -289,8 +275,21 @@ async def createprecisionfeedback(info: Request):
         pc.graph_controller()  # Select and run graphing based on display type
         full_selected_message = pc.prepare_selected_message()
         if settings.log_level == "DEBUG":
-            performer_graph.add((BNode("p1"),URIRef("http://example.com/slowmo#IsAboutPerformer"),Literal(performance_data_df["staff_number"].iloc[0])  ))
+            cool_new_super_graph.add((BNode("p1"),URIRef("http://example.com/slowmo#IsAboutPerformer"),Literal(performance_data_df["staff_number"].iloc[0])  ))
         
-            full_selected_message["candidates"] = utils.candidates_records(performer_graph)
+            full_selected_message["candidates"] = utils.candidates_records(cool_new_super_graph)
 
     return full_selected_message
+
+def debug_output_if_set(performer_graph: Graph, file_location):
+    if settings.outputs is True and settings.log_level == "DEBUG":
+        file_path = Path(file_location)
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        performer_graph.serialize(destination=file_path, format="json-ld", indent=2)
+
+def add_candidate_to_super_graph(cool_new_super_graph: Graph, candidate: Resource) -> Resource:
+    cool_new_super_candidate = cool_new_super_graph.resource(candidate.identifier)
+    for p,o in candidate.predicate_objects():
+        cool_new_super_candidate.add(p.identifier,o)   
+    
+    return cool_new_super_candidate
