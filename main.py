@@ -14,6 +14,7 @@ from rdflib import (  #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
     Graph,
     Literal,
     URIRef,
+    RDF
 )
 from rdflib.resource import Resource
 from requests_file import FileAdapter
@@ -26,6 +27,7 @@ from pictoralist.pictoralist import Pictoralist
 from thinkpudding.thinkpudding import Thinkpudding
 from utils.graph_operations import create_performer_graph, read_graph
 from utils.settings import settings
+from utils.namespace import SLOWMO, PSDO
 
 global templates, pathways, measures, comparators
 
@@ -210,50 +212,54 @@ async def createprecisionfeedback(info: Request):
     cool_new_super_graph += causal_pathways
     cool_new_super_graph += measure_details
     cool_new_super_graph += templates
-    
+    debug_output_if_set(cool_new_super_graph, "outputs/base.json")
+
     # BitStomach 2
     g: Graph = bitstomach.extract_signals(performance_data)
     performer_graph += g
     cool_new_super_graph += g
     debug_output_if_set(performer_graph, "outputs/spek_bs2.json")
 
+    if settings.candidate_pudding:
+        candidate_pudding(cool_new_super_graph)
+    else:
+        logger.info("CandidateSmasher and Thinkpuddung")
+        #CandidateSmasher     
+        logger.info("Calling CandidateSmasher from main...")
+        cs = CandidateSmasher(performer_graph, templates)
+        df_graph, goal_types, peer_types, top_10_types, top_25_types = cs.get_graph_type()
+        df_template, df_1, df_2, df_3, df16 = cs.get_template_data()
+        # create top_10
+        CS = cs.create_candidates(top_10_types, df_1)
+        # #create top_25
+        CS = cs.create_candidates(top_25_types, df_2)
+        # #creat peers
+        CS = cs.create_candidates(peer_types, df_3)
+        # create goal
+        CS = cs.create_candidates(goal_types, df16)
+        
+        debug_output_if_set(performer_graph, "outputs/spek_cs.json")
 
-    #CandidateSmasher
-
-    logger.info("Calling CandidateSmasher from main...")
-    cs = CandidateSmasher(performer_graph, templates)
-    df_graph, goal_types, peer_types, top_10_types, top_25_types = cs.get_graph_type()
-    df_template, df_1, df_2, df_3, df16 = cs.get_template_data()
-    # create top_10
-    CS = cs.create_candidates(top_10_types, df_1)
-    # #create top_25
-    CS = cs.create_candidates(top_25_types, df_2)
-    # #creat peers
-    CS = cs.create_candidates(peer_types, df_3)
-    # create goal
-    CS = cs.create_candidates(goal_types, df16)
-    debug_output_if_set(performer_graph, "outputs/spek_cs.json")
-
-    # Thinkpuddung
-    logger.info("Calling ThinkPudding from main...")
-    tp = Thinkpudding(CS, causal_pathways)
-    tp.process_causalpathways()
-    tp.process_performer_graph()
-    tp.matching()
-    performer_graph = tp.insert()
-    debug_output_if_set(performer_graph, "outputs/spek_tp.json")
+        # Thinkpuddung
+        logger.info("Calling ThinkPudding from main...")
+        tp = Thinkpudding(CS, causal_pathways)
+        tp.process_causalpathways()
+        tp.process_performer_graph()
+        tp.matching()
+        performer_graph = tp.insert()
+        debug_output_if_set(performer_graph, "outputs/spek_tp.json")
 
     # #Esteemer
     logger.info("Calling Esteemer from main...")
 
     for measure in utils.measures(cool_new_super_graph):
         candidates = utils.candidates(
-            performer_graph, filter_acceptable=True, measure=measure
+            cool_new_super_graph, filter_acceptable=True, measure=measure
         )
         for candidate in candidates:
             # temporary shim to get candidates from existing thinkpudding into new graph
-            cool_new_super_candidate = add_candidate_to_super_graph(cool_new_super_graph, candidate)
-            esteemer.score(cool_new_super_candidate, history, preferences)
+            #cool_new_super_candidate = add_candidate_to_super_graph(cool_new_super_graph, candidate)
+            esteemer.score(candidate, history, preferences)
     selected_candidate = esteemer.select_candidate(cool_new_super_graph)
 
     # print updated graph by esteemer
@@ -278,7 +284,8 @@ async def createprecisionfeedback(info: Request):
             cool_new_super_graph.add((BNode("p1"),URIRef("http://example.com/slowmo#IsAboutPerformer"),Literal(performance_data_df["staff_number"].iloc[0])  ))
         
             full_selected_message["candidates"] = utils.candidates_records(cool_new_super_graph)
-
+    else: 
+        return selected_message
     return full_selected_message
 
 def debug_output_if_set(performer_graph: Graph, file_location):
@@ -293,3 +300,22 @@ def add_candidate_to_super_graph(cool_new_super_graph: Graph, candidate: Resourc
         cool_new_super_candidate.add(p.identifier,o)   
     
     return cool_new_super_candidate
+
+def candidate_pudding(graph: Graph):
+    logger.info("candidate_pudding")
+    candidate = graph.resource(BNode("candidate1"))
+    candidate[RDF.type] = SLOWMO.Candidate
+    candidate[URIRef("slowmo:acceptable_by")] = Literal("Improving")
+    candidate[SLOWMO.RegardingMeasure] = BNode("BP01")
+    candidate[SLOWMO.AncestorTemplate] = URIRef("https://repo.metadatacenter.org/template-instances/0ae1872f-5593-4891-8713-7d5e815c0b00")
+    # convenience properties
+    candidate[URIRef("psdo:PerformanceSummaryTextualEntity")] = candidate.value(
+        SLOWMO.AncestorTemplate / 
+        URIRef("https://schema.metadatacenter.org/properties/6b9dfdf9-9c8a-4d85-8684-a24bee4b85a8")
+        )
+    candidate[SLOWMO.name] = candidate.value(
+        SLOWMO.AncestorTemplate / 
+        URIRef("https://schema.metadatacenter.org/properties/26450fa6-bb2c-4126-8229-79efda7f863a")
+        )
+    candidate[SLOWMO.RegardingComparator] = PSDO.peer_75th_percentile_benchmark
+    return

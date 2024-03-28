@@ -1,7 +1,7 @@
 import json
 import random
 
-from rdflib import XSD, BNode, Graph, Literal, URIRef
+from rdflib import XSD, BNode, Graph, Literal, URIRef, RDF
 from rdflib.resource import Resource
 
 from bitstomach2.signals import Comparison, Trend
@@ -188,6 +188,9 @@ def select_candidate(performer_graph: Graph) -> BNode:
     # 2. select candidate
 
     # Find the max score
+    if not len(set(performer_graph[:RDF.type:SLOWMO.Candidate])):
+        return None
+    
     max_score = max(
         [score for _, score in performer_graph.subject_objects(SLOWMO.Score)],
         default=None,

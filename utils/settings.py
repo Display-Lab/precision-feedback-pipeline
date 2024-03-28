@@ -34,6 +34,7 @@ class Settings:
         self.generate_image = config('generate_image', cast=bool, default=True)     # Generate image flag (pictoraless)
         self.cache_image    = config('cache_image', cast=bool, default=False)       # Cache generated image flag
         self.outputs        = config('outputs', cast=bool, default=False)           # Logging of intermediate files
+        self.candidate_pudding        = config('candidate_pudding', cast=bool, default=False)           # switch between candidate_pudding and old candidatesmasher and thinkpdding
 
         # Instance display settings
         self.display_window = config('display_window', cast=int, default=6)

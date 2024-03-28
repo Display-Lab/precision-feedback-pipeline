@@ -114,13 +114,7 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
         measure = candidate_resource.value(SLOWMO.RegardingMeasure)
         s_m["measure_name"] = str(measure.identifier)
         s_m["measure_title"] = measure.value(DCTERMS.title).value
-        comparators = list(performer_graph.subjects(RDF.type, PSDO.comparator_content))
-
-        for c_type in candidate_resource[SLOWMO.RegardingComparator / RDF.type]:
-            if c_type.identifier in comparators:
-                s_m["comparator_type"] = c_type.value(RDFS.label).value
-                break
-
+        s_m["comparator_type"] = candidate_resource.value(SLOWMO.RegardingComparator / RDFS.label)
         return s_m
 
 
