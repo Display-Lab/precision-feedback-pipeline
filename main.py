@@ -1,29 +1,31 @@
-from pathlib import Path
-from rdflib import BNode, Graph, Literal, URIRef #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
-from bitstomach2 import bitstomach
-
-from candidatesmasher.candidatesmasher import CandidateSmasher
-from utils.graph_operations import read_graph, create_performer_graph
-from fastapi import FastAPI, Request, HTTPException
-from thinkpudding.thinkpudding import Thinkpudding
-from bit_stomach.bit_stomach import BitStomach
-from pictoralist.pictoralist import Pictoralist
-from requests_file import FileAdapter
-from utils.settings import settings
-from loguru import logger
-from typing import List
-from io import BytesIO
-import pandas as pd
-import webbrowser
-import requests
 import json
-import sys
 import os
+import sys
+import webbrowser
+from io import BytesIO
+from pathlib import Path
 
-from esteemer import utils, esteemer
+import pandas as pd
+import requests
+from fastapi import FastAPI, HTTPException, Request
+from loguru import logger
+from rdflib import (  #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
+    BNode,
+    Graph,
+    Literal,
+    URIRef,
+)
 from rdflib.resource import Resource
-from utils.namespace import PSDO
-from rdflib import RDFS, RDF
+from requests_file import FileAdapter
+
+from bit_stomach.bit_stomach import BitStomach
+from bitstomach2 import bitstomach
+from candidatesmasher.candidatesmasher import CandidateSmasher
+from esteemer import esteemer, utils
+from pictoralist.pictoralist import Pictoralist
+from thinkpudding.thinkpudding import Thinkpudding
+from utils.graph_operations import create_performer_graph, read_graph
+from utils.settings import settings
 
 global templates, pathways, measures, comparators
 
@@ -218,7 +220,7 @@ async def createprecisionfeedback(info: Request):
 
     #CandidateSmasher
 
-    logger.info(f"Calling CandidateSmasher from main...")
+    logger.info("Calling CandidateSmasher from main...")
     cs = CandidateSmasher(performer_graph, templates)
     df_graph, goal_types, peer_types, top_10_types, top_25_types = cs.get_graph_type()
     df_template, df_1, df_2, df_3, df16 = cs.get_template_data()
