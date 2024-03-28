@@ -82,10 +82,7 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
         return s_m
     else:
         temp_name = SLOWMO.name  # URI of template name?
-        p232 = URIRef("psdo:PerformanceSummaryDisplay")
         Display = ["text only", "bar chart", "line graph"]
-        comparator_types = ["Top 25", "Top 10", "Peers", "Goal"]
-        sw = 0
         o2wea = []
 
         ## Format selected_candidate to return for pictoralist-ing

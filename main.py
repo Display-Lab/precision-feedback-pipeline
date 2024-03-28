@@ -25,7 +25,7 @@ from rdflib.resource import Resource
 from utils.namespace import PSDO
 from rdflib import RDFS, RDF
 
-global templates, pathways, measures
+global templates, pathways, measures, comparators
 
 ### Logging module setup (using loguru module)
 logger.remove()
@@ -114,12 +114,13 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     try:
-        global measure_details, causal_pathways, templates, f3json, f5json
+        global measure_details, causal_pathways, templates, f3json, f5json, comparators
 
         f3json = se.get(settings.measures).text
         f5json = se.get(settings.mpm).content
         causal_pathways = causal_pathways
         templates = templates
+        comparators = se.get(settings.comparators).text
 
     except Exception as e:
         print("Startup aborted, see traceback:")
@@ -202,28 +203,8 @@ async def createprecisionfeedback(info: Request):
     ### Start with cool new super graph
     
     cool_new_super_graph = Graph()
-    
-    peer_75th_percentile_benchmark = cool_new_super_graph.resource(PSDO.peer_75th_percentile_benchmark)
-    peer_75th_percentile_benchmark[RDFS.label] = Literal("Top 25")
-    peer_75th_percentile_benchmark.add(RDF.type, PSDO.comparator_content)
-    peer_75th_percentile_benchmark.add(RDF.type, PSDO.social_comparator_content)
-    
-    peer_90th_percentile_benchmark = cool_new_super_graph.resource(PSDO.peer_90th_percentile_benchmark)
-    peer_90th_percentile_benchmark[RDFS.label] = Literal("Top 10")
-    peer_90th_percentile_benchmark.add(RDF.type, PSDO.comparator_content)
-    peer_90th_percentile_benchmark.add(RDF.type, PSDO.social_comparator_content)
-    
-    peer_average_comparator = cool_new_super_graph.resource(PSDO.peer_average_comparator)
-    peer_average_comparator[RDFS.label] = Literal("Peers")
-    peer_average_comparator.add(RDF.type, PSDO.comparator_content)
-    peer_average_comparator.add(RDF.type, PSDO.social_comparator_content)
-    
-    goal_comparator_content = cool_new_super_graph.resource(PSDO.goal_comparator_content)
-    goal_comparator_content[RDFS.label] = Literal("Goal")
-    goal_comparator_content[RDF.type] = PSDO.comparator_content
-    
-    cool_new_super_graph
-
+    comparators_graph = read_graph(comparators)
+    cool_new_super_graph += comparators_graph    
     cool_new_super_graph += causal_pathways
     cool_new_super_graph += measure_details
     cool_new_super_graph += templates
@@ -302,7 +283,7 @@ def debug_output_if_set(performer_graph: Graph, file_location):
     if settings.outputs is True and settings.log_level == "DEBUG":
         file_path = Path(file_location)
         file_path.parent.mkdir(parents=True, exist_ok=True)
-        performer_graph.serialize(destination=file_path, format="json-ld", indent=2, auto_compact=True)
+        performer_graph.serialize(destination=file_path, format="json-ld", indent=2)
 
 def add_candidate_to_super_graph(cool_new_super_graph: Graph, candidate: Resource) -> Resource:
     cool_new_super_candidate = cool_new_super_graph.resource(candidate.identifier)
