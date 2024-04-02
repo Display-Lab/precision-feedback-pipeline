@@ -62,6 +62,6 @@ from bitstomach2.signals._trend import Trend  # noqa: E402
 __all__ = ["Comparison", "Trend"]
 
 SIGNALS = {
-    Comparison,
-    Trend,
+    Comparison: Signal,
+    Trend: Signal,
 }

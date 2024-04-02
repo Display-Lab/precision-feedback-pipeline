@@ -58,10 +58,12 @@ from utils.namespace._PSDO import PSDO   # noqa: E402
 from utils.namespace._CPO import CPO  # noqa: E402
 from utils.namespace._SLOWMO import SLOWMO  # noqa: E402
 from utils.namespace._RO import RO  # noqa: E402
+from utils.namespace._IAO import IAO  # noqa: E402
 
 _NAMESPACE_PREFIXES_PFP = {
     "psdo": PSDO,
     "cpo": CPO,
     "slowmo": SLOWMO,
     "ro": RO,
+    "iao": IAO
     }

@@ -59,8 +59,8 @@ def performance_data_frame():
 def candidate_resource(performance_data_frame):
     graph = Graph()
     candidate_resource = graph.resource(BNode())
-    candidate_resource[SLOWMO.IsAbout] = PSDO.peer_90th_percentile_benchmark
-    candidate_resource[URIRef("slowmo:acceptable_by")] = Literal("Social better")
+    candidate_resource[SLOWMO.RegardingComparator] = PSDO.peer_90th_percentile_benchmark
+    candidate_resource[URIRef("slowmo:acceptable_by")] = Literal("social better")
     candidate_resource[SLOWMO.AncestorTemplate] = URIRef(TEMPLATE_A)
     candidate_resource[SLOWMO.RegardingMeasure] = BNode("PONV05")
 

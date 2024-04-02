@@ -9,10 +9,10 @@ from esteemer.signals import History
 from utils.namespace import SLOWMO
 
 MPM = {
-    "Social Worse": {Comparison.signal_type: 0.5, History.signal_type: -0.5},
-    "Social better": {Comparison.signal_type: 0.5, History.signal_type: -0.1},
-    "Improving": {Trend.signal_type: 0.8, History.signal_type: -0.1},
-    "Worsening": {Trend.signal_type: 0.8, History.signal_type: -0.5},
+    "social worse": {Comparison.signal_type: 0.5, History.signal_type: -0.5},
+    "social better": {Comparison.signal_type: 0.5, History.signal_type: -0.1},
+    "improving": {Trend.signal_type: 0.8, History.signal_type: -0.1},
+    "worsening": {Trend.signal_type: 0.8, History.signal_type: -0.5},
 }
 
 
@@ -76,12 +76,14 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
         for motivating_info in performance_content[URIRef("motivating_information")]
         if motivating_info.value(SLOWMO.RegardingMeasure) == measure
     ]
+    
+    # motivating_informations = list(candidate_resource[URIRef("motivating_information")])
 
     mod = {}
 
     match causal_pathway.value:
-        case "Social Worse":
-            comparator_type = candidate_resource.value(SLOWMO.IsAbout).identifier
+        case "social worse":
+            comparator_type = candidate_resource.value(SLOWMO.RegardingComparator).identifier
 
             moderators = Comparison.moderators(motivating_informations)
 
@@ -94,8 +96,8 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
             mod["score"] = (mod["gap_size"] / 5 - 0.02) * MPM[causal_pathway.value][
                 Comparison.signal_type
             ]
-        case "Social better":
-            comparator_type = candidate_resource.value(SLOWMO.IsAbout).identifier
+        case "social better":
+            comparator_type = candidate_resource.value(SLOWMO.RegardingComparator).identifier
             moderators = Comparison.moderators(motivating_informations)
 
             mod = [
@@ -107,12 +109,12 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
             mod["score"] = (mod["gap_size"] + 0.02) * MPM[causal_pathway.value][
                 Comparison.signal_type
             ]
-        case "Improving":
+        case "improving":
             mod = Trend.moderators(motivating_informations)[0]
             mod["score"] = (mod["trend_size"] * 5) * MPM[causal_pathway.value][
                 Trend.signal_type
             ]
-        case "Worsening":
+        case "worsening":
             mod = Trend.moderators(motivating_informations)[0]
             mod["score"] = (
                 (mod["trend_size"]) * MPM[causal_pathway.value][Trend.signal_type]
@@ -148,7 +150,7 @@ def calculate_history_score(candidate_resource: Resource, history: dict) -> dict
 
     mod = History.moderators(signals)[0]
 
-    causal_pathway = list(candidate_resource.objects(URIRef("slowmo:acceptable_by")))[0]
+    causal_pathway = candidate_resource.value(URIRef("slowmo:acceptable_by"))
 
     mod["score"] = (
         mod["recurrence_count"] * MPM[causal_pathway.value][History.signal_type]
@@ -188,7 +190,7 @@ def select_candidate(performer_graph: Graph) -> BNode:
     # 2. select candidate
 
     # Find the max score
-    if not len(set(performer_graph[:RDF.type:SLOWMO.Candidate])):
+    if not set(performer_graph[:URIRef("slowmo:acceptable_by"):]):
         return None
     
     max_score = max(

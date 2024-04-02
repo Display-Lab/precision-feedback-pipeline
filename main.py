@@ -221,7 +221,7 @@ async def createprecisionfeedback(info: Request):
     debug_output_if_set(performer_graph, "outputs/spek_bs2.json")
 
     if settings.candidate_pudding:
-        candidate_pudding2(cool_new_super_graph)
+        candidate_pudding.create_candidates(cool_new_super_graph)
     else:
         logger.info("CandidateSmasher and Thinkpuddung")
         #CandidateSmasher     
@@ -301,18 +301,3 @@ def add_candidate_to_super_graph(cool_new_super_graph: Graph, candidate: Resourc
     
     return cool_new_super_candidate
 
-def candidate_pudding2(graph: Graph):
-    
-    # TODO: add for loop to iterate over measures and templates
-    logger.info("candidate_pudding")
-
-    candidate = candidate_pudding.create_candidate(
-        graph.resource(BNode("BP01")), 
-        graph.resource(URIRef("https://repo.metadatacenter.org/template-instances/9e71ec9e-26f3-442a-8278-569bcd58e708"))
-        )
-    
-    candidate = candidate_pudding.acceptable_by(candidate)
-    
-    candidate = candidate_pudding.add_convenience_properties(candidate)
-    
-    return
