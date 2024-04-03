@@ -18,6 +18,7 @@ def extract_signals(performance_data) -> Graph:
     if not performance_data:
         return g
     else:
+        # TODO: implement a million datarules and maybe business
         performance_df = fix_up(performance_data)
 
     measures = performance_df["measure"].unique()

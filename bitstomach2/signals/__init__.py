@@ -55,7 +55,17 @@ class Signal:
         return cls.signal_type in {t.identifier for t in mi[RDF.type]}
         # return mi.graph.resource(cls.signal_type) in mi[RDF.type]
 
-
+    @classmethod
+    def disposition(cls, mi: Resource) -> List[Resource]:
+        return list(mi[RDF.type])
+    
+    @classmethod
+    def for_type(cls, mi: Resource):
+        for signal in SIGNALS:
+            if signal.is_rdf_type_of(mi):
+                return signal
+        
+        
 from bitstomach2.signals._comparison import Comparison  # noqa: E402
 from bitstomach2.signals._trend import Trend  # noqa: E402
 

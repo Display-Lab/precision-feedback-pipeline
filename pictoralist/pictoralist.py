@@ -80,8 +80,11 @@ class Pictoralist():
 
 
         ## Convert values in selected columns for further processing:
-        self.performance_data['month'] = pd.to_datetime(self.performance_data['month'])             # convert month column to datetime objects
-        self.performance_data["performance_level"] = self.performance_data["Performance_Rate"]*100.0 # convert preformance ratio to percentage
+        self.performance_data['month'] = pd.to_datetime(self.performance_data['month'])  # convert month column to datetime objects
+        self.performance_data["performance_level"] = (
+            self.performance_data["passed_count"] /
+            self.performance_data['denominator'] * 100.0
+        )  # convert preformance ratio to percentage
         self.performance_data["goal_percent"] = self.performance_data["MPOG_goal"]*100.0            # convert MPOG goal ratio to percentage
 
         ## Drop extraneous columns of current dataframe

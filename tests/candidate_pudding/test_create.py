@@ -13,7 +13,7 @@ def graph():
     measure[RDF.type] = URIRef("http://purl.obolibrary.org/obo/PSDO_0000102")
     
     template = graph.resource(URIRef("https://repo.metadatacenter.org/template-instances/9e71ec9e-26f3-442a-8278-569bcd58e708"))
-    template[RDF.type] = URIRef("http://data.bioontology.org/ontologies/PSDO/classes/http://purl.obolibrary.org/obo/PSDO_0000002")
+    template[RDF.type] = candidate_pudding.PERFORMANCE_SUMMARY_DISPLAY_TEMPLATE
     # template[URIRef("https://schema.metadatacenter.org/properties/26450fa6-bb2c-4126-8229-79efda7f863a")] = Literal("Opportunity to Improve Top 10 Peer Benchmark")
     template[URIRef("https://schema.metadatacenter.org/properties/6b9dfdf9-9c8a-4d85-8684-a24bee4b85a8")] = Literal(
         "You may have an opportunity to improve for the measure [measure name]. Your performance was [recipient performance level], below the top 10% peer benchmark, which was [comparator performance level] this month.")

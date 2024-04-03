@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import pandas as pd
 from rdflib import RDF, BNode, Literal
@@ -7,8 +7,6 @@ from rdflib.resource import Resource
 from bitstomach2.signals import Signal
 from utils.namespace import PSDO, SLOWMO
 
-
-# TODO: Refactor to `class Comparison(Signal)`
 class Comparison(Signal):
     signal_type = PSDO.performance_gap_content
 
@@ -98,3 +96,25 @@ class Comparison(Signal):
             mods.append(motivating_info_dict)
 
         return mods
+
+    @classmethod
+    def disposition(cls, mi: Resource) -> Union[ List[Resource] | None]:
+        
+        if not super().select([mi]):
+            return None
+        
+        disposition = super().disposition(mi)
+        
+        # extras
+        comparator_type = mi.value(SLOWMO.RegardingComparator / RDF.type)
+        
+        disposition.append(comparator_type)
+        
+        disposition += list(comparator_type[RDF.type])
+
+        return disposition
+    
+    @classmethod
+    def match(cls, mi, types: List[Resource]) -> bool:
+        # is the social moderator type from disp in `types` passed in
+        pass

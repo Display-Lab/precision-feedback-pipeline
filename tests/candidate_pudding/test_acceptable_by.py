@@ -1,7 +1,6 @@
 import pytest
 from rdflib import BNode, Graph, RDF, Literal, URIRef, XSD
 from candidate_pudding import candidate_pudding
-from rdflib.resource import Resource
 from utils.namespace import SLOWMO, PSDO, IAO
 from bitstomach2.signals import Trend
 
@@ -16,8 +15,7 @@ def graph():
     measure[RDF.type] = URIRef("http://purl.obolibrary.org/obo/PSDO_0000102")
     
     template = graph.resource(IMPROVING_TEMPLATE)
-    template[RDF.type] = URIRef("http://data.bioontology.org/ontologies/PSDO/classes/http://purl.obolibrary.org/obo/PSDO_0000002")
-    #template[URIRef("https://schema.metadatacenter.org/properties/26450fa6-bb2c-4126-8229-79efda7f863a")] = Literal("Performance Improving")
+    template[RDF.type] = candidate_pudding.PERFORMANCE_SUMMARY_DISPLAY_TEMPLATE
     template[URIRef("https://schema.metadatacenter.org/properties/6b9dfdf9-9c8a-4d85-8684-a24bee4b85a8")] = Literal(
         "Your performance is improving this month for the measure [measure name]. Your performance was [recipient performance level].")
     template.add(IAO.is_about,PSDO.positive_performance_trend_set)
@@ -61,3 +59,4 @@ def test_accaptable_by(graph):
         
     #then
     assert candidate.value(URIRef("slowmo:acceptable_by")).value == Literal("improving").value
+    

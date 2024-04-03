@@ -190,19 +190,19 @@ async def createprecisionfeedback(info: Request):
     # BitStomach
     logger.info("Calling BitStomach from main...")
 
-    # Trying another strategy for graceful exit:
-    try:
-        bs = BitStomach(performer_graph, performance_data_df)
-    except ValueError:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Insufficient significant data found for providing feedback, process aborted. Message_instance_id: {message_instance_id}",
-            headers={"400-Error": "Invalid Input Error"},
-        )
-        sys.exit(4)
+    # # Trying another strategy for graceful exit:
+    # try:
+    #     bs = BitStomach(performer_graph, performance_data_df)
+    # except ValueError:
+    #     raise HTTPException(
+    #         status_code=400,
+    #         detail=f"Insufficient significant data found for providing feedback, process aborted. Message_instance_id: {message_instance_id}",
+    #         headers={"400-Error": "Invalid Input Error"},
+    #     )
+    #     sys.exit(4)
 
-    performer_graph = bs.annotate()
-    debug_output_if_set(performer_graph, "outputs/spek_bs.json")
+    # performer_graph = bs.annotate()
+    # debug_output_if_set(performer_graph, "outputs/spek_bs.json")
     
     ### Start with cool new super graph
     

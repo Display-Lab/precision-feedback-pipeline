@@ -132,3 +132,40 @@ def test_moderators_return_dictionary1():
     ][0]
 
     assert moderator["gap_size"] == 23
+    
+def test_comparison_has_super_type(perf_data):
+    signal = Comparison()
+
+    signals = signal.detect(perf_data)
+    
+    s = signals[0]
+    assert s.graph.resource(PSDO.motivating_information) in s[RDF.type]
+    assert s.graph.resource(PSDO.performance_gap_content) in s[RDF.type]
+    assert s.graph.resource(PSDO.positive_performance_gap_content) in s[RDF.type]
+    
+    assert s.graph.resource(PSDO.social_comparator_content) not in s[RDF.type]
+    
+def test_can_get_matching_types(perf_data, perf_info):
+    g, perf_content = perf_info
+    
+    # given
+    comparator = g.resource(PSDO.peer_average_comparator)
+    comparator.add(RDF.type, PSDO.social_comparator_content)
+    
+    signal = Comparison()
+    signals = signal.detect(perf_data) 
+     
+    s = signals[0]  # positive performance gap to peer average
+    
+    perf_content.add(PSDO.motivating_information, s)
+    g += s.graph
+    # 
+    matching_types = Comparison.disposition(g.resource(s.identifier))
+    
+    assert g.resource(PSDO.motivating_information) in matching_types
+    assert g.resource(PSDO.performance_gap_content) in matching_types
+    assert g.resource(PSDO.positive_performance_gap_content) in matching_types
+
+    assert g.resource(PSDO.peer_average_comparator) in matching_types
+
+    assert g.resource(PSDO.social_comparator_content) in matching_types

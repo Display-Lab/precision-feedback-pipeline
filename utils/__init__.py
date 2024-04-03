@@ -1,7 +1,8 @@
 from utils.namespace import (
-    PSDO,
-    SLOWMO,
-    CPO,
-    RO,
-    IAO
+    PSDO as PSDO,
+    SLOWMO as SLOWMO,
+    CPO as CPO,
+    RO as RO,
+    IAO as IAO,
+    SCHEMA as SCHEMA
 )
