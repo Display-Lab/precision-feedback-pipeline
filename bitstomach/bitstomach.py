@@ -1,7 +1,7 @@
 import pandas as pd
 from rdflib import RDF, BNode, Graph
 
-from bitstomach2.signals import SIGNALS
+from bitstomach.signals import SIGNALS
 from utils.namespace import PSDO, SLOWMO
 
 

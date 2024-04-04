@@ -70,8 +70,8 @@ class Signal:
         return False
 
 
-from bitstomach2.signals._comparison import Comparison  # noqa: E402
-from bitstomach2.signals._trend import Trend  # noqa: E402
+from bitstomach.signals._comparison import Comparison  # noqa: E402
+from bitstomach.signals._trend import Trend  # noqa: E402
 
 __all__ = ["Comparison", "Trend"]
 

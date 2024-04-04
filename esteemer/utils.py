@@ -4,25 +4,7 @@ from typing import List
 from rdflib import DCTERMS, RDF, RDFS, BNode, Graph, URIRef
 from rdflib.resource import Resource
 
-from utils import PSDO, SLOWMO
-
-
-def measures(performer_graph: Graph) -> List[BNode]:
-    """
-    returns performer measures.
-
-    Parameters:
-    - performer_graph (Graph): The performer_graph.
-
-    Returns:
-    List[BNode]: returns list of performer measures.
-    """
-    measures = performer_graph.objects(
-        URIRef("http://example.com/app#display-lab"),
-        SLOWMO.IsAboutMeasure,
-    )
-    measure_list = list(measures)
-    return measure_list
+from utils import SLOWMO
 
 
 def candidates(
@@ -55,7 +37,7 @@ def candidates(
             )
             and (
                 not filter_acceptable
-                or candidate.value(URIRef("slowmo:acceptable_by")) is not None
+                or candidate.value(SLOWMO.AcceptableBy) is not None
             )
         )
     ]
@@ -104,7 +86,7 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
         # for s9,p9,o9 in self.spek_tp.triples((s,p8,None)):
         #     s_m["Comparator Type"] = o9
         for s2we, p2we, o2we in performer_graph.triples(
-            (candidate, URIRef("slowmo:acceptable_by"), None)
+            (candidate, SLOWMO.AcceptableBy, None)
         ):
             o2wea.append(o2we)
         # print(*o2wea)
@@ -114,7 +96,9 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
         measure = candidate_resource.value(SLOWMO.RegardingMeasure)
         s_m["measure_name"] = str(measure.identifier)
         s_m["measure_title"] = measure.value(DCTERMS.title).value
-        s_m["comparator_type"] = candidate_resource.value(SLOWMO.RegardingComparator / RDFS.label)
+        s_m["comparator_type"] = candidate_resource.value(
+            SLOWMO.RegardingComparator / RDFS.label
+        )
         return s_m
 
 
@@ -169,7 +153,7 @@ def candidate_as_record(a_candidate: Resource) -> List:
         float(a_candidate.value(URIRef("history_score"))) if score else None
     )
     representation.append(a_candidate.value(SLOWMO.name))
-    representation.append(a_candidate.value(URIRef("slowmo:acceptable_by")))
+    representation.append(a_candidate.value(SLOWMO.AcceptableBy))
     representation.append(a_candidate.value(URIRef("slowmo:selected")))
 
     return representation

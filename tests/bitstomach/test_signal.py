@@ -1,6 +1,6 @@
 from rdflib import RDF, BNode, Graph
 
-from bitstomach2.signals import Comparison, Signal, Trend
+from bitstomach.signals import Comparison, Signal, Trend
 from utils.namespace import PSDO, SLOWMO
 
 

@@ -27,13 +27,14 @@ def test_basic_defined_namespace_works():
 
     # Test context creation
     assert "ns:FOO" == NS.as_jsonld_context("ns")["@context"]["FOO"]
-    
+
     with pytest.raises(KeyError):
         NS.as_jsonld_context("ns")["@context"]["BAZ"]
 
 
 def test_alias():
     """Aliases resolve to the original term in code"""
+
     class NS(AliasingDefinedNamespace):
         _NS = Namespace("http://example.org/")
 
@@ -52,30 +53,31 @@ def test_alias():
 
 def test_context_with_alias():
     """Currently aliases do not resolve to the original term in the json-ld context"""
+
     class NS(AliasingDefinedNamespace):
-        _NS = Namespace('http://example.org/')
+        _NS = Namespace("http://example.org/")
 
         FOO: URIRef
         bar: URIRef
-        
-        _alias = {'bar': 'FOO'} 
-        
+
+        _alias = {"bar": "FOO"}
+
     assert NS.bar == NS.FOO
-    terms = NS.as_jsonld_context('ns')['@context']
-    assert terms['ns'] == 'http://example.org/'
-    assert terms['FOO'] == 'ns:FOO'
-    assert terms['bar'] != terms['FOO']
+    terms = NS.as_jsonld_context("ns")["@context"]
+    assert terms["ns"] == "http://example.org/"
+    assert terms["FOO"] == "ns:FOO"
+    assert terms["bar"] != terms["FOO"]
+
 
 def test_alias_without_attribute():
     class NS(AliasingDefinedNamespace):
-        _NS = Namespace('http://example.org/')
+        _NS = Namespace("http://example.org/")
 
         FOO: URIRef
-        
-        _alias = {'baz': 'FOO'}
-        
+
+        _alias = {"baz": "FOO"}
+
     # Test alias without attribute
     # No need to add alias to _extras, non-attribute alias is handled directly
     assert NS.baz in NS
     assert NS.baz == NS.FOO
-        

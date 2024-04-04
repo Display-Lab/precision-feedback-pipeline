@@ -1,6 +1,6 @@
 from rdflib import RDF, BNode, Graph
 
-from bitstomach2 import bitstomach
+from bitstomach import bitstomach
 from utils.namespace import PSDO
 
 

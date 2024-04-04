@@ -4,7 +4,7 @@ import pandas as pd
 from rdflib import XSD, Literal, URIRef
 from rdflib.resource import Resource
 
-from bitstomach2.signals import Signal
+from bitstomach.signals import Signal
 from utils.namespace import SLOWMO
 
 
@@ -28,7 +28,9 @@ class History(Signal):
     def _resource(cls, recurrence_count: int) -> Resource:
         base = super()._resource()
 
-        base[URIRef("recurrence_count")] = Literal(recurrence_count, datatype=XSD.integer)
+        base[URIRef("recurrence_count")] = Literal(
+            recurrence_count, datatype=XSD.integer
+        )
         return base
 
     @classmethod
@@ -37,7 +39,9 @@ class History(Signal):
 
         for signal in super().select(signals):
             history_dict = {}
-            history_dict["recurrence_count"] = round( signal.value(URIRef("recurrence_count")).value / 11, 4) 
+            history_dict["recurrence_count"] = round(
+                signal.value(URIRef("recurrence_count")).value / 11, 4
+            )
             mods.append(history_dict)
 
         return mods
@@ -52,7 +56,9 @@ class History(Signal):
     @staticmethod
     def to_element(candidate: Resource):
         element = {}
-        element['message_template'] = str(candidate.value(SLOWMO.AncestorTemplate).identifier)
-        element['acceptable_by'] = candidate.value(URIRef("slowmo:acceptable_by")).value
-        
-        return {'current_month': element}
+        element["message_template"] = str(
+            candidate.value(SLOWMO.AncestorTemplate).identifier
+        )
+        element["acceptable_by"] = candidate.value(SLOWMO.AcceptableBy).value
+
+        return {"current_month": element}

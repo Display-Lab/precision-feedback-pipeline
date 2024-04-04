@@ -2,7 +2,7 @@ import pytest
 from rdflib import RDF, XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
-from bitstomach2.signals import Comparison, Trend
+from bitstomach.signals import Comparison, Trend
 from candidate_pudding import candidate_pudding
 from utils.namespace import IAO, PSDO, RO, SLOWMO
 

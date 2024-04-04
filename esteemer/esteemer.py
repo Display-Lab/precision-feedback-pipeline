@@ -4,7 +4,7 @@ import random
 from rdflib import XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
-from bitstomach2.signals import Comparison, Trend
+from bitstomach.signals import Comparison, Trend
 from esteemer.signals import History
 from utils.namespace import PSDO, SLOWMO
 
@@ -66,7 +66,7 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
     dict: motivating info.
     """
 
-    causal_pathway = candidate_resource.value(URIRef("slowmo:acceptable_by"))
+    causal_pathway = candidate_resource.value(SLOWMO.AcceptableBy)
     performance_content = candidate_resource.graph.resource(
         BNode("performance_content")
     )
@@ -152,7 +152,7 @@ def calculate_history_score(candidate_resource: Resource, history: dict) -> dict
 
     mod = History.moderators(signals)[0]
 
-    causal_pathway = candidate_resource.value(URIRef("slowmo:acceptable_by"))
+    causal_pathway = candidate_resource.value(SLOWMO.AcceptableBy)
 
     mod["score"] = (
         mod["recurrence_count"] * MPM[causal_pathway.value][History.signal_type]
@@ -192,7 +192,7 @@ def select_candidate(performer_graph: Graph) -> BNode:
     # 2. select candidate
 
     # Find the max score
-    if not set(performer_graph[: URIRef("slowmo:acceptable_by") :]):
+    if not set(performer_graph[: SLOWMO.AcceptableBy :]):
         return None
 
     max_score = max(

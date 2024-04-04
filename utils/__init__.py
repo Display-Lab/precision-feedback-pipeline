@@ -4,5 +4,5 @@ from utils.namespace import (
     CPO as CPO,
     RO as RO,
     IAO as IAO,
-    SCHEMA as SCHEMA
+    SCHEMA as SCHEMA,
 )

@@ -1,7 +1,7 @@
 from rdflib import RDF, XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
-from bitstomach2.signals import Signal
+from bitstomach.signals import Signal
 from utils.namespace import CPO, IAO, PSDO, RO, SCHEMA, SLOWMO
 
 PERFORMANCE_SUMMARY_DISPLAY_TEMPLATE = URIRef(
@@ -62,7 +62,7 @@ def acceptable_by(candidate: Resource):
     dispositions = roles + mi_dispositions
 
     if pre_conditions.issubset(dispositions):
-        candidate[URIRef("slowmo:acceptable_by")] = pathway.value(SCHEMA.name)
+        candidate[SLOWMO.AcceptableBy] = pathway.value(SCHEMA.name)
 
     return candidate
 

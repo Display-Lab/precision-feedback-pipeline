@@ -19,3 +19,4 @@ class SLOWMO(AliasingDefinedNamespace):
     WithComparator: URIRef
     IsAbout: URIRef
     MessageRecurrance: URIRef
+    AcceptableBy: URIRef

@@ -4,7 +4,7 @@ import pandas as pd
 from rdflib import RDF, BNode, Literal
 from rdflib.resource import Resource
 
-from bitstomach2.signals import Signal
+from bitstomach.signals import Signal
 from utils.namespace import PSDO, SLOWMO
 
 
