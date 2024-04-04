@@ -1,12 +1,12 @@
 import json
 import random
 
-from rdflib import XSD, BNode, Graph, Literal, URIRef, RDF
+from rdflib import XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
 from bitstomach2.signals import Comparison, Trend
 from esteemer.signals import History
-from utils.namespace import SLOWMO
+from utils.namespace import PSDO, SLOWMO
 
 MPM = {
     "social worse": {Comparison.signal_type: 0.5, History.signal_type: -0.5},
@@ -73,17 +73,17 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
     measure = candidate_resource.value(SLOWMO.RegardingMeasure)
     motivating_informations = [
         motivating_info
-        for motivating_info in performance_content[URIRef("motivating_information")]
+        for motivating_info in performance_content[PSDO.motivating_information]
         if motivating_info.value(SLOWMO.RegardingMeasure) == measure
     ]
-    
-    # motivating_informations = list(candidate_resource[URIRef("motivating_information")])
 
     mod = {}
 
     match causal_pathway.value:
         case "social worse":
-            comparator_type = candidate_resource.value(SLOWMO.RegardingComparator).identifier
+            comparator_type = candidate_resource.value(
+                SLOWMO.RegardingComparator
+            ).identifier
 
             moderators = Comparison.moderators(motivating_informations)
 
@@ -97,7 +97,9 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
                 Comparison.signal_type
             ]
         case "social better":
-            comparator_type = candidate_resource.value(SLOWMO.RegardingComparator).identifier
+            comparator_type = candidate_resource.value(
+                SLOWMO.RegardingComparator
+            ).identifier
             moderators = Comparison.moderators(motivating_informations)
 
             mod = [
@@ -190,9 +192,9 @@ def select_candidate(performer_graph: Graph) -> BNode:
     # 2. select candidate
 
     # Find the max score
-    if not set(performer_graph[:URIRef("slowmo:acceptable_by"):]):
+    if not set(performer_graph[: URIRef("slowmo:acceptable_by") :]):
         return None
-    
+
     max_score = max(
         [score for _, score in performer_graph.subject_objects(SLOWMO.Score)],
         default=None,

@@ -1,5 +1,5 @@
 import pandas as pd
-from rdflib import RDF, BNode, Graph, URIRef
+from rdflib import RDF, BNode, Graph
 
 from bitstomach2.signals import SIGNALS
 from utils.namespace import PSDO, SLOWMO
@@ -32,7 +32,7 @@ def extract_signals(performance_data) -> Graph:
 
             for s in signals:
                 s.add(SLOWMO.RegardingMeasure, BNode(measure))
-                r.add(URIRef("motivating_information"), s.identifier)
+                r.add(PSDO.motivating_information, s.identifier)
                 g += s.graph
     return g
 
@@ -45,7 +45,7 @@ def fix_up(performance_data):
         columns={"MPOG_goal": "goal_comparator_content"}, inplace=True
     )
     performance_df["passed_rate"] = (
-        performance_df["passed_count"] / performance_df["denominator"] 
+        performance_df["passed_count"] / performance_df["denominator"]
     )
 
     return performance_df

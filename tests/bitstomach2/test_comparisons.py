@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 import pandas as pd
 import pytest
-from rdflib import RDF, BNode, Graph, Literal, URIRef
+from rdflib import RDF, BNode, Graph, Literal
 from rdflib.resource import Resource
 
 from bitstomach2.signals import Comparison
@@ -59,7 +59,7 @@ def test_multiple_signals_from_single_detector(perf_info, perf_data):
     assert 4 == len(signals)
 
     for s in signals:
-        perf_content.add(URIRef("motivating_information"), s.identifier)
+        perf_content.add(PSDO.motivating_information, s.identifier)
         perf_graph += s.graph
 
     assert 33 == len(perf_graph)

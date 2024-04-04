@@ -19,4 +19,3 @@ class SLOWMO(AliasingDefinedNamespace):
     WithComparator: URIRef
     IsAbout: URIRef
     MessageRecurrance: URIRef
-    CausalPathway: URIRef

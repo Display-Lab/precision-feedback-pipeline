@@ -12,7 +12,7 @@ def graph():
     graph = Graph() 
     
     measure = graph.resource(BNode("PONV05"))
-    measure[RDF.type] = URIRef("http://purl.obolibrary.org/obo/PSDO_0000102")
+    measure[RDF.type] = PSDO.performance_measure_content
     
     template = graph.resource(IMPROVING_TEMPLATE)
     template[RDF.type] = candidate_pudding.PERFORMANCE_SUMMARY_DISPLAY_TEMPLATE
@@ -25,7 +25,7 @@ def graph():
     performance_content.set(RDF.type, PSDO.performance_content)    
     signal = Trend._resource(2.0)
     signal.add(SLOWMO.RegardingMeasure, measure)
-    performance_content.add(URIRef("motivating_information"), signal)
+    performance_content.add(PSDO.motivating_information, signal)
     graph += signal.graph
     
     causal_pathway = graph.resource(URIRef("https://repo.metadatacenter.org/template-instances/0b160448-c376-476d-b4a9-5e8a5496eaf0"))

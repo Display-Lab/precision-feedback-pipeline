@@ -69,7 +69,7 @@ def candidate_resource(performance_data_frame):
     performance_content = graph.resource(BNode("performance_content"))
     for s in motivating_informations:
         s[SLOWMO.RegardingMeasure] = BNode("PONV05")
-        performance_content.add(URIRef("motivating_information"), s.identifier)
+        performance_content.add(PSDO.motivating_information, s.identifier)
         graph += s.graph
 
     return candidate_resource

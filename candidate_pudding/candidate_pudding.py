@@ -2,7 +2,7 @@ from rdflib import RDF, XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
 from bitstomach2.signals import Signal
-from utils.namespace import IAO, PSDO, SCHEMA, SLOWMO
+from utils.namespace import CPO, IAO, PSDO, RO, SCHEMA, SLOWMO
 
 PERFORMANCE_SUMMARY_DISPLAY_TEMPLATE = URIRef(
     "http://data.bioontology.org/ontologies/PSDO/classes/http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FPSDO_0000002"
@@ -32,27 +32,30 @@ def add_motivating_information(candidate: Resource):
     measure = candidate.value(SLOWMO.RegardingMeasure)
     motivating_informations = [
         motivating_info
-        for motivating_info in performance_content[URIRef("motivating_information")]
+        for motivating_info in performance_content[PSDO.motivating_information]
         if motivating_info.value(SLOWMO.RegardingMeasure) == measure
     ]
 
+    roles = list(candidate[SLOWMO.AncestorTemplate / IAO.is_about])  #
+
     for motivating_information in motivating_informations:
-        candidate.add(URIRef("motivating_information"), motivating_information)
+        signal: Signal = Signal.for_type(motivating_information)  #
+        if not signal:
+            continue
+        if not signal.exclude(motivating_information, roles):  #
+            candidate.add(PSDO.motivating_information, motivating_information)
+            for disposition in signal.disposition(motivating_information):
+                candidate.add(RO.has_disposition, disposition)
 
     return candidate
 
 
 def acceptable_by(candidate: Resource):
-    pathway = candidate.value(SLOWMO.AncestorTemplate / SLOWMO.CausalPathway)
+    pathway = candidate.value(SLOWMO.AncestorTemplate / CPO.causal_pathway)
 
     roles = list(candidate[SLOWMO.AncestorTemplate / IAO.is_about])
 
-    mi_dispositions = []
-    for mi in candidate[URIRef("motivating_information")]:
-        signal: Signal = Signal.for_type(mi)
-        if not signal:
-            continue
-        mi_dispositions += signal.disposition(mi)
+    mi_dispositions = list(candidate[RO.has_disposition])
 
     pre_conditions = set(pathway[CPO_HAS_PRECONDITIONS])
 
@@ -80,7 +83,7 @@ def add_causal_pathway(candidate: Resource):
         URIRef("http://schema.org/name"),
         Literal(causal_pathway_name, datatype=XSD.string),
     )
-    candidate.value(SLOWMO.AncestorTemplate)[SLOWMO.CausalPathway] = causal_pathway_id
+    candidate.value(SLOWMO.AncestorTemplate)[CPO.causal_pathway] = causal_pathway_id
     return candidate
 
 

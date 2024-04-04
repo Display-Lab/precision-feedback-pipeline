@@ -28,6 +28,7 @@ from thinkpudding.thinkpudding import Thinkpudding
 from utils.graph_operations import create_performer_graph, read_graph
 from utils.settings import settings
 from candidate_pudding import candidate_pudding
+from utils.namespace import PSDO
 
 global templates, pathways, measures, comparators
 
@@ -216,6 +217,16 @@ async def createprecisionfeedback(info: Request):
 
     # BitStomach 2
     g: Graph = bitstomach.extract_signals(performance_data)
+    performance_content = g.resource(
+        BNode("performance_content")
+    )
+    if len(list(performance_content[PSDO.motivating_information])) == 0:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Insufficient significant data found for providing feedback, process aborted. Message_instance_id: {message_instance_id}",
+            headers={"400-Error": "Invalid Input Error"},
+        )
+    
     performer_graph += g
     cool_new_super_graph += g
     debug_output_if_set(performer_graph, "outputs/spek_bs2.json")
