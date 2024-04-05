@@ -1,3 +1,5 @@
+from typing import Optional
+
 from rdflib import RDF, XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
@@ -12,17 +14,20 @@ CPO_HAS_PRECONDITIONS = URIRef(
 )
 
 
-def create_candidate(measure: Resource, template: Resource):
-    candidate = measure.graph.resource(BNode())
+def create_candidate(measure: Resource, template: Resource) -> Optional[Resource]:
+    g: Graph = measure.graph
+    candidate = g.resource(BNode())
     candidate[RDF.type] = SLOWMO.Candidate
     candidate[SLOWMO.RegardingMeasure] = measure
     candidate[SLOWMO.AncestorTemplate] = template
 
-    add_convenience_properties(candidate)
-
-    add_motivating_information(candidate)
+    if not add_motivating_information(candidate):
+        g.remove((candidate.identifier, None, None))
+        return None
 
     add_causal_pathway(candidate)
+
+    add_convenience_properties(candidate)
 
     return candidate
 
@@ -35,6 +40,9 @@ def add_motivating_information(candidate: Resource):
         for motivating_info in performance_content[PSDO.motivating_information]
         if motivating_info.value(SLOWMO.RegardingMeasure) == measure
     ]
+
+    if not motivating_informations:
+        return None
 
     roles = list(candidate[SLOWMO.AncestorTemplate / IAO.is_about])  #
 
@@ -102,10 +110,7 @@ def add_convenience_properties(candidate: Resource):
     comparator = next(
         (
             ttype
-            for ttype in candidate[
-                SLOWMO.AncestorTemplate
-                / URIRef("http://purl.obolibrary.org/obo/IAO_0000136")
-            ]
+            for ttype in candidate[SLOWMO.AncestorTemplate / IAO.is_about]
             if ttype[RDF.type : PSDO.comparator_content]
         ),
         None,
@@ -121,4 +126,6 @@ def create_candidates(graph: Graph):
         for template in graph[: RDF.type : PERFORMANCE_SUMMARY_DISPLAY_TEMPLATE]:
             template_resource = graph.resource(template)
             candidate = create_candidate(measure_resource, template_resource)
+            if not candidate:
+                continue
             candidate = acceptable_by(candidate)

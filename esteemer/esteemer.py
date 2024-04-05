@@ -122,7 +122,7 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
                 (mod["trend_size"]) * MPM[causal_pathway.value][Trend.signal_type]
             )
         case _:
-            mod["score"] = 0.0
+            mod["score"] = None
     return mod
 
 
@@ -209,6 +209,6 @@ def select_candidate(performer_graph: Graph) -> BNode:
     # Randomly select one of the candidates with the known maximum score
     selected_candidate = random.choice(candidates_with_max_score)
 
-    performer_graph.add((selected_candidate, URIRef("slowmo:selected"), Literal(True)))
+    performer_graph.add((selected_candidate, SLOWMO.Selected, Literal(True)))
 
     return selected_candidate

@@ -145,15 +145,15 @@ def candidate_as_record(a_candidate: Resource) -> List:
     representation.append(a_candidate.value(SLOWMO.RegardingMeasure).identifier)
     representation.append("N/A")
     score = a_candidate.value(SLOWMO.Score)
-    representation.append(float(score.value) if score else None)
+    representation.append(score)
     representation.append(
-        float(a_candidate.value(URIRef("motivating_score"))) if score else None
+        a_candidate.value(URIRef("motivating_score")) 
     )
     representation.append(
-        float(a_candidate.value(URIRef("history_score"))) if score else None
+        a_candidate.value(URIRef("history_score")) 
     )
     representation.append(a_candidate.value(SLOWMO.name))
     representation.append(a_candidate.value(SLOWMO.AcceptableBy))
-    representation.append(a_candidate.value(URIRef("slowmo:selected")))
+    representation.append(a_candidate.value(SLOWMO.Selected))
 
     return representation
