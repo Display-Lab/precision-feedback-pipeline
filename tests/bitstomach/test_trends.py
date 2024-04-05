@@ -8,7 +8,7 @@ from decoy.matchers import IsA
 from rdflib import RDF, BNode, Graph, Literal
 from rdflib.resource import Resource
 
-from bitstomach2.signals import Comparison, Trend
+from bitstomach.signals import Comparison, Trend
 from utils import PSDO, SLOWMO
 
 

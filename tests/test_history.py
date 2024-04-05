@@ -65,7 +65,7 @@ def test_single_resource_returns_single_moderator():
     assert isinstance(mods[0], dict)
     assert len(mods) == 1
 
-    assert mods[0]["recurrence_count"] == round(4/11,4)
+    assert mods[0]["recurrence_count"] == round(4 / 11, 4)
 
 
 # Supplementary methods
@@ -74,7 +74,7 @@ def test_single_resource_returns_single_moderator():
 def test_to_element():
     candidate_resource = Graph().resource(BNode())
     candidate_resource[SLOWMO.AncestorTemplate] = URIRef(TEMPLATE_A)
-    candidate_resource[URIRef("slowmo:acceptable_by")] = Literal("Social Worse")
+    candidate_resource[SLOWMO.AcceptableBy] = Literal("Social Worse")
 
     current_hist: dict = History.to_element(candidate_resource)
 

@@ -1,6 +1,6 @@
-from rdflib import RDF, BNode, Graph, URIRef
+from rdflib import RDF, BNode, Graph
 
-from bitstomach2 import bitstomach
+from bitstomach import bitstomach
 from utils.namespace import PSDO
 
 
@@ -32,7 +32,7 @@ def test_returns_performance_content_with_multiple_elements():
         ]
     )
     r = g.resource(BNode("performance_content"))
-    mi = set(r[URIRef("motivating_information")])
+    mi = set(r[PSDO.motivating_information])
 
     assert len(mi) == 8
 

@@ -1,14 +1,13 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import pandas as pd
 from rdflib import RDF, BNode, Literal
 from rdflib.resource import Resource
 
-from bitstomach2.signals import Signal
+from bitstomach.signals import Signal
 from utils.namespace import PSDO, SLOWMO
 
 
-# TODO: Refactor to `class Comparison(Signal)`
 class Comparison(Signal):
     signal_type = PSDO.performance_gap_content
 
@@ -37,7 +36,7 @@ class Comparison(Signal):
             "peer_90th_percentile_benchmark",
             "goal_comparator_content",
         ]
-        comparators = perf_data[-1:][comp_cols].to_dict(orient="records")[0] 
+        comparators = perf_data[-1:][comp_cols].to_dict(orient="records")[0]
 
         for key, value in comparators.items():
             gap = Comparison._detect(level, value / 100)
@@ -88,9 +87,9 @@ class Comparison(Signal):
 
         for signal in super().select(motivating_informations):
             motivating_info_dict = super().moderators(signal)
-            motivating_info_dict["gap_size"] = round(abs(signal.value(
-                SLOWMO.PerformanceGapSize
-            ).value),4)
+            motivating_info_dict["gap_size"] = round(
+                abs(signal.value(SLOWMO.PerformanceGapSize).value), 4
+            )
             motivating_info_dict["comparator_type"] = signal.value(
                 SLOWMO.RegardingComparator / RDF.type
             ).identifier
@@ -98,3 +97,27 @@ class Comparison(Signal):
             mods.append(motivating_info_dict)
 
         return mods
+
+    @classmethod
+    def disposition(cls, mi: Resource) -> Union[List[Resource] | None]:
+        if not super().select([mi]):
+            return None
+
+        disposition = super().disposition(mi)
+
+        # extras
+        comparator_type = mi.value(SLOWMO.RegardingComparator / RDF.type)
+
+        disposition.append(comparator_type)
+
+        disposition += list(comparator_type[RDF.type])
+
+        return disposition
+
+    @classmethod
+    def exclude(cls, mi, types: List[Resource]) -> bool:
+        comparator_type = mi.value(SLOWMO.RegardingComparator / RDF.type)
+        if comparator_type in types:
+            return False
+        else:
+            return True

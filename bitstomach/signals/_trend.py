@@ -4,7 +4,7 @@ import pandas as pd
 from rdflib import RDF, Literal
 from rdflib.resource import Resource
 
-from bitstomach2.signals import Signal
+from bitstomach.signals import Signal
 from utils import PSDO, SLOWMO
 
 
@@ -57,9 +57,9 @@ class Trend(Signal):
 
         for signal in super().select(motivating_informations):
             motivating_info_dict = super().moderators(signal)
-            motivating_info_dict["trend_size"] = round(abs(signal.value(
-                SLOWMO.PerformanceTrendSlope
-            ).value),4)
+            motivating_info_dict["trend_size"] = round(
+                abs(signal.value(SLOWMO.PerformanceTrendSlope).value), 4
+            )
 
             mods.append(motivating_info_dict)
 

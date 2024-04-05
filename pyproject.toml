@@ -26,6 +26,7 @@ uvicorn = "^0.20.0"
 pytest = "^8.0.0"
 python-slugify = "^8.0.4"
 decoy = "^2.1.1"
+ruff = "^0.3.5"
 
 [build-system]
 requires = ["poetry-core"]

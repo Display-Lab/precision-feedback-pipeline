@@ -1,7 +1,6 @@
 import json
 import os
 from concurrent.futures import ThreadPoolExecutor
-import time
 
 import requests
 from google.auth.transport.requests import Request
@@ -93,7 +92,7 @@ def main():
 
     with ThreadPoolExecutor(max_workers=100) as executor:
         executor.map(post_json_message, json_files[0:MAX_REQUESTS])
-        
+
     # for message in json_files[0:MAX_REQUESTS]:
     #     post_json_message(message)
     #     time.sleep(0)

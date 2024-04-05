@@ -3,14 +3,14 @@ from rdflib import Namespace, URIRef
 from utils.namespace import AliasingDefinedNamespace
 
 
-class RO(AliasingDefinedNamespace):
+class IAO(AliasingDefinedNamespace):
     _NS = Namespace("http://purl.obolibrary.org/obo/")
 
     # http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
 
-    RO_0000091: URIRef
-    has_disposition: URIRef
+    IAO_0000136: URIRef
+    is_about: URIRef
 
     _alias = {
-        "has_disposition": "RO_0000091",
+        "is_about": "IAO_0000136",
     }

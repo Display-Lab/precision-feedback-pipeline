@@ -2,6 +2,7 @@
 
 `AliasingDefinedNamespace` base class, and `PSDO`, `CPO`, and `SLOWMO` namespaces. These namespaces work the same way as the builtin RDF classes but allow for convenient aliases (e.g. labels) in code.
 """
+
 from rdflib.namespace import (
     _DFNS_RESERVED_ATTRS,
     DefinedNamespace,
@@ -24,7 +25,6 @@ class AliasingDefinedNamespaceMeta(DefinedNamespaceMeta):
 class AliasingDefinedNamespace(
     DefinedNamespace, metaclass=AliasingDefinedNamespaceMeta
 ):
-    
     """Shorthand for defined namespace classes that use aliases. Derived namespace classes should be imported directly and not instantiated.
 
     The base URI of the namespace is set in the derived class using:
@@ -54,14 +54,18 @@ class AliasingDefinedNamespace(
 
 
 # import at end to avoid circular reference when namespaces import `AliasingDefinedNamespace`
-from utils.namespace._PSDO import PSDO   # noqa: E402
+from utils.namespace._PSDO import PSDO  # noqa: E402
 from utils.namespace._CPO import CPO  # noqa: E402
 from utils.namespace._SLOWMO import SLOWMO  # noqa: E402
 from utils.namespace._RO import RO  # noqa: E402
+from utils.namespace._IAO import IAO  # noqa: E402
+from utils.namespace._SCHEMA import SCHEMA  # noqa: E402
 
 _NAMESPACE_PREFIXES_PFP = {
     "psdo": PSDO,
     "cpo": CPO,
     "slowmo": SLOWMO,
     "ro": RO,
-    }
+    "iao": IAO,
+    "schema": SCHEMA,
+}
