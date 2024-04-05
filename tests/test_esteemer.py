@@ -73,12 +73,12 @@ def candidate_resource(performance_data_frame):
 
 
 def test_score(candidate_resource):
-    esteemer.score(candidate_resource, None, None)
+    esteemer.score(candidate_resource, None, {})
     assert candidate_resource.value(SLOWMO.Score).value == pytest.approx(0.035)
 
 
 def test_calculate_preference_score(candidate_resource):
-    assert esteemer.calculate_preference_score(candidate_resource, None) == 0
+    assert esteemer.calculate_preference_score(candidate_resource, {}) == 0
 
 
 def test_select_candidate():

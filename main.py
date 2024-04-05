@@ -9,11 +9,11 @@ import requests
 from fastapi import FastAPI, HTTPException, Request
 from loguru import logger
 from rdflib import (  # , ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
+    RDF,
     BNode,
     Graph,
     Literal,
     URIRef,
-    RDF,
 )
 from requests_file import FileAdapter
 
@@ -165,10 +165,30 @@ async def createprecisionfeedback(info: Request):
     del req_info1["Performance_data"]
     history: dict = req_info1.setdefault("History", {})
     del req_info1["History"]
-    preferences = req_info1["Preferences"]
+
+    input_preferences: dict = (
+        req_info1.get("Preferences", {}).get("Utilities", {}).get("Message_Format", {})
+    )
+    default_preferences = {
+        "Social gain": "1.007650319",
+        "Social stayed better": "0.4786461911",
+        "Worsening": "-1.7261141",
+        "Improving": "0.258245277",
+        "Social loss": "0.7730646814",
+        "Social stayed worse": "-0.5986969529",
+        "Social better": "-0.1251083934",
+        "Social worse": "-1.154453186",
+        "Social approach": "1.086765623",
+        "Goal gain": "1.007650319",
+        "Goal approach": "1.086765623",
+    }
+    preferences = {
+        **input_preferences,
+        **{k: v for k, v in default_preferences.items() if k not in input_preferences},
+    }
+
     ## Pass message instance ID from input message through to pictoralist
     message_instance_id = req_info1.get("message_instance_id")
-    del req_info1["Preferences"]
     measure_details = Graph()
 
     for s, p, o in measure_details.triples((None, None, None)):

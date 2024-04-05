@@ -120,6 +120,7 @@ def candidates_records(performer_graph: Graph) -> List[List]:
             "score",
             "motivating_score",
             "history_score",
+            "preference_score",
             "name",
             "acceptable_by",
             "selected",
@@ -146,12 +147,11 @@ def candidate_as_record(a_candidate: Resource) -> List:
     representation.append("N/A")
     score = a_candidate.value(SLOWMO.Score)
     representation.append(score)
-    representation.append(
-        a_candidate.value(URIRef("motivating_score")) 
-    )
-    representation.append(
-        a_candidate.value(URIRef("history_score")) 
-    )
+    representation.append(a_candidate.value(URIRef("motivating_score")))
+    representation.append(a_candidate.value(URIRef("history_score")))
+
+    representation.append(a_candidate.value(URIRef("preference_score")))
+
     representation.append(a_candidate.value(SLOWMO.name))
     representation.append(a_candidate.value(SLOWMO.AcceptableBy))
     representation.append(a_candidate.value(SLOWMO.Selected))
