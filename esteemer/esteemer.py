@@ -40,13 +40,19 @@ def score(candidate_resource: Resource, history: json, preferences: json) -> Res
     preference_score = calculate_preference_score(candidate_resource, preferences)
 
     # calculate final score = function of sub-scores
-    final_score = motivating_info["score"] + history_info["score"] + preference_score
+    final_score = (motivating_info["score"] + history_info["score"]) * (
+        1 + preference_score
+    )
 
     candidate_resource[URIRef("motivating_score")] = Literal(
         motivating_info["score"], datatype=XSD.double
     )
     candidate_resource[URIRef("history_score")] = Literal(
         history_info["score"], datatype=XSD.double
+    )
+
+    candidate_resource[URIRef("preference_score")] = Literal(
+        preference_score, datatype=XSD.double
     )
 
     candidate_resource[SLOWMO.Score] = Literal(final_score, datatype=XSD.double)
@@ -174,7 +180,15 @@ def calculate_preference_score(
     Returns:
     float: preference sub-score.
     """
-    return 0
+    map_cp_to_preferences = {
+        "social better": "Social better",
+        "social worse": "Social worse",
+        "improving": "Improving",
+        "worsening": "Worsening",
+    }
+
+    key = map_cp_to_preferences.get(candidate_resource.value(SLOWMO.AcceptableBy).value)
+    return float(preferences.get(key, 0.0))
 
 
 def select_candidate(performer_graph: Graph) -> BNode:
