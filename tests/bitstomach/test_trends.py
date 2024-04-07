@@ -1,10 +1,8 @@
 from typing import List
-from unittest.mock import MagicMock
+from unittest.mock import Mock, patch
 
 import pandas as pd
 import pytest
-from decoy import Decoy
-from decoy.matchers import IsA
 from rdflib import RDF, BNode, Graph, Literal
 from rdflib.resource import Resource
 
@@ -157,22 +155,10 @@ def test_trend_identity():
     assert r1.pop() is r1a.pop()
 
 
-def test_detect_creates_correct_signal_with_magick_mock_calc():
-    Trend._detect = MagicMock(return_value=2.0)
-
-    signal = Trend.detect(
-        pd.DataFrame(
-            {"passed_rate": [89, 90, 91]},  # slope 1.0
-        )
-    )
-
-    assert signal[0].value(SLOWMO.PerformanceTrendSlope) == Literal(2.0)
-
-
-def test_detect_with_decoy_calc(decoy: Decoy):
-    Trend._detect = decoy.mock(func=Trend._detect)
-
-    decoy.when(Trend._detect(IsA(pd.DataFrame))).then_return(42.0)
+# @pytest.mark.skip("boo")
+@patch.object(Trend, "_detect")
+def test_partial_mock(mock_detect: Mock):
+    mock_detect.return_value = 42.0
 
     signal = Trend.detect(
         pd.DataFrame(
@@ -182,4 +168,37 @@ def test_detect_with_decoy_calc(decoy: Decoy):
 
     assert signal[0].value(SLOWMO.PerformanceTrendSlope) == Literal(42.0)
 
-    decoy.verify(Trend._detect(IsA(pd.DataFrame)))
+
+@patch.object(Trend, "_detect")
+def test_partial_mock_with_patch_decorator(mock_detect: Mock):
+    class TypeMatcher:
+        def __init__(self, expected_type):
+            self.expected_type = expected_type
+
+        def __eq__(self, other):
+            return isinstance(other, self.expected_type)
+
+    mock_detect.return_value = 42.0
+
+    signal = Trend.detect(
+        pd.DataFrame(
+            {"passed_rate": [89, 90, 91]},  # slope 1.0
+        )
+    )
+
+    mock_detect.assert_called_once_with(TypeMatcher(pd.DataFrame))
+
+    assert signal[0].value(SLOWMO.PerformanceTrendSlope) == Literal(42.0)
+
+
+def test_partial_mock_using_with():
+    with patch.object(Trend, "_detect", return_value=42.0):
+        signal = Trend.detect(
+            pd.DataFrame(
+                {"passed_rate": [89, 90, 91]},  # slope 1.0
+            )
+        )
+
+    assert signal[0].value(SLOWMO.PerformanceTrendSlope) == Literal(42.0)
+
+    # TODO: Try some https://mockito-python.readthedocs.io
