@@ -1,9 +1,8 @@
-import warnings
-import time
 import logging
+import time
+import warnings
 
 from rdflib import Graph
-
 
 warnings.filterwarnings("ignore")
 
