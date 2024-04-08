@@ -46,6 +46,9 @@ class PSDO(AliasingDefinedNamespace):
     PSDO_0000107: URIRef
     performance_content: URIRef
 
+    PSDO_0000112: URIRef
+    achievement_content: URIRef
+
     PSDO_0000116: URIRef
     negative_performance_gap_set: URIRef
 
@@ -79,6 +82,7 @@ class PSDO(AliasingDefinedNamespace):
         "negative_performance_gap_content": "PSDO_0000105",
         "performance_gap_content": "PSDO_0000106",
         "performance_content": "PSDO_0000107",
+        "achievement_content": "PSDO_0000112",
         "negative_performance_gap_set": "PSDO_0000116",
         "positive_performance_trend_set": "PSDO_0000120",
         "peer_average_comparator": "PSDO_0000126",

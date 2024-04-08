@@ -70,12 +70,10 @@ class Signal:
         return False
 
 
+from bitstomach.signals._achievement import Achievement  # noqa: E402
 from bitstomach.signals._comparison import Comparison  # noqa: E402
 from bitstomach.signals._trend import Trend  # noqa: E402
 
-__all__ = ["Comparison", "Trend"]
+__all__ = ["Comparison", "Trend", "Achievement"]
 
-SIGNALS = {
-    Comparison: Signal,
-    Trend: Signal,
-}
+SIGNALS = {Comparison: Signal, Trend: Signal, Achievement: Signal}
