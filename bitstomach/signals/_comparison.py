@@ -27,28 +27,19 @@ class Comparison(Signal):
         if perf_data.empty:
             raise ValueError
 
-        level = perf_data["passed_rate"][-1:].to_list()[0]
-
         resources = []
-        comp_cols = [
-            "peer_average_comparator",
-            "peer_75th_percentile_benchmark",
-            "peer_90th_percentile_benchmark",
-            "goal_comparator_content",
-        ]
-        comparators = perf_data[-1:][comp_cols].to_dict(orient="records")[0]
 
-        for key, value in comparators.items():
-            gap = Comparison._detect(level, value / 100)
-
-            r = Comparison._resource(gap, key, value / 100)
-
+        gaps = Comparison._detect(perf_data)
+        for key, value in gaps.items():
+            r = Comparison._resource(value[0], key, value[1])
             resources.append(r)
 
         return resources
 
     @classmethod
-    def _resource(cls, gap: float, key: str, value: float) -> Resource:
+    def _resource(
+        cls, gap: float, comparator_name: str, comparator_value: float
+    ) -> Resource:
         """
         adds the performance gap size, types it as positive or negative and adds the comparator to the subgraph
         """
@@ -65,18 +56,32 @@ class Comparison(Signal):
 
         # Add the comparator
         c = base.graph.resource(BNode())
-        c.set(RDF.type, PSDO[key])
-        c.set(RDF.value, Literal(value))
+        c.set(RDF.type, PSDO[comparator_name])
+        c.set(RDF.value, Literal(comparator_value))
 
         base.add(SLOWMO.RegardingComparator, c)
 
         return base
 
     @staticmethod
-    def _detect(level: float, comparator: float) -> float:
+    def _detect(perf_data: pd.DataFrame) -> dict:
         """Calculate gap from levels and comparators"""
+        comp_cols = [
+            "peer_average_comparator",
+            "peer_75th_percentile_benchmark",
+            "peer_90th_percentile_benchmark",
+            "goal_comparator_content",
+        ]
 
-        return level - comparator
+        gaps: dict = {}
+
+        for comparator in comp_cols:
+            comparator_value = perf_data[-1:][comparator] / 100
+
+            gap = perf_data[-1:]["passed_rate"] - comparator_value
+            gaps[comparator] = (float(gap), float(comparator_value))
+
+        return gaps
 
     @classmethod
     def moderators(cls, motivating_informations: List[Resource]) -> List[dict]:

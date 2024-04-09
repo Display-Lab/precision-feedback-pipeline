@@ -56,7 +56,7 @@ def test_detect_handles_empty_datframe():
 def test_detect_returns_mi(perf_data):
     perf_data["passed_rate"] = [0.94, 0.96, 0.95]
     signals = Achievement.detect(perf_data)
-    assert signals is None
+    assert signals == []
 
 
 def test_signal_properties(perf_data):
@@ -67,55 +67,53 @@ def test_signal_properties(perf_data):
     assert slope == pytest.approx(0.01)
 
     gap = signals[0].value(SLOWMO.PerformanceGapSize).value
-    assert gap == pytest.approx(0.17)
+    assert gap == pytest.approx(0.02)
 
 
 perf_level_test_set = [
-    ([0.65, 0.70, 0.75], 0.05, -0.05, PSDO.peer_average_comparator),
-    ([0.60, 0.70, 0.80], 0.1, 0, PSDO.peer_average_comparator),
-    ([0.62, 0.72, 0.82], 0.1, 0.02, PSDO.peer_average_comparator),
+    (
+        [0.67, 0.79, 0.97],
+        [80.0, 85.0, 90.0, 95.0],
+        {
+            PSDO.peer_average_comparator,
+            PSDO.peer_75th_percentile_benchmark,
+            PSDO.peer_90th_percentile_benchmark,
+            PSDO.goal_comparator_content,
+        },
+        "achievement all benchmarks",
+    ),
+    (
+        [0.67, 0.95, 0.99],
+        [80.0, 96.0, 98.0, 97.0],
+        {
+            PSDO.peer_75th_percentile_benchmark,
+            PSDO.peer_90th_percentile_benchmark,
+            PSDO.goal_comparator_content,
+        },
+        "achievement no peer_90th_percentile_benchmark",
+    ),
+    (
+        [0.67, 0.96, 0.97],
+        [80.0, 98.0, 96.5, 95.0],
+        {
+            PSDO.peer_90th_percentile_benchmark,
+            # PSDO.goal_comparator_content,
+        },
+        "last month negative gap for 90 percentile",
+    ),
 ]
 
 
-@pytest.mark.parametrize("perf_level, slope, gap, comparator", perf_level_test_set)
-def test_signal_properties2(perf_level, slope, gap, comparator, perf_data):
+@pytest.mark.parametrize(
+    "perf_level, comparator_values, types, condition", perf_level_test_set
+)
+def test_detect(perf_level, comparator_values, types: dict, condition, perf_data):
     perf_data2 = perf_data.assign(passed_rate=perf_level)
+
+    perf_data2.iloc[:, -4:] = comparator_values
+
     signals = Achievement.detect(perf_data2)
 
-    assert len(signals) == 4
+    comparators = {s.value(SLOWMO.RegardingComparator).identifier for s in signals}
 
-    signal = signals[0]
-    assert signal.value(SLOWMO.PerformanceTrendSlope).value == pytest.approx(slope)
-    assert signal.value(SLOWMO.PerformanceGapSize).value == pytest.approx(gap)
-    assert signal.value(SLOWMO.RegardingComparator).identifier == comparator
-
-
-# detection_test_set = [
-#     ([0.77, 0.88, 0.99], 0.11, "simple positive trend"),
-#     ([0.99, 0.88, 0.77], -0.11, "simple negative trend"),
-#     ([0.88, 0.88, 0.88], 0.0, "no trend"),
-#     ([0.77, 0.77, 0.99], 0.11, "partial positive trend"),
-#     ([0.77, 0.99, 0.99], 0.0, "partial positive trend"),
-#     ([0.77, 0.99, 0.88], 0.0, "non-monotonic, last month negative"),
-#     ([0.88, 0.77, 0.88], 0.0, "non-monotonic, last month positive"),
-# ]
-# @pytest.mark.parametrize("perf_level, expected, condition", detection_test_set)
-# def test_trend__detect(perf_level: list, expected: float, condition: str):
-#     perf = pd.DataFrame({"passed_rate": perf_level})
-#     slope = Trend._detect(perf)
-#     assert slope == pytest.approx(expected), condition + " failed"
-
-
-# mods_test_set = [
-#     (0.11, round(abs(0.11), 4), "simple negative trend"),
-#     (-0.111111111111, round(abs(0.111111111111), 4), "simple negative trend"),
-#     (0.0, 0.0, "no trend"),
-# ]
-
-
-# @pytest.mark.parametrize("slope, moderator, condition", mods_test_set)
-# def test_trend_moderators(slope: float, moderator: float, condition):
-#     signal = Trend._resource(slope)
-#     mods = Trend.moderators([signal])[0]
-
-#     assert str(mods["trend_size"]) == str(moderator), condition + " failed"
+    assert comparators == types

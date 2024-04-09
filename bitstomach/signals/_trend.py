@@ -24,7 +24,7 @@ class Trend(Signal):
         slope = Trend._detect(perf_data)
 
         if not slope:
-            return None
+            return []
 
         return [Trend._resource(slope)]
 

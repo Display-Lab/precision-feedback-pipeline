@@ -171,3 +171,9 @@ def test_can_get_matching_types(perf_data, perf_info):
     assert g.resource(PSDO.peer_average_comparator) in matching_types
 
     assert g.resource(PSDO.social_comparator_content) in matching_types
+
+
+def test_detect1(perf_data):
+    gaps: dict = Comparison._detect(perf_data[-1:])
+
+    assert gaps["peer_90th_percentile_benchmark"][0] == pytest.approx(-0.01)

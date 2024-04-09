@@ -4,7 +4,7 @@ import pandas as pd
 from rdflib import RDF
 from rdflib.resource import Resource
 
-from bitstomach.signals import Signal
+from bitstomach.signals import Comparison, Signal, Trend
 from utils.namespace import PSDO, SLOWMO
 
 
@@ -16,6 +16,8 @@ class Achievement(Signal):
         if perf_data.empty:
             raise ValueError
 
+        achievement_signals = []
+
         # call Comparison.detect(perf_data)
         # call Trend.detect(pref_data)
         # for each positive comparison signal
@@ -24,27 +26,39 @@ class Achievement(Signal):
         #           everything from the comparison signal
         #           everything from the trend signal
         #           negative gap for the previous month
-        from bitstomach.signals import Comparison, Trend
-        comparison_signals = Comparison.detect(perf_data)
         trend_signals = Trend.detect(perf_data)
 
-        if not (comparison_signals and trend_signals):
-            return None
+        if (
+            not trend_signals
+            or not trend_signals[0][RDF.type : PSDO.positive_performance_trend_content]
+        ):
+            return []
 
-        achievement_signals = []
+        positive_comparison_signals = [
+            s
+            for s in Comparison.detect(perf_data)
+            if s[RDF.type : PSDO.positive_performance_gap_content]
+        ]
+        # check if there is previsus month
+        previous_gaps = Comparison._detect(perf_data.iloc[:-1])
 
-        slope = trend_signals[0].value(SLOWMO.PerformanceTrendSlope).value
+        for signal in positive_comparison_signals:
+            previous_gap = next(
+                value[0]
+                for key, value in previous_gaps.items()
+                if PSDO[key]
+                == signal.value(SLOWMO.RegardingComparator / RDF.type).identifier
+            )
 
-        for signal in comparison_signals:
-            # continue on cases that are not achivement signals
+            if previous_gap >= 0:
+                continue
+
             mi = Achievement._resource()
             mi[SLOWMO.PerformanceTrendSlope] = trend_signals[0].value(
                 SLOWMO.PerformanceTrendSlope
             )
-            mi[SLOWMO.PerformanceGapSize] = comparison_signals[0].value(
-                SLOWMO.PerformanceGapSize
-            )
-            mi[SLOWMO.RegardingComparator] = comparison_signals[0].value(
+            mi[SLOWMO.PerformanceGapSize] = signal.value(SLOWMO.PerformanceGapSize)
+            mi[SLOWMO.RegardingComparator] = signal.value(
                 SLOWMO.RegardingComparator / RDF.type
             )
             achievement_signals.append(mi)
