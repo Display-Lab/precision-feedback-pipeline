@@ -1,7 +1,7 @@
 from typing import List, Optional, Union
 
 import pandas as pd
-from rdflib import RDF, BNode, Literal
+from rdflib import RDF, BNode, Literal, URIRef
 from rdflib.resource import Resource
 
 from bitstomach.signals import Signal
@@ -116,13 +116,17 @@ class Comparison(Signal):
         disposition.append(comparator_type)
 
         disposition += list(comparator_type[RDF.type])
-
+        TypeError
         return disposition
 
     @classmethod
-    def exclude(cls, mi, types: List[Resource]) -> bool:
+    def exclude(cls, mi, message_roles: List[Resource]) -> bool:
         comparator_type = mi.value(SLOWMO.RegardingComparator / RDF.type)
-        if comparator_type in types:
+        if comparator_type in message_roles:
             return False
         else:
             return True
+
+    @staticmethod
+    def comparator_type(mi: Resource) -> URIRef:
+        return mi.value(SLOWMO.RegardingComparator / RDF.type).identifier

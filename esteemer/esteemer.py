@@ -4,7 +4,7 @@ import random
 from rdflib import XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
-from bitstomach.signals import Comparison, Trend
+from bitstomach.signals import Achievement, Comparison, Trend
 from esteemer.signals import History
 from utils.namespace import PSDO, SLOWMO
 
@@ -13,6 +13,7 @@ MPM = {
     "social better": {Comparison.signal_type: 0.5, History.signal_type: -0.1},
     "improving": {Trend.signal_type: 0.8, History.signal_type: -0.1},
     "worsening": {Trend.signal_type: 0.8, History.signal_type: -0.5},
+    "goal gain": {Achievement.signal_type: 0.8, History.signal_type: -0.1},
 }
 
 
@@ -128,7 +129,7 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
                 (mod["trend_size"]) * MPM[causal_pathway.value][Trend.signal_type]
             )
         case _:
-            mod["score"] = None
+            mod["score"] = 0.0
     return mod
 
 

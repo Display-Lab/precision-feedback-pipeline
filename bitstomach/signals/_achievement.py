@@ -16,18 +16,7 @@ class Achievement(Signal):
         if perf_data.empty:
             raise ValueError
 
-        achievement_signals = []
-
-        # call Comparison.detect(perf_data)
-        # call Trend.detect(pref_data)
-        # for each positive comparison signal
-        #   if there is a negative gap for that comparator for previous month
-        #       create an achievement and add
-        #           everything from the comparison signal
-        #           everything from the trend signal
-        #           negative gap for the previous month
         trend_signals = Trend.detect(perf_data)
-
         if (
             not trend_signals
             or not trend_signals[0][RDF.type : PSDO.positive_performance_trend_content]
@@ -39,32 +28,72 @@ class Achievement(Signal):
             for s in Comparison.detect(perf_data)
             if s[RDF.type : PSDO.positive_performance_gap_content]
         ]
-        # check if there is previsus month
-        previous_gaps = Comparison._detect(perf_data.iloc[:-1])
 
-        for signal in positive_comparison_signals:
-            previous_gap = next(
-                value[0]
-                for key, value in previous_gaps.items()
-                if PSDO[key]
-                == signal.value(SLOWMO.RegardingComparator / RDF.type).identifier
+        negative_prior_month_comparisons = [
+            s
+            for s in Comparison.detect(perf_data.iloc[:-1])
+            if s[RDF.type : PSDO.negative_performance_gap_content]
+        ]
+
+        achievement_signals = []
+
+        for comparison_signal in positive_comparison_signals:
+            previous_comparison_signal = next(
+                (
+                    comparison
+                    for comparison in negative_prior_month_comparisons
+                    if (
+                        Comparison.comparator_type(comparison)
+                        == Comparison.comparator_type(comparison_signal)
+                    )
+                ),
+                None,
             )
 
-            if previous_gap >= 0:
+            if not previous_comparison_signal:
                 continue
 
-            mi = Achievement._resource()
-            mi[SLOWMO.PerformanceTrendSlope] = trend_signals[0].value(
-                SLOWMO.PerformanceTrendSlope
+            mi = Achievement._resource(
+                trend_signals, comparison_signal, previous_comparison_signal
             )
-            mi[SLOWMO.PerformanceGapSize] = signal.value(SLOWMO.PerformanceGapSize)
-            mi[SLOWMO.RegardingComparator] = signal.value(
-                SLOWMO.RegardingComparator / RDF.type
-            )
+
             achievement_signals.append(mi)
         return achievement_signals
 
     @classmethod
-    def _resource(cls) -> Resource:
+    def _resource(
+        cls, trend_signals, comparison_signal: Resource, previous_comparison_signal
+    ) -> Resource:
+        # create and type the Achievmente
         mi = super()._resource()
+        mi.add(RDF.type, Comparison.signal_type)
+        mi.add(RDF.type, Trend.signal_type)
+
+        # set signal properties
+        mi[SLOWMO.PerformanceTrendSlope] = trend_signals[0].value(
+            SLOWMO.PerformanceTrendSlope
+        )
+        mi[SLOWMO.PerformanceGapSize] = comparison_signal.value(
+            SLOWMO.PerformanceGapSize
+        )
+        mi[SLOWMO.PriorPerformanceGapSize] = previous_comparison_signal.value(
+            SLOWMO.PerformanceGapSize
+        )
+
+        # add comparator (Achievments are a Comparison)
+        comparator = comparison_signal.value(SLOWMO.RegardingComparator)
+
+        mi[SLOWMO.RegardingComparator] = comparator
+
+        g = mi.graph
+        g += comparison_signal.graph.triples((comparator.identifier, None, None))
+
         return mi
+
+    @classmethod
+    def disposition(cls, mi: Resource) -> List[Resource]:
+        dispos = super().disposition(mi)
+        dispos += Comparison.disposition(mi)
+        dispos += Trend.disposition(mi)
+
+        return dispos

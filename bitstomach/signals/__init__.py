@@ -53,7 +53,6 @@ class Signal:
         checks whether motivating information is of the same type of the signal
         """
         return cls.signal_type in {t.identifier for t in mi[RDF.type]}
-        # return mi.graph.resource(cls.signal_type) in mi[RDF.type]
 
     @classmethod
     def disposition(cls, mi: Resource) -> List[Resource]:

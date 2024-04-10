@@ -40,8 +40,16 @@ def test_achievement_is_rdf_type():
 
 def test_disposition():
     g: Graph = Graph()
-    mi = g.resource(BNode())
+
+    # Hand create an Achievment with dispositions
+    mi: Resource = g.resource(BNode())
     mi.add(RDF.type, PSDO.achievement_content)
+    mi.add(RDF.type, PSDO.performance_gap_content)
+    mi.add(RDF.type, PSDO.performance_trend_content)
+
+    c = mi.graph.resource(BNode())  # Comparator
+    c.add(RDF.type, PSDO.goal_comparator_content)
+    mi[SLOWMO.RegardingComparator] = c
 
     dispositions = Achievement.disposition(mi)
     assert len(dispositions)
@@ -68,6 +76,9 @@ def test_signal_properties(perf_data):
 
     gap = signals[0].value(SLOWMO.PerformanceGapSize).value
     assert gap == pytest.approx(0.02)
+
+    gap = signals[0].value(SLOWMO.PriorPerformanceGapSize).value
+    assert gap == pytest.approx(-0.04)
 
 
 perf_level_test_set = [
@@ -107,13 +118,21 @@ perf_level_test_set = [
 @pytest.mark.parametrize(
     "perf_level, comparator_values, types, condition", perf_level_test_set
 )
-def test_detect(perf_level, comparator_values, types: dict, condition, perf_data):
+def test_detect(perf_level, comparator_values, types, condition, perf_data):
     perf_data2 = perf_data.assign(passed_rate=perf_level)
 
     perf_data2.iloc[:, -4:] = comparator_values
 
     signals = Achievement.detect(perf_data2)
 
-    comparators = {s.value(SLOWMO.RegardingComparator).identifier for s in signals}
+    comparators = {
+        s.value(SLOWMO.RegardingComparator / RDF.type).identifier for s in signals
+    }
 
-    assert comparators == types
+    assert comparators == types, condition + " failed"
+
+
+def test_only_current_month_no_achievement(perf_data):
+    assert [] == Achievement.detect(perf_data[-2:])  # Prior month but no trend
+    assert [] == Achievement.detect(perf_data[-1:])  # only current month
+    assert [] != Achievement.detect(perf_data[:])  # three months
