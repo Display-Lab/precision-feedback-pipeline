@@ -30,8 +30,8 @@ class Signal:
         creates a dictionary of moderators. base calss adds types
         """
         base_mods = {"type": []}
-        for trend_type in mi[RDF.type]:
-            base_mods["type"].append(trend_type.identifier)
+        for signal_type in mi[RDF.type]:
+            base_mods["type"].append(signal_type.identifier)
 
         return base_mods
 
@@ -73,7 +73,8 @@ class Signal:
 from bitstomach.signals._comparison import Comparison  # noqa: E402, I001
 from bitstomach.signals._trend import Trend  # noqa: E402, I001
 from bitstomach.signals._achievement import Achievement  # noqa: E402, I001
+from bitstomach.signals._loss import Loss  # noqa: E402, I001
 
-__all__ = ["Comparison", "Trend", "Achievement"]
+__all__ = ["Comparison", "Trend", "Achievement", "Loss"]
 
-SIGNALS = {Comparison: Signal, Trend: Signal, Achievement: Signal}
+SIGNALS = {Comparison: Signal, Trend: Signal, Achievement: Signal, Loss: Signal}

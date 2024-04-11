@@ -8,8 +8,8 @@ from bitstomach.signals import Comparison, Signal, Trend
 from utils.namespace import PSDO, SLOWMO
 
 
-class Achievement(Signal):
-    signal_type = PSDO.achievement_content
+class Loss(Signal):
+    signal_type = PSDO.loss_content
 
     @staticmethod
     def detect(perf_data: pd.DataFrame) -> Optional[List[Resource]]:
@@ -19,29 +19,29 @@ class Achievement(Signal):
         trend_signals = Trend.detect(perf_data)
         if (
             not trend_signals
-            or not trend_signals[0][RDF.type : PSDO.positive_performance_trend_content]
+            or not trend_signals[0][RDF.type : PSDO.negative_performance_trend_content]
         ):
             return []
 
-        positive_comparison_signals = [
+        negative_comparison_signals = [
             s
             for s in Comparison.detect(perf_data)
-            if s[RDF.type : PSDO.positive_performance_gap_content]
-        ]
-
-        negative_prior_month_comparisons = [
-            s
-            for s in Comparison.detect(perf_data.iloc[:-1])
             if s[RDF.type : PSDO.negative_performance_gap_content]
         ]
 
-        achievement_signals = []
+        positive_prior_month_comparisons = [
+            s
+            for s in Comparison.detect(perf_data.iloc[:-1])
+            if s[RDF.type : PSDO.positive_performance_gap_content]
+        ]
 
-        for comparison_signal in positive_comparison_signals:
+        loss_signals = []
+
+        for comparison_signal in negative_comparison_signals:
             previous_comparison_signal = next(
                 (
                     comparison
-                    for comparison in negative_prior_month_comparisons
+                    for comparison in positive_prior_month_comparisons
                     if (
                         Comparison.comparator_type(comparison)
                         == Comparison.comparator_type(comparison_signal)
@@ -53,12 +53,12 @@ class Achievement(Signal):
             if not previous_comparison_signal:
                 continue
 
-            mi = Achievement._resource(
+            mi = Loss._resource(
                 trend_signals[0], comparison_signal, previous_comparison_signal
             )
 
-            achievement_signals.append(mi)
-        return achievement_signals
+            loss_signals.append(mi)
+        return loss_signals
 
     @classmethod
     def _resource(
@@ -104,7 +104,7 @@ class Achievement(Signal):
     @classmethod
     def moderators(cls, motivating_informations: List[Resource]) -> List[dict]:
         """
-        extracts achievement moderators (trend_slope, gap_size, comparator_type and prior_gap_size) from a suplied list of motivating information
+        extracts loss moderators (trend_slope, gap_size, comparator_type and prior_gap_size) from a suplied list of motivating information
         """
         mods = []
 

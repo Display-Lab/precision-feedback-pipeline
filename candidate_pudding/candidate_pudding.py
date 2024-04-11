@@ -76,6 +76,7 @@ def acceptable_by(candidate: Resource):
 
 
 def add_causal_pathway(candidate: Resource):
+    # map message templates schema:name to causal pathway schema:name
     causal_pathway_map: dict = {
         "Congratulations High Performance": "social better",
         "Getting Worse": "worsening",
@@ -83,6 +84,7 @@ def add_causal_pathway(candidate: Resource):
         "Opportunity to Improve Top 10 Peer Benchmark": "social worse",
         "Performance Improving": "improving",
         "Reached Goal": "goal gain",
+        "Drop Below Goal": "goal loss",
     }
     ancestor_template = candidate.value(SLOWMO.AncestorTemplate)
     template_name = ancestor_template.value(URIRef("http://schema.org/name")).value
