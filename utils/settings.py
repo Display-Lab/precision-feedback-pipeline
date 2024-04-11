@@ -1,7 +1,8 @@
-from loguru import logger
-import sys
 import os
+import sys
+
 from decouple import Config, RepositoryEnv, config
+from loguru import logger
 
 ## Logging setup
 logger.remove()
@@ -44,7 +45,6 @@ class Settings:
         self.outputs = config(
             "outputs", cast=bool, default=False
         )  # Logging of intermediate files
-
 
         # Instance display settings
         self.display_window = config("display_window", cast=int, default=6)

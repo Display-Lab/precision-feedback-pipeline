@@ -1,5 +1,5 @@
 import pytest
-from rdflib import BNode, Graph, RDF, Literal
+from rdflib import RDF, BNode, Graph, Literal
 
 from esteemer import utils
 from utils.namespace import SLOWMO

@@ -30,8 +30,8 @@ class Signal:
         creates a dictionary of moderators. base calss adds types
         """
         base_mods = {"type": []}
-        for trend_type in mi[RDF.type]:
-            base_mods["type"].append(trend_type.identifier)
+        for signal_type in mi[RDF.type]:
+            base_mods["type"].append(signal_type.identifier)
 
         return base_mods
 
@@ -53,7 +53,6 @@ class Signal:
         checks whether motivating information is of the same type of the signal
         """
         return cls.signal_type in {t.identifier for t in mi[RDF.type]}
-        # return mi.graph.resource(cls.signal_type) in mi[RDF.type]
 
     @classmethod
     def disposition(cls, mi: Resource) -> List[Resource]:
@@ -70,12 +69,12 @@ class Signal:
         return False
 
 
-from bitstomach.signals._comparison import Comparison  # noqa: E402
-from bitstomach.signals._trend import Trend  # noqa: E402
+# TODO: revisit. at this time must be loaded after Signal and in order Comparison, Trend and then Achievement
+from bitstomach.signals._comparison import Comparison  # noqa: E402, I001
+from bitstomach.signals._trend import Trend  # noqa: E402, I001
+from bitstomach.signals._achievement import Achievement  # noqa: E402, I001
+from bitstomach.signals._loss import Loss  # noqa: E402, I001
 
-__all__ = ["Comparison", "Trend"]
+__all__ = ["Comparison", "Trend", "Achievement", "Loss"]
 
-SIGNALS = {
-    Comparison: Signal,
-    Trend: Signal,
-}
+SIGNALS = {Comparison: Signal, Trend: Signal, Achievement: Signal, Loss: Signal}

@@ -1,12 +1,13 @@
-import matplotlib.pyplot as plt
-from loguru import logger
-import pandas as pd
-import numpy as np
-import datetime
 import base64
-import sys
-import os
+import datetime
 import io
+import os
+import sys
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from loguru import logger
 
 ## Logging setup
 logger.remove()

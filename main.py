@@ -252,21 +252,21 @@ async def createprecisionfeedback(info: Request):
         pc.finalize_text()  # Finalize text message and labels
         pc.graph_controller()  # Select and run graphing based on display type
         full_selected_message = pc.prepare_selected_message()
-        if settings.log_level == "DEBUG":
-            cool_new_super_graph.add(
-                (
-                    BNode("p1"),
-                    URIRef("http://example.com/slowmo#IsAboutPerformer"),
-                    Literal(performance_data_df["staff_number"].iloc[0]),
-                )
-            )
-
-            full_selected_message["candidates"] = utils.candidates_records(
-                cool_new_super_graph
-            )
     else:
-        cool_new_super_graph.close()
-        return selected_message
+        full_selected_message = selected_message
+
+    if settings.log_level == "DEBUG":
+        cool_new_super_graph.add(
+            (
+                BNode("p1"),
+                URIRef("http://example.com/slowmo#IsAboutPerformer"),
+                Literal(performance_data_df["staff_number"].iloc[0]),
+            )
+        )
+
+        full_selected_message["candidates"] = utils.candidates_records(
+            cool_new_super_graph
+        )
 
     cool_new_super_graph.close()
     return full_selected_message

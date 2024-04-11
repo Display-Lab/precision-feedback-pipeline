@@ -22,7 +22,7 @@ def test_no_trend_returns_none():
             {"passed_rate": [90, 90, 90]},
         )
     )
-    assert mi is None
+    assert mi == []
 
 
 ## Signal detection tests

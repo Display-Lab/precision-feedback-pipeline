@@ -4,7 +4,7 @@ import random
 from rdflib import XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
-from bitstomach.signals import Comparison, Trend
+from bitstomach.signals import Achievement, Comparison, Loss, Trend
 from esteemer.signals import History
 from utils.namespace import PSDO, SLOWMO
 
@@ -13,6 +13,8 @@ MPM = {
     "social better": {Comparison.signal_type: 0.5, History.signal_type: -0.1},
     "improving": {Trend.signal_type: 0.8, History.signal_type: -0.1},
     "worsening": {Trend.signal_type: 0.8, History.signal_type: -0.5},
+    "goal gain": {Achievement.signal_type: 0.8, History.signal_type: -0.1},
+    "goal loss": {Loss.signal_type: 0.8, History.signal_type: -0.5},
 }
 
 
@@ -127,8 +129,38 @@ def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
             mod["score"] = (
                 (mod["trend_size"]) * MPM[causal_pathway.value][Trend.signal_type]
             )
+        case "goal gain":
+            comparator_type = candidate_resource.value(
+                SLOWMO.RegardingComparator
+            ).identifier
+            moderators = Achievement.moderators(motivating_informations)
+
+            mod = [
+                moderator
+                for moderator in moderators
+                if moderator["comparator_type"] == comparator_type
+            ][0]
+
+            mod["score"] = (mod["gap_size"] + mod["trend_size"]) * MPM[
+                causal_pathway.value
+            ][Achievement.signal_type]
+        case "goal loss":
+            comparator_type = candidate_resource.value(
+                SLOWMO.RegardingComparator
+            ).identifier
+            moderators = Loss.moderators(motivating_informations)
+
+            mod = [
+                moderator
+                for moderator in moderators
+                if moderator["comparator_type"] == comparator_type
+            ][0]
+
+            mod["score"] = (mod["gap_size"] + mod["trend_size"]) * MPM[
+                causal_pathway.value
+            ][Loss.signal_type]
         case _:
-            mod["score"] = None
+            mod["score"] = 0.0
     return mod
 
 
@@ -180,11 +212,15 @@ def calculate_preference_score(
     Returns:
     float: preference sub-score.
     """
+
+    # map causal pathway schema:name to preferences key from the input
     map_cp_to_preferences = {
         "social better": "Social better",
         "social worse": "Social worse",
         "improving": "Improving",
         "worsening": "Worsening",
+        "goal gain": "Goal gain",
+        "goal loss": "Social loss",  # goal loss uses Social loss preferences value
     }
 
     key = map_cp_to_preferences.get(candidate_resource.value(SLOWMO.AcceptableBy).value)
