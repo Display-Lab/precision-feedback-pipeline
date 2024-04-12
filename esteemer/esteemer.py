@@ -1,10 +1,10 @@
-import json
 import random
+from typing import List
 
 from rdflib import XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
-from bitstomach.signals import Achievement, Comparison, Loss, Trend
+from bitstomach.signals import Achievement, Comparison, Loss, Signal, Trend
 from esteemer.signals import History
 from utils.namespace import PSDO, SLOWMO
 
@@ -13,12 +13,20 @@ MPM = {
     "social better": {Comparison.signal_type: 0.5, History.signal_type: -0.1},
     "improving": {Trend.signal_type: 0.8, History.signal_type: -0.1},
     "worsening": {Trend.signal_type: 0.8, History.signal_type: -0.5},
-    "goal gain": {Achievement.signal_type: 0.8, History.signal_type: -0.1},
-    "goal loss": {Loss.signal_type: 0.8, History.signal_type: -0.5},
+    "goal gain": {
+        Comparison.signal_type: 0.5,
+        Trend.signal_type: 0.8,
+        History.signal_type: -0.1,
+    },
+    "goal loss": {
+        Comparison.signal_type: 0.5,
+        Trend.signal_type: 0.8,
+        History.signal_type: -0.5,
+    },
 }
 
 
-def score(candidate_resource: Resource, history: json, preferences: json) -> Resource:
+def score(candidate: Resource, history: dict, preferences: dict) -> Resource:
     """
     calculates score.
 
@@ -31,140 +39,146 @@ def score(candidate_resource: Resource, history: json, preferences: json) -> Res
     float: score.
     """
 
-    # calculate sub-score
-    # 1. based on motivating info
-    motivating_info = calculate_motivating_info_score(candidate_resource)
+    SCORING = {
+        "social better": score_social_better,
+        "social worse": score_social_worse,
+        "improving": score_improving,
+        "worsening": score_worsening,
+        "goal gain": score_goal_gain,
+        "goal loss": score_goal_loss,
+    }
 
-    # 2. based on history
-    history_info = calculate_history_score(candidate_resource, history)
+    causal_pathway = candidate.value(SLOWMO.AcceptableBy)
+    motivating_informations = list(candidate[PSDO.motivating_information])
+    score_mi = SCORING[causal_pathway.value]
 
-    # 3. based on preferences
-    preference_score = calculate_preference_score(candidate_resource, preferences)
+    # MI
+    mi_score = score_mi(candidate, motivating_informations)
+    candidate[URIRef("motivating_score")] = Literal(mi_score, datatype=XSD.double)
 
-    # calculate final score = function of sub-scores
-    final_score = (motivating_info["score"] + history_info["score"]) * (
-        1 + preference_score
-    )
+    # History
+    history_score = score_history(candidate, history)
+    candidate[URIRef("history_score")] = Literal(history_score, datatype=XSD.double)
 
-    candidate_resource[URIRef("motivating_score")] = Literal(
-        motivating_info["score"], datatype=XSD.double
-    )
-    candidate_resource[URIRef("history_score")] = Literal(
-        history_info["score"], datatype=XSD.double
-    )
-
-    candidate_resource[URIRef("preference_score")] = Literal(
+    # Preferences
+    preference_score = score_preferences(candidate, preferences)
+    candidate[URIRef("preference_score")] = Literal(
         preference_score, datatype=XSD.double
     )
 
-    candidate_resource[SLOWMO.Score] = Literal(final_score, datatype=XSD.double)
+    final_score = (mi_score + history_score) * (1 + preference_score)
 
-    return candidate_resource
+    candidate[SLOWMO.Score] = Literal(final_score, datatype=XSD.double)
+
+    return candidate
 
 
-def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
-    """
-    calculates motivating info sub-score.
+def score_social_better(
+    candidate: Resource, motivating_informations: List[Resource]
+) -> float:
+    moderators = social_moderators(candidate, motivating_informations)
+    mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
-    Parameters:
-    - performer_graph (Graph): the performer_graph.
-    - candidate_resource (Resource): The candidate resource.
+    score = (moderators["gap_size"] + 0.02) * mpm[Comparison.signal_type]
 
-    Returns:
-    dict: motivating info.
-    """
+    return score
 
-    causal_pathway = candidate_resource.value(SLOWMO.AcceptableBy)
-    performance_content = candidate_resource.graph.resource(
-        BNode("performance_content")
+
+def score_social_worse(
+    candidate: Resource, motivating_informations: List[Resource]
+) -> float:
+    moderators = social_moderators(candidate, motivating_informations)
+    mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
+
+    score = (moderators["gap_size"] / 5 - 0.02) * mpm[Comparison.signal_type]
+
+    return score
+
+
+def score_improving(
+    candidate: Resource, motivating_informations: List[Resource]
+) -> float:
+    moderators = Trend.moderators(motivating_informations)[0]
+    mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
+
+    score = (moderators["trend_size"] * 5) * mpm[Trend.signal_type]
+
+    return score
+
+
+def score_worsening(
+    candidate: Resource, motivating_informations: List[Resource]
+) -> float:
+    # TODO: what should the response be if the candidate is not acceptable by worsening
+    moderators = Trend.moderators(motivating_informations)[0]
+    mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
+
+    score = (moderators["trend_size"]) * mpm[Trend.signal_type]
+
+    return score
+
+
+def score_goal_gain(
+    candidate: Resource, motivating_informations: List[Resource]
+) -> float:
+    moderators = achievement_and_loss_moderators(
+        candidate, motivating_informations, Achievement
     )
-    measure = candidate_resource.value(SLOWMO.RegardingMeasure)
-    motivating_informations = [
-        motivating_info
-        for motivating_info in performance_content[PSDO.motivating_information]
-        if motivating_info.value(SLOWMO.RegardingMeasure) == measure
-    ]
+    mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
-    mod = {}
+    score = (
+        moderators["gap_size"] * mpm[Comparison.signal_type]
+        + moderators["trend_size"] * mpm[Trend.signal_type]
+    ) / 2.0
 
-    match causal_pathway.value:
-        case "social worse":
-            comparator_type = candidate_resource.value(
-                SLOWMO.RegardingComparator
-            ).identifier
-
-            moderators = Comparison.moderators(motivating_informations)
-
-            mod = [
-                moderator
-                for moderator in moderators
-                if moderator["comparator_type"] == comparator_type
-            ][0]
-
-            mod["score"] = (mod["gap_size"] / 5 - 0.02) * MPM[causal_pathway.value][
-                Comparison.signal_type
-            ]
-        case "social better":
-            comparator_type = candidate_resource.value(
-                SLOWMO.RegardingComparator
-            ).identifier
-            moderators = Comparison.moderators(motivating_informations)
-
-            mod = [
-                moderator
-                for moderator in moderators
-                if moderator["comparator_type"] == comparator_type
-            ][0]
-
-            mod["score"] = (mod["gap_size"] + 0.02) * MPM[causal_pathway.value][
-                Comparison.signal_type
-            ]
-        case "improving":
-            mod = Trend.moderators(motivating_informations)[0]
-            mod["score"] = (mod["trend_size"] * 5) * MPM[causal_pathway.value][
-                Trend.signal_type
-            ]
-        case "worsening":
-            mod = Trend.moderators(motivating_informations)[0]
-            mod["score"] = (
-                (mod["trend_size"]) * MPM[causal_pathway.value][Trend.signal_type]
-            )
-        case "goal gain":
-            comparator_type = candidate_resource.value(
-                SLOWMO.RegardingComparator
-            ).identifier
-            moderators = Achievement.moderators(motivating_informations)
-
-            mod = [
-                moderator
-                for moderator in moderators
-                if moderator["comparator_type"] == comparator_type
-            ][0]
-
-            mod["score"] = (mod["gap_size"] + mod["trend_size"]) * MPM[
-                causal_pathway.value
-            ][Achievement.signal_type]
-        case "goal loss":
-            comparator_type = candidate_resource.value(
-                SLOWMO.RegardingComparator
-            ).identifier
-            moderators = Loss.moderators(motivating_informations)
-
-            mod = [
-                moderator
-                for moderator in moderators
-                if moderator["comparator_type"] == comparator_type
-            ][0]
-
-            mod["score"] = (mod["gap_size"] + mod["trend_size"]) * MPM[
-                causal_pathway.value
-            ][Loss.signal_type]
-        case _:
-            mod["score"] = 0.0
-    return mod
+    return score
 
 
-def calculate_history_score(candidate_resource: Resource, history: dict) -> dict:
+def score_goal_loss(
+    candidate: Resource, motivating_informations: List[Resource]
+) -> float:
+    moderators = achievement_and_loss_moderators(
+        candidate, motivating_informations, Loss
+    )
+    mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
+
+    score = (
+        moderators["gap_size"] * mpm[Comparison.signal_type]
+        + moderators["trend_size"] * mpm[Trend.signal_type]
+    ) / 2.0
+
+    return score
+
+
+def achievement_and_loss_moderators(candidate, motivating_informations, signal: Signal):
+    comparator_type = candidate.value(SLOWMO.RegardingComparator).identifier
+
+    moderators = signal.moderators(motivating_informations)
+
+    scoring_detail = [
+        moderator
+        for moderator in moderators
+        if moderator["comparator_type"] == comparator_type
+    ][0]
+
+    return scoring_detail
+
+
+def social_moderators(candidate, motivating_informations):
+    comparator_type = candidate.value(SLOWMO.RegardingComparator).identifier
+
+    moderators = Comparison.moderators(motivating_informations)
+
+    scoring_detail = [
+        moderator
+        for moderator in moderators
+        if moderator["comparator_type"] == comparator_type
+    ][0]
+
+    return scoring_detail
+
+
+def score_history(candidate, history) -> float:
     """
     calculates history sub-score.
 
@@ -176,32 +190,27 @@ def calculate_history_score(candidate_resource: Resource, history: dict) -> dict
     float: history sub-score.
     """
     if not history:
-        return {"score": 0}
+        return 0
 
     # turn candidate resource into a 'history' element for the current month
-    current_hist = History.to_element(candidate_resource)
+    current_hist = History.to_element(candidate)
     # add to history
     history.update(current_hist)
 
     signals = History.detect(history)
 
     if not signals:
-        return {"score": 0}
+        return 0
 
     mod = History.moderators(signals)[0]
+    score = mod["recurrence_count"]
 
-    causal_pathway = candidate_resource.value(SLOWMO.AcceptableBy)
+    causal_pathway = candidate.value(SLOWMO.AcceptableBy)
 
-    mod["score"] = (
-        mod["recurrence_count"] * MPM[causal_pathway.value][History.signal_type]
-    )
-
-    return mod
+    return score * MPM[causal_pathway.value][History.signal_type]
 
 
-def calculate_preference_score(
-    candidate_resource: Resource, preferences: json
-) -> float:
+def score_preferences(candidate_resource: Resource, preferences: dict) -> float:
     """
     calculates preference sub-score.
 
