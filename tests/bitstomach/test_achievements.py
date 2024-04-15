@@ -175,5 +175,5 @@ def test_moderators():
     ][0]
 
     assert moderator["gap_size"] == abs(gap)
-    assert moderator["trend_size"] == abs(slope)
+    assert moderator["trend_size"] == abs(slope) * 2
     assert moderator["prior_gap_size"] == abs(prior_gap)

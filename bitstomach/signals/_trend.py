@@ -55,7 +55,7 @@ class Trend(Signal):
         for signal in super().select(motivating_informations):
             motivating_info_dict = super().moderators(signal)
             motivating_info_dict["trend_size"] = round(
-                abs(signal.value(SLOWMO.PerformanceTrendSlope).value), 4
+                abs(signal.value(SLOWMO.PerformanceTrendSlope).value * 2), 4
             )
 
             mods.append(motivating_info_dict)

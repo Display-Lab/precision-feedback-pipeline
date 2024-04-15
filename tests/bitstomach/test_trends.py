@@ -62,17 +62,18 @@ def test_to_moderators_returns_dictionary():
 def test_to_moderators_return_dictionary1():
     r = Graph().resource(BNode())
     r.add(RDF.type, PSDO.performance_trend_content)
-    r.add(SLOWMO.PerformanceTrendSlope, Literal(2.0))
+    slope = 2.0
+    r.add(SLOWMO.PerformanceTrendSlope, Literal(slope))
     r.add(RDF.type, PSDO.performance_trend_content)
     r.add(RDF.type, PSDO.positive_performance_trend_content)
 
     r.add(SLOWMO.RegardingMeasure, BNode("PONV05"))
 
-    trend = Trend.moderators([r])[0]
-    assert pytest.approx(2) == trend["trend_size"]
+    mods = Trend.moderators([r])[0]
+    assert pytest.approx(slope * 2) == mods["trend_size"] 
 
-    assert PSDO.performance_trend_content in trend["type"]
-    assert PSDO.positive_performance_trend_content in trend["type"]
+    assert PSDO.performance_trend_content in mods["type"]
+    assert PSDO.positive_performance_trend_content in mods["type"]
 
 
 def test_resource_selects_pos_or_neg():

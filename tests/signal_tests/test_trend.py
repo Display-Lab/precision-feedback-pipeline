@@ -78,8 +78,8 @@ def test_trend__detect(perf_level: list, expected: float, condition: str):
 
 
 mods_test_set = [
-    (0.11, round(abs(0.11), 4), "simple negative trend"),
-    (-0.111111111111, round(abs(0.111111111111), 4), "simple negative trend"),
+    (0.11, round(abs(0.22), 4), "simple negative trend"),
+    (-0.111111111111, round(abs(0.22222222222), 4), "simple negative trend"),
     (0.0, 0.0, "no trend"),
 ]
 
