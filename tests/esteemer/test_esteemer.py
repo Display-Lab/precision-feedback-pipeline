@@ -77,7 +77,7 @@ def candidate_resource(performance_data_frame):
 
 def test_score(candidate_resource):
     esteemer.score(candidate_resource, None, {})
-    assert candidate_resource.value(SLOWMO.Score).value == pytest.approx(0.035)
+    assert candidate_resource.value(SLOWMO.Score).value == pytest.approx(0.3)
 
 
 def test_calculate_preference_score(candidate_resource):
@@ -111,7 +111,7 @@ def test_select_candidate():
 def test_get_trend_info():
     candidate_resource = Trend._resource(0.0034)
     mods = Trend.moderators([candidate_resource])[0]
-    assert mods["trend_size"] == pytest.approx(0.0034)
+    assert mods["trend_size"] == pytest.approx(0.0068)
     assert Trend.signal_type in mods["type"]
 
 
@@ -138,7 +138,7 @@ def test_social_better_score(performance_data_frame):
 
     motivating_informations = Comparison.detect(performance_data_frame)
     score = esteemer.score_social_better(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.045)
+    assert score == pytest.approx(0.035)
 
 
 def test_social_worse_score(performance_data_frame):
@@ -149,7 +149,7 @@ def test_social_worse_score(performance_data_frame):
 
     motivating_informations = Comparison.detect(performance_data_frame)
     score = esteemer.score_social_worse(candidate_resource, motivating_informations)
-    assert score == pytest.approx(-0.006)
+    assert score == pytest.approx(0.02)
 
 
 def test_improving_score():
@@ -163,7 +163,7 @@ def test_improving_score():
         )
     )
     score = esteemer.score_improving(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.04)
+    assert score == pytest.approx(0.016)
 
 
 def test_worsening_score():
@@ -177,7 +177,7 @@ def test_worsening_score():
         )
     )
     score = esteemer.score_worsening(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.008)
+    assert score == pytest.approx(0.016)
 
 
 def test_goal_gain_score():
@@ -200,7 +200,7 @@ def test_goal_gain_score():
 
     motivating_informations = Achievement.detect(data_frame)
     score = esteemer.score_goal_gain(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.0085)
+    assert score == pytest.approx(0.029)
 
 
 def test_goal_loss_score():
@@ -223,4 +223,4 @@ def test_goal_loss_score():
 
     motivating_informations = Loss.detect(data_frame)
     score = esteemer.score_goal_loss(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.013)
+    assert score == pytest.approx(0.042)

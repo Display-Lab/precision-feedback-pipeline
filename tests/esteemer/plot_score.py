@@ -17,7 +17,7 @@ def f(s, p):
     base_value = scale_s * 0.5 + scale_p * 0  # default to mid-points of stated ranges
 
     # Adjust the function to increase with either s or p increasing
-    return (scale_s * s + scale_p * p + s*p + base_value) / (scale_s + scale_p + base_value)
+    return (scale_s * s + scale_p * p + base_value) / (scale_s + scale_p + base_value)
 
 
 def plot_score():

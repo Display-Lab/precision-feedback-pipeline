@@ -66,12 +66,26 @@ def score(candidate: Resource, history: dict, preferences: dict) -> Resource:
         preference_score, datatype=XSD.double
     )
 
-    final_score = (mi_score + history_score) * (1 + preference_score)
+    final_calculated_score = final_score((mi_score + history_score) , preference_score)
 
-    candidate[SLOWMO.Score] = Literal(final_score, datatype=XSD.double)
+    candidate[SLOWMO.Score] = Literal(final_calculated_score, datatype=XSD.double)
 
     return candidate
 
+def final_score(s, p):
+    """
+    the function, final_score,  takes two inputs, s and p. the range for s is 0 to 1. the range for p is -2 to +2.  The function f(s,p) increases with either s or p increasing. The function should have the following constraints: f(1,-2) == f(.5, 0) == f(0,2) and f(0.5, -2) == f(0.25, -1) == f(0, 0).
+    """
+    # Define the scaling factors for s and p
+    scale_s = 4  # default to stated range of p
+    scale_p = 1  # default to stated range of 2
+
+    # Calculate the base value for the constraints, e.g. f(1,-2) == f(0.5, 0) == f(0,2)
+    # base_value = scale_s * 0.5 + scale_p * 0.0  # default to mid-points of stated ranges
+    base_value = scale_s * 0.5 + scale_p * 0  # default to mid-points of stated ranges
+
+    # Adjust the function to increase with either s or p increasing
+    return (scale_s * s + scale_p * p + base_value) / (scale_s + scale_p + base_value)
 
 def score_social_better(
     candidate: Resource, motivating_informations: List[Resource]
@@ -79,7 +93,7 @@ def score_social_better(
     moderators = social_moderators(candidate, motivating_informations)
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
-    score = (moderators["gap_size"] + 0.02) * mpm[Comparison.signal_type]
+    score = (moderators["gap_size"] ) * mpm[Comparison.signal_type]
 
     return score
 
@@ -90,7 +104,7 @@ def score_social_worse(
     moderators = social_moderators(candidate, motivating_informations)
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
-    score = (moderators["gap_size"] / 5 - 0.02) * mpm[Comparison.signal_type]
+    score = (moderators["gap_size"] ) * mpm[Comparison.signal_type]
 
     return score
 
@@ -101,7 +115,7 @@ def score_improving(
     moderators = Trend.moderators(motivating_informations)[0]
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
-    score = (moderators["trend_size"] * 5) * mpm[Trend.signal_type]
+    score = (moderators["trend_size"] ) * mpm[Trend.signal_type]
 
     return score
 
@@ -129,7 +143,7 @@ def score_goal_gain(
     score = (
         moderators["gap_size"] * mpm[Comparison.signal_type]
         + moderators["trend_size"] * mpm[Trend.signal_type]
-    ) / 2.0
+    )
 
     return score
 
@@ -145,7 +159,7 @@ def score_goal_loss(
     score = (
         moderators["gap_size"] * mpm[Comparison.signal_type]
         + moderators["trend_size"] * mpm[Trend.signal_type]
-    ) / 2.0
+    ) 
 
     return score
 

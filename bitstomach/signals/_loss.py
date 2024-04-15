@@ -118,7 +118,7 @@ class Loss(Signal):
                 SLOWMO.RegardingComparator / RDF.type
             ).identifier
             motivating_info_dict["trend_size"] = round(
-                abs(signal.value(SLOWMO.PerformanceTrendSlope).value), 4
+                abs(signal.value(SLOWMO.PerformanceTrendSlope).value * 2), 4
             )
             motivating_info_dict["prior_gap_size"] = round(
                 abs(signal.value(SLOWMO.PriorPerformanceGapSize).value), 4
