@@ -143,6 +143,7 @@ async def createprecisionfeedback(info: Request):
     req_info = await info.json()
     req_info1 = req_info
     performance_data = req_info1["Performance_data"]
+    performance_month = req_info1["performance_month"]
 
     performance_data_df = pd.DataFrame(
         performance_data,
@@ -206,7 +207,8 @@ async def createprecisionfeedback(info: Request):
 
     # BitStomach
     logger.info("Calling BitStomach from main...")
-    g: Graph = bitstomach.extract_signals(performance_data)
+    performance_data_df.attrs["performance_month"] = performance_month
+    g: Graph = bitstomach.extract_signals(performance_data_df)
     performance_content = g.resource(BNode("performance_content"))
     if len(list(performance_content[PSDO.motivating_information])) == 0:
         cool_new_super_graph.close()
