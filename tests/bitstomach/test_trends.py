@@ -70,7 +70,7 @@ def test_to_moderators_return_dictionary1():
     r.add(SLOWMO.RegardingMeasure, BNode("PONV05"))
 
     mods = Trend.moderators([r])[0]
-    assert pytest.approx(slope * 2) == mods["trend_size"] 
+    assert pytest.approx(slope * 2) == mods["trend_size"]
 
     assert PSDO.performance_trend_content in mods["type"]
     assert PSDO.positive_performance_trend_content in mods["type"]

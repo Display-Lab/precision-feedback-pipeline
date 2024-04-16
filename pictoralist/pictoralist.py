@@ -59,9 +59,9 @@ class Pictoralist:
             )  # Add string value of rdflib literal to list
         self.message_instance_id = message_instance_id
         self.base64_image = []  # Initialize as empty key to later fill image into
-        self.staff_ID = performance_dataframe["staff_number"].iloc[
-            0
-        ]  # Preserve one instance of staff number before data cleanup
+        self.staff_ID = int(
+            performance_dataframe["staff_number"].iloc[0]
+        )  # Preserve one instance of staff number before data cleanup
 
         # Config settings from main basesettings class
         self.log_level = settings.log_level
