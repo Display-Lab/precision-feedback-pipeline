@@ -231,7 +231,7 @@ async def createprecisionfeedback(info: Request):
             (
                 BNode("p1"),
                 URIRef("http://example.com/slowmo#IsAboutPerformer"),
-                Literal(performance_data_df["staff_number"].iloc[0]),
+                Literal(int(performance_data_df["staff_number"].iloc[0])),
             )
         )
 
