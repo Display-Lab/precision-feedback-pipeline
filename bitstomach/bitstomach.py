@@ -1,7 +1,4 @@
-from datetime import datetime
-
 import pandas as pd
-from dateutil.relativedelta import relativedelta
 from rdflib import RDF, BNode, Graph
 
 from bitstomach.signals import SIGNALS
@@ -21,7 +18,6 @@ def extract_signals(perf_df: pd.DataFrame) -> Graph:
     if perf_df.empty:
         return g
 
-
     for measure in perf_df.attrs["valid_measures"]:
         measure_df = perf_df[perf_df["measure"] == measure]
         for signal_type in SIGNALS:
@@ -39,23 +35,25 @@ def extract_signals(perf_df: pd.DataFrame) -> Graph:
 def fix_up(req_info):
     performance_data = req_info["Performance_data"]
     performance_df = pd.DataFrame(performance_data[1:], columns=performance_data[0])
-
-    performance_df = performance_df[performance_df["denominator"] >= 10]
-
     performance_df["goal_comparator_content"] = performance_df["MPOG_goal"]
+
+    performance_df.attrs["performance_month"] = req_info.get(
+        "performance_month", performance_df["month"].max()
+    )
+
+    performance_df["valid"] = performance_df["denominator"] >= 10
+
     performance_df["passed_rate"] = (
         performance_df["passed_count"] / performance_df["denominator"]
     )
 
     performance_df.attrs["measures"] = performance_df["measure"].unique()
 
-    last_month: datetime = datetime.now() - relativedelta(months=1)
-    performance_df.attrs["performance_month"] = req_info.get(
-        "performance_month", last_month.strftime("%Y-%m-01")
-    )
-    p_month = performance_df.attrs["performance_month"]
     performance_df.attrs["valid_measures"] = performance_df[
-        performance_df["month"] == p_month
+        (
+            (performance_df["month"] == performance_df.attrs["performance_month"])
+            & performance_df["valid"]
+        )
     ]["measure"]
 
     return performance_df

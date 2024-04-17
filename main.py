@@ -140,8 +140,6 @@ async def template():
 async def createprecisionfeedback(info: Request):
     req_info = await info.json()
 
-    performance_data_df = bitstomach.fix_up(req_info)
-
     history: dict = req_info.get("History", {})
 
     input_preferences: dict = (
@@ -170,10 +168,13 @@ async def createprecisionfeedback(info: Request):
     cool_new_super_graph += templates
     debug_output_if_set(cool_new_super_graph, "outputs/base.json")
 
+    performance_data_df = bitstomach.fix_up(req_info)
+
     # BitStomach
     logger.info("Calling BitStomach from main...")
 
     g: Graph = bitstomach.extract_signals(performance_data_df)
+
     performance_content = g.resource(BNode("performance_content"))
     if len(list(performance_content[PSDO.motivating_information])) == 0:
         cool_new_super_graph.close()

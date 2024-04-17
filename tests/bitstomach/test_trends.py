@@ -19,7 +19,7 @@ def test_empty_perf_data_raises_value_error():
 def test_no_trend_returns_none():
     mi = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [90, 90, 90]},
+            {"passed_rate": [90, 90, 90], "valid": True},
         )
     )
     assert mi == []
@@ -45,7 +45,9 @@ def test_trend_is_detected():
 
 def test_trend_as_resource():
     signal = Trend.detect(
-        pd.DataFrame(columns=["passed_rate"], data=[[90], [91], [92]])
+        pd.DataFrame(
+            columns=["passed_rate", "valid"], data=[[90, True], [91, True], [92, True]]
+        )
     ).pop()
 
     assert isinstance(signal, Resource)
@@ -97,6 +99,7 @@ def test_select():
     r1 = Comparison().detect(
         pd.DataFrame(
             columns=[
+                "valid",
                 "measure",
                 "passed_rate",
                 "peer_average_comparator",
@@ -104,13 +107,13 @@ def test_select():
                 "peer_90th_percentile_benchmark",
                 "goal_comparator_content",
             ],
-            data=[["PONV05", 80, 90, 90, 90, 90]],
+            data=[[True, "PONV05", 80, 90, 90, 90, 90]],
         )
     )
 
     r2 = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [89, 90, 91]},
+            {"passed_rate": [89, 90, 91], "valid": True},
         )
     )
 
@@ -140,12 +143,12 @@ def test_select():
 def test_trend_identity():
     r1 = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [89, 90, 91]},
+            {"passed_rate": [89, 90, 91], "valid": True},
         )
     )
     r2 = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [89, 90, 91]},
+            {"passed_rate": [89, 90, 91], "valid": True},
         )
     )
 
@@ -163,7 +166,7 @@ def test_partial_mock(mock_detect: Mock):
 
     signal = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [89, 90, 91]},  # slope 1.0
+            {"passed_rate": [89, 90, 91], "valid": True},  # slope 1.0
         )
     )
 
@@ -183,7 +186,7 @@ def test_partial_mock_with_patch_decorator(mock_detect: Mock):
 
     signal = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [89, 90, 91]},  # slope 1.0
+            {"passed_rate": [89, 90, 91], "valid": True},  # slope 1.0
         )
     )
 
@@ -196,7 +199,7 @@ def test_partial_mock_using_with():
     with patch.object(Trend, "_detect", return_value=42.0):
         signal = Trend.detect(
             pd.DataFrame(
-                {"passed_rate": [89, 90, 91]},  # slope 1.0
+                {"passed_rate": [89, 90, 91], "valid": True},  # slope 1.0
             )
         )
 

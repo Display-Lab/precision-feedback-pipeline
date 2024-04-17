@@ -21,6 +21,9 @@ class Trend(Signal):
         if perf_data.empty:
             raise ValueError
 
+        if perf_data["passed_rate"].count() < 3 or not perf_data[-3:]["valid"].all():
+            return []
+
         slope = Trend._detect(perf_data)
 
         if not slope:
@@ -67,9 +70,6 @@ class Trend(Signal):
         """
         calcolates the slope of a monotonically increasing or decreasing trend over three month.
         """
-
-        if perf_data["passed_rate"].count() < 3:
-            return 0
 
         performance_rates = perf_data["passed_rate"]
         change_this_month = performance_rates.iloc[-1] - performance_rates.iloc[-2]
