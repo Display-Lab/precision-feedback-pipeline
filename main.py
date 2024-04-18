@@ -168,7 +168,7 @@ async def createprecisionfeedback(info: Request):
     cool_new_super_graph += templates
     debug_output_if_set(cool_new_super_graph, "outputs/base.json")
 
-    performance_data_df = bitstomach.fix_up(req_info)
+    performance_data_df = bitstomach.prepare(req_info)
 
     # BitStomach
     logger.info("Calling BitStomach from main...")

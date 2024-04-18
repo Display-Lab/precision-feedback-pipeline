@@ -34,7 +34,7 @@ def test_returns_performance_content_with_multiple_elements():
         [157, "PONV05", "2022-11-01", 40, 0, 40, 82.4, 100.0, 100.0, 90.0],
     ]
 
-    perf_df = bitstomach.fix_up(
+    perf_df = bitstomach.prepare(
         {"Performance_data": perf_data, "performance_month": "2022-11-01"}
     )
 
@@ -56,7 +56,7 @@ def test_fix_up_marks_low_count_as_invalid():
         [157, "BP02", "2022-10-01", 29, 0, 2, 81.7, 100.0, 100.0, 90.0],
     ]
 
-    perf_df = bitstomach.fix_up(
+    perf_df = bitstomach.prepare(
         {"Performance_data": perf_data, "performance_month": "2022-11-01"}
     )
 

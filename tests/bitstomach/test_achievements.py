@@ -41,9 +41,11 @@ def perf_data() -> pd.DataFrame:
             91.0,
             100.0,
         ],
-        [True, 157, "BP01", "2022-09-01", 0.97, 92.0, 0, 100.0, 80.0, 85.0, 90.0, 95.0],
+        [True, 157, "BP01", "2022-10-01", 0.97, 92.0, 0, 100.0, 80.0, 85.0, 90.0, 95.0],
     ]
-    return pd.DataFrame(performance_data[1:], columns=performance_data[0])
+    df = pd.DataFrame(performance_data[1:], columns=performance_data[0])
+    df.attrs["performance_month"] = "2022-10-01"
+    return df
 
 
 def test_achievement_is_rdf_type():

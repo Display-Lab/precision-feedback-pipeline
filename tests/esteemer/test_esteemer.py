@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 from rdflib import BNode, Graph, Literal, URIRef
 
-from bitstomach.bitstomach import fix_up
+from bitstomach.bitstomach import prepare
 from bitstomach.signals import Achievement, Comparison, Loss, Trend
 from esteemer import esteemer
 from utils.namespace import PSDO, SLOWMO
@@ -52,7 +52,7 @@ def performance_data_frame():
         [157, "PONV05", "2022-07-01", 94, 85, 0, 100, 84.0, 88.0, 90.0, 99.0],
         [157, "PONV05", "2022-08-01", 95, 85, 0, 100, 84.0, 88.0, 90.0, 99.0],
     ]
-    return fix_up({"Performance_data": performance_data})
+    return prepare({"Performance_data": performance_data})
 
 
 @pytest.fixture
@@ -160,7 +160,11 @@ def test_improving_score():
 
     motivating_informations = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [0.89, 0.90, 0.91], "valid": True},  # slope 1.0
+            {
+                "passed_rate": [0.89, 0.90, 0.91],
+                "valid": True,
+                "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+            },  # slope 1.0
         )
     )
     score = esteemer.score_improving(candidate_resource, motivating_informations)
@@ -174,7 +178,11 @@ def test_worsening_score():
 
     motivating_informations = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [0.91, 0.90, 0.89], "valid": True},  # slope 1.0
+            {
+                "passed_rate": [0.91, 0.90, 0.89],
+                "valid": True,
+                "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+            },  # slope 1.0
         )
     )
     score = esteemer.score_worsening(candidate_resource, motivating_informations)
@@ -183,8 +191,13 @@ def test_worsening_score():
 
 def test_goal_gain_score():
     data_frame = pd.DataFrame(
-        {"passed_rate": [0.88, 0.89, 0.91], "valid": [True, True, True]},
+        {
+            "passed_rate": [0.88, 0.89, 0.91],
+            "valid": [True, True, True],
+            "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+        },
         columns=[
+            "month",
             "valid",
             "passed_rate",
             "peer_average_comparator",
@@ -207,8 +220,13 @@ def test_goal_gain_score():
 
 def test_goal_loss_score():
     data_frame = pd.DataFrame(
-        {"passed_rate": [0.92, 0.91, 0.88], "valid": [True, True, True]},
+        {
+            "passed_rate": [0.92, 0.91, 0.88],
+            "valid": [True, True, True],
+            "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+        },
         columns=[
+            "month",
             "valid",
             "passed_rate",
             "peer_average_comparator",

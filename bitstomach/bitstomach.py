@@ -32,7 +32,7 @@ def extract_signals(perf_df: pd.DataFrame) -> Graph:
     return g
 
 
-def fix_up(req_info):
+def prepare(req_info):
     performance_data = req_info["Performance_data"]
     performance_df = pd.DataFrame(performance_data[1:], columns=performance_data[0])
     performance_df["goal_comparator_content"] = performance_df["MPOG_goal"]
