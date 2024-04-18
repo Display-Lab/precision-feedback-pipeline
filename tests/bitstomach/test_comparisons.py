@@ -21,6 +21,7 @@ def perf_info() -> Tuple[Graph, Resource]:
 def perf_data() -> pd.DataFrame:
     performance_data = [
         [
+            "valid",
             "staff_number",
             "measure",
             "month",
@@ -33,8 +34,21 @@ def perf_data() -> pd.DataFrame:
             "peer_90th_percentile_benchmark",
             "goal_comparator_content",
         ],
-        [157, "BP01", "2022-08-01", 0.85, 85.0, 0, 100.0, 84.0, 88.0, 90.0, 99.0],
-        [157, "BP01", "2022-09-01", 0.90, 90.0, 0, 100.0, 85.0, 89.0, 91.0, 100.0],
+        [True, 157, "BP01", "2022-08-01", 0.85, 85.0, 0, 100.0, 84.0, 88.0, 90.0, 99.0],
+        [
+            True,
+            157,
+            "BP01",
+            "2022-09-01",
+            0.90,
+            90.0,
+            0,
+            100.0,
+            85.0,
+            89.0,
+            91.0,
+            100.0,
+        ],
     ]
     return pd.DataFrame(performance_data[1:], columns=performance_data[0])
 

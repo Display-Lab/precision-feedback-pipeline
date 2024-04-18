@@ -4,7 +4,6 @@ import sys
 import webbrowser
 from pathlib import Path
 
-import pandas as pd
 import requests
 from fastapi import FastAPI, HTTPException, Request
 from loguru import logger
@@ -139,37 +138,14 @@ async def template():
 
 @app.post("/createprecisionfeedback/")
 async def createprecisionfeedback(info: Request):
-    selected_message = {}
     req_info = await info.json()
-    req_info1 = req_info
-    performance_data = req_info1["Performance_data"]
 
-    performance_data_df = pd.DataFrame(
-        performance_data,
-        columns=[
-            "staff_number",
-            "Measure_Name",
-            "Month",
-            "Passed_Count",
-            "Flagged_Count",
-            "Denominator",
-            "peer_average_comparator",
-            "peer_90th_percentile_benchmark",
-            "peer_75th_percentile_benchmark",
-            "MPOG_goal",
-        ],
-    )
-    performance_data_df.columns = performance_data_df.iloc[0]
-    performance_data_df = performance_data_df[1:]
-    p_df = req_info1["Performance_data"]
-    del req_info1["Performance_data"]
-    history: dict = req_info1.setdefault("History", {})
-    del req_info1["History"]
+    history: dict = req_info.get("History", {})
 
     input_preferences: dict = (
-        req_info1.get("Preferences", {}).get("Utilities", {}).get("Message_Format", {})
+        req_info.get("Preferences", {}).get("Utilities", {}).get("Message_Format", {})
     )
-    default_preferences = {
+    preferences = {
         "Social gain": "1.007650319",
         "Social stayed better": "0.4786461911",
         "Worsening": "-1.7261141",
@@ -181,38 +157,30 @@ async def createprecisionfeedback(info: Request):
         "Social approach": "1.086765623",
         "Goal gain": "1.007650319",
         "Goal approach": "1.086765623",
-    }
-    preferences = {
-        **input_preferences,
-        **{k: v for k, v in default_preferences.items() if k not in input_preferences},
-    }
-
-    ## Pass message instance ID from input message through to pictoralist
-    message_instance_id = req_info1.get("message_instance_id")
-    measure_details = Graph()
-
-    for s, p, o in measure_details.triples((None, None, None)):
-        measure_details.remove((s, p, o))
-
-    measure_details = read_graph(f3json)
+    }.copy()
+    preferences.update(input_preferences)
 
     cool_new_super_graph = Graph()
     comparators_graph = read_graph(comparators)
     cool_new_super_graph += comparators_graph
     cool_new_super_graph += causal_pathways
-    cool_new_super_graph += measure_details
+    cool_new_super_graph += read_graph(f3json)
     cool_new_super_graph += templates
     debug_output_if_set(cool_new_super_graph, "outputs/base.json")
 
+    performance_data_df = bitstomach.prepare(req_info)
+
     # BitStomach
     logger.info("Calling BitStomach from main...")
-    g: Graph = bitstomach.extract_signals(performance_data)
+
+    g: Graph = bitstomach.extract_signals(performance_data_df)
+
     performance_content = g.resource(BNode("performance_content"))
     if len(list(performance_content[PSDO.motivating_information])) == 0:
         cool_new_super_graph.close()
         raise HTTPException(
             status_code=400,
-            detail=f"Insufficient significant data found for providing feedback, process aborted. Message_instance_id: {message_instance_id}",
+            detail=f"Insufficient significant data found for providing feedback, process aborted. Message_instance_id: {req_info['message_instance_id']}",
             headers={"400-Error": "Invalid Input Error"},
         )
 
@@ -244,7 +212,11 @@ async def createprecisionfeedback(info: Request):
     if selected_message["message_text"] != "No message selected":
         ## Initialize and run message and display generation:
         pc = Pictoralist(
-            performance_data_df, p_df, selected_message, settings, message_instance_id
+            performance_data_df,
+            req_info["Performance_data"],
+            selected_message,
+            settings,
+            req_info["message_instance_id"],
         )
         pc.prep_data_for_graphing()  # Setup dataframe of one measure, cleaned for graphing
         pc.fill_missing_months()  # Fill holes in dataframe where they exist
@@ -260,7 +232,7 @@ async def createprecisionfeedback(info: Request):
             (
                 BNode("p1"),
                 URIRef("http://example.com/slowmo#IsAboutPerformer"),
-                Literal(performance_data_df["staff_number"].iloc[0]),
+                Literal(int(performance_data_df["staff_number"].iloc[0])),
             )
         )
 

@@ -124,7 +124,12 @@ def add_convenience_properties(candidate: Resource):
 
 
 def create_candidates(graph: Graph):
-    for measure in graph[: RDF.type : PSDO.performance_measure_content]:
+    # measures = graph[: RDF.type : PSDO.performance_measure_content]
+    # How do we get the measures for all MI?
+    measures: set[BNode] = set(
+        graph.objects(None, PSDO.motivating_information / SLOWMO.RegardingMeasure)
+    )
+    for measure in measures:
         measure_resource = graph.resource(measure)
         for template in graph[: RDF.type : PERFORMANCE_SUMMARY_DISPLAY_TEMPLATE]:
             template_resource = graph.resource(template)

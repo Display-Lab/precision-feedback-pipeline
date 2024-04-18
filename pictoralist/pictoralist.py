@@ -59,9 +59,9 @@ class Pictoralist:
             )  # Add string value of rdflib literal to list
         self.message_instance_id = message_instance_id
         self.base64_image = []  # Initialize as empty key to later fill image into
-        self.staff_ID = performance_dataframe["staff_number"].iloc[
-            0
-        ]  # Preserve one instance of staff number before data cleanup
+        self.staff_ID = int(
+            performance_dataframe["staff_number"].iloc[0]
+        )  # Preserve one instance of staff number before data cleanup
 
         # Config settings from main basesettings class
         self.log_level = settings.log_level
@@ -93,27 +93,27 @@ class Pictoralist:
         ## Change processing and graphing depending on comparator type:
         # Make changes based on peer 50th percentile benchmark being comparator message "is about"
         if self.comparator_type == "Peer Average":
-            self.performance_data["comparator_level"] = (
-                self.performance_data["peer_average_benchmark"] * 100
-            )  # Select which column of data to keep as the 'comparator_level'
+            self.performance_data["comparator_level"] = self.performance_data[
+                "peer_average_benchmark"
+            ]  # Select which column of data to keep as the 'comparator_level'
 
         # Same as above, but for peer 75th percentile benchmark
         elif self.comparator_type == "Peer Top 25%":
-            self.performance_data["comparator_level"] = (
-                self.performance_data["peer_75th_percentile_benchmark"] * 100
-            )
+            self.performance_data["comparator_level"] = self.performance_data[
+                "peer_75th_percentile_benchmark"
+            ]
 
         # Same as above, but for peer 90th percentile benchmark
         elif self.comparator_type == "Peer Top 10%":
-            self.performance_data["comparator_level"] = (
-                self.performance_data["peer_90th_percentile_benchmark"] * 100
-            )
+            self.performance_data["comparator_level"] = self.performance_data[
+                "peer_90th_percentile_benchmark"
+            ]
 
         # Same as above, but for goal comparator messages
         else:
-            self.performance_data["comparator_level"] = (
-                self.performance_data["MPOG_goal"] * 100.0
-            )
+            self.performance_data["comparator_level"] = self.performance_data[
+                "MPOG_goal"
+            ]
 
         ## Convert values in selected columns for further processing:
         self.performance_data["month"] = pd.to_datetime(
@@ -124,9 +124,9 @@ class Pictoralist:
             / self.performance_data["denominator"]
             * 100.0
         )  # convert preformance ratio to percentage
-        self.performance_data["goal_percent"] = (
-            self.performance_data["MPOG_goal"] * 100.0
-        )  # convert MPOG goal ratio to percentage
+        self.performance_data["goal_percent"] = self.performance_data[
+            "MPOG_goal"
+        ]  # convert MPOG goal ratio to percentage
 
         ## Drop extraneous columns of current dataframe
         cols_to_keep = [

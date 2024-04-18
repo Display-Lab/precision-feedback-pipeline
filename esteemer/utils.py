@@ -127,7 +127,7 @@ def candidates_records(performer_graph: Graph) -> List[List]:
         ]
     ]
 
-    for a_candidate in candidates(performer_graph):
+    for a_candidate in candidates(performer_graph, filter_acceptable=True):
         # representation = candidate_as_dictionary(a_candidate)
         representation = candidate_as_record(a_candidate)
 

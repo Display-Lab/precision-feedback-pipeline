@@ -2,6 +2,7 @@ import pandas as pd
 import pytest
 from rdflib import BNode, Graph, Literal, URIRef
 
+from bitstomach.bitstomach import prepare
 from bitstomach.signals import Achievement, Comparison, Loss, Trend
 from esteemer import esteemer
 from utils.namespace import PSDO, SLOWMO
@@ -45,13 +46,13 @@ def performance_data_frame():
             "peer_average_comparator",
             "peer_75th_percentile_benchmark",
             "peer_90th_percentile_benchmark",
-            "goal_comparator_content",
+            "MPOG_goal",
         ],
-        [157, "PONV05", "2022-06-01", 0.93, 85.0, 0, 100.0, 84.0, 88.0, 90.0, 99.0],
-        [157, "PONV05", "2022-07-01", 0.94, 85.0, 0, 100.0, 84.0, 88.0, 90.0, 99.0],
-        [157, "PONV05", "2022-08-01", 0.95, 85.0, 0, 100.0, 84.0, 88.0, 90.0, 99.0],
+        [157, "PONV05", "2022-06-01", 93, 85, 0, 100, 84.0, 88.0, 90.0, 99.0],
+        [157, "PONV05", "2022-07-01", 94, 85, 0, 100, 84.0, 88.0, 90.0, 99.0],
+        [157, "PONV05", "2022-08-01", 95, 85, 0, 100, 84.0, 88.0, 90.0, 99.0],
     ]
-    return pd.DataFrame(performance_data[1:], columns=performance_data[0])
+    return prepare({"Performance_data": performance_data})
 
 
 @pytest.fixture
@@ -138,7 +139,7 @@ def test_social_better_score(performance_data_frame):
 
     motivating_informations = Comparison.detect(performance_data_frame)
     score = esteemer.score_social_better(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.035)
+    assert score == pytest.approx(0.015)
 
 
 def test_social_worse_score(performance_data_frame):
@@ -149,7 +150,7 @@ def test_social_worse_score(performance_data_frame):
 
     motivating_informations = Comparison.detect(performance_data_frame)
     score = esteemer.score_social_worse(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.02)
+    assert score == pytest.approx(0.07)
 
 
 def test_improving_score():
@@ -159,7 +160,11 @@ def test_improving_score():
 
     motivating_informations = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [0.89, 0.90, 0.91]},  # slope 1.0
+            {
+                "passed_rate": [0.89, 0.90, 0.91],
+                "valid": True,
+                "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+            },  # slope 1.0
         )
     )
     score = esteemer.score_improving(candidate_resource, motivating_informations)
@@ -173,7 +178,11 @@ def test_worsening_score():
 
     motivating_informations = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [0.91, 0.90, 0.89]},  # slope 1.0
+            {
+                "passed_rate": [0.91, 0.90, 0.89],
+                "valid": True,
+                "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+            },  # slope 1.0
         )
     )
     score = esteemer.score_worsening(candidate_resource, motivating_informations)
@@ -182,8 +191,14 @@ def test_worsening_score():
 
 def test_goal_gain_score():
     data_frame = pd.DataFrame(
-        {"passed_rate": [0.88, 0.89, 0.91]},
+        {
+            "passed_rate": [0.88, 0.89, 0.91],
+            "valid": [True, True, True],
+            "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+        },
         columns=[
+            "month",
+            "valid",
             "passed_rate",
             "peer_average_comparator",
             "peer_75th_percentile_benchmark",
@@ -205,8 +220,14 @@ def test_goal_gain_score():
 
 def test_goal_loss_score():
     data_frame = pd.DataFrame(
-        {"passed_rate": [0.92, 0.91, 0.88]},
+        {
+            "passed_rate": [0.92, 0.91, 0.88],
+            "valid": [True, True, True],
+            "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+        },
         columns=[
+            "month",
+            "valid",
             "passed_rate",
             "peer_average_comparator",
             "peer_75th_percentile_benchmark",

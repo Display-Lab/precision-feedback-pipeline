@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 import pandas as pd
+from dateutil.relativedelta import relativedelta
 from rdflib import RDF, Literal
 from rdflib.resource import Resource
 
@@ -21,12 +22,31 @@ class Trend(Signal):
         if perf_data.empty:
             raise ValueError
 
+        if not Trend.last_three_month_are_valid_and_consecutive(perf_data):
+            return []
+
         slope = Trend._detect(perf_data)
 
         if not slope:
             return []
 
         return [Trend._resource(slope)]
+
+    @staticmethod
+    def last_three_month_are_valid_and_consecutive(perf_data: pd.DataFrame):
+        if perf_data["passed_rate"].count() < 3 or not perf_data[-3:]["valid"].all():
+            return False
+
+        current_month = pd.to_datetime(perf_data.loc[perf_data.index[-1], "month"])
+        last_month = pd.to_datetime(perf_data.loc[perf_data.index[-2], "month"])
+        last_last_month = pd.to_datetime(perf_data.loc[perf_data.index[-3], "month"])
+        if current_month - relativedelta(months=1) != last_month:
+            return False
+
+        if current_month - relativedelta(months=2) != last_last_month:
+            return False
+
+        return True
 
     @classmethod
     def _resource(cls, slope: float) -> Resource:
@@ -67,9 +87,6 @@ class Trend(Signal):
         """
         calcolates the slope of a monotonically increasing or decreasing trend over three month.
         """
-
-        if perf_data["passed_rate"].count() < 3:
-            return 0
 
         performance_rates = perf_data["passed_rate"]
         change_this_month = performance_rates.iloc[-1] - performance_rates.iloc[-2]

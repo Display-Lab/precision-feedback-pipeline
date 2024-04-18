@@ -19,7 +19,11 @@ def test_empty_perf_data_raises_value_error():
 def test_no_trend_returns_none():
     mi = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [90, 90, 90]},
+            {
+                "passed_rate": [90, 90, 90],
+                "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+                "valid": True,
+            },
         )
     )
     assert mi == []
@@ -45,7 +49,13 @@ def test_trend_is_detected():
 
 def test_trend_as_resource():
     signal = Trend.detect(
-        pd.DataFrame(columns=["passed_rate"], data=[[90], [91], [92]])
+        pd.DataFrame(
+            {
+                "passed_rate": [90, 91, 92],
+                "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+                "valid": True,
+            },
+        )
     ).pop()
 
     assert isinstance(signal, Resource)
@@ -70,7 +80,7 @@ def test_to_moderators_return_dictionary1():
     r.add(SLOWMO.RegardingMeasure, BNode("PONV05"))
 
     mods = Trend.moderators([r])[0]
-    assert pytest.approx(slope * 2) == mods["trend_size"] 
+    assert pytest.approx(slope * 2) == mods["trend_size"]
 
     assert PSDO.performance_trend_content in mods["type"]
     assert PSDO.positive_performance_trend_content in mods["type"]
@@ -97,6 +107,7 @@ def test_select():
     r1 = Comparison().detect(
         pd.DataFrame(
             columns=[
+                "valid",
                 "measure",
                 "passed_rate",
                 "peer_average_comparator",
@@ -104,13 +115,17 @@ def test_select():
                 "peer_90th_percentile_benchmark",
                 "goal_comparator_content",
             ],
-            data=[["PONV05", 80, 90, 90, 90, 90]],
+            data=[[True, "PONV05", 80, 90, 90, 90, 90]],
         )
     )
 
     r2 = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [89, 90, 91]},
+            {
+                "passed_rate": [89, 90, 91],
+                "valid": True,
+                "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+            },
         )
     )
 
@@ -140,12 +155,20 @@ def test_select():
 def test_trend_identity():
     r1 = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [89, 90, 91]},
+            {
+                "passed_rate": [89, 90, 91],
+                "valid": True,
+                "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+            },
         )
     )
     r2 = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [89, 90, 91]},
+            {
+                "passed_rate": [89, 90, 91],
+                "valid": True,
+                "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+            },
         )
     )
 
@@ -163,7 +186,11 @@ def test_partial_mock(mock_detect: Mock):
 
     signal = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [89, 90, 91]},  # slope 1.0
+            {
+                "passed_rate": [89, 90, 91],
+                "valid": True,
+                "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+            },  # slope 1.0
         )
     )
 
@@ -183,7 +210,11 @@ def test_partial_mock_with_patch_decorator(mock_detect: Mock):
 
     signal = Trend.detect(
         pd.DataFrame(
-            {"passed_rate": [89, 90, 91]},  # slope 1.0
+            {
+                "passed_rate": [89, 90, 91],
+                "valid": True,
+                "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+            },  # slope 1.0
         )
     )
 
@@ -196,7 +227,11 @@ def test_partial_mock_using_with():
     with patch.object(Trend, "_detect", return_value=42.0):
         signal = Trend.detect(
             pd.DataFrame(
-                {"passed_rate": [89, 90, 91]},  # slope 1.0
+                {
+                    "passed_rate": [89, 90, 91],
+                    "valid": True,
+                    "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+                },  # slope 1.0
             )
         )
 

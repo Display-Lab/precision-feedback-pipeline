@@ -13,6 +13,7 @@ from utils.namespace import PSDO, SLOWMO
 def perf_data() -> pd.DataFrame:
     performance_data = [
         [
+            "valid",
             "staff_number",
             "measure",
             "month",
@@ -25,11 +26,26 @@ def perf_data() -> pd.DataFrame:
             "peer_90th_percentile_benchmark",
             "goal_comparator_content",
         ],
-        [157, "BP01", "2022-08-01", 0.95, 90.0, 0, 100.0, 85.0, 88.0, 90.0, 99.0],
-        [157, "BP01", "2022-09-01", 0.96, 91.0, 0, 100.0, 85.0, 89.0, 91.0, 100.0],
-        [157, "BP01", "2022-09-01", 0.97, 92.0, 0, 100.0, 80.0, 85.0, 90.0, 95.0],
+        [True, 157, "BP01", "2022-08-01", 0.95, 90.0, 0, 100.0, 85.0, 88.0, 90.0, 99.0],
+        [
+            True,
+            157,
+            "BP01",
+            "2022-09-01",
+            0.96,
+            91.0,
+            0,
+            100.0,
+            85.0,
+            89.0,
+            91.0,
+            100.0,
+        ],
+        [True, 157, "BP01", "2022-10-01", 0.97, 92.0, 0, 100.0, 80.0, 85.0, 90.0, 95.0],
     ]
-    return pd.DataFrame(performance_data[1:], columns=performance_data[0])
+    df = pd.DataFrame(performance_data[1:], columns=performance_data[0])
+    df.attrs["performance_month"] = "2022-10-01"
+    return df
 
 
 def test_achievement_is_rdf_type():

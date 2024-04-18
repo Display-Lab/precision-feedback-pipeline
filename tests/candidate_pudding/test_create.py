@@ -20,7 +20,6 @@ def graph():
         )
     )
     template[RDF.type] = candidate_pudding.PERFORMANCE_SUMMARY_DISPLAY_TEMPLATE
-    # template[URIRef("https://schema.metadatacenter.org/properties/26450fa6-bb2c-4126-8229-79efda7f863a")] = Literal("Opportunity to Improve Top 10 Peer Benchmark")
     template[
         URIRef(
             "https://schema.metadatacenter.org/properties/6b9dfdf9-9c8a-4d85-8684-a24bee4b85a8"

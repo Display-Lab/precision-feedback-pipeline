@@ -27,6 +27,9 @@ class Comparison(Signal):
         if perf_data.empty:
             raise ValueError
 
+        if not perf_data[-1:]["valid"].bool():
+            return []
+
         resources = []
 
         gaps = Comparison._detect(perf_data)
@@ -66,6 +69,7 @@ class Comparison(Signal):
     @staticmethod
     def _detect(perf_data: pd.DataFrame) -> dict:
         """Calculate gap from levels and comparators"""
+
         comp_cols = [
             "peer_average_comparator",
             "peer_75th_percentile_benchmark",
