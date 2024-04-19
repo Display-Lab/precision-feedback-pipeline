@@ -31,7 +31,7 @@ class Loss(Signal):
 
         positive_prior_month_comparisons = [
             s
-            for s in Comparison.detect(perf_data.iloc[:-1])
+            for s in Comparison.detect(perf_data.iloc[:-1], tiered_comparators= False)
             if s[RDF.type : PSDO.positive_performance_gap_content]
         ]
 

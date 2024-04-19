@@ -131,7 +131,7 @@ def test_select():
 
     mi = r1 + r2
 
-    assert len(mi) == 5
+    assert len(mi) == 3
 
     selected_mi = Trend.select(mi)
     assert len(selected_mi) == 1

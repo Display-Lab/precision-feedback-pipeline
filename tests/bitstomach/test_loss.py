@@ -104,15 +104,25 @@ perf_level_test_set = [
     ),
     (
         [0.97, 0.90, 0.67],
-        [80.0, 98.0, 96.5, 95.0],
+        [80.0, 94.0, 96.5, 95.0],
         {
             PSDO.peer_average_comparator,
         },
         "last month positive gap for peer_average_comparator",
     ),
     (
+        [0.97, 0.95, 0.81],
+        [80.0, 94.0, 96.5, 95.0],
+        {
+            PSDO.peer_75th_percentile_benchmark,
+            PSDO.goal_comparator_content,
+
+        },
+        "last month positive gap for peer_average_comparator",
+    ),
+    (
         [0.67, 0.98, 0.97],
-        [80.0, 98.0, 96.5, 95.0],
+        [80.0, 94.0, 96.5, 95.0],
         set(),
         "no trend",
     ),

@@ -94,7 +94,7 @@ class Pictoralist:
         # Make changes based on peer 50th percentile benchmark being comparator message "is about"
         if self.comparator_type == "Peer Average":
             self.performance_data["comparator_level"] = self.performance_data[
-                "peer_average_benchmark"
+                "peer_average_comparator"
             ]  # Select which column of data to keep as the 'comparator_level'
 
         # Same as above, but for peer 75th percentile benchmark
