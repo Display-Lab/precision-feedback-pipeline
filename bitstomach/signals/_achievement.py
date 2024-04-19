@@ -31,7 +31,7 @@ class Achievement(Signal):
 
         negative_prior_month_comparisons = [
             s
-            for s in Comparison.detect(perf_data.iloc[:-1])
+            for s in Comparison.detect(perf_data.iloc[:-1], tiered_comparators= False)
             if s[RDF.type : PSDO.negative_performance_gap_content]
         ]
 

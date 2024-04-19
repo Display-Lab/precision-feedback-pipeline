@@ -39,7 +39,7 @@ def performance_data_frame():
             "staff_number",
             "measure",
             "month",
-            "passed_rate",
+           
             "passed_count",
             "flagged_count",
             "denominator",
@@ -48,9 +48,9 @@ def performance_data_frame():
             "peer_90th_percentile_benchmark",
             "MPOG_goal",
         ],
-        [157, "PONV05", "2022-06-01", 93, 85, 0, 100, 84.0, 88.0, 90.0, 99.0],
-        [157, "PONV05", "2022-07-01", 94, 85, 0, 100, 84.0, 88.0, 90.0, 99.0],
-        [157, "PONV05", "2022-08-01", 95, 85, 0, 100, 84.0, 88.0, 90.0, 99.0],
+        [157, "PONV05", "2022-06-01", 93, 0, 100, 84.0, 88.0, 90.0, 99.0],
+        [157, "PONV05", "2022-07-01", 94, 0, 100, 84.0, 88.0, 90.0, 99.0],
+        [157, "PONV05", "2022-08-01", 95, 0, 100, 84.0, 88.0, 90.0, 99.0],
     ]
     return prepare({"Performance_data": performance_data})
 
@@ -134,23 +134,41 @@ def test_history_with_two_recurrances(candidate_resource, history):
 def test_social_better_score(performance_data_frame):
     graph = Graph()
     candidate_resource = graph.resource(BNode())
-    candidate_resource[SLOWMO.RegardingComparator] = PSDO.peer_75th_percentile_benchmark
+    candidate_resource[SLOWMO.RegardingComparator] = PSDO.peer_90th_percentile_benchmark
     candidate_resource[SLOWMO.AcceptableBy] = Literal("social better")
 
     motivating_informations = Comparison.detect(performance_data_frame)
     score = esteemer.score_social_better(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.015)
+    assert score == pytest.approx(0.025)
 
 
-def test_social_worse_score(performance_data_frame):
+def test_social_worse_score():
+    data_frame = pd.DataFrame(
+        {
+            "passed_rate": [0.92, 0.91, 0.88],
+            "valid": [True, True, True],
+            "month": ["2023-11-01", "2023-12-01", "2024-01-01"],
+        },
+        columns=[
+            "month",
+            "valid",
+            "passed_rate",
+            "peer_average_comparator",
+            "peer_75th_percentile_benchmark",
+            "peer_90th_percentile_benchmark",
+            "goal_comparator_content",
+        ],
+    )
+    data_frame[data_frame.columns[-4:]] = [90.0, 92.0, 94.0, 90.0]
+
     graph = Graph()
     candidate_resource = graph.resource(BNode())
-    candidate_resource[SLOWMO.RegardingComparator] = PSDO.goal_comparator_content
+    candidate_resource[SLOWMO.RegardingComparator] = PSDO.peer_average_comparator
     candidate_resource[SLOWMO.AcceptableBy] = Literal("social worse")
 
-    motivating_informations = Comparison.detect(performance_data_frame)
+    motivating_informations = Comparison.detect(data_frame)
     score = esteemer.score_social_worse(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.07)
+    assert score == pytest.approx(0.01)
 
 
 def test_improving_score():

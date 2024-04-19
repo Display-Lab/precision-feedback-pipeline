@@ -98,8 +98,6 @@ perf_level_test_set = [
         [0.67, 0.79, 0.97],
         [80.0, 85.0, 90.0, 95.0],
         {
-            PSDO.peer_average_comparator,
-            PSDO.peer_75th_percentile_benchmark,
             PSDO.peer_90th_percentile_benchmark,
             PSDO.goal_comparator_content,
         },
@@ -109,7 +107,6 @@ perf_level_test_set = [
         [0.67, 0.95, 0.99],
         [80.0, 96.0, 98.0, 97.0],
         {
-            PSDO.peer_75th_percentile_benchmark,
             PSDO.peer_90th_percentile_benchmark,
             PSDO.goal_comparator_content,
         },
@@ -117,7 +114,7 @@ perf_level_test_set = [
     ),
     (
         [0.67, 0.96, 0.97],
-        [80.0, 98.0, 96.5, 95.0],
+        [80.0, 95.0, 96.5, 95.0],
         {
             PSDO.peer_90th_percentile_benchmark,
         },
@@ -125,7 +122,7 @@ perf_level_test_set = [
     ),
     (
         [0.67, 0.98, 0.97],
-        [80.0, 98.0, 96.5, 95.0],
+        [80.0, 95.0, 96.5, 95.0],
         set(),
         "no trend",
     ),
