@@ -39,18 +39,24 @@ def score(candidate: Resource, history: dict, preferences: dict) -> Resource:
     float: score.
     """
 
-    SCORING = {
-        "social better": score_social_better,
-        "social worse": score_social_worse,
-        "improving": score_improving,
-        "worsening": score_worsening,
-        "goal gain": score_goal_gain,
-        "goal loss": score_goal_loss,
+    CAUSAL_PATHWAY = {
+        "social better": {"score": score_social_better, "rules": null_rule},
+        "social worse": {"score": score_social_worse, "rules": null_rule},
+        "improving": {"score": score_improving, "rules": null_rule},
+        "worsening": {"score": score_worsening, "rules": null_rule},
+        "goal gain": {"score": score_goal_gain, "rules": null_rule},
+        "goal loss": {"score": score_goal_loss, "rules": null_rule},
     }
 
     causal_pathway = candidate.value(SLOWMO.AcceptableBy)
     motivating_informations = list(candidate[PSDO.motivating_information])
-    score_mi = SCORING[causal_pathway.value]
+    rules = CAUSAL_PATHWAY[causal_pathway.value]["rules"]
+    score_mi = CAUSAL_PATHWAY[causal_pathway.value]["score"]
+
+    # rules
+
+    if not rules(candidate):
+        return None
 
     # MI
     mi_score = score_mi(candidate, motivating_informations)
@@ -98,6 +104,19 @@ def score_social_better(
     score = (moderators["gap_size"]) * mpm[Comparison.signal_type]
 
     return score
+
+
+def null_rule(candidate):
+    return True
+
+
+def rule_social_better(candidate):
+    # if candidate[SLOWMO.RegardingComparator: PSDO.peer_75th_percentile_benchmark]:
+    #      if candidate.graph( :
+    #          SLOWMO.RegardingComparator / PSDO.peer_90th_percentile_benchmark,
+
+    #      )
+    return True
 
 
 def score_social_worse(
