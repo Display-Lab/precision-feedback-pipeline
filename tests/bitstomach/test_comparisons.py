@@ -86,7 +86,7 @@ def test_multiple_gap_values(perf_data):
 
     assert 3 == len(signals)
 
-    expected_gap_sizes = [ 0.01, -0.01, -0.1]
+    expected_gap_sizes = [0.01, -0.01, -0.1]
 
     for index, signal in enumerate(signals):
         v = signal.value(SLOWMO.PerformanceGapSize).value
@@ -98,7 +98,7 @@ def test_comparator_node(perf_data):
 
     signals = signal.detect(perf_data)
 
-    expected_comparator_values = [ 0.89, 0.91, 1.0]
+    expected_comparator_values = [0.89, 0.91, 1.0]
 
     for index, signal in enumerate(signals):
         assert Literal(expected_comparator_values[index]) == signal.value(

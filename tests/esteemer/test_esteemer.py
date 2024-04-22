@@ -39,7 +39,6 @@ def performance_data_frame():
             "staff_number",
             "measure",
             "month",
-           
             "passed_count",
             "flagged_count",
             "denominator",

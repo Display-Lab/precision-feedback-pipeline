@@ -1,6 +1,7 @@
 import os
 import sys
 
+import tomllib
 from decouple import Config, RepositoryEnv, config
 from loguru import logger
 
@@ -21,10 +22,15 @@ else:
         "ENV_PATH not specified, running from manually set environment variables..."
     )
 
+with open("pyproject.toml", "rb") as f:
+    pypro = tomllib.load(f)
+
 
 ## Settings class to store decoupled instance and build settings:
 class Settings:
     def __init__(self):
+        self.version = pypro["tool"]["poetry"]["version"]
+
         # Knowledge settings
         self.templates = config("templates", cast=str)
         self.pathways = config("pathways", cast=str)
