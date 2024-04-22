@@ -5,6 +5,7 @@ import time
 import webbrowser
 from pathlib import Path
 
+import matplotlib
 import psutil
 import requests
 from fastapi import FastAPI, HTTPException, Request
@@ -25,6 +26,9 @@ from pictoralist.pictoralist import Pictoralist
 from utils.graph_operations import read_graph
 from utils.namespace import PSDO
 from utils.settings import settings
+
+matplotlib.use("Agg")
+
 
 logger.info(
     f"Initial system memory: {psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024}"
