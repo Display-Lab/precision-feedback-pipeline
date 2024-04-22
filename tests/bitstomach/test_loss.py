@@ -116,7 +116,6 @@ perf_level_test_set = [
         {
             PSDO.peer_75th_percentile_benchmark,
             PSDO.goal_comparator_content,
-
         },
         "last month positive gap for peer_average_comparator",
     ),

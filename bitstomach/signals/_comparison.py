@@ -12,7 +12,9 @@ class Comparison(Signal):
     signal_type = PSDO.performance_gap_content
 
     @staticmethod
-    def detect(perf_data: pd.DataFrame, tiered_comparators: bool = True) -> Optional[List[Resource]]:
+    def detect(
+        perf_data: pd.DataFrame, tiered_comparators: bool = True
+    ) -> Optional[List[Resource]]:
         """
         Detects comparison signals against a pre-defined list of comparators using performance levels in performance content.
         The signal is calculated as a simple difference. It returns a list of resources representing each signal detected.
@@ -33,10 +35,10 @@ class Comparison(Signal):
         resources = []
 
         gaps = Comparison._detect(perf_data)
-        
-        if tiered_comparators:    
-            Comparison.select_by_tier(gaps)  
-        
+
+        if tiered_comparators:
+            Comparison.select_by_tier(gaps)
+
         for key, value in gaps.items():
             r = Comparison._resource(value[0], key, value[1])
             resources.append(r)
@@ -97,17 +99,17 @@ class Comparison(Signal):
             if gaps["peer_75th_percentile_benchmark"][0] >= 0:
                 gaps.pop("peer_75th_percentile_benchmark", None)
             if gaps["peer_average_comparator"][0] >= 0:
-                gaps.pop("peer_average_comparator", None)   
+                gaps.pop("peer_average_comparator", None)
         elif gaps["peer_75th_percentile_benchmark"][0] >= 0:
-            if gaps["peer_average_comparator"][0] >= 0: 
-                gaps.pop("peer_average_comparator", None)    
-            
+            if gaps["peer_average_comparator"][0] >= 0:
+                gaps.pop("peer_average_comparator", None)
+
         # social worse lower tier
         # if "peer_average_comparator" in gaps.keys() and gaps["peer_average_comparator"][0] < 0:
         #     if "peer_75th_percentile_benchmark" in gaps.keys() and gaps["peer_75th_percentile_benchmark"][0] < 0:
         #         gaps.pop("peer_75th_percentile_benchmark", None)
         #     if "peer_90th_percentile_benchmark" in gaps.keys() and gaps["peer_90th_percentile_benchmark"][0] < 0:
-        #         gaps.pop("peer_90th_percentile_benchmark", None)   
+        #         gaps.pop("peer_90th_percentile_benchmark", None)
         # elif "peer_75th_percentile_benchmark" in gaps.keys() and gaps["peer_75th_percentile_benchmark"][0] < 0:
         #     if "peer_90th_percentile_benchmark" in gaps.keys() and gaps["peer_90th_percentile_benchmark"][0] < 0:
         #         gaps.pop("peer_90th_percentile_benchmark", None)

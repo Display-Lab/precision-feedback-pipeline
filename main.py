@@ -1,9 +1,12 @@
 import json
 import os
 import sys
+import time
 import webbrowser
 from pathlib import Path
 
+import matplotlib
+import psutil
 import requests
 from fastapi import FastAPI, HTTPException, Request
 from loguru import logger
@@ -24,6 +27,13 @@ from utils.graph_operations import read_graph
 from utils.namespace import PSDO
 from utils.settings import settings
 
+matplotlib.use("Agg")
+
+
+logger.info(
+    f"Initial system memory: {psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024}"
+)
+
 global templates, pathways, measures, comparators
 
 ### Logging module setup (using loguru module)
@@ -31,13 +41,16 @@ logger.remove()
 logger.add(
     sys.stdout, colorize=True, format="{level}|  {message}", level=settings.log_level
 )
+logger.at_least = (
+    lambda lvl: logger.level(lvl).no >= logger.level(settings.log_level).no
+)
 
 ## Log of instance configuration
-logger.info("Startup configuration for this instance:")
+logger.debug("Startup configuration for this instance:")
 for attribute in dir(settings):
     if not attribute.startswith("__"):
         value = getattr(settings, attribute)
-        logger.info(f"{attribute}:\t{value}")
+        logger.debug(f"{attribute}:\t{value}")
 
 
 ### Create RDFlib graph from locally saved json files
@@ -130,6 +143,11 @@ async def root():
     return {"Hello": "Universe"}
 
 
+@app.get("/info")
+async def info():
+    return settings
+
+
 @app.get("/template/")
 async def template():
     github_link = "https://raw.githubusercontent.com/Display-Lab/precision-feedback-pipeline/main/input_message.json"
@@ -160,19 +178,22 @@ async def createprecisionfeedback(info: Request):
     }.copy()
     preferences.update(input_preferences)
 
+    initial_tic = tic = time.perf_counter()
     cool_new_super_graph = Graph()
     comparators_graph = read_graph(comparators)
     cool_new_super_graph += comparators_graph
     cool_new_super_graph += causal_pathways
     cool_new_super_graph += read_graph(f3json)
     cool_new_super_graph += templates
+    toc = time.perf_counter()
+    timing = {"load base graph": f"{(toc-tic)*1000.:2.2f} ms"}
     debug_output_if_set(cool_new_super_graph, "outputs/base.json")
 
-    performance_data_df = bitstomach.prepare(req_info)
-
     # BitStomach
-    logger.info("Calling BitStomach from main...")
+    logger.debug("Calling BitStomach from main...")
 
+    tic = time.perf_counter()
+    performance_data_df = bitstomach.prepare(req_info)
     g: Graph = bitstomach.extract_signals(performance_data_df)
 
     performance_content = g.resource(BNode("performance_content"))
@@ -185,15 +206,22 @@ async def createprecisionfeedback(info: Request):
         )
 
     cool_new_super_graph += g
+    toc = time.perf_counter()
+    timing["extract signals"] = f"{(toc-tic)*1000.:.2f} ms"
+
     debug_output_if_set(cool_new_super_graph, "outputs/spek_bs.json")
 
     # candidate_pudding
-    logger.info("Calling candidate_pudding from main...")
+    logger.debug("Calling candidate_pudding from main...")
+    tic = time.perf_counter()
     candidate_pudding.create_candidates(cool_new_super_graph)
+    toc = time.perf_counter()
+    timing["create candidates"] = f"{(toc-tic)*1000.:.2f} ms"
 
     # #Esteemer
-    logger.info("Calling Esteemer from main...")
+    logger.debug("Calling Esteemer from main...")
 
+    tic = time.perf_counter()
     for measure in cool_new_super_graph[: RDF.type : PSDO.performance_measure_content]:
         candidates = utils.candidates(
             cool_new_super_graph, filter_acceptable=True, measure=measure
@@ -201,16 +229,20 @@ async def createprecisionfeedback(info: Request):
         for candidate in candidates:
             esteemer.score(candidate, history, preferences)
     selected_candidate = esteemer.select_candidate(cool_new_super_graph)
+    toc = time.perf_counter()
+    timing["esteemer"] = f"{(toc-tic)*1000.:.2f} ms"
 
     # print updated graph by esteemer
     debug_output_if_set(cool_new_super_graph, "outputs/spek_st.json")
 
+    tic = time.perf_counter()
     selected_message = utils.render(cool_new_super_graph, selected_candidate)
 
     ### Pictoralist 2, now on the Nintendo DS: ###
-    logger.info("Calling Pictoralist from main...")
+    logger.debug("Calling Pictoralist from main...")
     if selected_message["message_text"] != "No message selected":
         ## Initialize and run message and display generation:
+        tic = time.perf_counter()
         pc = Pictoralist(
             performance_data_df,
             req_info["Performance_data"],
@@ -223,11 +255,27 @@ async def createprecisionfeedback(info: Request):
         pc.set_timeframe()  # Ensure no less than three months being graphed
         pc.finalize_text()  # Finalize text message and labels
         pc.graph_controller()  # Select and run graphing based on display type
+
         full_selected_message = pc.prepare_selected_message()
     else:
         full_selected_message = selected_message
 
-    if settings.log_level == "DEBUG":
+    toc = time.perf_counter()
+    timing["pictoralist"] = f"{(toc-tic)*1000.:.2f} ms"
+    timing["total"] = f"{(toc-initial_tic)*1000.:.2f} ms"
+
+    response = {}
+    # if settings.log_level == "INFO":
+    if logger.at_least("INFO"):
+        response["timing"] = timing
+
+        # Get memory usage information
+        mem_info = psutil.Process(os.getpid()).memory_info()
+
+        response["memory (RSS in MB)"] = {
+            "memory_info.rss": mem_info.rss / 1024 / 1024,
+        }
+
         cool_new_super_graph.add(
             (
                 BNode("p1"),
@@ -235,17 +283,17 @@ async def createprecisionfeedback(info: Request):
                 Literal(int(performance_data_df["staff_number"].iloc[0])),
             )
         )
+        response["candidates"] = utils.candidates_records(cool_new_super_graph)
 
-        full_selected_message["candidates"] = utils.candidates_records(
-            cool_new_super_graph
-        )
-
-    cool_new_super_graph.close()
-    return full_selected_message
+    response.update(full_selected_message)
+    # cool_new_super_graph.close()
+    del cool_new_super_graph
+    del performance_data_df
+    return response
 
 
 def debug_output_if_set(graph: Graph, file_location):
-    if settings.outputs is True and settings.log_level == "DEBUG":
+    if settings.outputs is True and logger.at_least("DEBUG"):
         file_path = Path(file_location)
         file_path.parent.mkdir(parents=True, exist_ok=True)
         graph.serialize(destination=file_path, format="json-ld", indent=2)
