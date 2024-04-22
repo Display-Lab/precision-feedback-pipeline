@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pfp-api"
-version = "v0.5.0+0"
+version = "0.5.0a1"
 description = ""
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
@@ -39,7 +39,7 @@ mccabe.max-complexity = 5
 
 [tool.poe.tasks]
 ruff = [{ cmd = "ruff check --fix --exit-zero" }, { cmd = "ruff format" }]
-pre-commit = ["ruff",{cmd = "poetry set-git-version"} ]
+pre = ["ruff",{cmd = "poetry set-git-version"} ]
 
 [build-system]
 requires = ["poetry-core"]
