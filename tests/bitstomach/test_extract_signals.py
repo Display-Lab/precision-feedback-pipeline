@@ -42,7 +42,7 @@ def test_returns_performance_content_with_multiple_elements():
     r = g.resource(BNode("performance_content"))
     mi = set(r[PSDO.motivating_information])
 
-    assert len(mi) == 4
+    assert len(mi) == 8
 
     assert g.value(None, RDF.type, PSDO.performance_gap_content)
 

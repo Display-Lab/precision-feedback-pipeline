@@ -5,6 +5,7 @@ from rdflib import XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
 from bitstomach.signals import Achievement, Comparison, Loss, Signal, Trend
+from esteemer import utils
 from esteemer.signals import History
 from utils.namespace import PSDO, SLOWMO
 
@@ -19,6 +20,16 @@ MPM = {
         History.signal_type: -0.1,
     },
     "goal loss": {
+        Comparison.signal_type: 0.5,
+        Trend.signal_type: 0.8,
+        History.signal_type: -0.5,
+    },
+    "social gain": {
+        Comparison.signal_type: 0.5,
+        Trend.signal_type: 0.8,
+        History.signal_type: -0.1,
+    },
+    "social loss": {
         Comparison.signal_type: 0.5,
         Trend.signal_type: 0.8,
         History.signal_type: -0.5,
@@ -40,12 +51,14 @@ def score(candidate: Resource, history: dict, preferences: dict) -> Resource:
     """
 
     CAUSAL_PATHWAY = {
-        "social better": {"score": score_social_better, "rules": null_rule},
+        "social better": {"score": score_social_better, "rules": rule_social_highest},
         "social worse": {"score": score_social_worse, "rules": null_rule},
         "improving": {"score": score_improving, "rules": null_rule},
         "worsening": {"score": score_worsening, "rules": null_rule},
-        "goal gain": {"score": score_goal_gain, "rules": null_rule},
-        "goal loss": {"score": score_goal_loss, "rules": null_rule},
+        "goal gain": {"score": score_gain, "rules": null_rule},
+        "goal loss": {"score": score_loss, "rules": null_rule},
+        "social gain": {"score": score_gain, "rules": rule_social_highest},
+        "social loss": {"score": score_loss, "rules": rule_social_lowest},
     }
 
     causal_pathway = candidate.value(SLOWMO.AcceptableBy)
@@ -110,12 +123,73 @@ def null_rule(candidate):
     return True
 
 
-def rule_social_better(candidate):
-    # if candidate[SLOWMO.RegardingComparator: PSDO.peer_75th_percentile_benchmark]:
-    #      if candidate.graph( :
-    #          SLOWMO.RegardingComparator / PSDO.peer_90th_percentile_benchmark,
+def rule_social_highest(candidate: Resource):
+    # TODO: see if we can refactor to a better query
+    causal_pathway = candidate.value(SLOWMO.AcceptableBy).value
+    if candidate[SLOWMO.RegardingComparator : PSDO.peer_average_comparator]:
+        candidates = utils.candidates(
+            candidate.graph,
+            candidate.value(SLOWMO.RegardingMeasure).identifier,
+            filter_acceptable=True,
+        )
+        return not any(
+            (
+                candid[SLOWMO.RegardingComparator : PSDO.peer_90th_percentile_benchmark]
+                or candid[
+                    SLOWMO.RegardingComparator : PSDO.peer_75th_percentile_benchmark
+                ]
+            )
+            and candid.value(SLOWMO.AcceptableBy).value == causal_pathway
+            for candid in candidates
+        )
 
-    #      )
+    if candidate[SLOWMO.RegardingComparator : PSDO.peer_75th_percentile_benchmark]:
+        candidates = utils.candidates(
+            candidate.graph,
+            candidate.value(SLOWMO.RegardingMeasure).identifier,
+            filter_acceptable=True,
+        )
+        return not any(
+            candid[SLOWMO.RegardingComparator : PSDO.peer_90th_percentile_benchmark]
+            and candid.value(SLOWMO.AcceptableBy).value == causal_pathway
+            for candid in candidates
+        )
+
+    return True
+
+
+def rule_social_lowest(candidate: Resource):
+    # TODO: see if we can refactor to a better query
+    causal_pathway = candidate.value(SLOWMO.AcceptableBy).value
+    if candidate[SLOWMO.RegardingComparator : PSDO.peer_90th_percentile_benchmark]:
+        candidates = utils.candidates(
+            candidate.graph,
+            candidate.value(SLOWMO.RegardingMeasure).identifier,
+            filter_acceptable=True,
+        )
+        return not any(
+            (
+                candid[SLOWMO.RegardingComparator : PSDO.peer_average_comparator]
+                or candid[
+                    SLOWMO.RegardingComparator : PSDO.peer_75th_percentile_benchmark
+                ]
+            )
+            and candid.value(SLOWMO.AcceptableBy).value == causal_pathway
+            for candid in candidates
+        )
+
+    if candidate[SLOWMO.RegardingComparator : PSDO.peer_75th_percentile_benchmark]:
+        candidates = utils.candidates(
+            candidate.graph,
+            candidate.value(SLOWMO.RegardingMeasure).identifier,
+            filter_acceptable=True,
+        )
+        return not any(
+            candid[SLOWMO.RegardingComparator : PSDO.peer_average_comparator]
+            and candid.value(SLOWMO.AcceptableBy).value == causal_pathway
+            for candid in candidates
+        )
+
     return True
 
 
@@ -153,9 +227,7 @@ def score_worsening(
     return score
 
 
-def score_goal_gain(
-    candidate: Resource, motivating_informations: List[Resource]
-) -> float:
+def score_gain(candidate: Resource, motivating_informations: List[Resource]) -> float:
     moderators = achievement_and_loss_moderators(
         candidate, motivating_informations, Achievement
     )
@@ -169,9 +241,7 @@ def score_goal_gain(
     return score
 
 
-def score_goal_loss(
-    candidate: Resource, motivating_informations: List[Resource]
-) -> float:
+def score_loss(candidate: Resource, motivating_informations: List[Resource]) -> float:
     moderators = achievement_and_loss_moderators(
         candidate, motivating_informations, Loss
     )
@@ -265,6 +335,8 @@ def score_preferences(candidate_resource: Resource, preferences: dict) -> float:
         "worsening": "Worsening",
         "goal gain": "Goal gain",
         "goal loss": "Social loss",  # goal loss uses Social loss preferences value
+        "social gain": "Social gain",
+        "social loss": "Social loss",
     }
 
     key = map_cp_to_preferences.get(candidate_resource.value(SLOWMO.AcceptableBy).value)

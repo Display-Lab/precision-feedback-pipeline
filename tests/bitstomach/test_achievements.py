@@ -99,6 +99,8 @@ perf_level_test_set = [
         [80.0, 85.0, 90.0, 95.0],
         {
             PSDO.peer_90th_percentile_benchmark,
+            PSDO.peer_75th_percentile_benchmark,
+            PSDO.peer_average_comparator,
             PSDO.goal_comparator_content,
         },
         "achievement all benchmarks",
@@ -108,6 +110,7 @@ perf_level_test_set = [
         [80.0, 96.0, 98.0, 97.0],
         {
             PSDO.peer_90th_percentile_benchmark,
+            PSDO.peer_75th_percentile_benchmark,
             PSDO.goal_comparator_content,
         },
         "achievement no peer_average_comparator",
