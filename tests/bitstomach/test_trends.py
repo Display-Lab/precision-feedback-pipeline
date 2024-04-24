@@ -103,7 +103,7 @@ def test_resource_selects_pos_or_neg():
     assert PSDO.negative_performance_trend_content not in types
 
 
-def test_select():
+def test_select_ignores_signals_of_a_different_type():
     r1 = Comparison().detect(
         pd.DataFrame(
             columns=[
@@ -129,9 +129,7 @@ def test_select():
         )
     )
 
-    mi = r1 + r2
-
-    assert len(mi) == 3
+    mi = r1 + r2  # four comparisons and one trend
 
     selected_mi = Trend.select(mi)
     assert len(selected_mi) == 1

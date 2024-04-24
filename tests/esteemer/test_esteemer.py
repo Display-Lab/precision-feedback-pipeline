@@ -231,7 +231,7 @@ def test_goal_gain_score():
     candidate_resource[SLOWMO.RegardingComparator] = PSDO.goal_comparator_content
 
     motivating_informations = Achievement.detect(data_frame)
-    score = esteemer.score_goal_gain(candidate_resource, motivating_informations)
+    score = esteemer.score_gain(candidate_resource, motivating_informations)
     assert score == pytest.approx(0.029)
 
 
@@ -260,5 +260,5 @@ def test_goal_loss_score():
     candidate_resource[SLOWMO.RegardingComparator] = PSDO.goal_comparator_content
 
     motivating_informations = Loss.detect(data_frame)
-    score = esteemer.score_goal_loss(candidate_resource, motivating_informations)
+    score = esteemer.score_loss(candidate_resource, motivating_informations)
     assert score == pytest.approx(0.042)

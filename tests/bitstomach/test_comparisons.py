@@ -59,7 +59,7 @@ def test_comp_annotation_creates_minimal_subgraph(perf_data):
 
     assert isinstance(comparison, List)
     assert isinstance(comparison[0], Resource)
-    assert 3 == len(comparison)
+    assert 4 == len(comparison)
     assert 1 == len(
         set(comparison[0].graph.subjects(RDF.type, PSDO.performance_gap_content))
     )
@@ -70,13 +70,13 @@ def test_multiple_signals_from_single_detector(perf_info, perf_data):
 
     signals = Comparison.detect(perf_data)
 
-    assert 3 == len(signals)
+    assert 4 == len(signals)
 
     for s in signals:
         perf_content.add(PSDO.motivating_information, s.identifier)
         perf_graph += s.graph
 
-    assert 25 == len(perf_graph)
+    assert 33 == len(perf_graph)
 
 
 def test_multiple_gap_values(perf_data):
@@ -84,9 +84,9 @@ def test_multiple_gap_values(perf_data):
 
     signals = signal.detect(perf_data)
 
-    assert 3 == len(signals)
+    assert 4 == len(signals)
 
-    expected_gap_sizes = [0.01, -0.01, -0.1]
+    expected_gap_sizes = [0.05, 0.01, -0.01, -0.1]
 
     for index, signal in enumerate(signals):
         v = signal.value(SLOWMO.PerformanceGapSize).value
@@ -98,7 +98,7 @@ def test_comparator_node(perf_data):
 
     signals = signal.detect(perf_data)
 
-    expected_comparator_values = [0.89, 0.91, 1.0]
+    expected_comparator_values = [0.85, 0.89, 0.91, 1.0]
 
     for index, signal in enumerate(signals):
         assert Literal(expected_comparator_values[index]) == signal.value(
@@ -165,7 +165,7 @@ def test_can_get_dispositions(perf_data, perf_info):
     g, perf_content = perf_info
 
     # given
-    comparator = g.resource(PSDO.peer_75th_percentile_benchmark)
+    comparator = g.resource(PSDO.peer_average_comparator)
     comparator.add(RDF.type, PSDO.social_comparator_content)
 
     signal = Comparison()
@@ -182,7 +182,7 @@ def test_can_get_dispositions(perf_data, perf_info):
     assert g.resource(PSDO.performance_gap_content) in matching_types
     assert g.resource(PSDO.positive_performance_gap_content) in matching_types
 
-    assert g.resource(PSDO.peer_75th_percentile_benchmark) in matching_types
+    assert g.resource(PSDO.peer_average_comparator) in matching_types
 
     assert g.resource(PSDO.social_comparator_content) in matching_types
 
