@@ -8,7 +8,8 @@ from google.oauth2.service_account import IDTokenCredentials
 
 # Define your OIDC Google Cloud service endpoint
 ENDPOINT_URL = os.environ.setdefault(
-    "ENDPOINT_URL", "https://pfp.test.app.med.umich.edu/createprecisionfeedback"
+    # "ENDPOINT_URL", "https://pfp.test.app.med.umich.edu/createprecisionfeedback"
+    "ENDPOINT_URL", "http://localhost:8000/createprecisionfeedback/"
 )
 
 # Path to the directory containing JSON files
@@ -19,7 +20,7 @@ MAX_REQUESTS = int(os.environ.setdefault("MAX_REQUESTS", "10"))
 SERVICE_ACCOUNT_KEY_PATH = os.environ.setdefault(
     "SERVICE_ACCOUNT_KEY_PATH", os.path.expanduser("~/service_account_key.json")
 )
-TARGET_AUDIENCE = os.environ["TARGET_AUDIENCE"]
+TARGET_AUDIENCE = os.environ.get("TARGET_AUDIENCE", None)
 
 
 def refresh_credentials(service_account_file, target_audience) -> IDTokenCredentials:
@@ -45,9 +46,10 @@ def refresh_credentials(service_account_file, target_audience) -> IDTokenCredent
 
 credential: IDTokenCredentials = refresh_credentials(
     SERVICE_ACCOUNT_KEY_PATH, TARGET_AUDIENCE
-)
+) if TARGET_AUDIENCE else {"token": None}
 
-
+count: int = 0
+    
 def post_json_message(filename):
     global credential
 
@@ -61,7 +63,7 @@ def post_json_message(filename):
             response = requests.post(
                 ENDPOINT_URL,
                 json=data,
-                headers={"Authorization": f"Bearer {credential.token}"},
+                headers={"Authorization": f"Bearer {credential['token']}"},
             )
 
             if response.status_code == 401:
@@ -76,6 +78,8 @@ def post_json_message(filename):
                 )
 
             response_data = response.json()
+            
+            update_stats(response_data)
 
             message_instance_id = response_data.get("message_instance_id")
             print(
@@ -83,20 +87,27 @@ def post_json_message(filename):
             )
     except Exception as e:
         print(f"Error processing {filename}: {str(e)}")
+        
+def update_stats(resp_data):
+    global count
+    
+    count += 1
 
 
 def main():
+    global count
+    
     json_files = sorted([f for f in os.listdir(JSON_DIR) if f.endswith(".json")])
 
     # print(f"files: {json_files}")
 
-    with ThreadPoolExecutor(max_workers=100) as executor:
+    with ThreadPoolExecutor(max_workers=10) as executor:
         executor.map(post_json_message, json_files[0:MAX_REQUESTS])
 
     # for message in json_files[0:MAX_REQUESTS]:
     #     post_json_message(message)
     #     time.sleep(0)
-
+    print(F"Count is: {count}")
 
 if __name__ == "__main__":
     main()
