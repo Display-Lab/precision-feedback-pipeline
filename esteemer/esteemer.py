@@ -8,6 +8,7 @@ from bitstomach.signals import Achievement, Comparison, Loss, Signal, Trend
 from esteemer import utils
 from esteemer.signals import History
 from utils.namespace import PSDO, SLOWMO
+from utils import settings
 
 MPM = {
     "social worse": {Comparison.signal_type: 0.5, History.signal_type: -0.5},
@@ -294,8 +295,8 @@ def score_history(candidate, history) -> float:
     Returns:
     float: history sub-score.
     """
-    if not history:
-        return 0
+    if not history or not settings.settings.use_history:
+        return 0.0
 
     # turn candidate resource into a 'history' element for the current month
     current_hist = History.to_element(candidate)
@@ -305,7 +306,7 @@ def score_history(candidate, history) -> float:
     signals = History.detect(history)
 
     if not signals:
-        return 0
+        return 0.0
 
     mod = History.moderators(signals)[0]
     score = mod["recurrence_count"]
@@ -326,6 +327,9 @@ def score_preferences(candidate_resource: Resource, preferences: dict) -> float:
     Returns:
     float: preference sub-score.
     """
+
+    if not settings.settings.use_preferences:
+        return 0.0
 
     # map causal pathway schema:name to preferences key from the input
     map_cp_to_preferences = {

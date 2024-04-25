@@ -51,6 +51,13 @@ class Settings:
         self.outputs = config(
             "outputs", cast=bool, default=False
         )  # Logging of intermediate files
+        self.performance_month = config(
+            "performance_month", default=None
+        )  # performance_month for instance
+        self.use_preferences = config(
+            "use_preferences", cast=bool, default=True
+        )  # use preferences
+        self.use_history = config("use_history", cast=bool, default=True)  # use history
 
         # Instance display settings
         self.display_window = config("display_window", cast=int, default=6)
