@@ -32,11 +32,11 @@ class Settings:
         # self.version = pypro["tool"]["poetry"]["version"]
 
         # Knowledge settings
-        self.templates = config("templates", cast=str)
-        self.pathways = config("pathways", cast=str)
-        self.measures = config("measures", cast=str)
-        self.mpm = config("mpm", cast=str)
-        self.comparators = config("comparators", cast=str)
+        self.templates = config("templates", cast=str, default=None)
+        self.pathways = config("pathways", cast=str, default=None)
+        self.measures = config("measures", cast=str, default=None)
+        self.mpm = config("mpm", cast=str, default=None)
+        self.comparators = config("comparators", cast=str, default=None)
 
         # Instance settings
         self.log_level = config(

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pfp-api"
-version = "0.5.0a2"
+version = "v0.5.0"
 description = ""
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
@@ -28,10 +28,6 @@ python-slugify = "^8.0.4"
 decoy = "^2.1.1"
 ruff = "^0.3.5"
 poethepoet = "^0.25.0"
-poetry-git-version-plugin = "^1.0.8"
-
-[tool.poetry-git-version-plugin]
-version_format = 'v{version}+{distance}'
 
 [tool.ruff.lint]
 extend-select = ["I", "C901"] # sort imports 
@@ -39,7 +35,6 @@ mccabe.max-complexity = 5
 
 [tool.poe.tasks]
 ruff = [{ cmd = "ruff check --fix --exit-zero" }, { cmd = "ruff format" }]
-pre = ["ruff",{cmd = "poetry set-git-version"} ]
 
 [build-system]
 requires = ["poetry-core"]
