@@ -1,3 +1,4 @@
+from datetime import timedelta
 import json
 import os
 import sys
@@ -262,7 +263,7 @@ async def createprecisionfeedback(info: Request):
 
     toc = time.perf_counter()
     timing["pictoralist"] = f"{(toc-tic)*1000.:.2f} ms"
-    timing["total"] = f"{(toc-initial_tic)*1000.:.2f} ms"
+    timing["total"] = timedelta(seconds=(toc-initial_tic))
 
     response = {}
     # if settings.log_level == "INFO":
@@ -286,9 +287,7 @@ async def createprecisionfeedback(info: Request):
         response["candidates"] = utils.candidates_records(cool_new_super_graph)
 
     response.update(full_selected_message)
-    # cool_new_super_graph.close()
-    del cool_new_super_graph
-    del performance_data_df
+
     return response
 
 

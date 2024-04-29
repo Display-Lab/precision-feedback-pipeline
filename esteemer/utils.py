@@ -154,6 +154,6 @@ def candidate_as_record(a_candidate: Resource) -> List:
 
     representation.append(a_candidate.value(SLOWMO.name))
     representation.append(a_candidate.value(SLOWMO.AcceptableBy))
-    representation.append(a_candidate.value(SLOWMO.Selected))
+    representation.append(bool(a_candidate.value(SLOWMO.Selected)))
 
     return representation
