@@ -56,4 +56,6 @@ def prepare(req_info):
         )
     ]["measure"]
 
+    performance_df.attrs["staff_number"] = int(performance_df.at[0, "staff_number"])
+
     return performance_df

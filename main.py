@@ -1,9 +1,9 @@
-from datetime import timedelta
 import json
 import os
 import sys
 import time
 import webbrowser
+from datetime import timedelta
 from pathlib import Path
 
 import matplotlib
@@ -200,9 +200,14 @@ async def createprecisionfeedback(info: Request):
     performance_content = g.resource(BNode("performance_content"))
     if len(list(performance_content[PSDO.motivating_information])) == 0:
         cool_new_super_graph.close()
+        detail = {
+            "message": "Insufficient significant data found for providing feedback, process aborted.",
+            "message_instance_id": req_info["message_instance_id"],
+            "staff_number": performance_data_df.attrs["staff_number"],
+        }
         raise HTTPException(
             status_code=400,
-            detail=f"Insufficient significant data found for providing feedback, process aborted. Message_instance_id: {req_info['message_instance_id']}",
+            detail=detail,
             headers={"400-Error": "Invalid Input Error"},
         )
 
@@ -263,7 +268,7 @@ async def createprecisionfeedback(info: Request):
 
     toc = time.perf_counter()
     timing["pictoralist"] = f"{(toc-tic)*1000.:.2f} ms"
-    timing["total"] = timedelta(seconds=(toc-initial_tic))
+    timing["total"] = timedelta(seconds=(toc - initial_tic))
 
     response = {}
     # if settings.log_level == "INFO":

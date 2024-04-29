@@ -16,7 +16,7 @@ ENDPOINT_URL = os.environ.setdefault(
 )
 
 # Path to the directory containing JSON files
-JSON_DIR = "/home/faridsei/dev/test/ProviderInputMessages"
+JSON_DIR = os.environ.setdefault("JSON_DIR", "")
 MAX_REQUESTS = int(os.environ.setdefault("MAX_REQUESTS", "10"))
 WORKERS = int(os.environ.setdefault("WORKERS", "10"))
 # Service account credentials (replace with your own)
@@ -65,7 +65,12 @@ def post_json_message(filename):
     # print(f"post with token: {credential.token}")
     try:
         with open(os.path.join(JSON_DIR, filename), "r") as file:
-            data = json.load(file)
+            data = None
+            try:
+                data = json.load(file)
+            except Exception as e:
+                print(f"file: {filename} failed. {e}")
+                return
 
             response = requests.post(
                 ENDPOINT_URL,
@@ -86,14 +91,17 @@ def post_json_message(filename):
                     allow_redirects=True,
                 )
 
-            response_data = response.json()
+            if response.ok:
+                response_data = response.json()
+            elif response.status_code == 400:
+                response_data = response.json()["detail"]
 
             with lock:
                 add_response(response, response_data)
                 add_candidates(response_data)
 
     except Exception as e:
-        print(f"Error processing {filename}: {str(e)}")
+        print(f"Error processing {filename}: {e}")
 
 
 def add_candidates(response_data: dict):
@@ -140,7 +148,6 @@ def analyse_responses():
     r["pfp_time"] = round(r["pfp_time"] * 1000, 1)
     r["response_time"] = round(r["response_time"] * 1000, 1)
 
-    
     print(f"\n {r} \n")
 
 
@@ -152,6 +159,15 @@ def analyse_candidates():
         .agg(acceptable=("count"), selected=("sum"))
         .reset_index()
     )
+
+    candidate_df["score"] = candidate_df["score"].astype(float)
+    scores = (
+        candidate_df.groupby("causal_pathway")["score"]
+        .agg(acceptable_score=("mean"))
+        .reset_index()
+    )
+    causal_pathway = pd.merge(causal_pathway, scores, on="causal_pathway")
+
     causal_pathway["%"] = round(
         causal_pathway["acceptable"] / causal_pathway["acceptable"].sum() * 100, 1
     )
@@ -160,7 +176,14 @@ def analyse_candidates():
     )
 
     causal_pathway = causal_pathway[
-        ["causal_pathway", "%", "acceptable", "selected", "selected %"]
+        [
+            "causal_pathway",
+            "%",
+            "acceptable",
+            "acceptable_score",
+            "selected",
+            "selected %",
+        ]
     ]
     print(causal_pathway, "\n")
 
@@ -174,7 +197,7 @@ def analyse_candidates():
 
     measure = measure[["measure", "%", "total", "selected", "selected %"]]
     print(measure, "\n")
-    
+
     candidate_df.rename(columns={"name": "message"}, inplace=True)
     message = (
         candidate_df.groupby("message")["selected"]
@@ -186,8 +209,6 @@ def analyse_candidates():
 
     message = message[["message", "%", "total", "selected", "selected %"]]
     print(message, "\n")
-
-    pass
 
 
 def main():
