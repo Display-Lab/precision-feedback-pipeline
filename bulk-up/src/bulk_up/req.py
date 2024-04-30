@@ -15,8 +15,8 @@ ENDPOINT_URL = os.environ.setdefault(
     "http://localhost:8000/createprecisionfeedback/",
 )
 
-# Path to the directory containing JSON files
-JSON_DIR = os.environ.setdefault("JSON_DIR", "")
+# Path to the directory containing input files
+INPUT_DIR = os.environ.setdefault("INPUT_DIR", "")
 MAX_REQUESTS = int(os.environ.setdefault("MAX_REQUESTS", "10"))
 WORKERS = int(os.environ.setdefault("WORKERS", "10"))
 # Service account credentials (replace with your own)
@@ -64,7 +64,7 @@ def post_json_message(filename):
 
     # print(f"post with token: {credential.token}")
     try:
-        with open(os.path.join(JSON_DIR, filename), "r") as file:
+        with open(os.path.join(INPUT_DIR, filename), "r") as file:
             data = None
             try:
                 data = json.load(file)
@@ -143,7 +143,7 @@ def analyse_responses():
         .reset_index()
     )
 
-    r = pd.merge(r, r1, on="status_code")
+    r = pd.merge(r, r1, on="status_code", how="left")
 
     r["pfp_time"] = round(r["pfp_time"] * 1000, 1)
     r["response_time"] = round(r["response_time"] * 1000, 1)
@@ -153,51 +153,49 @@ def analyse_responses():
 
 def analyse_candidates():
     global candidate_df
+    
+    # causal pathways
     candidate_df.rename(columns={"acceptable_by": "causal_pathway"}, inplace=True)
     causal_pathway = (
         candidate_df.groupby("causal_pathway")["selected"]
         .agg(acceptable=("count"), selected=("sum"))
         .reset_index()
     )
-
     candidate_df["score"] = candidate_df["score"].astype(float)
     scores = (
         candidate_df.groupby("causal_pathway")["score"]
         .agg(acceptable_score=("mean"))
         .reset_index()
     )
-    causal_pathway = pd.merge(causal_pathway, scores, on="causal_pathway")
+    causal_pathway = pd.merge(causal_pathway, scores, on="causal_pathway", how="left")
 
-    causal_pathway["%"] = round(
+    causal_pathway["% acceptable"] = round(
         causal_pathway["acceptable"] / causal_pathway["acceptable"].sum() * 100, 1
     )
-    causal_pathway["selected %"] = round(
+    causal_pathway["% selected"] = round(
         causal_pathway["selected"] / causal_pathway["acceptable"] * 100, 1
+    )    
+    selected_scores = (
+        candidate_df[candidate_df["selected"]].groupby("causal_pathway")["score"]
+        .agg(selected_score=("mean"))
+        .reset_index()
     )
+    causal_pathway = pd.merge(causal_pathway, selected_scores, on="causal_pathway", how="left")
 
     causal_pathway = causal_pathway[
         [
-            "causal_pathway",
-            "%",
+            "causal_pathway",            
             "acceptable",
+            "% acceptable",
             "acceptable_score",
             "selected",
-            "selected %",
+            "% selected",
+            "selected_score"
         ]
     ]
     print(causal_pathway, "\n")
 
-    measure = (
-        candidate_df.groupby("measure")["selected"]
-        .agg(total=("count"), selected=("sum"))
-        .reset_index()
-    )
-    measure["%"] = round(measure["total"] / measure["total"].sum() * 100, 1)
-    measure["selected %"] = round(measure["selected"] / measure["total"] * 100, 1)
-
-    measure = measure[["measure", "%", "total", "selected", "selected %"]]
-    print(measure, "\n")
-
+    # messages
     candidate_df.rename(columns={"name": "message"}, inplace=True)
     message = (
         candidate_df.groupby("message")["selected"]
@@ -205,25 +203,29 @@ def analyse_candidates():
         .reset_index()
     )
     message["%"] = round(message["total"] / message["total"].sum() * 100, 1)
-    message["selected %"] = round(message["selected"] / message["total"] * 100, 1)
-
-    message = message[["message", "%", "total", "selected", "selected %"]]
+    message["% selected"] = round(message["selected"] / message["total"] * 100, 1)
+    message = message[["message", "%", "total", "selected", "% selected"]]
     print(message, "\n")
 
-
+    # measures
+    measure = (
+        candidate_df.groupby("measure")["selected"]
+        .agg(total=("count"), selected=("sum"))
+        .reset_index()
+    )
+    measure["%"] = round(measure["total"] / measure["total"].sum() * 100, 1)
+    measure["% selected"] = round(measure["selected"] / measure["total"] * 100, 1)
+    measure = measure[["measure", "%", "total", "selected", "% selected"]]
+    print(measure, "\n")
+    
 def main():
     global count
 
-    json_files = sorted([f for f in os.listdir(JSON_DIR) if f.endswith(".json")])
-
-    # print(f"files: {json_files}")
+    input_files = sorted([f for f in os.listdir(INPUT_DIR) if f.endswith(".json")])
 
     with ThreadPoolExecutor(WORKERS) as executor:
-        executor.map(post_json_message, json_files[0:MAX_REQUESTS])
+        executor.map(post_json_message, input_files[0:MAX_REQUESTS])
 
-    # for message in json_files[0:MAX_REQUESTS]:
-    #     post_json_message(message)
-    #     time.sleep(0)
     analyse_responses()
     analyse_candidates()
 
