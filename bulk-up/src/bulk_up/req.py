@@ -1,5 +1,6 @@
 import json
 import os
+import random
 import re
 import threading
 from concurrent.futures import ThreadPoolExecutor
@@ -19,12 +20,16 @@ ENDPOINT_URL = os.environ.setdefault(
 # Path to the directory containing input files
 INPUT_DIR = os.environ.setdefault("INPUT_DIR", "")
 MAX_REQUESTS = int(os.environ.setdefault("MAX_REQUESTS", "10"))
-WORKERS = int(os.environ.setdefault("WORKERS", "10"))
+WORKERS = int(os.environ.setdefault("WORKERS", "1"))
 # Service account credentials (replace with your own)
 SERVICE_ACCOUNT_KEY_PATH = os.environ.setdefault(
     "SERVICE_ACCOUNT_KEY_PATH", os.path.expanduser("~/service_account_key.json")
 )
 TARGET_AUDIENCE = os.environ.get("TARGET_AUDIENCE", None)
+SAMPLE = os.getenv("SAMPLE", "False").lower() in ("true", "1")
+SAMPLE_START = int(os.getenv("SAMPLE_START", "0"))
+SAMPLE_END = int(os.getenv("SAMPLE_END", "-1"))
+
 candidate_df: pd.DataFrame = pd.DataFrame()
 response_df: pd.DataFrame = pd.DataFrame()
 lock = threading.Lock()
@@ -232,12 +237,27 @@ def extract_number(filename):
         return float("inf")  # Return infinity if no numeric part found
 
 
+def random_sample_with_range(lst, start, end):
+    if end == -1:
+        end = len(lst)
+    start = max(start, 0)
+    end = min(end, len(lst))
+    sample = random.sample(lst[start:end], end - start)
+    return sample
+
+
 def main():
     global count
 
     input_files = sorted(
         [f for f in os.listdir(INPUT_DIR) if f.endswith(".json")], key=extract_number
     )
+
+    if SAMPLE:
+        input_files = sorted(
+            random_sample_with_range(input_files, SAMPLE_START, SAMPLE_END),
+            key=extract_number,
+        )
 
     with ThreadPoolExecutor(WORKERS) as executor:
         executor.map(post_json_message, input_files[0:MAX_REQUESTS])
