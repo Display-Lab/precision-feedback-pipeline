@@ -19,16 +19,15 @@ ENDPOINT_URL = os.environ.setdefault(
 
 # Path to the directory containing input files
 INPUT_DIR = os.environ.setdefault("INPUT_DIR", "")
-MAX_REQUESTS = int(os.environ.setdefault("MAX_REQUESTS", "10"))
 WORKERS = int(os.environ.setdefault("WORKERS", "1"))
 # Service account credentials (replace with your own)
 SERVICE_ACCOUNT_KEY_PATH = os.environ.setdefault(
     "SERVICE_ACCOUNT_KEY_PATH", os.path.expanduser("~/service_account_key.json")
 )
 TARGET_AUDIENCE = os.environ.get("TARGET_AUDIENCE", None)
-SAMPLE = os.getenv("SAMPLE", "False").lower() in ("true", "1")
-SAMPLE_START = int(os.getenv("SAMPLE_START", "0"))
-SAMPLE_END = int(os.getenv("SAMPLE_END", "-1"))
+SAMPLE = int(os.getenv("SAMPLE", "0"))
+START = int(os.getenv("START", "0"))
+END = int(os.getenv("END", "10"))
 
 candidate_df: pd.DataFrame = pd.DataFrame()
 response_df: pd.DataFrame = pd.DataFrame()
@@ -36,7 +35,9 @@ lock = threading.Lock()
 
 
 def refresh_credentials(service_account_file, target_audience) -> IDTokenCredentials:
-    # Load the service account credentials from the file
+    # Usage:
+    # service_account_file = 'path/to/service_account.json'
+    # target_audience = 'https://service-you-are-calling.com'
     credentials = IDTokenCredentials.from_service_account_file(
         SERVICE_ACCOUNT_KEY_PATH, target_audience=TARGET_AUDIENCE
     )
@@ -46,15 +47,6 @@ def refresh_credentials(service_account_file, target_audience) -> IDTokenCredent
 
     return credentials
 
-
-# Usage:
-# service_account_file = 'path/to/service_account.json'
-# target_audience = 'https://service-you-are-calling.com'
-# new_token = get_new_token(service_account_file, target_audience)
-
-# Initialize credentials
-# credentials = IDTokenCredentials.from_service_account_file(SERVICE_ACCOUNT_KEY_PATH)
-# credentials.refresh(Request())
 
 credential: IDTokenCredentials = (
     refresh_credentials(SERVICE_ACCOUNT_KEY_PATH, TARGET_AUDIENCE)
@@ -67,8 +59,6 @@ count: int = 0
 
 def post_json_message(filename):
     global credential
-
-    # print(f"post with token: {credential.token}")
     try:
         with open(os.path.join(INPUT_DIR, filename), "r") as file:
             data = None
@@ -237,15 +227,6 @@ def extract_number(filename):
         return float("inf")  # Return infinity if no numeric part found
 
 
-def random_sample_with_range(lst, start, end):
-    if end == -1:
-        end = len(lst)
-    start = max(start, 0)
-    end = min(end, len(lst))
-    sample = random.sample(lst[start:end], end - start)
-    return sample
-
-
 def main():
     global count
 
@@ -253,14 +234,14 @@ def main():
         [f for f in os.listdir(INPUT_DIR) if f.endswith(".json")], key=extract_number
     )
 
+    input_files = input_files[START:END]
+
     if SAMPLE:
-        input_files = sorted(
-            random_sample_with_range(input_files, SAMPLE_START, SAMPLE_END),
-            key=extract_number,
-        )
+        n = min(SAMPLE, len(input_files))
+        input_files = sorted(random.sample(input_files, n), key=extract_number)
 
     with ThreadPoolExecutor(WORKERS) as executor:
-        executor.map(post_json_message, input_files[0:MAX_REQUESTS])
+        executor.map(post_json_message, input_files)
 
     analyse_responses()
     analyse_candidates()

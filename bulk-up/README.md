@@ -41,9 +41,16 @@ The defaults behavior is to run 10 requests, using 1 worker, with `http://localh
 #### INPUT_DIR: Path to the directory containing JSON files
 - Required
 
-#### MAX_REQUESTS: Number of inputs to read and send
-- default: 10
-- maximum is the number of input files in the INPUT_DIR
+#### START, END: Range of inputs to read and send (after sorting by provider number in filename; some may be missing)
+- default: 0, 10
+- maximum (END) is the number of input files in the INPUT_DIR
+- minumum (START) is 0
+- END > START
+
+#### SAMPLE: Number of randomly sampled inputs from the range [START,END]
+- default: 0 (do not sample, use all in range)
+- maximum: SAMPLE <= END-START
+- if SAMPLE >= END-START all inputs are selected and processed in provider number order
 
 #### WORKERS: Number of simultaneous threads to use for sending requests
 - default : 1
@@ -68,7 +75,7 @@ ENDPOINT_URL="http://localhost:8000/createprecisionfeedback/" MAX_REQUESTS=10 IN
 TARGET_AUDIENCE=123-xyz.apps.googleusercontent.com SERVICE_ACCOUNT_KEY_PATH=~/my-client-secret.json INPUT_DIR=~/pf_inputs_bulk ENDPOINT_URL="https://pfp.lab.app.med.umich.edu/createprecisionfeedback/" python src/bulk_up/req.py```
 ```
 
-### Sample output
+### Sample output (with preferences)
 
 ```
     status_code  count  response_time  pfp_time
