@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
@@ -153,7 +154,7 @@ def analyse_responses():
 
 def analyse_candidates():
     global candidate_df
-    
+
     # causal pathways
     candidate_df.rename(columns={"acceptable_by": "causal_pathway"}, inplace=True)
     causal_pathway = (
@@ -174,23 +175,26 @@ def analyse_candidates():
     )
     causal_pathway["% selected"] = round(
         causal_pathway["selected"] / causal_pathway["acceptable"] * 100, 1
-    )    
+    )
     selected_scores = (
-        candidate_df[candidate_df["selected"]].groupby("causal_pathway")["score"]
+        candidate_df[candidate_df["selected"]]
+        .groupby("causal_pathway")["score"]
         .agg(selected_score=("mean"))
         .reset_index()
     )
-    causal_pathway = pd.merge(causal_pathway, selected_scores, on="causal_pathway", how="left")
+    causal_pathway = pd.merge(
+        causal_pathway, selected_scores, on="causal_pathway", how="left"
+    )
 
     causal_pathway = causal_pathway[
         [
-            "causal_pathway",            
+            "causal_pathway",
             "acceptable",
             "% acceptable",
             "acceptable_score",
             "selected",
             "% selected",
-            "selected_score"
+            "selected_score",
         ]
     ]
     print(causal_pathway, "\n")
@@ -217,11 +221,23 @@ def analyse_candidates():
     measure["% selected"] = round(measure["selected"] / measure["total"] * 100, 1)
     measure = measure[["measure", "%", "total", "selected", "% selected"]]
     print(measure, "\n")
-    
+
+
+def extract_number(filename):
+    # Extract numeric part from filename
+    match = re.search(r"_(\d+)", filename)
+    if match:
+        return int(match.group(1))
+    else:
+        return float("inf")  # Return infinity if no numeric part found
+
+
 def main():
     global count
 
-    input_files = sorted([f for f in os.listdir(INPUT_DIR) if f.endswith(".json")])
+    input_files = sorted(
+        [f for f in os.listdir(INPUT_DIR) if f.endswith(".json")], key=extract_number
+    )
 
     with ThreadPoolExecutor(WORKERS) as executor:
         executor.map(post_json_message, input_files[0:MAX_REQUESTS])
