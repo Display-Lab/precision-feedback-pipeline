@@ -12,6 +12,7 @@ import requests
 from fastapi import FastAPI, HTTPException, Request
 from loguru import logger
 from rdflib import (  # , ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
+    RDF,
     BNode,
     Graph,
     Literal,
@@ -34,7 +35,7 @@ logger.info(
     f"Initial system memory: {psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024}"
 )
 
-global templates, pathways, measures, comparators
+global templates, pathways, measures, comparators_text
 
 ### Logging module setup (using loguru module)
 logger.remove()
@@ -126,12 +127,10 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     try:
-        global measure_details, causal_pathways, templates, f3json, comparators
+        global measures_text, comparators_text
 
-        f3json = se.get(settings.measures).text
-        causal_pathways = causal_pathways
-        templates = templates
-        comparators = se.get(settings.comparators).text
+        measures_text = se.get(settings.measures).text
+        comparators_text = se.get(settings.comparators).text
 
     except Exception as e:
         print("Startup aborted, see traceback:")
@@ -181,10 +180,10 @@ async def createprecisionfeedback(info: Request):
 
     initial_tic = tic = time.perf_counter()
     cool_new_super_graph = Graph()
-    comparators_graph = read_graph(comparators)
+    comparators_graph = read_graph(comparators_text)
     cool_new_super_graph += comparators_graph
     cool_new_super_graph += causal_pathways
-    cool_new_super_graph += read_graph(f3json)
+    cool_new_super_graph += read_graph(measures_text)
     cool_new_super_graph += templates
     toc = time.perf_counter()
     timing = {"load base graph": f"{(toc-tic)*1000.:2.2f} ms"}
@@ -195,6 +194,10 @@ async def createprecisionfeedback(info: Request):
 
     tic = time.perf_counter()
     performance_data_df = bitstomach.prepare(req_info)
+    # TODO: find a place for measures to live...mabe move these two line into prepare or make a measurees class
+    measures = set(cool_new_super_graph[: RDF.type : PSDO.performance_measure_content])
+    
+    performance_data_df.attrs["valid_measures"] = [m for m in performance_data_df.attrs["valid_measures"] if BNode(m) in measures]
     g: Graph = bitstomach.extract_signals(performance_data_df)
 
     performance_content = g.resource(BNode("performance_content"))
