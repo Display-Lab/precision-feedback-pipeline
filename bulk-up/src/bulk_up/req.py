@@ -52,7 +52,7 @@ def refresh_credentials(service_account_file, target_audience) -> IDTokenCredent
 credential: IDTokenCredentials = (
     refresh_credentials(SERVICE_ACCOUNT_KEY_PATH, TARGET_AUDIENCE)
     if TARGET_AUDIENCE
-    else {"token": None}
+    else None
 )
 
 count: int = 0
@@ -69,10 +69,13 @@ def post_json_message(filename):
                 print(f"file: {filename} failed. {e}")
                 return
 
+            headers = (
+                {"Authorization": f"Bearer {credential.token}"} if credential else None
+            )
             response = requests.post(
                 ENDPOINT_URL,
                 json=data,
-                headers={"Authorization": f"Bearer {credential['token']}"},
+                headers=headers,
                 allow_redirects=True,
             )
 
@@ -84,7 +87,7 @@ def post_json_message(filename):
                 response = requests.post(
                     ENDPOINT_URL,
                     json=data,
-                    headers={"Authorization": f"Bearer {credential.token}"},
+                    headers=headers,
                     allow_redirects=True,
                 )
 
