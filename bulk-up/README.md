@@ -56,6 +56,10 @@ The defaults behavior is to run 10 requests, using 1 worker, with `http://localh
 - default : 1
 - note: The PFP can be configured to run multiple worker using `uvicorn ... --workers 10`. Suggest setting the number of workers the same for both client and server
 
+#### OUTPUT: If specified writes the candidates to the file given
+- default: None
+- format: CSV
+
 ### Authentication (Google Cloud only)
 
 If TARGET_AUDIENCE is set then the bulk requester will send Google cloud credentials to the PFP service. Both TARGET_AUDIENCE and SERVICE_ACCOUNT_KEY_PATH must be set. Both values can be obtained from deployment team.

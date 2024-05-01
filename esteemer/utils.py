@@ -116,7 +116,6 @@ def candidates_records(performer_graph: Graph) -> List[List]:
         [
             "staff_number",
             "measure",
-            "month",
             "score",
             "motivating_score",
             "history_score",
@@ -144,7 +143,6 @@ def candidate_as_record(a_candidate: Resource) -> List:
         ).value
     )
     representation.append(a_candidate.value(SLOWMO.RegardingMeasure).identifier)
-    representation.append("N/A")
     score = a_candidate.value(SLOWMO.Score)
     representation.append(score)
     representation.append(a_candidate.value(URIRef("motivating_score")))

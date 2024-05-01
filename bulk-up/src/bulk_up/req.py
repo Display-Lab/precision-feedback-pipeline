@@ -28,6 +28,7 @@ TARGET_AUDIENCE = os.environ.get("TARGET_AUDIENCE", None)
 SAMPLE = int(os.getenv("SAMPLE", "0"))
 START = int(os.getenv("START", "0"))
 END = int(os.getenv("END", "10"))
+OUTPUT = os.environ.get("OUTPUT", None)
 
 candidate_df: pd.DataFrame = pd.DataFrame()
 response_df: pd.DataFrame = pd.DataFrame()
@@ -149,6 +150,9 @@ def analyse_responses():
 
 def analyse_candidates():
     global candidate_df
+
+    if OUTPUT:
+        candidate_df.to_csv(OUTPUT, index=False)
 
     # causal pathways
     candidate_df.rename(columns={"acceptable_by": "causal_pathway"}, inplace=True)

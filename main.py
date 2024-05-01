@@ -12,7 +12,6 @@ import requests
 from fastapi import FastAPI, HTTPException, Request
 from loguru import logger
 from rdflib import (  # , ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
-    RDF,
     BNode,
     Graph,
     Literal,
@@ -25,7 +24,7 @@ from candidate_pudding import candidate_pudding
 from esteemer import esteemer, utils
 from pictoralist.pictoralist import Pictoralist
 from utils.graph_operations import read_graph
-from utils.namespace import PSDO
+from utils.namespace import PSDO, SLOWMO
 from utils.settings import settings
 
 matplotlib.use("Agg")
@@ -228,7 +227,10 @@ async def createprecisionfeedback(info: Request):
     logger.debug("Calling Esteemer from main...")
 
     tic = time.perf_counter()
-    for measure in cool_new_super_graph[: RDF.type : PSDO.performance_measure_content]:
+
+    for measure in cool_new_super_graph.objects(
+        None, PSDO.motivating_information / SLOWMO.RegardingMeasure
+    ):
         candidates = utils.candidates(
             cool_new_super_graph, filter_acceptable=True, measure=measure
         )
