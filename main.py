@@ -3,6 +3,7 @@ import os
 import sys
 import time
 import webbrowser
+from datetime import timedelta
 from pathlib import Path
 
 import matplotlib
@@ -11,7 +12,6 @@ import requests
 from fastapi import FastAPI, HTTPException, Request
 from loguru import logger
 from rdflib import (  # , ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
-    RDF,
     BNode,
     Graph,
     Literal,
@@ -24,7 +24,7 @@ from candidate_pudding import candidate_pudding
 from esteemer import esteemer, utils
 from pictoralist.pictoralist import Pictoralist
 from utils.graph_operations import read_graph
-from utils.namespace import PSDO
+from utils.namespace import PSDO, SLOWMO
 from utils.settings import settings
 
 matplotlib.use("Agg")
@@ -200,9 +200,14 @@ async def createprecisionfeedback(info: Request):
     performance_content = g.resource(BNode("performance_content"))
     if len(list(performance_content[PSDO.motivating_information])) == 0:
         cool_new_super_graph.close()
+        detail = {
+            "message": "Insufficient significant data found for providing feedback, process aborted.",
+            "message_instance_id": req_info["message_instance_id"],
+            "staff_number": performance_data_df.attrs["staff_number"],
+        }
         raise HTTPException(
             status_code=400,
-            detail=f"Insufficient significant data found for providing feedback, process aborted. Message_instance_id: {req_info['message_instance_id']}",
+            detail=detail,
             headers={"400-Error": "Invalid Input Error"},
         )
 
@@ -229,7 +234,10 @@ async def createprecisionfeedback(info: Request):
     }
 
     tic = time.perf_counter()
-    for measure in cool_new_super_graph[: RDF.type : PSDO.performance_measure_content]:
+
+    for measure in cool_new_super_graph.objects(
+        None, PSDO.motivating_information / SLOWMO.RegardingMeasure
+    ):
         candidates = utils.candidates(
             cool_new_super_graph, filter_acceptable=True, measure=measure
         )
@@ -269,7 +277,7 @@ async def createprecisionfeedback(info: Request):
 
     toc = time.perf_counter()
     timing["pictoralist"] = f"{(toc-tic)*1000.:.2f} ms"
-    timing["total"] = f"{(toc-initial_tic)*1000.:.2f} ms"
+    timing["total"] = timedelta(seconds=(toc - initial_tic))
 
     response = {}
     # if settings.log_level == "INFO":
@@ -293,9 +301,7 @@ async def createprecisionfeedback(info: Request):
         response["candidates"] = utils.candidates_records(cool_new_super_graph)
 
     response.update(full_selected_message)
-    # cool_new_super_graph.close()
-    del cool_new_super_graph
-    del performance_data_df
+
     return response
 
 
