@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 import pandas as pd
-from rdflib import RDF
+from rdflib import RDF, URIRef
 from rdflib.resource import Resource
 
 from bitstomach.signals import Comparison, Signal, Trend
@@ -53,8 +53,10 @@ class Achievement(Signal):
             if not previous_comparison_signal:
                 continue
 
+            streak_length = Achievement._detect(perf_data,comparison_signal.value(SLOWMO.RegardingComparator))
+            
             mi = Achievement._resource(
-                trend_signals[0], comparison_signal, previous_comparison_signal
+                trend_signals[0], comparison_signal, previous_comparison_signal, streak_length
             )
 
             achievement_signals.append(mi)
@@ -66,6 +68,7 @@ class Achievement(Signal):
         trend_signal: Resource,
         comparison_signal: Resource,
         previous_comparison_signal: Resource,
+        streak_length: int
     ) -> Resource:
         # create and type the Achievmente
         mi = super()._resource()
@@ -127,3 +130,23 @@ class Achievement(Signal):
             mods.append(motivating_info_dict)
 
         return mods
+    
+    @staticmethod
+    def _detect(perf_data: pd.DataFrame, comparator: Resource) -> float:
+        """
+        calculates the number of consecutive negative gaps prior to this months positive gap.
+        """
+        comp_cols = {
+            PSDO["peer_average_comparator"]: "peer_average_comparator",
+            PSDO["peer_75th_percentile_benchmark"]: "peer_75th_percentile_benchmark",
+            PSDO["peer_90th_percentile_benchmark"]: "peer_90th_percentile_benchmark",
+            PSDO["goal_comparator_content"]: "goal_comparator_content",
+        }
+        
+        comparator_id = comparator.value(RDF.type).identifier
+
+        gaps = perf_data["passed_rate"]-perf_data[comp_cols[comparator_id]]
+        
+        last_pos_gap = gaps[gaps > 0][:-1].index.max()
+
+        return 0
