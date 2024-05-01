@@ -41,6 +41,10 @@ def prepare(req_info):
         "performance_month", performance_df["month"].max()
     )
 
+    performance_df = performance_df[
+        performance_df["month"] <= performance_df.attrs["performance_month"]
+    ]
+
     performance_df["valid"] = performance_df["denominator"] >= 10
 
     performance_df["passed_rate"] = (

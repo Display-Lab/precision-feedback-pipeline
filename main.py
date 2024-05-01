@@ -158,7 +158,8 @@ async def template():
 async def createprecisionfeedback(info: Request):
     req_info = await info.json()
 
-    history: dict = req_info.get("History", {})
+    if settings.performance_month:
+        req_info["performance_month"] = settings.performance_month
 
     input_preferences: dict = (
         req_info.get("Preferences", {}).get("Utilities", {}).get("Message_Format", {})
@@ -225,6 +226,12 @@ async def createprecisionfeedback(info: Request):
 
     # #Esteemer
     logger.debug("Calling Esteemer from main...")
+    history: dict = req_info.get("History", {})
+    history = {
+        key: value
+        for key, value in history.items()
+        if key < performance_data_df.attrs["performance_month"]
+    }
 
     tic = time.perf_counter()
 

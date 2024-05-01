@@ -17,8 +17,11 @@ class History(Signal):
         if not message_history:
             return None
 
-        history = pd.DataFrame.from_dict(message_history, orient="index")
-        history = history.sort_index()
+        history = (
+            pd.DataFrame.from_dict(message_history, orient="index")
+            .tail(12)
+            .sort_index()
+        )
 
         recurrence = History._detect(history)
 
