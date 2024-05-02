@@ -1,12 +1,12 @@
 from typing import List, Optional
 
 import pandas as pd
-from rdflib import RDF, URIRef
+from rdflib import RDF, Literal, URIRef
 from rdflib.resource import Resource
 
 from bitstomach.signals import Comparison, Signal, Trend
 from utils.namespace import PSDO, SLOWMO
-
+import numpy as np
 
 class Achievement(Signal):
     signal_type = PSDO.achievement_content
@@ -84,7 +84,8 @@ class Achievement(Signal):
         )
         mi[SLOWMO.PriorPerformanceGapSize] = previous_comparison_signal.value(
             SLOWMO.PerformanceGapSize
-        )
+        )        
+        mi[SLOWMO.StreakLength] = Literal(streak_length)
 
         # add comparator (Achievments are a Comparison)
         comparator = comparison_signal.value(SLOWMO.RegardingComparator)
@@ -126,6 +127,7 @@ class Achievement(Signal):
             motivating_info_dict["prior_gap_size"] = round(
                 abs(signal.value(SLOWMO.PriorPerformanceGapSize).value), 4
             )
+            motivating_info_dict["streak_length"] = signal.value(SLOWMO.StreakLength).value / 12
 
             mods.append(motivating_info_dict)
 
@@ -145,8 +147,10 @@ class Achievement(Signal):
         
         comparator_id = comparator.value(RDF.type).identifier
 
-        gaps = perf_data["passed_rate"]-perf_data[comp_cols[comparator_id]]
+        gaps = perf_data["passed_rate"]-perf_data[comp_cols[comparator_id]]/100
         
-        last_pos_gap = gaps[gaps > 0][:-1].index.max()
-
-        return 0
+        diff_reversed = gaps.values[:-1][::-1]
+        first_positive_index = np.argmax(diff_reversed >= 0)
+        count = np.sum(diff_reversed[:first_positive_index] < 0)
+        count = count if count > 0 else len(diff_reversed)
+        return count

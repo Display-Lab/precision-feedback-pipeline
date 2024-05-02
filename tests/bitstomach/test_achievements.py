@@ -174,6 +174,7 @@ def test_moderators():
     r.add(SLOWMO.PerformanceGapSize, Literal(gap))
     r.add(SLOWMO.PerformanceTrendSlope, Literal(slope))
     r.add(SLOWMO.PriorPerformanceGapSize, Literal(prior_gap))
+    r.add(SLOWMO.StreakLength, Literal(3))
     r.add(SLOWMO.RegardingMeasure, BNode("PONV05"))
 
     # Add the comparator

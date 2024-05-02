@@ -237,10 +237,10 @@ async def createprecisionfeedback(info: Request):
     }
 
     tic = time.perf_counter()
-
-    for measure in cool_new_super_graph.objects(
+    measures: set[BNode] = set(cool_new_super_graph.objects(
         None, PSDO.motivating_information / SLOWMO.RegardingMeasure
-    ):
+    ))
+    for measure in measures:
         candidates = utils.candidates(
             cool_new_super_graph, filter_acceptable=True, measure=measure
         )

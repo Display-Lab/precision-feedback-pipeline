@@ -18,21 +18,25 @@ MPM = {
     "goal gain": {
         Comparison.signal_type: 0.5,
         Trend.signal_type: 0.8,
+        "achievement_recency": 0.5,
         History.signal_type: -0.1,
     },
     "goal loss": {
         Comparison.signal_type: 0.5,
         Trend.signal_type: 0.8,
+        "loss_recency": 0.5,
         History.signal_type: -0.5,
     },
     "social gain": {
         Comparison.signal_type: 0.5,
         Trend.signal_type: 0.8,
+        "achievement_recency": 0.5,
         History.signal_type: -0.1,
     },
     "social loss": {
         Comparison.signal_type: 0.5,
         Trend.signal_type: 0.8,
+        "loss_recency": 0.5,
         History.signal_type: -0.5,
     },
 }
@@ -237,6 +241,7 @@ def score_gain(candidate: Resource, motivating_informations: List[Resource]) -> 
     score = (
         moderators["gap_size"] * mpm[Comparison.signal_type]
         + moderators["trend_size"] * mpm[Trend.signal_type]
+        + moderators["streak_length"] * mpm["achievement_recency"]
     )
 
     return score
@@ -251,6 +256,7 @@ def score_loss(candidate: Resource, motivating_informations: List[Resource]) -> 
     score = (
         moderators["gap_size"] * mpm[Comparison.signal_type]
         + moderators["trend_size"] * mpm[Trend.signal_type]
+        + moderators["streak_length"] * mpm["loss_recency"]
     )
 
     return score
