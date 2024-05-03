@@ -26,7 +26,7 @@ def perf_data() -> pd.DataFrame:
             "peer_90th_percentile_benchmark",
             "goal_comparator_content",
         ],
-        [True, 157, "BP01", "2022-08-01", 0.97, 90.0, 0, 100.0, 85.0, 88.0, 90.0, 99.0],
+        [True, 157, "BP01", "2022-08-01", 0.97, 90.0, 0, 100.0, 85.0, 88.0, 90.0, 95.0],
         [True, 157, "BP01", "2022-09-01", 0.96, 91.0, 0, 100.0, 85.0, 89.0, 91.0, 95.0],
         [True, 157, "BP01", "2022-10-01", 0.94, 92.0, 0, 100.0, 80.0, 85.0, 90.0, 95.0],
     ]
@@ -131,7 +131,7 @@ perf_level_test_set = [
 @pytest.mark.parametrize(
     "perf_level, comparator_values, types, condition", perf_level_test_set
 )
-def test_detect(perf_level, comparator_values, types, condition, perf_data):
+def test_detect_signal(perf_level, comparator_values, types, condition, perf_data):
     perf_data2 = perf_data.assign(passed_rate=perf_level)
 
     perf_data2.iloc[:, -4:] = comparator_values
@@ -144,6 +144,24 @@ def test_detect(perf_level, comparator_values, types, condition, perf_data):
 
     assert comparators == types, condition + " failed"
 
+
+def test_detect(perf_data):
+    g: Graph = Graph()
+    comparator = g.resource(BNode( ))
+    comparator[RDF.type] = PSDO.goal_comparator_content
+    streap_length = Loss._detect(perf_data,comparator) 
+    assert streap_length == 2
+    
+    new_row = pd.DataFrame({'passed_rate': [0.98],'goal_comparator_content': 95.0 })
+    perf_data = pd.concat([new_row, perf_data], ignore_index=True)
+    streap_length = Loss._detect(perf_data,comparator) 
+    assert streap_length == 3
+    
+    new_row = pd.DataFrame({'passed_rate': [0.94],'goal_comparator_content': 95.0 })
+    perf_data = pd.concat([new_row, perf_data], ignore_index=True)
+    streap_length = Loss._detect(perf_data,comparator) 
+    assert streap_length == 3
+    pass
 
 def test_only_current_month_no_loss(perf_data):
     assert [] == Loss.detect(perf_data[-2:])  # Prior month but no trend
