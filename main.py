@@ -196,8 +196,10 @@ async def createprecisionfeedback(info: Request):
     performance_data_df = bitstomach.prepare(req_info)
     # TODO: find a place for measures to live...mabe move these two line into prepare or make a measurees class
     measures = set(cool_new_super_graph[: RDF.type : PSDO.performance_measure_content])
-    
-    performance_data_df.attrs["valid_measures"] = [m for m in performance_data_df.attrs["valid_measures"] if BNode(m) in measures]
+
+    performance_data_df.attrs["valid_measures"] = [
+        m for m in performance_data_df.attrs["valid_measures"] if BNode(m) in measures
+    ]
     g: Graph = bitstomach.extract_signals(performance_data_df)
 
     performance_content = g.resource(BNode("performance_content"))
@@ -237,9 +239,11 @@ async def createprecisionfeedback(info: Request):
     }
 
     tic = time.perf_counter()
-    measures: set[BNode] = set(cool_new_super_graph.objects(
-        None, PSDO.motivating_information / SLOWMO.RegardingMeasure
-    ))
+    measures: set[BNode] = set(
+        cool_new_super_graph.objects(
+            None, PSDO.motivating_information / SLOWMO.RegardingMeasure
+        )
+    )
     for measure in measures:
         candidates = utils.candidates(
             cool_new_super_graph, filter_acceptable=True, measure=measure

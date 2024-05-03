@@ -147,23 +147,27 @@ def test_detect_signals(perf_level, comparator_values, types, condition, perf_da
     }
 
     assert comparators == types, condition + " failed"
-    
+
 
 def test_detect(perf_data):
     g: Graph = Graph()
-    comparator = g.resource(BNode( ))
+    comparator = g.resource(BNode())
     comparator[RDF.type] = PSDO.peer_90th_percentile_benchmark
-    streap_length = Achievement._detect(perf_data,comparator) 
+    streap_length = Achievement._detect(perf_data, comparator)
     assert streap_length == 2
-    
-    new_row = pd.DataFrame({'passed_rate': [0.81],'peer_90th_percentile_benchmark': 90.0 })
+
+    new_row = pd.DataFrame(
+        {"passed_rate": [0.81], "peer_90th_percentile_benchmark": 90.0}
+    )
     perf_data = pd.concat([new_row, perf_data], ignore_index=True)
-    streap_length = Achievement._detect(perf_data,comparator) 
+    streap_length = Achievement._detect(perf_data, comparator)
     assert streap_length == 3
-    
-    new_row = pd.DataFrame({'passed_rate': [0.91],'peer_90th_percentile_benchmark': 90.0 })
+
+    new_row = pd.DataFrame(
+        {"passed_rate": [0.91], "peer_90th_percentile_benchmark": 90.0}
+    )
     perf_data = pd.concat([new_row, perf_data], ignore_index=True)
-    streap_length = Achievement._detect(perf_data,comparator) 
+    streap_length = Achievement._detect(perf_data, comparator)
     assert streap_length == 3
     pass
 

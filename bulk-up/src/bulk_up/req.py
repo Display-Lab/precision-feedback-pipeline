@@ -69,7 +69,9 @@ def post_json_message(filename):
                 print(f"file: {filename} failed. {e}")
                 return
 
-            headers = {"Authorization": f"Bearer {credential.token}"} if credential else None
+            headers = (
+                {"Authorization": f"Bearer {credential.token}"} if credential else None
+            )
             response = requests.post(
                 ENDPOINT_URL,
                 json=data,

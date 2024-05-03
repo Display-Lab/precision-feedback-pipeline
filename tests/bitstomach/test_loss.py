@@ -147,21 +147,22 @@ def test_detect_signal(perf_level, comparator_values, types, condition, perf_dat
 
 def test_detect(perf_data):
     g: Graph = Graph()
-    comparator = g.resource(BNode( ))
+    comparator = g.resource(BNode())
     comparator[RDF.type] = PSDO.goal_comparator_content
-    streap_length = Loss._detect(perf_data,comparator) 
+    streap_length = Loss._detect(perf_data, comparator)
     assert streap_length == 2
-    
-    new_row = pd.DataFrame({'passed_rate': [0.98],'goal_comparator_content': 95.0 })
+
+    new_row = pd.DataFrame({"passed_rate": [0.98], "goal_comparator_content": 95.0})
     perf_data = pd.concat([new_row, perf_data], ignore_index=True)
-    streap_length = Loss._detect(perf_data,comparator) 
+    streap_length = Loss._detect(perf_data, comparator)
     assert streap_length == 3
-    
-    new_row = pd.DataFrame({'passed_rate': [0.94],'goal_comparator_content': 95.0 })
+
+    new_row = pd.DataFrame({"passed_rate": [0.94], "goal_comparator_content": 95.0})
     perf_data = pd.concat([new_row, perf_data], ignore_index=True)
-    streap_length = Loss._detect(perf_data,comparator) 
+    streap_length = Loss._detect(perf_data, comparator)
     assert streap_length == 3
     pass
+
 
 def test_only_current_month_no_loss(perf_data):
     assert [] == Loss.detect(perf_data[-2:])  # Prior month but no trend

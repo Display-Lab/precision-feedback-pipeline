@@ -1,15 +1,13 @@
 import json
 import os
-import random
 import re
 import threading
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 
 import pandas as pd
 import requests
-from google.auth.transport.requests import Request
-from google.oauth2.service_account import IDTokenCredentials
-from datetime import datetime
+
 # Define your OIDC Google Cloud service endpoint
 ENDPOINT_URL = os.environ.setdefault(
     # "ENDPOINT_URL", "https://pfp.test.app.med.umich.edu/createprecisionfeedback"
@@ -31,7 +29,8 @@ DURATION = int(os.getenv("DURATION", "1"))
 candidate_df: pd.DataFrame = pd.DataFrame()
 response_df: pd.DataFrame = pd.DataFrame()
 lock = threading.Lock()
-months_range: list[datetime] = []    
+months_range: list[datetime] = []
+
 
 def extract_number(filename):
     # Extract numeric part from filename
@@ -41,10 +40,11 @@ def extract_number(filename):
     else:
         return float("inf")  # Return infinity if no numeric part found
 
+
 def generate_history(filename):
     global months_range
     print(f"started processing {filename}")
-        
+
     with open(os.path.join(INPUT_DIR, filename), "r") as file:
         data = None
         try:
@@ -52,31 +52,37 @@ def generate_history(filename):
         except Exception as e:
             print(f"file: {filename} failed. {e}")
             return
-        
+
     data["History"] = {}
-                
+
     for month in months_range:
         month_str = month.strftime("%Y-%m-%d")
         try:
-            data["performance_month"]=month_str
+            data["performance_month"] = month_str
             response = requests.post(
                 ENDPOINT_URL,
                 json=data,
                 allow_redirects=True,
             )
-            
+
             if response.ok:
                 response_data = response.json()
-                data["History"][month_str]= {
-                "message_template": response_data["selected_candidate"]["message_template_id"],
-                "message_generated_datetime": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
-                "measure": response_data["selected_candidate"]["measure"],
-                "acceptable_by": response_data["selected_candidate"]["acceptable_by"]
-                }   
+                data["History"][month_str] = {
+                    "message_template": response_data["selected_candidate"][
+                        "message_template_id"
+                    ],
+                    "message_generated_datetime": datetime.now().strftime(
+                        "%Y-%m-%dT%H:%M:%S"
+                    ),
+                    "measure": response_data["selected_candidate"]["measure"],
+                    "acceptable_by": response_data["selected_candidate"][
+                        "acceptable_by"
+                    ],
+                }
             else:
-                if response.status_code!=400:    
-                    print(f"Error processing {filename}: code {response.status_code}")                            
-            
+                if response.status_code != 400:
+                    print(f"Error processing {filename}: code {response.status_code}")
+
         except Exception as e:
             print(f"Error processing {filename}: {e}")
 
@@ -84,13 +90,14 @@ def generate_history(filename):
     new_filename = f"{name}_h.{extension}"
     with open(os.path.join(OUTPUT_DIR, new_filename), "w") as file:
         json.dump(data, file, indent=2)
-        
+
+
 def main():
     global months_range
-    current_date=datetime.strptime(LATEST_HISTORY_MONTH, "%Y-%m-%d")
-        
+    current_date = datetime.strptime(LATEST_HISTORY_MONTH, "%Y-%m-%d")
+
     for i in range(DURATION):
-        m = (current_date - relativedelta(months=i))
+        m = current_date - relativedelta(months=i)
         months_range.append(m)
 
     months_range = months_range[::-1]
@@ -101,10 +108,11 @@ def main():
         [f for f in os.listdir(INPUT_DIR) if f.endswith(".json")], key=extract_number
     )
 
-    input_files = input_files[START:END]      
-    
+    input_files = input_files[START:END]
+
     with ThreadPoolExecutor(WORKERS) as executor:
         executor.map(generate_history, input_files)
+
 
 if __name__ == "__main__":
     main()
