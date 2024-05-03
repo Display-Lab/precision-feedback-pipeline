@@ -10,6 +10,7 @@ class SLOWMO(AliasingDefinedNamespace):
     RegardingComparator: URIRef
     PerformanceGapSize: URIRef
     PriorPerformanceGapSize: URIRef
+    StreakLength: URIRef
     PerformanceTrendSlope: URIRef
     numberofmonths: URIRef
     Score: URIRef

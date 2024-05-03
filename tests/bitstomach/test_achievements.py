@@ -26,13 +26,13 @@ def perf_data() -> pd.DataFrame:
             "peer_90th_percentile_benchmark",
             "goal_comparator_content",
         ],
-        [True, 157, "BP01", "2022-08-01", 0.95, 90.0, 0, 100.0, 85.0, 88.0, 90.0, 99.0],
+        [True, 157, "BP01", "2022-08-01", 0.85, 90.0, 0, 100.0, 85.0, 88.0, 90.0, 99.0],
         [
             True,
             157,
             "BP01",
             "2022-09-01",
-            0.96,
+            0.86,
             91.0,
             0,
             100.0,
@@ -84,13 +84,13 @@ def test_signal_properties(perf_data):
     assert isinstance(signals[0], Resource)
 
     slope = signals[0].value(SLOWMO.PerformanceTrendSlope).value
-    assert slope == pytest.approx(0.01)
+    assert slope == pytest.approx(0.06)
 
     gap = signals[0].value(SLOWMO.PerformanceGapSize).value
-    assert gap == pytest.approx(0.02)
+    assert gap == pytest.approx(0.12)
 
     gap = signals[0].value(SLOWMO.PriorPerformanceGapSize).value
-    assert gap == pytest.approx(-0.04)
+    assert gap == pytest.approx(-0.03)
 
 
 perf_level_test_set = [
@@ -135,7 +135,7 @@ perf_level_test_set = [
 @pytest.mark.parametrize(
     "perf_level, comparator_values, types, condition", perf_level_test_set
 )
-def test_detect(perf_level, comparator_values, types, condition, perf_data):
+def test_detect_signals(perf_level, comparator_values, types, condition, perf_data):
     perf_data2 = perf_data.assign(passed_rate=perf_level)
 
     perf_data2.iloc[:, -4:] = comparator_values
@@ -147,6 +147,29 @@ def test_detect(perf_level, comparator_values, types, condition, perf_data):
     }
 
     assert comparators == types, condition + " failed"
+
+
+def test_detect(perf_data):
+    g: Graph = Graph()
+    comparator = g.resource(BNode())
+    comparator[RDF.type] = PSDO.peer_90th_percentile_benchmark
+    streap_length = Achievement._detect(perf_data, comparator)
+    assert streap_length == 2
+
+    new_row = pd.DataFrame(
+        {"passed_rate": [0.81], "peer_90th_percentile_benchmark": 90.0}
+    )
+    perf_data = pd.concat([new_row, perf_data], ignore_index=True)
+    streap_length = Achievement._detect(perf_data, comparator)
+    assert streap_length == 3
+
+    new_row = pd.DataFrame(
+        {"passed_rate": [0.91], "peer_90th_percentile_benchmark": 90.0}
+    )
+    perf_data = pd.concat([new_row, perf_data], ignore_index=True)
+    streap_length = Achievement._detect(perf_data, comparator)
+    assert streap_length == 3
+    pass
 
 
 def test_only_current_month_no_achievement(perf_data):
@@ -174,6 +197,7 @@ def test_moderators():
     r.add(SLOWMO.PerformanceGapSize, Literal(gap))
     r.add(SLOWMO.PerformanceTrendSlope, Literal(slope))
     r.add(SLOWMO.PriorPerformanceGapSize, Literal(prior_gap))
+    r.add(SLOWMO.StreakLength, Literal(3))
     r.add(SLOWMO.RegardingMeasure, BNode("PONV05"))
 
     # Add the comparator

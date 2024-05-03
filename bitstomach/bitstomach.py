@@ -19,7 +19,7 @@ def extract_signals(perf_df: pd.DataFrame) -> Graph:
         return g
 
     for measure in perf_df.attrs["valid_measures"]:
-        measure_df = perf_df[perf_df["measure"] == measure]
+        measure_df = perf_df[perf_df["measure"] == measure].tail(12)
         for signal_type in SIGNALS:
             signals = signal_type.detect(measure_df)
             if not signals:
@@ -35,6 +35,9 @@ def extract_signals(perf_df: pd.DataFrame) -> Graph:
 def prepare(req_info):
     performance_data = req_info["Performance_data"]
     performance_df = pd.DataFrame(performance_data[1:], columns=performance_data[0])
+
+    performance_df.attrs["staff_number"] = int(performance_df.at[0, "staff_number"])
+
     performance_df["goal_comparator_content"] = performance_df["MPOG_goal"]
 
     performance_df.attrs["performance_month"] = req_info.get(
@@ -59,7 +62,5 @@ def prepare(req_info):
             & performance_df["valid"]
         )
     ]["measure"]
-
-    performance_df.attrs["staff_number"] = int(performance_df.at[0, "staff_number"])
 
     return performance_df

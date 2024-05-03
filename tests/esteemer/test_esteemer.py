@@ -232,7 +232,7 @@ def test_goal_gain_score():
 
     motivating_informations = Achievement.detect(data_frame)
     score = esteemer.score_gain(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.029)
+    assert score == pytest.approx(0.11233333)
 
 
 def test_goal_loss_score():
@@ -261,4 +261,4 @@ def test_goal_loss_score():
 
     motivating_informations = Loss.detect(data_frame)
     score = esteemer.score_loss(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.042)
+    assert score == pytest.approx(0.1253333333)
