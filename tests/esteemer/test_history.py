@@ -15,22 +15,27 @@ def history():
         "2023-06-01": {
             "message_template": "https://repo.metadatacenter.org/template-instances/1f257d98-f6b0-44f6-92c8-1a194954f33f",
             "acceptable_by": "Social better",
+            "measure": "PONV05",
         },
         "2023-07-01": {
             "message_template": "different template B",
             "acceptable_by": "Social worse",
+            "measure": "PONV05",
         },
         "2023-08-01": {
             "message_template": "https://repo.metadatacenter.org/template-instances/1f257d98-f6b0-44f6-92c8-1a194954f33f",
             "acceptable_by": "Social better",
+            "measure": "PONV05",
         },
         "2023-09-01": {
             "message_template": "different template A",
             "acceptable_by": "Social better",
+            "measure": "PONV05",
         },
         "current_month": {
             "message_template": "https://repo.metadatacenter.org/template-instances/1f257d98-f6b0-44f6-92c8-1a194954f33f",
             "acceptable_by": "Social better",
+            "measure": "PONV05",
         },
     }
 
@@ -65,7 +70,7 @@ def test_single_resource_returns_single_moderator():
     assert isinstance(mods[0], dict)
     assert len(mods) == 1
 
-    assert mods[0]["recurrence_count"] == round(4 / 11, 4)
+    assert mods[0]["recurrence_count"] == round(4 / 12, 4)
 
 
 # Supplementary methods
@@ -75,6 +80,7 @@ def test_to_element():
     candidate_resource = Graph().resource(BNode())
     candidate_resource[SLOWMO.AncestorTemplate] = URIRef(TEMPLATE_A)
     candidate_resource[SLOWMO.AcceptableBy] = Literal("Social Worse")
+    candidate_resource[SLOWMO.RegardingMeasure] = BNode("PONV05")
 
     current_hist: dict = History.to_element(candidate_resource)
 

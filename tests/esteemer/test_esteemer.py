@@ -127,7 +127,7 @@ def test_no_history_signal_is_score_0(candidate_resource):
 def test_history_with_two_recurrances(candidate_resource, history):
     score = esteemer.score_history(candidate_resource, history)
 
-    assert score == round(2 / 11, 4) * -0.1
+    assert score == round(2 / 12, 4) * -0.1
 
 
 def test_social_better_score(performance_data_frame):
