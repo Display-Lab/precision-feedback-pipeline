@@ -13,6 +13,10 @@ CPO_HAS_PRECONDITIONS = URIRef(
     "http://purl.bioontology.org/ontology/SNOMEDCT/has_precondition"
 )
 
+DEFAULT_DISPLAY = URIRef(
+    "https://schema.metadatacenter.org/properties/5b4f16a9-feb7-4724-8741-2739d8808760"
+)
+
 
 def create_candidate(measure: Resource, template: Resource) -> Optional[Resource]:
     g: Graph = measure.graph
@@ -126,6 +130,9 @@ def add_convenience_properties(candidate: Resource):
     )
 
     candidate[SLOWMO.RegardingComparator] = comparator or Literal(None)
+    candidate[SLOWMO.Display] = candidate.value(
+        SLOWMO.AncestorTemplate / DEFAULT_DISPLAY
+    )
     return candidate
 
 
