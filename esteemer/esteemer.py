@@ -11,33 +11,37 @@ from utils.namespace import PSDO, SLOWMO
 from utils.settings import settings
 
 MPM = {
-    "social worse": {Comparison.signal_type: 0.5, History.signal_type: -0.5},
-    "social better": {Comparison.signal_type: 0.5, History.signal_type: -0.1},
-    "improving": {Trend.signal_type: 0.8, History.signal_type: -0.1},
-    "worsening": {Trend.signal_type: 0.8, History.signal_type: -0.5},
+    "social worse": {Comparison.signal_type: 0.5, History.signal_type: -0.5, "coachiness": 1.0},
+    "social better": {Comparison.signal_type: 0.5, History.signal_type: -0.1, "coachiness":0.0},
+    "improving": {Trend.signal_type: 0.8, History.signal_type: -0.1, "coachiness": 0.5},
+    "worsening": {Trend.signal_type: 0.8, History.signal_type: -0.5, "coachiness": 1.0},
     "goal gain": {
         Comparison.signal_type: 0.5,
         Trend.signal_type: 0.8,
         "achievement_recency": 0.5,
         History.signal_type: -0.1,
+        "coachiness": 0.5
     },
     "goal loss": {
         Comparison.signal_type: 0.5,
         Trend.signal_type: 0.8,
         "loss_recency": 0.5,
         History.signal_type: -0.5,
+        "coachiness": 1.0
     },
     "social gain": {
         Comparison.signal_type: 0.5,
         Trend.signal_type: 0.8,
         "achievement_recency": 0.5,
         History.signal_type: -0.1,
+        "coachiness": 0.5
     },
     "social loss": {
         Comparison.signal_type: 0.5,
         Trend.signal_type: 0.8,
         "loss_recency": 0.5,
         History.signal_type: -0.5,
+        "coachiness": 1.0
     },
 }
 
@@ -89,18 +93,26 @@ def score(candidate: Resource, history: dict, preferences: dict) -> Resource:
     candidate[URIRef("preference_score")] = Literal(
         preference_score, datatype=XSD.double
     )
+    
+    # coachiness
+    coachiness_score = MPM[causal_pathway.value]["coachiness"] / 10
+    candidate[URIRef("coachiness_score")] = Literal(
+        coachiness_score, datatype=XSD.double
+    )
 
-    final_calculated_score = final_score((mi_score + history_score), preference_score)
+    final_calculated_score = final_score(mi_score,  history_score, preference_score, coachiness_score)
 
     candidate[SLOWMO.Score] = Literal(final_calculated_score, datatype=XSD.double)
 
     return candidate
 
 
-def final_score(s, p):
+def final_score(m, h, p, c):
     """
     the function, final_score,  takes two inputs, s and p. the range for s is 0 to 1. the range for p is -2 to +2.  The function f(s,p) increases with either s or p increasing. The function should have the following constraints: f(1,-2) == f(.5, 0) == f(0,2) and f(0.5, -2) == f(0.25, -1) == f(0, 0).
     """
+    
+    s = m + h
     # Define the scaling factors for s and p
     scale_s = 4  # default to stated range of p
     scale_p = 1  # default to stated range of 2
@@ -110,7 +122,12 @@ def final_score(s, p):
     base_value = scale_s * 0.5 + scale_p * 0  # default to mid-points of stated ranges
 
     # Adjust the function to increase with either s or p increasing
-    return (scale_s * s + scale_p * p + base_value) / (scale_s + scale_p + base_value)
+    score = (scale_s * s + scale_p * p + base_value) / (scale_s + scale_p + base_value)
+    
+    #apply coachiness factor
+    score = score + c 
+    
+    return score
 
 
 def score_social_better(
