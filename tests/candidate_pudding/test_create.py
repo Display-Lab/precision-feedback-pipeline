@@ -33,6 +33,11 @@ def graph():
         URIRef("http://schema.org/name"),
         Literal("Opportunity to Improve Top 10 Peer Benchmark", datatype=XSD.string),
     )
+    template[
+        URIRef(
+            "https://schema.metadatacenter.org/properties/5b4f16a9-feb7-4724-8741-2739d8808760"
+        )
+    ] = Literal("Line chart")
 
     comparator = graph.resource(PSDO.peer_90th_percentile_benchmark)
     comparator[RDF.type] = PSDO.comparator_content

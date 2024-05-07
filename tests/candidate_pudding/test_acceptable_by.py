@@ -34,6 +34,11 @@ def graph():
         URIRef("http://schema.org/name"),
         Literal("Performance Improving", datatype=XSD.string),
     )
+    template[
+        URIRef(
+            "https://schema.metadatacenter.org/properties/5b4f16a9-feb7-4724-8741-2739d8808760"
+        )
+    ] = Literal("Line chart")
 
     performance_content = graph.resource(BNode("performance_content"))
     performance_content.set(RDF.type, PSDO.performance_content)
