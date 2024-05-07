@@ -164,15 +164,16 @@ async def createprecisionfeedback(info: Request):
         req_info.get("Preferences", {}).get("Utilities", {}).get("Message_Format", {})
     )
 
-    Display_Format_preferences = None
+    # TODO: consolidate all display handling in render
+    Display_Format_preference = None
     for key, value in (
         req_info.get("Preferences", {})
         .get("Utilities", {})
         .get("Display_Format", {})
         .items()
     ):
-        if value == 1:
-            Display_Format_preferences = key
+        if value == 1 and key != "System-generated":
+            Display_Format_preference = key.lower()
 
     preferences = {
         "Social gain": "1.007650319",
@@ -262,9 +263,9 @@ async def createprecisionfeedback(info: Request):
         for candidate in candidates:
             esteemer.score(candidate, history, preferences)
     selected_candidate = esteemer.select_candidate(cool_new_super_graph)
-    if Display_Format_preferences:
+    if Display_Format_preference:
         cool_new_super_graph.resource(selected_candidate)[SLOWMO.Display] = Literal(
-            Display_Format_preferences
+            Display_Format_preference
         )
     toc = time.perf_counter()
     timing["esteemer"] = f"{(toc-tic)*1000.:.2f} ms"
