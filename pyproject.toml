@@ -21,6 +21,18 @@ python-decouple = "^3.8"
 loguru = "^0.7.2"
 psutil = "^5.9.8"
 
+# These are the versions that will work with python 3.12
+# python = ">=3.11,<3.13"
+# pandas = "^2.2.2"
+# rdflib = "^7.0.0"
+# fastapi = "^0.111.0"
+# matplotlib = "^3.8.4"
+# psutil = "^5.9.8"
+# loguru = "^0.7.2"
+# requests-file = "^2.0.0"
+# python-decouple = "^3.8"
+# gunicorn = "^22.0.0"
+
 [tool.poetry.group.dev.dependencies]
 uvicorn = "^0.20.0"
 pytest = "^8.0.0"
