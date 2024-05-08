@@ -137,7 +137,7 @@ def test_social_better_score(performance_data_frame):
     candidate_resource[SLOWMO.AcceptableBy] = Literal("social better")
 
     motivating_informations = Comparison.detect(performance_data_frame)
-    score = esteemer.score_social_better(candidate_resource, motivating_informations)
+    score = esteemer.score_better(candidate_resource, motivating_informations)
     assert score == pytest.approx(0.025)
 
 
@@ -166,7 +166,7 @@ def test_social_worse_score():
     candidate_resource[SLOWMO.AcceptableBy] = Literal("social worse")
 
     motivating_informations = Comparison.detect(data_frame)
-    score = esteemer.score_social_worse(candidate_resource, motivating_informations)
+    score = esteemer.score_worse(candidate_resource, motivating_informations)
     assert score == pytest.approx(0.01)
 
 

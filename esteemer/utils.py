@@ -63,7 +63,6 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
         return s_m
     else:
         temp_name = SLOWMO.name  # URI of template name?
-        Display = ["text only", "bar chart", "line graph"]
         o2wea = []
         candidate_resource = performer_graph.resource(candidate)
 
@@ -153,7 +152,6 @@ def candidate_as_record(a_candidate: Resource) -> List:
 
     representation.append(a_candidate.value(URIRef("preference_score")))
     representation.append(a_candidate.value(URIRef("coachiness_score")))
-
 
     representation.append(a_candidate.value(SLOWMO.name))
     representation.append(a_candidate.value(SLOWMO.AcceptableBy))

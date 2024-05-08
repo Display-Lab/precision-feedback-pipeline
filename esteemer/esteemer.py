@@ -4,15 +4,23 @@ from typing import List
 from rdflib import XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
-from bitstomach.signals import Achievement, Comparison, Loss, Signal, Trend
+from bitstomach.signals import Achievement, Approach, Comparison, Loss, Signal, Trend
 from esteemer import utils
 from esteemer.signals import History
 from utils.namespace import PSDO, SLOWMO
 from utils.settings import settings
 
 MPM = {
-    "social worse": {Comparison.signal_type: 0.5, History.signal_type: -0.5, "coachiness": 1.0},
-    "social better": {Comparison.signal_type: 0.5, History.signal_type: -0.1, "coachiness":0.0},
+    "social worse": {
+        Comparison.signal_type: 0.5,
+        History.signal_type: -0.5,
+        "coachiness": 1.0,
+    },
+    "social better": {
+        Comparison.signal_type: 0.5,
+        History.signal_type: -0.1,
+        "coachiness": 0.0,
+    },
     "improving": {Trend.signal_type: 0.8, History.signal_type: -0.1, "coachiness": 0.5},
     "worsening": {Trend.signal_type: 0.8, History.signal_type: -0.5, "coachiness": 1.0},
     "goal gain": {
@@ -20,28 +28,47 @@ MPM = {
         Trend.signal_type: 0.8,
         "achievement_recency": 0.5,
         History.signal_type: -0.1,
-        "coachiness": 0.5
+        "coachiness": 0.5,
     },
     "goal loss": {
         Comparison.signal_type: 0.5,
         Trend.signal_type: 0.8,
         "loss_recency": 0.5,
         History.signal_type: -0.5,
-        "coachiness": 1.0
+        "coachiness": 1.0,
     },
     "social gain": {
         Comparison.signal_type: 0.5,
         Trend.signal_type: 0.8,
         "achievement_recency": 0.5,
         History.signal_type: -0.1,
-        "coachiness": 0.5
+        "coachiness": 0.5,
     },
     "social loss": {
         Comparison.signal_type: 0.5,
         Trend.signal_type: 0.8,
         "loss_recency": 0.5,
         History.signal_type: -0.5,
-        "coachiness": 1.0
+        "coachiness": 1.0,
+    },
+    "goal worse": {
+        Comparison.signal_type: 0.5,
+        History.signal_type: -0.5,
+        "coachiness": 1.0,
+    },
+    "social approach": {
+        Comparison.signal_type: 0.5,
+        Trend.signal_type: 0.8,
+        "achievement_recency": 0.5,
+        History.signal_type: -0.1,
+        "coachiness": 1.0,
+    },
+    "goal approach": {
+        Comparison.signal_type: 0.5,
+        Trend.signal_type: 0.8,
+        "achievement_recency": 0.5,
+        History.signal_type: -0.1,
+        "coachiness": 1.0,
     },
 }
 
@@ -60,14 +87,17 @@ def score(candidate: Resource, history: dict, preferences: dict) -> Resource:
     """
 
     CAUSAL_PATHWAY = {
-        "social better": {"score": score_social_better, "rules": rule_social_highest},
-        "social worse": {"score": score_social_worse, "rules": null_rule},
+        "social better": {"score": score_better, "rules": rule_social_highest},
+        "social worse": {"score": score_worse, "rules": null_rule},
         "improving": {"score": score_improving, "rules": null_rule},
         "worsening": {"score": score_worsening, "rules": null_rule},
         "goal gain": {"score": score_gain, "rules": null_rule},
         "goal loss": {"score": score_loss, "rules": null_rule},
         "social gain": {"score": score_gain, "rules": rule_social_highest},
         "social loss": {"score": score_loss, "rules": rule_social_lowest},
+        "goal worse": {"score": score_worse, "rules": null_rule},
+        "goal approach": {"score": score_approach, "rules": null_rule},
+        "social approach": {"score": score_approach, "rules": rule_social_highest},
     }
 
     causal_pathway = candidate.value(SLOWMO.AcceptableBy)
@@ -93,14 +123,16 @@ def score(candidate: Resource, history: dict, preferences: dict) -> Resource:
     candidate[URIRef("preference_score")] = Literal(
         preference_score, datatype=XSD.double
     )
-    
+
     # coachiness
     coachiness_score = MPM[causal_pathway.value]["coachiness"] / 10
     candidate[URIRef("coachiness_score")] = Literal(
         coachiness_score, datatype=XSD.double
     )
 
-    final_calculated_score = final_score(mi_score,  history_score, preference_score, coachiness_score)
+    final_calculated_score = final_score(
+        mi_score, history_score, preference_score, coachiness_score
+    )
 
     candidate[SLOWMO.Score] = Literal(final_calculated_score, datatype=XSD.double)
 
@@ -111,7 +143,7 @@ def final_score(m, h, p, c):
     """
     the function, final_score,  takes two inputs, s and p. the range for s is 0 to 1. the range for p is -2 to +2.  The function f(s,p) increases with either s or p increasing. The function should have the following constraints: f(1,-2) == f(.5, 0) == f(0,2) and f(0.5, -2) == f(0.25, -1) == f(0, 0).
     """
-    
+
     s = m + h
     # Define the scaling factors for s and p
     scale_s = 4  # default to stated range of p
@@ -123,17 +155,15 @@ def final_score(m, h, p, c):
 
     # Adjust the function to increase with either s or p increasing
     score = (scale_s * s + scale_p * p + base_value) / (scale_s + scale_p + base_value)
-    
-    #apply coachiness factor
-    score = score + c 
-    
+
+    # apply coachiness factor
+    score = score + c
+
     return score
 
 
-def score_social_better(
-    candidate: Resource, motivating_informations: List[Resource]
-) -> float:
-    moderators = social_moderators(candidate, motivating_informations)
+def score_better(candidate: Resource, motivating_informations: List[Resource]) -> float:
+    moderators = comparator_moderators(candidate, motivating_informations, Comparison)
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
     score = (moderators["gap_size"]) * mpm[Comparison.signal_type]
@@ -215,10 +245,8 @@ def rule_social_lowest(candidate: Resource):
     return True
 
 
-def score_social_worse(
-    candidate: Resource, motivating_informations: List[Resource]
-) -> float:
-    moderators = social_moderators(candidate, motivating_informations)
+def score_worse(candidate: Resource, motivating_informations: List[Resource]) -> float:
+    moderators = comparator_moderators(candidate, motivating_informations, Comparison)
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
     score = (moderators["gap_size"]) * mpm[Comparison.signal_type]
@@ -249,10 +277,23 @@ def score_worsening(
     return score
 
 
-def score_gain(candidate: Resource, motivating_informations: List[Resource]) -> float:
-    moderators = achievement_and_loss_moderators(
-        candidate, motivating_informations, Achievement
+def score_approach(
+    candidate: Resource, motivating_informations: List[Resource]
+) -> float:
+    moderators = comparator_moderators(candidate, motivating_informations, Approach)
+    mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
+
+    score = (
+        moderators["gap_size"] * mpm[Comparison.signal_type]
+        + moderators["trend_size"] * mpm[Trend.signal_type]
+        + moderators["streak_length"] * mpm["achievement_recency"]
     )
+
+    return score
+
+
+def score_gain(candidate: Resource, motivating_informations: List[Resource]) -> float:
+    moderators = comparator_moderators(candidate, motivating_informations, Achievement)
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
     score = (
@@ -265,9 +306,7 @@ def score_gain(candidate: Resource, motivating_informations: List[Resource]) -> 
 
 
 def score_loss(candidate: Resource, motivating_informations: List[Resource]) -> float:
-    moderators = achievement_and_loss_moderators(
-        candidate, motivating_informations, Loss
-    )
+    moderators = comparator_moderators(candidate, motivating_informations, Loss)
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
     score = (
@@ -279,24 +318,10 @@ def score_loss(candidate: Resource, motivating_informations: List[Resource]) -> 
     return score
 
 
-def achievement_and_loss_moderators(candidate, motivating_informations, signal: Signal):
+def comparator_moderators(candidate, motivating_informations, signal: Signal):
     comparator_type = candidate.value(SLOWMO.RegardingComparator).identifier
 
     moderators = signal.moderators(motivating_informations)
-
-    scoring_detail = [
-        moderator
-        for moderator in moderators
-        if moderator["comparator_type"] == comparator_type
-    ][0]
-
-    return scoring_detail
-
-
-def social_moderators(candidate, motivating_informations):
-    comparator_type = candidate.value(SLOWMO.RegardingComparator).identifier
-
-    moderators = Comparison.moderators(motivating_informations)
 
     scoring_detail = [
         moderator
@@ -364,6 +389,9 @@ def score_preferences(candidate_resource: Resource, preferences: dict) -> float:
         "goal loss": "Social loss",  # goal loss uses Social loss preferences value
         "social gain": "Social gain",
         "social loss": "Social loss",
+        "goal worse": "Social worse",  # goal worse uses Social worse preferences value
+        "social approach": "Social approach",
+        "goal approach": "Goal approach",
     }
 
     key = map_cp_to_preferences.get(candidate_resource.value(SLOWMO.AcceptableBy).value)

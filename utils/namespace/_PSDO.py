@@ -71,6 +71,9 @@ class PSDO(AliasingDefinedNamespace):
     # TODO: change to `motivating_information_content
     motivating_information: URIRef
 
+    PSDO_0000201: URIRef
+    approach_content: URIRef
+
     _alias = {
         "performance_summary_display_template": "PSDO_0000002",
         "social_comparator_element": "PSDO_0000045",
@@ -93,4 +96,5 @@ class PSDO(AliasingDefinedNamespace):
         "peer_75th_percentile_benchmark": "PSDO_0000128",
         "peer_90th_percentile_benchmark": "PSDO_0000129",
         "motivating_information": "PSDO_0000200",
+        "approach_content": "PSDO_0000201",
     }
