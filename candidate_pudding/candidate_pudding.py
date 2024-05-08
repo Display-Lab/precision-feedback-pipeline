@@ -95,6 +95,7 @@ def add_causal_pathway(candidate: Resource):
         "Achieved Top 10 Peer Benchmark": "social gain",
         "No Longer Top Performer": "social loss",
         "Drop Below Peer Average": "social loss",
+        "Opportunity to Improve Goal": "goal worse",
     }
     ancestor_template = candidate.value(SLOWMO.AncestorTemplate)
     template_name = ancestor_template.value(URIRef("http://schema.org/name")).value
