@@ -74,7 +74,14 @@ from bitstomach.signals._comparison import Comparison  # noqa: E402, I001
 from bitstomach.signals._trend import Trend  # noqa: E402, I001
 from bitstomach.signals._achievement import Achievement  # noqa: E402, I001
 from bitstomach.signals._loss import Loss  # noqa: E402, I001
+from bitstomach.signals._approach import Approach  # noqa: E402, I001
 
-__all__ = ["Comparison", "Trend", "Achievement", "Loss"]
+__all__ = ["Comparison", "Trend", "Achievement", "Loss", "Approach"]
 
-SIGNALS = {Comparison: Signal, Trend: Signal, Achievement: Signal, Loss: Signal}
+SIGNALS = {
+    Comparison: Signal,
+    Trend: Signal,
+    Achievement: Signal,
+    Loss: Signal,
+    Approach: Signal,
+}

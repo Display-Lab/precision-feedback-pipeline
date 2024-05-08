@@ -63,7 +63,6 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
         return s_m
     else:
         temp_name = SLOWMO.name  # URI of template name?
-        Display = ["text only", "bar chart", "line graph"]
         o2wea = []
         candidate_resource = performer_graph.resource(candidate)
 
