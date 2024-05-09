@@ -13,6 +13,10 @@ CPO_HAS_PRECONDITIONS = URIRef(
     "http://purl.bioontology.org/ontology/SNOMEDCT/has_precondition"
 )
 
+DEFAULT_DISPLAY = URIRef(
+    "https://schema.metadatacenter.org/properties/5b4f16a9-feb7-4724-8741-2739d8808760"
+)
+
 
 def create_candidate(measure: Resource, template: Resource) -> Optional[Resource]:
     g: Graph = measure.graph
@@ -91,6 +95,11 @@ def add_causal_pathway(candidate: Resource):
         "Achieved Top 10 Peer Benchmark": "social gain",
         "No Longer Top Performer": "social loss",
         "Drop Below Peer Average": "social loss",
+        "Opportunity to Improve Goal": "goal worse",
+        "Approach Peer Average": "social approach",
+        "Approach Top 10 Peer Benchmark": "social approach",
+        "Approach Top 25 Peer Benchmark": "social approach",
+        "Approach Goal": "goal approach",
     }
     ancestor_template = candidate.value(SLOWMO.AncestorTemplate)
     template_name = ancestor_template.value(URIRef("http://schema.org/name")).value
@@ -126,6 +135,9 @@ def add_convenience_properties(candidate: Resource):
     )
 
     candidate[SLOWMO.RegardingComparator] = comparator or Literal(None)
+    candidate[SLOWMO.Display] = candidate.value(
+        SLOWMO.AncestorTemplate / DEFAULT_DISPLAY
+    )
     return candidate
 
 

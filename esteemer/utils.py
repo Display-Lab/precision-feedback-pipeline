@@ -1,4 +1,3 @@
-import random
 from typing import List
 
 from rdflib import DCTERMS, RDF, RDFS, BNode, Graph, URIRef
@@ -64,8 +63,8 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
         return s_m
     else:
         temp_name = SLOWMO.name  # URI of template name?
-        Display = ["text only", "bar chart", "line graph"]
         o2wea = []
+        candidate_resource = performer_graph.resource(candidate)
 
         ## Format selected_candidate to return for pictoralist-ing
         for s21, p21, o21 in performer_graph.triples(
@@ -82,7 +81,10 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
             s_m["message_text"] = o2
         # for s212,p212,o212 in self.spek_tp.triples((s,p232,None)):
 
-        s_m["display"] = random.choice(Display)
+        s_m["display"] = candidate_resource.value(
+            SLOWMO.Display
+        ).value  # random.choice(Display)
+
         # for s9,p9,o9 in self.spek_tp.triples((s,p8,None)):
         #     s_m["Comparator Type"] = o9
         for s2we, p2we, o2we in performer_graph.triples(
@@ -92,7 +94,6 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
         # print(*o2wea)
         s_m["acceptable_by"] = o2wea
 
-        candidate_resource = performer_graph.resource(candidate)
         measure = candidate_resource.value(SLOWMO.RegardingMeasure)
         s_m["measure_name"] = str(measure.identifier)
         s_m["measure_title"] = measure.value(DCTERMS.title).value
@@ -120,6 +121,7 @@ def candidates_records(performer_graph: Graph) -> List[List]:
             "motivating_score",
             "history_score",
             "preference_score",
+            "coachiness_score",
             "name",
             "acceptable_by",
             "selected",
@@ -149,6 +151,7 @@ def candidate_as_record(a_candidate: Resource) -> List:
     representation.append(a_candidate.value(URIRef("history_score")))
 
     representation.append(a_candidate.value(URIRef("preference_score")))
+    representation.append(a_candidate.value(URIRef("coachiness_score")))
 
     representation.append(a_candidate.value(SLOWMO.name))
     representation.append(a_candidate.value(SLOWMO.AcceptableBy))

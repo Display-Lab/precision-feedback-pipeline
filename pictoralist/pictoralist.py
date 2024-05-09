@@ -464,8 +464,8 @@ class Pictoralist:
 
     ### Graphing function control logic (modularized to allow for changes and extra display formats in the future):
     def graph_controller(self):
-        if self.display_format == "line graph" and self.generate_image:
-            logger.info("Generating line graph from performance data...")
+        if self.display_format == "line chart" and self.generate_image:
+            logger.info("Generating line chart from performance data...")
             self.generate_linegraph()
 
         elif self.display_format == "bar chart" and self.generate_image:

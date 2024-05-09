@@ -23,3 +23,4 @@ class SLOWMO(AliasingDefinedNamespace):
     MessageRecurrance: URIRef
     AcceptableBy: URIRef
     Selected: URIRef
+    Display: URIRef

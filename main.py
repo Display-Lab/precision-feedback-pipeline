@@ -160,23 +160,20 @@ async def createprecisionfeedback(info: Request):
     if settings.performance_month:
         req_info["performance_month"] = settings.performance_month
 
-    input_preferences: dict = (
-        req_info.get("Preferences", {}).get("Utilities", {}).get("Message_Format", {})
-    )
-    preferences = {
-        "Social gain": "1.007650319",
-        "Social stayed better": "0.4786461911",
-        "Worsening": "-1.7261141",
-        "Improving": "0.258245277",
-        "Social loss": "0.7730646814",
-        "Social stayed worse": "-0.5986969529",
-        "Social better": "-0.1251083934",
-        "Social worse": "-1.154453186",
-        "Social approach": "1.086765623",
-        "Goal gain": "1.007650319",
-        "Goal approach": "1.086765623",
-    }.copy()
-    preferences.update(input_preferences)
+    # TODO: consolidate all display handling in render
+    preferences_utilities =  req_info.get("Preferences", {}).get("Utilities", {})
+    
+    Display_Format_preference = None
+    for key, value in (
+        preferences_utilities.get("Display_Format", {})
+        .items()
+    ):
+        if value == 1 and key != "System-generated":
+            Display_Format_preference = key.lower()
+
+    preferences = set_preferences(preferences_utilities)
+    
+    
 
     initial_tic = tic = time.perf_counter()
     cool_new_super_graph = Graph()
@@ -251,6 +248,10 @@ async def createprecisionfeedback(info: Request):
         for candidate in candidates:
             esteemer.score(candidate, history, preferences)
     selected_candidate = esteemer.select_candidate(cool_new_super_graph)
+    if Display_Format_preference:
+        cool_new_super_graph.resource(selected_candidate)[SLOWMO.Display] = Literal(
+            Display_Format_preference
+        )
     toc = time.perf_counter()
     timing["esteemer"] = f"{(toc-tic)*1000.:.2f} ms"
 
@@ -310,6 +311,37 @@ async def createprecisionfeedback(info: Request):
     response.update(full_selected_message)
 
     return response
+
+def set_preferences(preferences_utilities):
+    input_preferences: dict = (
+        preferences_utilities.get("Message_Format", {})
+    )
+    
+    for key in input_preferences:
+        input_preferences[key] = float(input_preferences[key])
+    
+    preferences = {
+        "Social gain": 1.007650319,
+        "Social stayed better": 0.4786461911,
+        "Worsening": -1.7261141,
+        "Improving": 0.258245277,
+        "Social loss": 0.7730646814,
+        "Social stayed worse": -0.5986969529,
+        "Social better": -0.1251083934,
+        "Social worse": -1.154453186,
+        "Social approach": 1.086765623,
+        "Goal gain": 1.007650319,
+        "Goal approach": 1.086765623,
+    }.copy()
+    preferences.update(input_preferences)
+    
+    min_value = min(preferences.values())
+    max_value = max(preferences.values())
+    
+    for key in preferences:
+        preferences[key] = (preferences[key] - min_value) / (max_value - min_value)
+    
+    return preferences
 
 
 def debug_output_if_set(graph: Graph, file_location):
