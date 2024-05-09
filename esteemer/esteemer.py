@@ -1,3 +1,4 @@
+from datetime import datetime
 import random
 from typing import List
 
@@ -329,7 +330,7 @@ def comparator_moderators(candidate, motivating_informations, signal: Signal):
     return scoring_detail
 
 
-def score_history(candidate, history) -> float:
+def score_history(candidate: Resource, history) -> float:
     """
     calculates history sub-score.
 
@@ -344,11 +345,12 @@ def score_history(candidate, history) -> float:
         return 0.0
 
     # turn candidate resource into a 'history' element for the current month
-    current_hist = History.to_element(candidate)
+    g: Graph = candidate.graph
+    performance_month = next(g.objects(None, SLOWMO.PerformanceMonth)).value
     # add to history
-    history.update(current_hist)
+    # history[performance_month] = History.to_element(candidate)
 
-    signals = History.detect(history)
+    signals = History.detect(history, { datetime.fromisoformat(performance_month): History.to_element(candidate)})
 
     if not signals:
         return 0.0

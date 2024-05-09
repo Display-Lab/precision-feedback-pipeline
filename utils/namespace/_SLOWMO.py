@@ -24,3 +24,4 @@ class SLOWMO(AliasingDefinedNamespace):
     AcceptableBy: URIRef
     Selected: URIRef
     Display: URIRef
+    PerformanceMonth: URIRef
