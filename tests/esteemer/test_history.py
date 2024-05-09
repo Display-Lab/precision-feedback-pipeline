@@ -65,7 +65,7 @@ def test_single_resource_returns_single_moderator():
     assert isinstance(mods[0], dict)
     assert len(mods) == 1
 
-    assert mods[0]["recurrence_count"] == round(4 / 11, 4)
+    assert mods[0]["recurrence_count"] == round(4 / 12, 4)
 
 
 # Supplementary methods

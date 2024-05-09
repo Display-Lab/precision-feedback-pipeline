@@ -43,7 +43,7 @@ class History(Signal):
         for signal in super().select(signals):
             history_dict = {}
             history_dict["recurrence_count"] = round(
-                signal.value(URIRef("recurrence_count")).value / 11, 4
+                signal.value(URIRef("recurrence_count")).value / 12, 4
             )
             mods.append(history_dict)
 

@@ -58,6 +58,7 @@ class Settings:
             "use_preferences", cast=bool, default=True
         )  # use preferences
         self.use_history = config("use_history", cast=bool, default=True)  # use history
+        self.use_coachiness = config("use_coachiness", cast=bool, default=True)  # use coachiness
 
         # Instance display settings
         self.display_window = config("display_window", cast=int, default=6)

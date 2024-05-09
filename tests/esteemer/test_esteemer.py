@@ -1,6 +1,6 @@
 import pandas as pd
 import pytest
-from rdflib import BNode, Graph, Literal, URIRef
+from rdflib import BNode, Graph, Literal, URIRef, RDF
 
 from bitstomach.bitstomach import prepare
 from bitstomach.signals import Achievement, Comparison, Loss, Trend
@@ -77,7 +77,7 @@ def candidate_resource(performance_data_frame):
 
 def test_score(candidate_resource):
     esteemer.score(candidate_resource, None, {})
-    assert candidate_resource.value(SLOWMO.Score).value == pytest.approx(0.3)
+    assert candidate_resource.value(SLOWMO.Score).value == pytest.approx(0.1)
 
 
 def test_calculate_preference_score(candidate_resource):
@@ -91,7 +91,12 @@ def test_select_candidate():
 
     candidate1[SLOWMO.Score] = Literal(0.2)
     candidate2[SLOWMO.Score] = Literal(0.1)
-
+    candidate1[URIRef("coachiness_score")] = Literal(1.00)
+    candidate2[URIRef("coachiness_score")] = Literal(1.00)
+    candidate1[SLOWMO.AcceptableBy] = Literal(True)
+    candidate2[SLOWMO.AcceptableBy] = Literal(True)
+    candidate1[RDF.type] = SLOWMO.Candidate
+    candidate2[RDF.type] = SLOWMO.Candidate
     candidate1[SLOWMO.AcceptableBy] = Literal("social worse")
     candidate1[SLOWMO.AcceptableBy] = Literal("improving")
 
@@ -127,7 +132,7 @@ def test_no_history_signal_is_score_0(candidate_resource):
 def test_history_with_two_recurrances(candidate_resource, history):
     score = esteemer.score_history(candidate_resource, history)
 
-    assert score == round(2 / 11, 4) * -0.1
+    assert score == round(2 / 12, 4) * -0.1
 
 
 def test_social_better_score(performance_data_frame):
@@ -138,7 +143,7 @@ def test_social_better_score(performance_data_frame):
 
     motivating_informations = Comparison.detect(performance_data_frame)
     score = esteemer.score_better(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.025)
+    assert score == pytest.approx(0.05)
 
 
 def test_social_worse_score():
@@ -167,7 +172,7 @@ def test_social_worse_score():
 
     motivating_informations = Comparison.detect(data_frame)
     score = esteemer.score_worse(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.01)
+    assert score == pytest.approx(0.02)
 
 
 def test_improving_score():
@@ -185,7 +190,7 @@ def test_improving_score():
         )
     )
     score = esteemer.score_improving(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.016)
+    assert score == pytest.approx(0.02)
 
 
 def test_worsening_score():
@@ -203,7 +208,7 @@ def test_worsening_score():
         )
     )
     score = esteemer.score_worsening(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.016)
+    assert score == pytest.approx(0.02)
 
 
 def test_goal_gain_score():
@@ -232,7 +237,7 @@ def test_goal_gain_score():
 
     motivating_informations = Achievement.detect(data_frame)
     score = esteemer.score_gain(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.11233333)
+    assert score == pytest.approx(0.062407407407407404)
 
 
 def test_goal_loss_score():
@@ -261,4 +266,4 @@ def test_goal_loss_score():
 
     motivating_informations = Loss.detect(data_frame)
     score = esteemer.score_loss(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.1253333333)
+    assert score == pytest.approx(0.06962962962962962)

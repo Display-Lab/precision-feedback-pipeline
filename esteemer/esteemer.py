@@ -97,7 +97,7 @@ def score(candidate: Resource, history: dict, preferences: dict) -> Resource:
         "social loss": {"score": score_loss, "rules": rule_social_lowest},
         "goal worse": {"score": score_worse, "rules": null_rule},
         "goal approach": {"score": score_approach, "rules": null_rule},
-        "social approach": {"score": score_approach, "rules": rule_social_highest},
+        "social approach": {"score": score_approach, "rules": rule_social_lowest},
     }
 
     causal_pathway = candidate.value(SLOWMO.AcceptableBy)
@@ -125,48 +125,33 @@ def score(candidate: Resource, history: dict, preferences: dict) -> Resource:
     )
 
     # coachiness
-    coachiness_score = MPM[causal_pathway.value]["coachiness"] / 10
+    coachiness_score = MPM[causal_pathway.value]["coachiness"]
     candidate[URIRef("coachiness_score")] = Literal(
         coachiness_score, datatype=XSD.double
     )
 
-    final_calculated_score = final_score(
-        mi_score, history_score, preference_score, coachiness_score
-    )
+    final_calculated_score = final_score(mi_score, history_score, preference_score)
 
     candidate[SLOWMO.Score] = Literal(final_calculated_score, datatype=XSD.double)
 
     return candidate
 
 
-def final_score(m, h, p, c):
+def final_score(m, h, p):
     """
     the function, final_score,  takes two inputs, s and p. the range for s is 0 to 1. the range for p is -2 to +2.  The function f(s,p) increases with either s or p increasing. The function should have the following constraints: f(1,-2) == f(.5, 0) == f(0,2) and f(0.5, -2) == f(0.25, -1) == f(0, 0).
     """
 
-    s = m + h
-    # Define the scaling factors for s and p
-    scale_s = 4  # default to stated range of p
-    scale_p = 1  # default to stated range of 2
+    score = m * 1 + h * 2 + p * 1.3
 
-    # Calculate the base value for the constraints, e.g. f(1,-2) == f(0.5, 0) == f(0,2)
-    # base_value = scale_s * 0.5 + scale_p * 0.0  # default to mid-points of stated ranges
-    base_value = scale_s * 0.5 + scale_p * 0  # default to mid-points of stated ranges
-
-    # Adjust the function to increase with either s or p increasing
-    score = (scale_s * s + scale_p * p + base_value) / (scale_s + scale_p + base_value)
-
-    # apply coachiness factor
-    score = score + c
-
-    return score
+    return round(score , 1)
 
 
 def score_better(candidate: Resource, motivating_informations: List[Resource]) -> float:
     moderators = comparator_moderators(candidate, motivating_informations, Comparison)
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
-    score = (moderators["gap_size"]) * mpm[Comparison.signal_type]
+    score = (moderators["gap_size"]) #* mpm[Comparison.signal_type]
 
     return score
 
@@ -249,7 +234,7 @@ def score_worse(candidate: Resource, motivating_informations: List[Resource]) ->
     moderators = comparator_moderators(candidate, motivating_informations, Comparison)
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
-    score = (moderators["gap_size"]) * mpm[Comparison.signal_type]
+    score = (moderators["gap_size"]) #* mpm[Comparison.signal_type]
 
     return score
 
@@ -260,7 +245,7 @@ def score_improving(
     moderators = Trend.moderators(motivating_informations)[0]
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
-    score = (moderators["trend_size"]) * mpm[Trend.signal_type]
+    score = (moderators["trend_size"]) #* mpm[Trend.signal_type]
 
     return score
 
@@ -272,7 +257,7 @@ def score_worsening(
     moderators = Trend.moderators(motivating_informations)[0]
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
-    score = (moderators["trend_size"]) * mpm[Trend.signal_type]
+    score = (moderators["trend_size"]) #* mpm[Trend.signal_type]
 
     return score
 
@@ -287,6 +272,10 @@ def score_approach(
         moderators["gap_size"] * mpm[Comparison.signal_type]
         + moderators["trend_size"] * mpm[Trend.signal_type]
         + moderators["streak_length"] * mpm["achievement_recency"]
+    ) / (
+        mpm[Comparison.signal_type]
+        + mpm[Trend.signal_type]
+        + mpm["achievement_recency"]
     )
 
     return score
@@ -300,6 +289,10 @@ def score_gain(candidate: Resource, motivating_informations: List[Resource]) -> 
         moderators["gap_size"] * mpm[Comparison.signal_type]
         + moderators["trend_size"] * mpm[Trend.signal_type]
         + moderators["streak_length"] * mpm["achievement_recency"]
+    ) / (
+        mpm[Comparison.signal_type]
+        + mpm[Trend.signal_type]
+        + mpm["achievement_recency"]
     )
 
     return score
@@ -313,6 +306,10 @@ def score_loss(candidate: Resource, motivating_informations: List[Resource]) -> 
         moderators["gap_size"] * mpm[Comparison.signal_type]
         + moderators["trend_size"] * mpm[Trend.signal_type]
         + moderators["streak_length"] * mpm["loss_recency"]
+    ) / (
+        mpm[Comparison.signal_type]
+        + mpm[Trend.signal_type]
+        + mpm["loss_recency"]
     )
 
     return score
@@ -395,7 +392,7 @@ def score_preferences(candidate_resource: Resource, preferences: dict) -> float:
     }
 
     key = map_cp_to_preferences.get(candidate_resource.value(SLOWMO.AcceptableBy).value)
-    return float(preferences.get(key, 0.0))
+    return preferences.get(key, 0.0)
 
 
 def select_candidate(performer_graph: Graph) -> BNode:
@@ -416,15 +413,32 @@ def select_candidate(performer_graph: Graph) -> BNode:
     if not set(performer_graph[: SLOWMO.AcceptableBy :]):
         return None
 
+    # filter acceptable candidates
+    candidates = utils.candidates(performer_graph, filter_acceptable=True)
+
+    # filter scored candidates
+    candidates = [
+        candidate for candidate in candidates
+        if (candidate.value(URIRef("coachiness_score")) is not None)
+    ]
+
+    if settings.use_coachiness:
+        # filter highest coachiness candidates
+        highest_coachiness_candidates = candidates_from_coachiness_category(candidates, category=1.0)
+        if not highest_coachiness_candidates:
+            highest_coachiness_candidates = candidates_from_coachiness_category(candidates, category=0.5)
+        if highest_coachiness_candidates:
+            candidates = highest_coachiness_candidates
+    
     max_score = max(
-        [score for _, score in performer_graph.subject_objects(SLOWMO.Score)],
+        [candidate.value(SLOWMO.Score).value for candidate in candidates],
         default=None,
     )
 
     candidates_with_max_score = [
-        (candidate)
-        for candidate, score in performer_graph.subject_objects(SLOWMO.Score)
-        if score == max_score
+        (candidate.identifier)
+        for candidate in candidates
+        if candidate.value(SLOWMO.Score).value == max_score
     ]
 
     # Randomly select one of the candidates with the known maximum score
@@ -433,3 +447,11 @@ def select_candidate(performer_graph: Graph) -> BNode:
     performer_graph.add((selected_candidate, SLOWMO.Selected, Literal(True)))
 
     return selected_candidate
+
+
+def candidates_from_coachiness_category(candidates, category):
+    return [
+        candidate
+        for candidate in candidates
+        if (candidate.value(URIRef("coachiness_score")).value == category)
+    ]
