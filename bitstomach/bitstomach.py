@@ -1,5 +1,5 @@
 import pandas as pd
-from rdflib import RDF, BNode, Graph
+from rdflib import RDF, BNode, Graph, Literal
 
 from bitstomach.signals import SIGNALS
 from utils.namespace import PSDO, SLOWMO
@@ -14,7 +14,7 @@ def extract_signals(perf_df: pd.DataFrame) -> Graph:
     g = Graph()
     r = g.resource(BNode("performance_content"))
     r.set(RDF.type, PSDO.performance_content)
-
+    r.set(SLOWMO.PerformanceMonth, Literal(perf_df.attrs["performance_month"]))
     if perf_df.empty:
         return g
 

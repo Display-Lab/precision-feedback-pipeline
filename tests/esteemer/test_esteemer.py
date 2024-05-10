@@ -1,6 +1,6 @@
 import pandas as pd
 import pytest
-from rdflib import BNode, Graph, Literal, URIRef
+from rdflib import RDF, BNode, Graph, Literal, URIRef
 
 from bitstomach.bitstomach import prepare
 from bitstomach.signals import Achievement, Comparison, Loss, Trend
@@ -13,21 +13,25 @@ TEMPLATE_A = "https://repo.metadatacenter.org/template-instances/9e71ec9e-26f3-4
 @pytest.fixture
 def history():
     return {
+        "2023-04-01": {
+            "message_template": TEMPLATE_A,
+            "acceptable_by": "Social better",
+            "measure": "PONV05",
+        },
+        "2023-05-01": {
+            "message_template": "different template B",
+            "acceptable_by": "Social worse",
+            "measure": "PONV05",
+        },
         "2023-06-01": {
             "message_template": TEMPLATE_A,
             "acceptable_by": "Social better",
+            "measure": "PONV05",
         },
         "2023-07-01": {
-            "message_template": "different template B",
-            "acceptable_by": "Social worse",
-        },
-        "2023-08-01": {
-            "message_template": TEMPLATE_A,
-            "acceptable_by": "Social better",
-        },
-        "2023-09-01": {
             "message_template": "different template A",
             "acceptable_by": "Social better",
+            "measure": "PONV05",
         },
     }
 
@@ -47,9 +51,9 @@ def performance_data_frame():
             "peer_90th_percentile_benchmark",
             "MPOG_goal",
         ],
-        [157, "PONV05", "2022-06-01", 93, 0, 100, 84.0, 88.0, 90.0, 99.0],
-        [157, "PONV05", "2022-07-01", 94, 0, 100, 84.0, 88.0, 90.0, 99.0],
-        [157, "PONV05", "2022-08-01", 95, 0, 100, 84.0, 88.0, 90.0, 99.0],
+        [157, "PONV05", "2023-06-01", 93, 0, 100, 84.0, 88.0, 90.0, 99.0],
+        [157, "PONV05", "2023-07-01", 94, 0, 100, 84.0, 88.0, 90.0, 99.0],
+        [157, "PONV05", "2023-08-01", 95, 0, 100, 84.0, 88.0, 90.0, 99.0],
     ]
     return prepare({"Performance_data": performance_data})
 
@@ -66,6 +70,7 @@ def candidate_resource(performance_data_frame):
     motivating_informations = Comparison.detect(performance_data_frame)
 
     performance_content = graph.resource(BNode("performance_content"))
+    performance_content.set(SLOWMO.PerformanceMonth, Literal("2023-08-01"))
     for s in motivating_informations:
         candidate_resource.add(PSDO.motivating_information, s)
         s[SLOWMO.RegardingMeasure] = BNode("PONV05")
@@ -77,7 +82,7 @@ def candidate_resource(performance_data_frame):
 
 def test_score(candidate_resource):
     esteemer.score(candidate_resource, None, {})
-    assert candidate_resource.value(SLOWMO.Score).value == pytest.approx(0.3)
+    assert candidate_resource.value(SLOWMO.Score).value == pytest.approx(0.1)
 
 
 def test_calculate_preference_score(candidate_resource):
@@ -91,7 +96,12 @@ def test_select_candidate():
 
     candidate1[SLOWMO.Score] = Literal(0.2)
     candidate2[SLOWMO.Score] = Literal(0.1)
-
+    candidate1[URIRef("coachiness_score")] = Literal(1.00)
+    candidate2[URIRef("coachiness_score")] = Literal(1.00)
+    candidate1[SLOWMO.AcceptableBy] = Literal(True)
+    candidate2[SLOWMO.AcceptableBy] = Literal(True)
+    candidate1[RDF.type] = SLOWMO.Candidate
+    candidate2[RDF.type] = SLOWMO.Candidate
     candidate1[SLOWMO.AcceptableBy] = Literal("social worse")
     candidate1[SLOWMO.AcceptableBy] = Literal("improving")
 
@@ -127,7 +137,7 @@ def test_no_history_signal_is_score_0(candidate_resource):
 def test_history_with_two_recurrances(candidate_resource, history):
     score = esteemer.score_history(candidate_resource, history)
 
-    assert score == round(2 / 11, 4) * -0.1
+    assert score == pytest.approx(0.409413)
 
 
 def test_social_better_score(performance_data_frame):
@@ -138,7 +148,7 @@ def test_social_better_score(performance_data_frame):
 
     motivating_informations = Comparison.detect(performance_data_frame)
     score = esteemer.score_better(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.025)
+    assert score == pytest.approx(0.05)
 
 
 def test_social_worse_score():
@@ -167,7 +177,7 @@ def test_social_worse_score():
 
     motivating_informations = Comparison.detect(data_frame)
     score = esteemer.score_worse(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.01)
+    assert score == pytest.approx(0.02)
 
 
 def test_improving_score():
@@ -185,7 +195,7 @@ def test_improving_score():
         )
     )
     score = esteemer.score_improving(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.016)
+    assert score == pytest.approx(0.02)
 
 
 def test_worsening_score():
@@ -203,7 +213,7 @@ def test_worsening_score():
         )
     )
     score = esteemer.score_worsening(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.016)
+    assert score == pytest.approx(0.02)
 
 
 def test_goal_gain_score():
@@ -232,7 +242,7 @@ def test_goal_gain_score():
 
     motivating_informations = Achievement.detect(data_frame)
     score = esteemer.score_gain(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.11233333)
+    assert score == pytest.approx(0.062407407407407404)
 
 
 def test_goal_loss_score():
@@ -261,4 +271,4 @@ def test_goal_loss_score():
 
     motivating_informations = Loss.detect(data_frame)
     score = esteemer.score_loss(candidate_resource, motivating_informations)
-    assert score == pytest.approx(0.1253333333)
+    assert score == pytest.approx(0.0696296)

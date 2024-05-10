@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 from typing import List
 
 from rdflib import XSD, BNode, Graph, Literal, URIRef
@@ -12,62 +13,92 @@ from utils.settings import settings
 
 MPM = {
     "social worse": {
-        Comparison.signal_type: 0.5,
-        History.signal_type: -0.5,
+        "comparison_size": 0.5,
+        "message_recency": 0.9,
+        "message_received_count": 0.5,
+        "measure_recency": 0.5,
         "coachiness": 1.0,
     },
     "social better": {
-        Comparison.signal_type: 0.5,
-        History.signal_type: -0.1,
+        "comparison_size": 0.5,
+        "message_recency": 0.9,
+        "message_received_count": 0.9,
+        "measure_recency": 0.5,
         "coachiness": 0.0,
     },
-    "improving": {Trend.signal_type: 0.8, History.signal_type: -0.1, "coachiness": 0.5},
-    "worsening": {Trend.signal_type: 0.8, History.signal_type: -0.5, "coachiness": 1.0},
+    "improving": {
+        "trend_size": 0.8,
+        "message_recency": 0.9,
+        "message_received_count": 0.9,
+        "measure_recency": 1.0,
+        "coachiness": 0.5,
+    },
+    "worsening": {
+        "trend_size": 0.8,
+        "message_recency": 0.9,
+        "message_received_count": 0.5,
+        "measure_recency": 1.0,
+        "coachiness": 1.0,
+    },
     "goal gain": {
-        Comparison.signal_type: 0.5,
-        Trend.signal_type: 0.8,
+        "comparison_size": 0.5,
+        "trend_size": 0.8,
         "achievement_recency": 0.5,
-        History.signal_type: -0.1,
+        "message_recency": 0.9,
+        "message_received_count": 0.9,
+        "measure_recency": 0.5,
         "coachiness": 0.5,
     },
     "goal loss": {
-        Comparison.signal_type: 0.5,
-        Trend.signal_type: 0.8,
+        "comparison_size": 0.5,
+        "trend_size": 0.8,
         "loss_recency": 0.5,
-        History.signal_type: -0.5,
+        "message_recency": 0.9,
+        "message_received_count": 0.5,
+        "measure_recency": 0.5,
         "coachiness": 1.0,
     },
     "social gain": {
-        Comparison.signal_type: 0.5,
-        Trend.signal_type: 0.8,
+        "comparison_size": 0.5,
+        "trend_size": 0.8,
         "achievement_recency": 0.5,
-        History.signal_type: -0.1,
+        "message_recency": 0.9,
+        "message_received_count": 0.9,
+        "measure_recency": 0.5,
         "coachiness": 0.5,
     },
     "social loss": {
-        Comparison.signal_type: 0.5,
-        Trend.signal_type: 0.8,
+        "comparison_size": 0.5,
+        "trend_size": 0.8,
         "loss_recency": 0.5,
-        History.signal_type: -0.5,
+        "message_recency": 0.9,
+        "message_received_count": 0.5,
+        "measure_recency": 0.5,
         "coachiness": 1.0,
     },
     "goal worse": {
-        Comparison.signal_type: 0.5,
-        History.signal_type: -0.5,
+        "comparison_size": 0.5,
+        "message_recency": 0.9,
+        "message_received_count": 0.5,
+        "measure_recency": 0.5,
         "coachiness": 1.0,
     },
     "social approach": {
-        Comparison.signal_type: 0.5,
-        Trend.signal_type: 0.8,
+        "comparison_size": 0.5,
+        "trend_size": 0.8,
         "achievement_recency": 0.5,
-        History.signal_type: -0.1,
+        "message_recency": 0.9,
+        "message_received_count": 0.9,
+        "measure_recency": 1.0,
         "coachiness": 1.0,
     },
     "goal approach": {
-        Comparison.signal_type: 0.5,
-        Trend.signal_type: 0.8,
+        "comparison_size": 0.5,
+        "trend_size": 0.8,
         "achievement_recency": 0.5,
-        History.signal_type: -0.1,
+        "message_recency": 0.9,
+        "message_received_count": 0.9,
+        "measure_recency": 1.0,
         "coachiness": 1.0,
     },
 }
@@ -97,7 +128,7 @@ def score(candidate: Resource, history: dict, preferences: dict) -> Resource:
         "social loss": {"score": score_loss, "rules": rule_social_lowest},
         "goal worse": {"score": score_worse, "rules": null_rule},
         "goal approach": {"score": score_approach, "rules": null_rule},
-        "social approach": {"score": score_approach, "rules": rule_social_highest},
+        "social approach": {"score": score_approach, "rules": rule_social_lowest},
     }
 
     causal_pathway = candidate.value(SLOWMO.AcceptableBy)
@@ -125,48 +156,33 @@ def score(candidate: Resource, history: dict, preferences: dict) -> Resource:
     )
 
     # coachiness
-    coachiness_score = MPM[causal_pathway.value]["coachiness"] / 10
+    coachiness_score = MPM[causal_pathway.value]["coachiness"]
     candidate[URIRef("coachiness_score")] = Literal(
         coachiness_score, datatype=XSD.double
     )
 
-    final_calculated_score = final_score(
-        mi_score, history_score, preference_score, coachiness_score
-    )
+    final_calculated_score = final_score(mi_score, history_score, preference_score)
 
     candidate[SLOWMO.Score] = Literal(final_calculated_score, datatype=XSD.double)
 
     return candidate
 
 
-def final_score(m, h, p, c):
+def final_score(m, h, p):
     """
     the function, final_score,  takes two inputs, s and p. the range for s is 0 to 1. the range for p is -2 to +2.  The function f(s,p) increases with either s or p increasing. The function should have the following constraints: f(1,-2) == f(.5, 0) == f(0,2) and f(0.5, -2) == f(0.25, -1) == f(0, 0).
     """
 
-    s = m + h
-    # Define the scaling factors for s and p
-    scale_s = 4  # default to stated range of p
-    scale_p = 1  # default to stated range of 2
+    score = m * 1 + h * 2 + p * 1.3
 
-    # Calculate the base value for the constraints, e.g. f(1,-2) == f(0.5, 0) == f(0,2)
-    # base_value = scale_s * 0.5 + scale_p * 0.0  # default to mid-points of stated ranges
-    base_value = scale_s * 0.5 + scale_p * 0  # default to mid-points of stated ranges
-
-    # Adjust the function to increase with either s or p increasing
-    score = (scale_s * s + scale_p * p + base_value) / (scale_s + scale_p + base_value)
-
-    # apply coachiness factor
-    score = score + c
-
-    return score
+    return round(score, 1)
 
 
 def score_better(candidate: Resource, motivating_informations: List[Resource]) -> float:
     moderators = comparator_moderators(candidate, motivating_informations, Comparison)
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
-    score = (moderators["gap_size"]) * mpm[Comparison.signal_type]
+    score = moderators["gap_size"]  # * mpm["comparison_size"]
 
     return score
 
@@ -249,7 +265,7 @@ def score_worse(candidate: Resource, motivating_informations: List[Resource]) ->
     moderators = comparator_moderators(candidate, motivating_informations, Comparison)
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
-    score = (moderators["gap_size"]) * mpm[Comparison.signal_type]
+    score = moderators["gap_size"]  # * mpm["comparison_size"]
 
     return score
 
@@ -260,7 +276,7 @@ def score_improving(
     moderators = Trend.moderators(motivating_informations)[0]
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
-    score = (moderators["trend_size"]) * mpm[Trend.signal_type]
+    score = moderators["trend_size"]  # * mpm["trend_size"]
 
     return score
 
@@ -272,7 +288,7 @@ def score_worsening(
     moderators = Trend.moderators(motivating_informations)[0]
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
-    score = (moderators["trend_size"]) * mpm[Trend.signal_type]
+    score = moderators["trend_size"]  # * mpm["trend_size"]
 
     return score
 
@@ -284,10 +300,10 @@ def score_approach(
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
     score = (
-        moderators["gap_size"] * mpm[Comparison.signal_type]
-        + moderators["trend_size"] * mpm[Trend.signal_type]
+        moderators["gap_size"] * mpm["comparison_size"]
+        + moderators["trend_size"] * mpm["trend_size"]
         + moderators["streak_length"] * mpm["achievement_recency"]
-    )
+    ) / (mpm["comparison_size"] + mpm["trend_size"] + mpm["achievement_recency"])
 
     return score
 
@@ -297,10 +313,10 @@ def score_gain(candidate: Resource, motivating_informations: List[Resource]) -> 
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
     score = (
-        moderators["gap_size"] * mpm[Comparison.signal_type]
-        + moderators["trend_size"] * mpm[Trend.signal_type]
+        moderators["gap_size"] * mpm["comparison_size"]
+        + moderators["trend_size"] * mpm["trend_size"]
         + moderators["streak_length"] * mpm["achievement_recency"]
-    )
+    ) / (mpm["comparison_size"] + mpm["trend_size"] + mpm["achievement_recency"])
 
     return score
 
@@ -310,10 +326,10 @@ def score_loss(candidate: Resource, motivating_informations: List[Resource]) -> 
     mpm = MPM[candidate.value(SLOWMO.AcceptableBy).value]
 
     score = (
-        moderators["gap_size"] * mpm[Comparison.signal_type]
-        + moderators["trend_size"] * mpm[Trend.signal_type]
+        moderators["gap_size"] * mpm["comparison_size"]
+        + moderators["trend_size"] * mpm["trend_size"]
         + moderators["streak_length"] * mpm["loss_recency"]
-    )
+    ) / (mpm["comparison_size"] + mpm["trend_size"] + mpm["loss_recency"])
 
     return score
 
@@ -332,7 +348,7 @@ def comparator_moderators(candidate, motivating_informations, signal: Signal):
     return scoring_detail
 
 
-def score_history(candidate, history) -> float:
+def score_history(candidate: Resource, history) -> float:
     """
     calculates history sub-score.
 
@@ -344,24 +360,35 @@ def score_history(candidate, history) -> float:
     float: history sub-score.
     """
     if not history or not settings.use_history:
-        return 0.0
+        return 1.0
 
     # turn candidate resource into a 'history' element for the current month
-    current_hist = History.to_element(candidate)
+    g: Graph = candidate.graph
+    performance_month = next(g.objects(None, SLOWMO.PerformanceMonth)).value
     # add to history
-    history.update(current_hist)
+    # history[performance_month] = History.to_element(candidate)
 
-    signals = History.detect(history)
+    signals = History.detect(
+        history,
+        {datetime.fromisoformat(performance_month): History.to_element(candidate)},
+    )
 
     if not signals:
-        return 0.0
+        return 1.0
 
     mod = History.moderators(signals)[0]
-    score = mod["recurrence_count"]
 
     causal_pathway = candidate.value(SLOWMO.AcceptableBy)
 
-    return score * MPM[causal_pathway.value][History.signal_type]
+    return (
+        mod["message_recurrence"] * MPM[causal_pathway.value]["message_received_count"]
+        + mod["message_recency"] * MPM[causal_pathway.value]["message_recency"]
+        + mod["measure_recency"] * MPM[causal_pathway.value]["measure_recency"]
+    ) / (
+        MPM[causal_pathway.value]["message_received_count"]
+        + MPM[causal_pathway.value]["message_recency"]
+        + MPM[causal_pathway.value]["measure_recency"]
+    )
 
 
 def score_preferences(candidate_resource: Resource, preferences: dict) -> float:
@@ -395,7 +422,7 @@ def score_preferences(candidate_resource: Resource, preferences: dict) -> float:
     }
 
     key = map_cp_to_preferences.get(candidate_resource.value(SLOWMO.AcceptableBy).value)
-    return float(preferences.get(key, 0.0))
+    return preferences.get(key, 0.0)
 
 
 def select_candidate(performer_graph: Graph) -> BNode:
@@ -416,15 +443,37 @@ def select_candidate(performer_graph: Graph) -> BNode:
     if not set(performer_graph[: SLOWMO.AcceptableBy :]):
         return None
 
+    # filter acceptable candidates
+    candidates = utils.candidates(performer_graph, filter_acceptable=True)
+
+    # filter scored candidates
+    candidates = [
+        candidate
+        for candidate in candidates
+        if (candidate.value(URIRef("coachiness_score")) is not None)
+    ]
+
+    if settings.use_coachiness:
+        # filter highest coachiness candidates
+        highest_coachiness_candidates = candidates_from_coachiness_category(
+            candidates, category=1.0
+        )
+        if not highest_coachiness_candidates:
+            highest_coachiness_candidates = candidates_from_coachiness_category(
+                candidates, category=0.5
+            )
+        if highest_coachiness_candidates:
+            candidates = highest_coachiness_candidates
+
     max_score = max(
-        [score for _, score in performer_graph.subject_objects(SLOWMO.Score)],
+        [candidate.value(SLOWMO.Score).value for candidate in candidates],
         default=None,
     )
 
     candidates_with_max_score = [
-        (candidate)
-        for candidate, score in performer_graph.subject_objects(SLOWMO.Score)
-        if score == max_score
+        (candidate.identifier)
+        for candidate in candidates
+        if candidate.value(SLOWMO.Score).value == max_score
     ]
 
     # Randomly select one of the candidates with the known maximum score
@@ -433,3 +482,11 @@ def select_candidate(performer_graph: Graph) -> BNode:
     performer_graph.add((selected_candidate, SLOWMO.Selected, Literal(True)))
 
     return selected_candidate
+
+
+def candidates_from_coachiness_category(candidates, category):
+    return [
+        candidate
+        for candidate in candidates
+        if (candidate.value(URIRef("coachiness_score")).value == category)
+    ]
