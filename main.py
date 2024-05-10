@@ -161,19 +161,14 @@ async def createprecisionfeedback(info: Request):
         req_info["performance_month"] = settings.performance_month
 
     # TODO: consolidate all display handling in render
-    preferences_utilities =  req_info.get("Preferences", {}).get("Utilities", {})
-    
+    preferences_utilities = req_info.get("Preferences", {}).get("Utilities", {})
+
     Display_Format_preference = None
-    for key, value in (
-        preferences_utilities.get("Display_Format", {})
-        .items()
-    ):
+    for key, value in preferences_utilities.get("Display_Format", {}).items():
         if value == 1 and key != "System-generated":
             Display_Format_preference = key.lower()
 
     preferences = set_preferences(preferences_utilities)
-    
-    
 
     initial_tic = tic = time.perf_counter()
     cool_new_super_graph = Graph()
@@ -312,14 +307,13 @@ async def createprecisionfeedback(info: Request):
 
     return response
 
+
 def set_preferences(preferences_utilities):
-    input_preferences: dict = (
-        preferences_utilities.get("Message_Format", {})
-    )
-    
+    input_preferences: dict = preferences_utilities.get("Message_Format", {})
+
     for key in input_preferences:
         input_preferences[key] = float(input_preferences[key])
-    
+
     preferences = {
         "Social gain": 1.007650319,
         "Social stayed better": 0.4786461911,
@@ -334,13 +328,13 @@ def set_preferences(preferences_utilities):
         "Goal approach": 1.086765623,
     }.copy()
     preferences.update(input_preferences)
-    
+
     min_value = min(preferences.values())
     max_value = max(preferences.values())
-    
+
     for key in preferences:
         preferences[key] = (preferences[key] - min_value) / (max_value - min_value)
-    
+
     return preferences
 
 

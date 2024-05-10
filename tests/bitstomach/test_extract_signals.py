@@ -19,7 +19,9 @@ COLUMNS = [
 
 
 def test_extract_signals_return_a_graph():
-    g = bitstomach.extract_signals(pd.DataFrame())
+    df = pd.DataFrame()
+    df.attrs["performance_month"] = "2024-01-01"
+    g = bitstomach.extract_signals(df)
 
     assert isinstance(g, Graph)
 

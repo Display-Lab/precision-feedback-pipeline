@@ -1,5 +1,5 @@
 import pandas as pd
-from rdflib import RDF, BNode, Graph, RDFS, Literal
+from rdflib import RDF, BNode, Graph, Literal
 
 from bitstomach.signals import SIGNALS
 from utils.namespace import PSDO, SLOWMO
