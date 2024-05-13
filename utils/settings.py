@@ -40,7 +40,7 @@ class Settings:
 
         # Instance settings
         self.log_level = config(
-            "log_level", cast=str, default="INFO"
+            "log_level", cast=str, default="WARNING"
         )  # Logging level for instance
         self.generate_image = config(
             "generate_image", cast=bool, default=True
