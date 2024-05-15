@@ -31,7 +31,7 @@ END = int(os.getenv("END", "10"))
 OUTPUT = os.environ.get("OUTPUT", None)
 
 process_candidates_str = os.environ.get("PROCESS_CANDIDATES", "True")
-PROCESS_CANDIDATES = process_candidates_str.lower() in ['true', 't', '1', 'yes']
+PROCESS_CANDIDATES = process_candidates_str.lower() in ["true", "t", "1", "yes"]
 
 candidate_df: pd.DataFrame = pd.DataFrame()
 response_df: pd.DataFrame = pd.DataFrame()
@@ -114,29 +114,28 @@ def add_candidates(response_data: dict, performance_month: str):
     if data:
         candidates = pd.DataFrame(data[1:], columns=data[0])
         candidates["performance_month"] = performance_month
-        candidate_df = pd.concat(
-            [candidate_df, candidates], ignore_index=True
-        )
+        candidate_df = pd.concat([candidate_df, candidates], ignore_index=True)
 
 
 def add_response(response: requests.Response, response_data):
     global response_df
     timing_total = response_data.get("timing", {}).get("total", float("NaN"))
     selected_candidate = response_data.get("selected_candidate", None)
-    
+
     response_dict: dict = {
         "staff_number": [response_data.get("staff_number", None)],
-        "causal_pathway": selected_candidate["acceptable_by"] if selected_candidate else [None],
+        "causal_pathway": selected_candidate["acceptable_by"]
+        if selected_candidate
+        else [None],
         "status_code": [response.status_code],
         "elapsed": [response.elapsed.total_seconds()],
         "timing.total": [timing_total],
         "ok": [response.ok],
-        
     }
     response_df = pd.concat(
         [response_df, pd.DataFrame(response_dict)], ignore_index=True
     )
-    print(response_dict,  end='\r')
+    print(response_dict, end="\r")
 
 
 def analyse_responses():
@@ -152,12 +151,14 @@ def analyse_responses():
         .agg(pfp_time=("mean"))
         .reset_index()
     )
-    
+
     r2 = (
         response_df.groupby("causal_pathway")["staff_number"]
         .agg(count=("count"))
         .reset_index()
     )
+
+    r2["%  "] = round(r2["count"] / r2["count"].sum() * 100, 1)
 
     r = pd.merge(r, r1, on="status_code", how="left")
 
@@ -165,8 +166,9 @@ def analyse_responses():
     r["response_time"] = round(r["response_time"] * 1000, 1)
 
     print(f"\n {r} \n")
-    
+
     print(f"\n {r2} \n")
+
 
 def analyse_candidates():
     global candidate_df
@@ -174,16 +176,14 @@ def analyse_candidates():
     if OUTPUT:
         candidate_df.to_csv(OUTPUT, index=False)
 
-    
     candidate_df.rename(columns={"acceptable_by": "causal_pathway"}, inplace=True)
     candidate_df["score"] = candidate_df["score"].astype(float)
     candidate_df.rename(columns={"name": "message"}, inplace=True)
-    
+
     # pd.set_option("display.max_columns", None)
     # pd.set_option("display.expand_frame_repr", False)
     # pd.set_option("display.width", 1000)
     # pd.set_option("display.max_colwidth", None)
-
 
     # causal pathways
     causal_pathway_report = build_table("causal_pathway")
@@ -192,10 +192,10 @@ def analyse_candidates():
     # messages
     message_report = build_table("message")
     print(message_report, "\n")
-    
+
     # measures
     measure_report = build_table("measure")
-    print(measure_report, "\n")    
+    print(measure_report, "\n")
 
 
 def build_table(grouping_column):
@@ -207,8 +207,9 @@ def build_table(grouping_column):
     scores = round(
         candidate_df.groupby(grouping_column)["score"]
         .agg(acceptable_score=("mean"))
-        .reset_index()
-    ,2)
+        .reset_index(),
+        2,
+    )
     report_table = pd.merge(report_table, scores, on=grouping_column, how="left")
 
     report_table["% acceptable"] = round(
@@ -224,8 +225,9 @@ def build_table(grouping_column):
         candidate_df[candidate_df["selected"]]
         .groupby(grouping_column)["score"]
         .agg(selected_score=("mean"))
-        .reset_index()
-    ,2)
+        .reset_index(),
+        2,
+    )
     report_table = pd.merge(
         report_table, selected_scores, on=grouping_column, how="left"
     )
@@ -242,7 +244,7 @@ def build_table(grouping_column):
             "% of acceptable selected",
         ]
     ]
-    
+
     return report_table
 
 
@@ -267,7 +269,7 @@ def main():
     if SAMPLE:
         n = min(SAMPLE, len(input_files))
         input_files = sorted(random.sample(input_files, n), key=extract_number)
-    
+
     with ThreadPoolExecutor(WORKERS) as executor:
         executor.map(post_json_message, input_files)
 

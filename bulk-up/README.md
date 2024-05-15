@@ -60,6 +60,10 @@ The defaults behavior is to run 10 requests, using 1 worker, with `http://localh
 - default: None
 - format: CSV
 
+#### PROCESS_CANDIDATES: If set to True then processes candidates and print detailed report
+- default: True
+- note: If the PFP is not logging candidate detail you must skip candidate processing by setting this variable to False 
+
 ### Authentication (Google Cloud only)
 
 If TARGET_AUDIENCE is set then the bulk requester will send Google cloud credentials to the PFP service. Both TARGET_AUDIENCE and SERVICE_ACCOUNT_KEY_PATH must be set. Both values can be obtained from deployment team.

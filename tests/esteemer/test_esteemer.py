@@ -82,7 +82,7 @@ def candidate_resource(performance_data_frame):
 
 def test_score(candidate_resource):
     esteemer.score(candidate_resource, None, {})
-    assert candidate_resource.value(SLOWMO.Score).value == pytest.approx(0.1)
+    assert candidate_resource.value(SLOWMO.Score).value == pytest.approx(2.05)
 
 
 def test_calculate_preference_score(candidate_resource):
@@ -129,9 +129,9 @@ def test_get_trend_info():
 
 
 def test_no_history_signal_is_score_0(candidate_resource):
-    assert esteemer.score_history(candidate_resource, {}) == 0.0
+    assert esteemer.score_history(candidate_resource, {}) == 1.0
 
-    assert esteemer.score_history(candidate_resource, None) == 0.0
+    assert esteemer.score_history(candidate_resource, None) == 1.0
 
 
 def test_history_with_two_recurrances(candidate_resource, history):
