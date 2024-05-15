@@ -205,7 +205,8 @@ class Pictoralist:
         ## Replace placeholders in the template with actual values:
         # Format "[measure name]":
         self.message_text = self.message_text.replace(
-            "[measure name]", f"{self.sel_measure_title}",
+            "[measure name]",
+            f"{self.sel_measure_title}",
         )
         # Format "[recipient performance level]":
         self.message_text = self.message_text.replace(

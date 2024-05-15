@@ -175,7 +175,7 @@ def final_score(m, h, p):
 
     score = m * 1 + h * 2 + p * 1.3
 
-    return round(score, 1)
+    return round(score, 2)
 
 
 def score_better(candidate: Resource, motivating_informations: List[Resource]) -> float:
