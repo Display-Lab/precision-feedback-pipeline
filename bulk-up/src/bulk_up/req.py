@@ -30,6 +30,9 @@ START = int(os.getenv("START", "0"))
 END = int(os.getenv("END", "10"))
 OUTPUT = os.environ.get("OUTPUT", None)
 
+process_candidates_str = os.environ.get("PROCESS_CANDIDATES", "True")
+PROCESS_CANDIDATES = process_candidates_str.lower() in ['true', 't', '1', 'yes']
+
 candidate_df: pd.DataFrame = pd.DataFrame()
 response_df: pd.DataFrame = pd.DataFrame()
 lock = threading.Lock()
@@ -98,7 +101,8 @@ def post_json_message(filename):
 
             with lock:
                 add_response(response, response_data)
-                add_candidates(response_data, data["performance_month"])
+                if PROCESS_CANDIDATES:
+                    add_candidates(response_data, data["performance_month"])
 
     except Exception as e:
         print(f"Error processing {filename}: {e}")
@@ -117,13 +121,17 @@ def add_candidates(response_data: dict, performance_month: str):
 
 def add_response(response: requests.Response, response_data):
     global response_df
-    timing_total = response_data.get("timing", {}).get("total", None)
+    timing_total = response_data.get("timing", {}).get("total", float("NaN"))
+    selected_candidate = response_data.get("selected_candidate", None)
+    
     response_dict: dict = {
         "staff_number": [response_data.get("staff_number", None)],
+        "causal_pathway": selected_candidate["acceptable_by"] if selected_candidate else [None],
         "status_code": [response.status_code],
         "elapsed": [response.elapsed.total_seconds()],
         "timing.total": [timing_total],
         "ok": [response.ok],
+        
     }
     response_df = pd.concat(
         [response_df, pd.DataFrame(response_dict)], ignore_index=True
@@ -144,6 +152,12 @@ def analyse_responses():
         .agg(pfp_time=("mean"))
         .reset_index()
     )
+    
+    r2 = (
+        response_df.groupby("causal_pathway")["staff_number"]
+        .agg(count=("count"))
+        .reset_index()
+    )
 
     r = pd.merge(r, r1, on="status_code", how="left")
 
@@ -151,7 +165,8 @@ def analyse_responses():
     r["response_time"] = round(r["response_time"] * 1000, 1)
 
     print(f"\n {r} \n")
-
+    
+    print(f"\n {r2} \n")
 
 def analyse_candidates():
     global candidate_df
@@ -163,6 +178,12 @@ def analyse_candidates():
     candidate_df.rename(columns={"acceptable_by": "causal_pathway"}, inplace=True)
     candidate_df["score"] = candidate_df["score"].astype(float)
     candidate_df.rename(columns={"name": "message"}, inplace=True)
+    
+    # pd.set_option("display.max_columns", None)
+    # pd.set_option("display.expand_frame_repr", False)
+    # pd.set_option("display.width", 1000)
+    # pd.set_option("display.max_colwidth", None)
+
 
     # causal pathways
     causal_pathway_report = build_table("causal_pathway")
@@ -251,7 +272,8 @@ def main():
         executor.map(post_json_message, input_files)
 
     analyse_responses()
-    analyse_candidates()
+    if PROCESS_CANDIDATES:
+        analyse_candidates()
 
 
 if __name__ == "__main__":
