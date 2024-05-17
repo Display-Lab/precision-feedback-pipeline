@@ -32,6 +32,7 @@ OUTPUT = os.environ.get("OUTPUT", None)
 
 process_candidates_str = os.environ.get("PROCESS_CANDIDATES", "True")
 PROCESS_CANDIDATES = process_candidates_str.lower() in ["true", "t", "1", "yes"]
+PERFORMANCE_MONTH = os.environ.setdefault("PERFORMANCE_MONTH", None)
 
 candidate_df: pd.DataFrame = pd.DataFrame()
 response_df: pd.DataFrame = pd.DataFrame()
@@ -72,6 +73,9 @@ def post_json_message(filename):
                 print(f"file: {filename} failed. {e}")
                 return
 
+            if PERFORMANCE_MONTH:
+                data["performance_month"] = PERFORMANCE_MONTH
+            
             headers = (
                 {"Authorization": f"Bearer {credential.token}"} if credential else None
             )

@@ -64,6 +64,9 @@ The defaults behavior is to run 10 requests, using 1 worker, with `http://localh
 - default: True
 - note: If the PFP is not logging candidate detail you must skip candidate processing by setting this variable to False 
 
+#### PERFORMANCE_MONTH: If set will override the performance month in input data
+- default: None 
+
 ### Authentication (Google Cloud only)
 
 If TARGET_AUDIENCE is set then the bulk requester will send Google cloud credentials to the PFP service. Both TARGET_AUDIENCE and SERVICE_ACCOUNT_KEY_PATH must be set. Both values can be obtained from deployment team.
