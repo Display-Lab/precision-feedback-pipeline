@@ -32,7 +32,7 @@ OUTPUT = os.environ.get("OUTPUT", None)
 
 process_candidates_str = os.environ.get("PROCESS_CANDIDATES", "True")
 PROCESS_CANDIDATES = process_candidates_str.lower() in ["true", "t", "1", "yes"]
-PERFORMANCE_MONTH = os.environ.setdefault("PERFORMANCE_MONTH", None)
+PERFORMANCE_MONTH = os.environ.get("PERFORMANCE_MONTH", None)
 
 candidate_df: pd.DataFrame = pd.DataFrame()
 response_df: pd.DataFrame = pd.DataFrame()
