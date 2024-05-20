@@ -76,7 +76,7 @@ def post_json_message(filename):
 
             if PERFORMANCE_MONTH:
                 data["performance_month"] = PERFORMANCE_MONTH
-            
+
             headers = (
                 {"Authorization": f"Bearer {credential.token}"} if credential else None
             )

@@ -54,6 +54,7 @@ def generate_history(filename):
             return
 
     data["History"] = {}
+    perf_month = data["performance_month"]
 
     for month in months_range:
         month_str = month.strftime("%Y-%m-%d")
@@ -82,9 +83,10 @@ def generate_history(filename):
             else:
                 if response.status_code != 400:
                     print(f"Error processing {filename}: code {response.status_code}")
-
         except Exception as e:
             print(f"Error processing {filename}: {e}")
+
+    data["performance_month"] = perf_month
 
     name, extension = filename.split(".")
     new_filename = f"{name}_h.{extension}"
