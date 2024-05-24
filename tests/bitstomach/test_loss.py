@@ -206,6 +206,6 @@ def test_moderators():
         if moderator["comparator_type"] == PSDO.peer_90th_percentile_benchmark
     ][0]
 
-    assert moderator["gap_size"] == abs(gap)
+    assert moderator["comparison_size"] == abs(gap)
     assert moderator["trend_size"] == abs(slope) * 2
-    assert moderator["prior_gap_size"] == abs(prior_gap)
+    assert moderator["prior_comparison_size"] == abs(prior_gap)

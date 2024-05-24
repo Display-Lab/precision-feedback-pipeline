@@ -91,7 +91,7 @@ def score_better(
 ) -> float:
     moderators = comparator_moderators(candidate, motivating_informations, Comparison)
 
-    score = moderators["gap_size"]  # * mpm["gap_size"]
+    score = moderators["comparison_size"]  # * mpm["comparison_size"]
 
     return score
 
@@ -175,7 +175,7 @@ def score_worse(
 ) -> float:
     moderators = comparator_moderators(candidate, motivating_informations, Comparison)
 
-    score = moderators["gap_size"]  # * mpm["gap_size"]
+    score = moderators["comparison_size"]  # * mpm["comparison_size"]
 
     return score
 
@@ -207,10 +207,10 @@ def score_approach(
     moderators = comparator_moderators(candidate, motivating_informations, Approach)
 
     score = (
-        moderators["gap_size"] * mpm["gap_size"]
+        moderators["comparison_size"] * mpm["comparison_size"]
         + moderators["trend_size"] * mpm["trend_size"]
-        + moderators["streak_length"] * mpm["achievement_recency"]
-    ) / (mpm["gap_size"] + mpm["trend_size"] + mpm["achievement_recency"])
+        + moderators["achievement_recency"] * mpm["achievement_recency"]
+    ) / (mpm["comparison_size"] + mpm["trend_size"] + mpm["achievement_recency"])
 
     return score
 
@@ -221,10 +221,10 @@ def score_gain(
     moderators = comparator_moderators(candidate, motivating_informations, Achievement)
 
     score = (
-        moderators["gap_size"] * mpm["gap_size"]
+        moderators["comparison_size"] * mpm["comparison_size"]
         + moderators["trend_size"] * mpm["trend_size"]
-        + moderators["streak_length"] * mpm["achievement_recency"]
-    ) / (mpm["gap_size"] + mpm["trend_size"] + mpm["achievement_recency"])
+        + moderators["achievement_recency"] * mpm["achievement_recency"]
+    ) / (mpm["comparison_size"] + mpm["trend_size"] + mpm["achievement_recency"])
 
     return score
 
@@ -235,10 +235,10 @@ def score_loss(
     moderators = comparator_moderators(candidate, motivating_informations, Loss)
 
     score = (
-        moderators["gap_size"] * mpm["gap_size"]
+        moderators["comparison_size"] * mpm["comparison_size"]
         + moderators["trend_size"] * mpm["trend_size"]
-        + moderators["streak_length"] * mpm["loss_recency"]
-    ) / (mpm["gap_size"] + mpm["trend_size"] + mpm["loss_recency"])
+        + moderators["loss_recency"] * mpm["loss_recency"]
+    ) / (mpm["comparison_size"] + mpm["trend_size"] + mpm["loss_recency"])
 
     return score
 
