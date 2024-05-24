@@ -10,14 +10,14 @@ from utils.namespace import PSDO, SLOWMO
 TEMPLATE_A = "https://repo.metadatacenter.org/template-instances/9e71ec9e-26f3-442a-8278-569bcd58e708"
 MPM = {
     "social worse": {
-        "comparison_size": 0.5,
+        "gap_size": 0.5,
         "message_recency": 0.9,
         "message_received_count": 0.5,
         "measure_recency": 0.5,
         "coachiness": 1.0,
     },
     "social better": {
-        "comparison_size": 0.5,
+        "gap_size": 0.5,
         "message_recency": 0.9,
         "message_received_count": 0.9,
         "measure_recency": 0.5,
@@ -38,7 +38,7 @@ MPM = {
         "coachiness": 1.0,
     },
     "goal gain": {
-        "comparison_size": 0.5,
+        "gap_size": 0.5,
         "trend_size": 0.8,
         "achievement_recency": 0.5,
         "message_recency": 0.9,
@@ -47,7 +47,7 @@ MPM = {
         "coachiness": 0.5,
     },
     "goal loss": {
-        "comparison_size": 0.5,
+        "gap_size": 0.5,
         "trend_size": 0.8,
         "loss_recency": 0.5,
         "message_recency": 0.9,

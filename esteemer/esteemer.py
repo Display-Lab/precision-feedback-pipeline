@@ -91,7 +91,7 @@ def score_better(
 ) -> float:
     moderators = comparator_moderators(candidate, motivating_informations, Comparison)
 
-    score = moderators["gap_size"]  # * mpm["comparison_size"]
+    score = moderators["gap_size"]  # * mpm["gap_size"]
 
     return score
 
@@ -175,7 +175,7 @@ def score_worse(
 ) -> float:
     moderators = comparator_moderators(candidate, motivating_informations, Comparison)
 
-    score = moderators["gap_size"]  # * mpm["comparison_size"]
+    score = moderators["gap_size"]  # * mpm["gap_size"]
 
     return score
 
@@ -207,10 +207,10 @@ def score_approach(
     moderators = comparator_moderators(candidate, motivating_informations, Approach)
 
     score = (
-        moderators["gap_size"] * mpm["comparison_size"]
+        moderators["gap_size"] * mpm["gap_size"]
         + moderators["trend_size"] * mpm["trend_size"]
         + moderators["streak_length"] * mpm["achievement_recency"]
-    ) / (mpm["comparison_size"] + mpm["trend_size"] + mpm["achievement_recency"])
+    ) / (mpm["gap_size"] + mpm["trend_size"] + mpm["achievement_recency"])
 
     return score
 
@@ -221,10 +221,10 @@ def score_gain(
     moderators = comparator_moderators(candidate, motivating_informations, Achievement)
 
     score = (
-        moderators["gap_size"] * mpm["comparison_size"]
+        moderators["gap_size"] * mpm["gap_size"]
         + moderators["trend_size"] * mpm["trend_size"]
         + moderators["streak_length"] * mpm["achievement_recency"]
-    ) / (mpm["comparison_size"] + mpm["trend_size"] + mpm["achievement_recency"])
+    ) / (mpm["gap_size"] + mpm["trend_size"] + mpm["achievement_recency"])
 
     return score
 
@@ -235,10 +235,10 @@ def score_loss(
     moderators = comparator_moderators(candidate, motivating_informations, Loss)
 
     score = (
-        moderators["gap_size"] * mpm["comparison_size"]
+        moderators["gap_size"] * mpm["gap_size"]
         + moderators["trend_size"] * mpm["trend_size"]
         + moderators["streak_length"] * mpm["loss_recency"]
-    ) / (mpm["comparison_size"] + mpm["trend_size"] + mpm["loss_recency"])
+    ) / (mpm["gap_size"] + mpm["trend_size"] + mpm["loss_recency"])
 
     return score
 
@@ -288,11 +288,11 @@ def score_history(candidate: Resource, history, mpm: dict) -> float:
     mod = History.moderators(signals)[0]
 
     return (
-        mod["message_recurrence"] * mpm["message_received_count"]
+        mod["message_recurrence"] * mpm["message_recurrence"]
         + mod["message_recency"] * mpm["message_recency"]
         + mod["measure_recency"] * mpm["measure_recency"]
     ) / (
-        mpm["message_received_count"] + mpm["message_recency"] + mpm["measure_recency"]
+        mpm["message_recurrence"] + mpm["message_recency"] + mpm["measure_recency"]
     )
 
 
