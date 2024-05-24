@@ -142,7 +142,11 @@ def score(candidate: Resource, history: dict, preferences: dict) -> Resource:
         return None
 
     # MI
-    mi_score = score_mi(candidate, motivating_informations)
+    if settings.use_mi:
+        mi_score = score_mi(candidate, motivating_informations)
+    else:
+        mi_score = 0.0
+
     candidate[URIRef("motivating_score")] = Literal(mi_score, datatype=XSD.double)
 
     # History
