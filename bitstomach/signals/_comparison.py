@@ -93,13 +93,13 @@ class Comparison(Signal):
     @classmethod
     def moderators(cls, motivating_informations: List[Resource]) -> List[dict]:
         """
-        extracts comparison moderators (gap_size and comparator_type) from a suplied list of motivating information
+        extracts comparison moderators (comparison_size and comparator_type) from a suplied list of motivating information
         """
         mods = []
 
         for signal in super().select(motivating_informations):
             motivating_info_dict = super().moderators(signal)
-            motivating_info_dict["gap_size"] = round(
+            motivating_info_dict["comparison_size"] = round(
                 abs(signal.value(SLOWMO.PerformanceGapSize).value), 4
             )
             motivating_info_dict["comparator_type"] = signal.value(

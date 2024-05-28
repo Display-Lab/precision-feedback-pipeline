@@ -114,14 +114,14 @@ class Loss(Signal):
     @classmethod
     def moderators(cls, motivating_informations: List[Resource]) -> List[dict]:
         """
-        extracts loss moderators (trend_slope, gap_size, comparator_type and prior_gap_size) from a suplied list of motivating information
+        extracts loss moderators (trend_slope, comparison_size, comparator_type and prior_comparison_size) from a suplied list of motivating information
         """
         mods = []
 
         for signal in super().select(motivating_informations):
             motivating_info_dict = super().moderators(signal)
 
-            motivating_info_dict["gap_size"] = round(
+            motivating_info_dict["comparison_size"] = round(
                 abs(signal.value(SLOWMO.PerformanceGapSize).value), 4
             )
             motivating_info_dict["comparator_type"] = signal.value(
@@ -130,10 +130,10 @@ class Loss(Signal):
             motivating_info_dict["trend_size"] = round(
                 abs(signal.value(SLOWMO.PerformanceTrendSlope).value * 2), 4
             )
-            motivating_info_dict["prior_gap_size"] = round(
+            motivating_info_dict["prior_comparison_size"] = round(
                 abs(signal.value(SLOWMO.PriorPerformanceGapSize).value), 4
             )
-            motivating_info_dict["streak_length"] = (
+            motivating_info_dict["loss_recency"] = (
                 signal.value(SLOWMO.StreakLength).value / 12
             )
 
