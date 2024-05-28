@@ -1,44 +1,62 @@
-from rdflib import BNode, Graph, Literal, URIRef #, ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
-from bitstomach2 import bitstomach
-
-from candidatesmasher.candidatesmasher import CandidateSmasher
-from utils.graph_operations import read_graph, create_performer_graph
-from fastapi import FastAPI, Request, HTTPException
-from thinkpudding.thinkpudding import Thinkpudding
-from bit_stomach.bit_stomach import BitStomach
-from pictoralist.pictoralist import Pictoralist
-from requests_file import FileAdapter
-from utils.settings import settings
-from loguru import logger
-from typing import List
-from io import BytesIO
-import pandas as pd
-import webbrowser
-import requests
+import csv
 import json
-import sys
 import os
+import sys
+import time
+import webbrowser
+from datetime import timedelta
+from io import StringIO
+from pathlib import Path
 
-from esteemer import utils, esteemer
+import matplotlib
+import psutil
+import requests
+from fastapi import FastAPI, HTTPException, Request
+from loguru import logger
+from rdflib import (  # , ConjunctiveGraph, Namespace, URIRef, RDFS, Literal
+    RDF,
+    BNode,
+    Graph,
+    Literal,
+    URIRef,
+)
+from requests_file import FileAdapter
 
-global templates, pathways, measures
+from bitstomach import bitstomach
+from candidate_pudding import candidate_pudding
+from esteemer import esteemer, utils
+from pictoralist.pictoralist import Pictoralist
+from utils.graph_operations import read_graph
+from utils.namespace import PSDO, SLOWMO
+from utils.settings import settings
+
+matplotlib.use("Agg")
+
+
+logger.info(
+    f"Initial system memory: {psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024}"
+)
 
 ### Logging module setup (using loguru module)
 logger.remove()
 logger.add(
     sys.stdout, colorize=True, format="{level}|  {message}", level=settings.log_level
 )
+logger.at_least = (
+    lambda lvl: logger.level(lvl).no >= logger.level(settings.log_level).no
+)
 
 ## Log of instance configuration
-logger.info("Startup configuration for this instance:")
+logger.debug("Startup configuration for this instance:")
 for attribute in dir(settings):
     if not attribute.startswith("__"):
         value = getattr(settings, attribute)
-        logger.info(f"{attribute}:\t{value}")
+        logger.debug(f"{attribute}:\t{value}")
 
 
 ### Create RDFlib graph from locally saved json files
-def local_to_graph(thisDirectory, thisGraph):
+def local_to_graph(thisDirectory):
+    g: Graph = Graph()
     logger.debug("Starting function local_to_graph...")
 
     # Scrape directory, filter to only JSON files, build list of paths to the files (V2)
@@ -54,12 +72,14 @@ def local_to_graph(thisDirectory, thisGraph):
         temp_graph.parse(
             json_only[n], format="json-ld"
         )  # Parse list data in JSON format
-        thisGraph = thisGraph + temp_graph  # Add parsed data to graph object
-    return thisGraph
+        g = g + temp_graph  # Add parsed data to graph object
+    return g
 
 
 ### Create RDFlib graph from remote knowledgebase JSON files
-def remote_to_graph(contentURL, thisGraph):
+def remote_to_graph(contentURL):
+    g: Graph = Graph()
+
     logger.debug("Starting function remote_to_graph...")
 
     # Fetch JSON content from URL (directory)
@@ -79,27 +99,41 @@ def remote_to_graph(contentURL, thisGraph):
                     data=json.dumps(file_jsoned), format="json-ld"
                 )  # Parse JSON, store as graph
                 logger.debug(f"Graphed file {file_name}")
-                thisGraph += temp_graph
+                g += temp_graph
 
     except json.JSONDecodeError:
         raise Exception("Failed parsing JSON content.")
 
-    return thisGraph
+    return g
 
 
-### Create empty RDFlib graphs to store resource description triples
-pathway_graph = Graph()
-template_graph = Graph()
+### read csv file to a dictionary
+def load_mpm() -> dict:
+    mpm_dict = {}
 
-### Changes loading strategy depending on the source of PFKB content
-if not settings.pathways.startswith("http"):
-    # Build graphs with local os.dirname method if using file URI
-    causal_pathways = local_to_graph(settings.pathways, pathway_graph)
-    templates = local_to_graph(settings.templates, template_graph)
-else:
-    # Build graphs from remote resource if using URLs
-    causal_pathways = remote_to_graph(settings.pathways, pathway_graph)
-    templates = remote_to_graph(settings.templates, template_graph)
+    if settings.mpm.startswith("http"):
+        response = requests.get(settings.mpm)
+        response.raise_for_status()
+        csv_content = StringIO(response.text)
+        file = csv_content
+    else:
+        file = open(settings.mpm, mode="r")
+
+    reader = csv.DictReader(file)
+    for row in reader:
+        outer_key = row["Causal_pathway"]
+        inner_dict = {
+            key: float(value) if value != "--" else None
+            for key, value in row.items()
+            if key != "Causal_pathway"
+        }
+        mpm_dict[outer_key] = inner_dict
+
+    if not settings.mpm.startswith("http"):
+        file.close()
+
+    return mpm_dict
+
 
 # Set up request session as se, config to handle file URIs with FileAdapter
 se = requests.Session()
@@ -110,12 +144,34 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     try:
-        global measure_details, causal_pathways, templates, f3json, f5json
+        global \
+            comparators_graph, \
+            measures_graph, \
+            mpm, \
+            default_preferences, \
+            causal_pathways_graph, \
+            templates_graph
 
-        f3json = se.get(settings.measures).text
-        f5json = se.get(settings.mpm).content
-        causal_pathways = causal_pathways
-        templates = templates
+        measures_text = se.get(settings.measures).text
+        measures_graph = read_graph(measures_text)
+
+        comparators_text = se.get(settings.comparators).text
+        comparators_graph = read_graph(comparators_text)
+
+        mpm = load_mpm()
+
+        preferences_text = se.get(settings.preferences).text
+        default_preferences = json.loads(preferences_text)
+
+        ### Changes loading strategy depending on the source of PFKB content
+        if not settings.pathways.startswith("http"):
+            # Build graphs with local os.dirname method if using file URI
+            causal_pathways_graph = local_to_graph(settings.pathways)
+            templates_graph = local_to_graph(settings.templates)
+        else:
+            # Build graphs from remote resource if using URLs
+            causal_pathways_graph = remote_to_graph(settings.pathways)
+            templates_graph = remote_to_graph(settings.templates)
 
     except Exception as e:
         print("Startup aborted, see traceback:")
@@ -127,6 +183,11 @@ async def root():
     return {"Hello": "Universe"}
 
 
+@app.get("/info")
+async def info():
+    return settings
+
+
 @app.get("/template/")
 async def template():
     github_link = "https://raw.githubusercontent.com/Display-Lab/precision-feedback-pipeline/main/input_message.json"
@@ -135,162 +196,178 @@ async def template():
 
 @app.post("/createprecisionfeedback/")
 async def createprecisionfeedback(info: Request):
-    selected_message = {}
     req_info = await info.json()
-    req_info1 = req_info
-    performance_data = req_info1["Performance_data"]
 
-    performance_data_df = pd.DataFrame(
-        performance_data,
-        columns=[
-            "staff_number",
-            "Measure_Name",
-            "Month",
-            "Passed_Count",
-            "Flagged_Count",
-            "Denominator",
-            "peer_average_comparator",
-            "peer_90th_percentile_benchmark",
-            "peer_75th_percentile_benchmark",
-            "MPOG_goal",
-        ],
-    )
-    performance_data_df.columns = performance_data_df.iloc[0]
-    performance_data_df = performance_data_df[1:]
-    p_df = req_info1["Performance_data"]
-    del req_info1["Performance_data"]
-    history = req_info1["History"]
-    del req_info1["History"]
-    preferences = req_info1["Preferences"]
-    ## Pass message instance ID from input message through to pictoralist
-    message_instance_id = req_info1.get("message_instance_id")
-    del req_info1["Preferences"]
-    input_message = read_graph(req_info1)
-    measure_details = Graph()
+    if settings.performance_month:
+        req_info["performance_month"] = settings.performance_month
 
-    for s, p, o in measure_details.triples((None, None, None)):
-        measure_details.remove((s, p, o))
+    preferences = set_preferences(req_info)
 
-    measure_details = read_graph(f3json)
-    mpm = f5json
-    # print(type(mpm))
-    mpm_df = pd.read_csv(BytesIO(mpm))
-    # print(df1)
-    performer_graph = create_performer_graph(measure_details)
+    initial_tic = tic = time.perf_counter()
+
+    cool_new_super_graph = Graph()
+    cool_new_super_graph += comparators_graph
+    cool_new_super_graph += causal_pathways_graph
+    cool_new_super_graph += measures_graph
+    cool_new_super_graph += templates_graph
+
+    toc = time.perf_counter()
+    timing = {"load base graph": f"{(toc-tic)*1000.:2.2f} ms"}
+    debug_output_if_set(cool_new_super_graph, "outputs/base.json")
 
     # BitStomach
-    logger.info("Calling BitStomach from main...")
+    logger.debug("Calling BitStomach from main...")
 
-    # Trying another strategy for graceful exit:
-    try:
-        bs = BitStomach(performer_graph, performance_data_df)
-    except ValueError:
+    tic = time.perf_counter()
+    performance_data_df = bitstomach.prepare(req_info)
+    # TODO: find a place for measures to live...mabe move these two line into prepare or make a measurees class
+    measures = set(cool_new_super_graph[: RDF.type : PSDO.performance_measure_content])
+
+    performance_data_df.attrs["valid_measures"] = [
+        m for m in performance_data_df.attrs["valid_measures"] if BNode(m) in measures
+    ]
+    g: Graph = bitstomach.extract_signals(performance_data_df)
+
+    performance_content = g.resource(BNode("performance_content"))
+    if len(list(performance_content[PSDO.motivating_information])) == 0:
+        cool_new_super_graph.close()
+        detail = {
+            "message": "Insufficient significant data found for providing feedback, process aborted.",
+            "message_instance_id": req_info["message_instance_id"],
+            "staff_number": performance_data_df.attrs["staff_number"],
+        }
         raise HTTPException(
             status_code=400,
-            detail=f"Insufficient significant data found for providing feedback, process aborted. Message_instance_id: {message_instance_id}",
+            detail=detail,
             headers={"400-Error": "Invalid Input Error"},
         )
-        sys.exit(4)
 
-    performer_graph = bs.annotate()
-    op = performer_graph.serialize(format="json-ld", indent=4)
-    if settings.outputs == True and settings.log_level == "DEBUG":
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_bs.json", "w")
-        f.write(op)
-        f.close()
-        # print(settings.outputs)
-        # print(settings.log_level)
-    
-    #BitStomach 2
-    g: Graph = bitstomach.extract_signals(performance_data)
-    performer_graph += g
-    
-    
-    if settings.outputs == True and settings.log_level == "DEBUG":
-        op=performer_graph.serialize(format='json-ld', indent=4)
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_bs2.json", "w")
-        f.write(op)
-        f.close()
+    cool_new_super_graph += g
+    toc = time.perf_counter()
+    timing["extract signals"] = f"{(toc-tic)*1000.:.2f} ms"
 
-    #CandidateSmasher
+    debug_output_if_set(cool_new_super_graph, "outputs/spek_bs.json")
 
-    logger.info(f"Calling CandidateSmasher from main...")
-    cs = CandidateSmasher(performer_graph, templates)
-    df_graph, goal_types, peer_types, top_10_types, top_25_types = cs.get_graph_type()
-    df_template, df_1, df_2, df_3, df16 = cs.get_template_data()
-    # create top_10
-    CS = cs.create_candidates(top_10_types, df_1)
-    # #create top_25
-    CS = cs.create_candidates(top_25_types, df_2)
-    # #creat peers
-    CS = cs.create_candidates(peer_types, df_3)
-    # create goal
-    CS = cs.create_candidates(goal_types, df16)
-    oc = CS.serialize(format="json-ld", indent=4)
-    if settings.outputs is True and settings.log_level == "DEBUG":
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_cs.json", "w")
-        f.write(oc)
-        f.close()
-
-    # Thinkpuddung
-    logger.info("Calling ThinkPudding from main...")
-    tp = Thinkpudding(CS, causal_pathways)
-    tp.process_causalpathways()
-    tp.process_performer_graph()
-    tp.matching()
-    performer_graph = tp.insert()
-    if settings.outputs is True and settings.log_level == "DEBUG":
-        ot = performer_graph.serialize(format="json-ld", indent=4)
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_tp.json", "w")
-        f.write(ot)
-        f.close()
+    # candidate_pudding
+    logger.debug("Calling candidate_pudding from main...")
+    tic = time.perf_counter()
+    candidate_pudding.create_candidates(cool_new_super_graph)
+    toc = time.perf_counter()
+    timing["create candidates"] = f"{(toc-tic)*1000.:.2f} ms"
 
     # #Esteemer
-    logger.info("Calling Esteemer from main...")
+    logger.debug("Calling Esteemer from main...")
+    history: dict = req_info.get("History", {})
+    history = {
+        key: value
+        for key, value in history.items()
+        if key < performance_data_df.attrs["performance_month"]
+    }
 
-    for measure in utils.measures(performer_graph):
+    tic = time.perf_counter()
+    measures: set[BNode] = set(
+        cool_new_super_graph.objects(
+            None, PSDO.motivating_information / SLOWMO.RegardingMeasure
+        )
+    )
+    for measure in measures:
         candidates = utils.candidates(
-            performer_graph, filter_acceptable=True, measure=measure
+            cool_new_super_graph, filter_acceptable=True, measure=measure
         )
         for candidate in candidates:
-            esteemer.score(candidate, history, preferences)
-    selected_candidate = esteemer.select_candidate(performer_graph)
+            esteemer.score(candidate, history, preferences["Message_Format"], mpm)
+    selected_candidate = esteemer.select_candidate(cool_new_super_graph)
+    if preferences["Display_Format"]:
+        cool_new_super_graph.resource(selected_candidate)[SLOWMO.Display] = Literal(
+            preferences["Display_Format"]
+        )
+    toc = time.perf_counter()
+    timing["esteemer"] = f"{(toc-tic)*1000.:.2f} ms"
 
     # print updated graph by esteemer
-    if settings.outputs is True and settings.log_level == "DEBUG":
-        st = performer_graph.serialize(format="json-ld", indent=4)
-        folderName = "outputs"
-        os.makedirs(folderName, exist_ok=True)
-        f = open("outputs/spek_st.json", "w")
-        f.write(st)
-        f.close()
+    debug_output_if_set(cool_new_super_graph, "outputs/spek_st.json")
 
-    selected_message = utils.render(performer_graph, selected_candidate)
+    tic = time.perf_counter()
+    selected_message = utils.render(cool_new_super_graph, selected_candidate)
 
     ### Pictoralist 2, now on the Nintendo DS: ###
-    logger.info("Calling Pictoralist from main...")
+    logger.debug("Calling Pictoralist from main...")
     if selected_message["message_text"] != "No message selected":
         ## Initialize and run message and display generation:
+        tic = time.perf_counter()
         pc = Pictoralist(
-            performance_data_df, p_df, selected_message, settings, message_instance_id
+            performance_data_df,
+            req_info["Performance_data"],
+            selected_message,
+            settings,
+            req_info["message_instance_id"],
         )
         pc.prep_data_for_graphing()  # Setup dataframe of one measure, cleaned for graphing
         pc.fill_missing_months()  # Fill holes in dataframe where they exist
         pc.set_timeframe()  # Ensure no less than three months being graphed
         pc.finalize_text()  # Finalize text message and labels
         pc.graph_controller()  # Select and run graphing based on display type
-        full_selected_message = pc.prepare_selected_message()
-        if settings.log_level == "DEBUG":
-            performer_graph.add((BNode("p1"),URIRef("http://example.com/slowmo#IsAboutPerformer"),Literal(performance_data_df["staff_number"].iloc[0])  ))
-        
-            full_selected_message["candidates"] = utils.candidates_records(performer_graph)
 
-    return full_selected_message
+        full_selected_message = pc.prepare_selected_message()
+    else:
+        full_selected_message = selected_message
+
+    toc = time.perf_counter()
+    timing["pictoralist"] = f"{(toc-tic)*1000.:.2f} ms"
+    timing["total"] = timedelta(seconds=(toc - initial_tic))
+
+    response = {}
+    # if settings.log_level == "INFO":
+    if logger.at_least("INFO"):
+        response["timing"] = timing
+
+        # Get memory usage information
+        mem_info = psutil.Process(os.getpid()).memory_info()
+
+        response["memory (RSS in MB)"] = {
+            "memory_info.rss": mem_info.rss / 1024 / 1024,
+        }
+
+        cool_new_super_graph.add(
+            (
+                BNode("p1"),
+                URIRef("http://example.com/slowmo#IsAboutPerformer"),
+                Literal(int(performance_data_df["staff_number"].iloc[0])),
+            )
+        )
+        response["candidates"] = utils.candidates_records(cool_new_super_graph)
+
+    response.update(full_selected_message)
+
+    return response
+
+
+def set_preferences(req_info):
+    preferences_utilities = req_info.get("Preferences", {}).get("Utilities", {})
+    input_preferences: dict = preferences_utilities.get("Message_Format", {})
+    individual_preferences: dict = {}
+    for key in input_preferences:
+        individual_preferences[key.lower()] = float(input_preferences[key])
+
+    preferences: dict = default_preferences.copy()
+    preferences.update(individual_preferences)
+
+    min_value = min(preferences.values())
+    max_value = max(preferences.values())
+
+    for key in preferences:
+        preferences[key] = (preferences[key] - min_value) / (max_value - min_value)
+
+    display_format = None
+    for key, value in preferences_utilities.get("Display_Format", {}).items():
+        if value == 1 and key != "System-generated":
+            display_format = key.lower()
+
+    return {"Message_Format": preferences, "Display_Format": display_format}
+
+
+def debug_output_if_set(graph: Graph, file_location):
+    if settings.outputs is True and logger.at_least("DEBUG"):
+        file_path = Path(file_location)
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        graph.serialize(destination=file_path, format="json-ld", indent=2)

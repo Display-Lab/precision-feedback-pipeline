@@ -2,20 +2,17 @@ from rdflib import Namespace, URIRef
 
 from utils.namespace import AliasingDefinedNamespace
 
+
 class CPO(AliasingDefinedNamespace):
-    _NS = Namespace("http://purl.obolibrary.org/cpo/")
+    _NS = Namespace("http://purl.obolibrary.org/obo/")
 
-    # http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
-    CPO_000123: URIRef  #
-    CPO_000124: URIRef  #
-    CPO_000125: URIRef  #
+    cpo_0000029: URIRef
+    causal_pathway: URIRef
 
-    # Aliases
-    foo: URIRef
-    # """CPO_000123"""
-    bar: URIRef
-    # baz: URIRef
+    cpo_0000056: URIRef
+    has_causal_pathway: URIRef
 
-    # _alias = {"foo": "CPO_000123", "bar": "CPO_000124"}
-
-    # _alias["baz"] = "CPO_000125"
+    _alias = {
+        "causal_pathway": "cpo_0000029",
+        "has_causal_pathway": "cpo_0000056",
+    }

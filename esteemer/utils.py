@@ -1,28 +1,9 @@
-import random
 from typing import List
 
-from rdflib import RDF, BNode, Graph, URIRef
+from rdflib import DCTERMS, RDF, RDFS, BNode, Graph, URIRef
 from rdflib.resource import Resource
 
-from utils import PSDO, RO, SLOWMO
-
-
-def measures(performer_graph: Graph) -> List[BNode]:
-    """
-    returns performer measures.
-
-    Parameters:
-    - performer_graph (Graph): The performer_graph.
-
-    Returns:
-    List[BNode]: returns list of performer measures.
-    """
-    measures = performer_graph.objects(
-        URIRef("http://example.com/app#display-lab"),
-        SLOWMO.IsAboutMeasure,
-    )
-    measure_list = list(measures)
-    return measure_list
+from utils import SLOWMO
 
 
 def candidates(
@@ -39,23 +20,27 @@ def candidates(
     Returns:
         List[Resource]: A list of candidate BNodes.
     """
-    
-  
+
     candidates = [
         performer_graph.resource(subject)
-        for subject in performer_graph.subjects(RDF.type,SLOWMO.Candidate )       
+        for subject in performer_graph.subjects(RDF.type, SLOWMO.Candidate)
     ]
-    
+
     candidates = [
         candidate
-        for candidate in candidates    
-        if(
-            (measure is None or candidate.value(SLOWMO.RegardingMeasure).identifier == measure)  
-           and
-            (not filter_acceptable or candidate.value(URIRef("slowmo:acceptable_by")) is not None)
-           ) 
+        for candidate in candidates
+        if (
+            (
+                measure is None
+                or candidate.value(SLOWMO.RegardingMeasure).identifier == measure
+            )
+            and (
+                not filter_acceptable
+                or candidate.value(SLOWMO.AcceptableBy) is not None
+            )
+        )
     ]
-    
+
     return candidates
 
 
@@ -71,18 +56,15 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
     BNode: selected message.
     """
     s_m = {}
-    a = 0
+
     # print(self.node)
     if candidate is None:
         s_m["message_text"] = "No message selected"
         return s_m
     else:
         temp_name = SLOWMO.name  # URI of template name?
-        p232 = URIRef("psdo:PerformanceSummaryDisplay")
-        Display = ["text only", "bar chart", "line graph"]
-        comparator_types = ["Top 25", "Top 10", "Peers", "Goal"]
-        sw = 0
         o2wea = []
+        candidate_resource = performer_graph.resource(candidate)
 
         ## Format selected_candidate to return for pictoralist-ing
         for s21, p21, o21 in performer_graph.triples(
@@ -99,54 +81,29 @@ def render(performer_graph: Graph, candidate: BNode) -> dict:
             s_m["message_text"] = o2
         # for s212,p212,o212 in self.spek_tp.triples((s,p232,None)):
 
-        s_m["display"] = random.choice(Display)
+        s_m["display"] = candidate_resource.value(
+            SLOWMO.Display
+        ).value  # random.choice(Display)
+
         # for s9,p9,o9 in self.spek_tp.triples((s,p8,None)):
         #     s_m["Comparator Type"] = o9
         for s2we, p2we, o2we in performer_graph.triples(
-            (candidate, URIRef("slowmo:acceptable_by"), None)
+            (candidate, SLOWMO.AcceptableBy, None)
         ):
             o2wea.append(o2we)
         # print(*o2wea)
         s_m["acceptable_by"] = o2wea
 
-        comparator_list = []
-
-        for s5, p5, o5 in performer_graph.triples(
-            (candidate, RO.has_disposition, None)
-        ):
-            s6 = o5
-            # print(o5)
-            for s7, p7, o7 in performer_graph.triples(
-                (s6, SLOWMO.RegardingMeasure, None)
-            ):
-                s_m["measure_name"] = o7
-                s10 = BNode(o7)
-                for s11, p11, o11 in performer_graph.triples(
-                    (s10, URIRef("http://purl.org/dc/terms/title"), None)
-                ):
-                    s_m["measure_title"] = o11
-            for s14, p14, o14 in performer_graph.triples((s6, RDF.type, None)):
-                # print(o14)
-                if o14 == PSDO.peer_75th_percentile_benchmark:
-                    comparator_list.append("Top 25")
-                    # s_m["comparator_type"]="Top 25"
-                if o14 == PSDO.peer_90th_percentile_benchmark:
-                    comparator_list.append("Top 10")
-                    # s_m["comparator_type"]="Top 10"
-                if o14 == PSDO.peer_average_comparator:
-                    comparator_list.append("Peers")
-                    # s_m["comparator_type"]="Peers"
-                if o14 == PSDO.goal_comparator_content:
-                    comparator_list.append("Goal")
-                    # s_m["comparator_type"]="Goal"
-        for i in comparator_list:
-            if i is not None:
-                a = i
-        s_m["comparator_type"] = a
+        measure = candidate_resource.value(SLOWMO.RegardingMeasure)
+        s_m["measure_name"] = str(measure.identifier)
+        s_m["measure_title"] = measure.value(DCTERMS.title).value
+        s_m["comparator_type"] = candidate_resource.value(
+            SLOWMO.RegardingComparator / RDFS.label
+        )
         return s_m
 
 
-def candidates_records(performer_graph: Graph) -> dict:
+def candidates_records(performer_graph: Graph) -> List[List]:
     """
     provides the representation of candidates as a dictionary.
 
@@ -156,49 +113,48 @@ def candidates_records(performer_graph: Graph) -> dict:
     Returns:
     dict: The representation of candidates as a dictionary.
     """
-    #candidate_list = []
-    candidate_list = [["staff_number", "measure", "month", "score", "number_of_months", "name", "acceptable_by", "selected"]]
+    candidate_list = [
+        [
+            "staff_number",
+            "measure",
+            "score",
+            "motivating_score",
+            "history_score",
+            "preference_score",
+            "coachiness_score",
+            "name",
+            "acceptable_by",
+            "selected",
+        ]
+    ]
 
-
-    for a_candidate in candidates(performer_graph):
+    for a_candidate in candidates(performer_graph, filter_acceptable=True):
         # representation = candidate_as_dictionary(a_candidate)
         representation = candidate_as_record(a_candidate)
-        
+
         candidate_list.append(representation)
     return candidate_list
 
 
-def candidate_as_dictionary(a_candidate: Resource) -> dict:
-    representation = {}
-    score = a_candidate.value(SLOWMO.Score) 
-    if score is not None:  # Literal('0.0') tests as false, so test for None explicitly
-        score = round(
-            float(score.value), 4
-        )  # and we are explicit floating to eliminate numpy types that give the json decoder problems
-
-    representation["score"] = score
-
-    representation["number_of_months"] = a_candidate.value(SLOWMO.numberofmonths)
-
-    representation["measure"] = a_candidate.value(SLOWMO.RegardingMeasure).identifier
-    representation["name"] = a_candidate.value( SLOWMO.name)
-    representation["acceptable_by"] =  a_candidate.value( URIRef("slowmo:acceptable_by"))
-    representation["selected"] = a_candidate.value( URIRef("slowmo:selected"))
-
-    return representation
-
 def candidate_as_record(a_candidate: Resource) -> List:
-    #["staff_number", "measure", "month", "score", "number_of_months", "name", "acceptable_by", "selected"]
     representation = []
-    
-    representation.append(a_candidate.graph.value(BNode("p1"),URIRef("http://example.com/slowmo#IsAboutPerformer")).value)
+
+    representation.append(
+        a_candidate.graph.value(
+            BNode("p1"), URIRef("http://example.com/slowmo#IsAboutPerformer")
+        ).value
+    )
     representation.append(a_candidate.value(SLOWMO.RegardingMeasure).identifier)
-    representation.append("N/A")
-    score = a_candidate.value(SLOWMO.Score) 
-    representation.append(round(float(score.value), 4) if score else None)
-    representation.append(a_candidate.value(SLOWMO.numberofmonths))
-    representation.append(a_candidate.value( SLOWMO.name))
-    representation.append(a_candidate.value( URIRef("slowmo:acceptable_by")))
-    representation.append(a_candidate.value( URIRef("slowmo:selected")))  
-    
+    score = a_candidate.value(SLOWMO.Score)
+    representation.append(score)
+    representation.append(a_candidate.value(URIRef("motivating_score")))
+    representation.append(a_candidate.value(URIRef("history_score")))
+
+    representation.append(a_candidate.value(URIRef("preference_score")))
+    representation.append(a_candidate.value(URIRef("coachiness_score")))
+
+    representation.append(a_candidate.value(SLOWMO.name))
+    representation.append(a_candidate.value(SLOWMO.AcceptableBy))
+    representation.append(bool(a_candidate.value(SLOWMO.Selected)))
+
     return representation

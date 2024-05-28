@@ -13,6 +13,7 @@ Read through our [wiki pages](https://github.com/Display-Lab/precision-feedback-
 - Testing with Google Cloud? See [this page](https://github.com/Display-Lab/precision-feedback-pipeline/wiki/Testing-with-Google-Cloud) for instructions.
      - Make sure you have Google Chrome installed
      - Check the wiki page for instructions on installing and using the Postman Interceptor plugin.
+- More on [Bulk testing](bulk-up/README.md)
 
 
 ## For Developers

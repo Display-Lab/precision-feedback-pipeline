@@ -1,8 +1,9 @@
+import os
+import sys
+
+# import tomllib
 from decouple import Config, RepositoryEnv, config
 from loguru import logger
-import sys
-import os
-
 
 ## Logging setup
 logger.remove()
@@ -10,33 +11,63 @@ logger.add(sys.stdout, colorize=True, format="{level} | {message}")
 
 ## Control switch for production and dev configurations
 # User specifies custom env var set to use on startup, else errors out at loading 'templates'
-env_path = os.environ.get('ENV_PATH')
-if env_path != None:
-    logger.debug(f"ENV_PATH specified. Running from environment variables in {env_path}...")
+env_path = os.environ.get("ENV_PATH")
+if env_path is not None:
+    logger.debug(
+        f"ENV_PATH specified. Running from environment variables in {env_path}..."
+    )
     config = Config(RepositoryEnv(env_path))
 else:
-    logger.debug(f"ENV_PATH not specified, running from manually set environment variables...")
+    logger.debug(
+        "ENV_PATH not specified, running from manually set environment variables..."
+    )
+
+# with open("pyproject.toml", "rb") as f:
+#     pypro = tomllib.load(f)
 
 
 ## Settings class to store decoupled instance and build settings:
 class Settings:
     def __init__(self):
+        # self.version = pypro["tool"]["poetry"]["version"]
+
         # Knowledge settings
-        self.templates = config('templates', cast=str)
-        self.pathways  = config('pathways', cast=str)
-        self.measures  = config('measures', cast=str)
-        self.mpm       = config('mpm', cast=str)
+        self.templates = config("templates", cast=str, default=None)
+        self.pathways = config("pathways", cast=str, default=None)
+        self.measures = config("measures", cast=str, default=None)
+        self.mpm = config("mpm", cast=str, default=None)
+        self.comparators = config("comparators", cast=str, default=None)
+        self.preferences = config("preferences", cast=str, default=None)
 
         # Instance settings
-        self.log_level      = config('log_level', cast=str, default='INFO')         # Logging level for instance
-        self.generate_image = config('generate_image', cast=bool, default=True)     # Generate image flag (pictoraless)
-        self.cache_image    = config('cache_image', cast=bool, default=False)       # Cache generated image flag
-        self.outputs        = config('outputs', cast=bool, default=False)           # Logging of intermediate files
+        self.log_level = config(
+            "log_level", cast=str, default="WARNING"
+        )  # Logging level for instance
+        self.generate_image = config(
+            "generate_image", cast=bool, default=True
+        )  # Generate image flag (pictoraless)
+        self.cache_image = config(
+            "cache_image", cast=bool, default=False
+        )  # Cache generated image flag
+        self.outputs = config(
+            "outputs", cast=bool, default=False
+        )  # Logging of intermediate files
+        self.performance_month = config(
+            "performance_month", default=None
+        )  # performance_month for instance
+        self.use_mi = config("use_mi", cast=bool, default=True)  # use mi
+        self.use_preferences = config(
+            "use_preferences", cast=bool, default=True
+        )  # use preferences
+        self.use_history = config("use_history", cast=bool, default=True)  # use history
+        self.use_coachiness = config(
+            "use_coachiness", cast=bool, default=True
+        )  # use coachiness
 
         # Instance display settings
-        self.display_window = config('display_window', cast=int, default=6)
-        self.plot_goal_line = config('plot_goal_line', cast=bool, default=True)
-        
+        self.display_window = config("display_window", cast=int, default=6)
+        self.plot_goal_line = config("plot_goal_line", cast=bool, default=True)
+
 
 # Instantiate
 settings = Settings()

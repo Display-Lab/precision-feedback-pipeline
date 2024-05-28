@@ -1,14 +1,18 @@
-import json
 import random
+from datetime import datetime
+from typing import List
 
-from rdflib import RDF, XSD, BNode, Graph, Literal, URIRef
+from rdflib import XSD, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
-from bitstomach2.signals import Comparison, Trend
-from utils.namespace import PSDO, RO, SLOWMO
+from bitstomach.signals import Achievement, Approach, Comparison, Loss, Signal, Trend
+from esteemer import utils
+from esteemer.signals import History
+from utils.namespace import PSDO, SLOWMO
+from utils.settings import settings
 
 
-def score(candidate_resource: Resource, history: json, preferences: json):
+def score(candidate: Resource, history: dict, preferences: dict, MPM: dict) -> Resource:
     """
     calculates score.
 
@@ -21,103 +25,278 @@ def score(candidate_resource: Resource, history: json, preferences: json):
     float: score.
     """
 
-    # calculate sub-score
-    # 1. based on motivating info
-    motivating_info = calculate_motivating_info_score(candidate_resource)
+    CAUSAL_PATHWAY = {
+        "social better": {"score": score_better, "rules": rule_social_highest},
+        "social worse": {"score": score_worse, "rules": null_rule},
+        "improving": {"score": score_improving, "rules": null_rule},
+        "worsening": {"score": score_worsening, "rules": null_rule},
+        "goal gain": {"score": score_gain, "rules": null_rule},
+        "goal loss": {"score": score_loss, "rules": null_rule},
+        "social gain": {"score": score_gain, "rules": rule_social_highest},
+        "social loss": {"score": score_loss, "rules": rule_social_lowest},
+        "goal worse": {"score": score_worse, "rules": null_rule},
+        "goal approach": {"score": score_approach, "rules": null_rule},
+        "social approach": {"score": score_approach, "rules": rule_social_lowest},
+    }
 
-    # 2. based on history
-    history_score = calculate_history_score(candidate_resource, history)
+    causal_pathway = candidate.value(SLOWMO.AcceptableBy).value
+    motivating_informations = list(candidate[PSDO.motivating_information])
+    rules = CAUSAL_PATHWAY[causal_pathway]["rules"]
+    score_mi = CAUSAL_PATHWAY[causal_pathway]["score"]
 
-    # 3. based on preferences
-    preference_score = calculate_preference_score(candidate_resource, preferences)
+    # rules
 
-    # calculate final score = function of sub-scores
-    final_score = motivating_info["score"] + history_score + preference_score
+    if not rules(candidate):
+        return None
 
-    # update the candidate with the score
-    update_candidate_score(
-        candidate_resource,
-        final_score,
-        motivating_info.setdefault("number_of_months", 0),
+    # MI
+    if settings.use_mi:
+        mi_score = score_mi(candidate, motivating_informations, MPM[causal_pathway])
+    else:
+        mi_score = 0.0
+
+    candidate[URIRef("motivating_score")] = Literal(mi_score, datatype=XSD.double)
+
+    # History
+    history_score = score_history(candidate, history, MPM[causal_pathway])
+    candidate[URIRef("history_score")] = Literal(history_score, datatype=XSD.double)
+
+    # Preferences
+    preference_score = score_preferences(candidate, preferences)
+    candidate[URIRef("preference_score")] = Literal(
+        preference_score, datatype=XSD.double
     )
 
-
-def calculate_motivating_info_score(candidate_resource: Resource) -> dict:
-    """
-    calculates motivating info sub-score.
-
-    Parameters:
-    - performer_graph (Graph): the performer_graph.
-    - candidate_resource (Resource): The candidate resource.
-
-    Returns:
-    dict: motivating info.
-    """
-
-    causal_pathway = list(candidate_resource.objects(URIRef("slowmo:acceptable_by")))[0]
-    performance_content = candidate_resource.graph.resource(
-        BNode("performance_content")
+    # coachiness
+    coachiness_score = MPM[causal_pathway]["coachiness"]
+    candidate[URIRef("coachiness_score")] = Literal(
+        coachiness_score, datatype=XSD.double
     )
-    measure = candidate_resource.value(SLOWMO.RegardingMeasure)
-    motivating_informations = [
-        motivating_info
-        for motivating_info in performance_content[URIRef("motivating_information")]
-        if motivating_info.value(SLOWMO.RegardingMeasure) == measure
-    ]
 
-    mod = {}
-    match causal_pathway.value:
-        case "Social Worse":
-            comparator_type = candidate_resource.value(SLOWMO.IsAbout).identifier
+    final_calculated_score = final_score(mi_score, history_score, preference_score)
 
-            moderators = Comparison.moderators(motivating_informations)
+    candidate[SLOWMO.Score] = Literal(final_calculated_score, datatype=XSD.double)
 
-            mod = [
-                moderator
-                for moderator in moderators
-                if moderator["comparator_type"] == comparator_type
-            ][0]
-
-            mod["score"] = round(abs(mod["gap_size"] / 100), 4) / 5 - 0.02
-        case "Social better":
-            comparator_type = candidate_resource.value(SLOWMO.IsAbout).identifier
-            moderators = Comparison.moderators(motivating_informations)
-
-            mod = [
-                moderator
-                for moderator in moderators
-                if moderator["comparator_type"] == comparator_type
-            ][0]
-
-            mod["score"] = round(abs(mod["gap_size"] / 100), 4) + 0.02
-        case "Improving":
-            mod = Trend.moderators(motivating_informations)[0]
-            mod["score"] = round(abs(mod["trend_size"] / 100), 4) * 5
-        case "Worsening":
-            mod = Trend.moderators(motivating_informations)[0]
-            mod["score"] = round(abs(mod["trend_size"] / 100), 4)
-        case _:
-            mod["score"] = 0.0
-    return mod
+    return candidate
 
 
-def calculate_history_score(candidate_resource: Resource, history: json) -> float:
+def final_score(m, h, p):
+    """
+    the function, final_score,  takes two inputs, s and p. the range for s is 0 to 1. the range for p is -2 to +2.  The function f(s,p) increases with either s or p increasing. The function should have the following constraints: f(1,-2) == f(.5, 0) == f(0,2) and f(0.5, -2) == f(0.25, -1) == f(0, 0).
+    """
+
+    score = m * 1 + h * 2 + p * 1.3
+
+    return round(score, 2)
+
+
+def score_better(
+    candidate: Resource, motivating_informations: List[Resource], mpm: dict
+) -> float:
+    moderators = comparator_moderators(candidate, motivating_informations, Comparison)
+
+    score = moderators["comparison_size"]  # * mpm["comparison_size"]
+
+    return score
+
+
+def null_rule(candidate):
+    return True
+
+
+def rule_social_highest(candidate: Resource):
+    # TODO: see if we can refactor to a better query
+    causal_pathway = candidate.value(SLOWMO.AcceptableBy).value
+    if candidate[SLOWMO.RegardingComparator : PSDO.peer_average_comparator]:
+        candidates = utils.candidates(
+            candidate.graph,
+            candidate.value(SLOWMO.RegardingMeasure).identifier,
+            filter_acceptable=True,
+        )
+        return not any(
+            (
+                candid[SLOWMO.RegardingComparator : PSDO.peer_90th_percentile_benchmark]
+                or candid[
+                    SLOWMO.RegardingComparator : PSDO.peer_75th_percentile_benchmark
+                ]
+            )
+            and candid.value(SLOWMO.AcceptableBy).value == causal_pathway
+            for candid in candidates
+        )
+
+    if candidate[SLOWMO.RegardingComparator : PSDO.peer_75th_percentile_benchmark]:
+        candidates = utils.candidates(
+            candidate.graph,
+            candidate.value(SLOWMO.RegardingMeasure).identifier,
+            filter_acceptable=True,
+        )
+        return not any(
+            candid[SLOWMO.RegardingComparator : PSDO.peer_90th_percentile_benchmark]
+            and candid.value(SLOWMO.AcceptableBy).value == causal_pathway
+            for candid in candidates
+        )
+
+    return True
+
+
+def rule_social_lowest(candidate: Resource):
+    # TODO: see if we can refactor to a better query
+    causal_pathway = candidate.value(SLOWMO.AcceptableBy).value
+    if candidate[SLOWMO.RegardingComparator : PSDO.peer_90th_percentile_benchmark]:
+        candidates = utils.candidates(
+            candidate.graph,
+            candidate.value(SLOWMO.RegardingMeasure).identifier,
+            filter_acceptable=True,
+        )
+        return not any(
+            (
+                candid[SLOWMO.RegardingComparator : PSDO.peer_average_comparator]
+                or candid[
+                    SLOWMO.RegardingComparator : PSDO.peer_75th_percentile_benchmark
+                ]
+            )
+            and candid.value(SLOWMO.AcceptableBy).value == causal_pathway
+            for candid in candidates
+        )
+
+    if candidate[SLOWMO.RegardingComparator : PSDO.peer_75th_percentile_benchmark]:
+        candidates = utils.candidates(
+            candidate.graph,
+            candidate.value(SLOWMO.RegardingMeasure).identifier,
+            filter_acceptable=True,
+        )
+        return not any(
+            candid[SLOWMO.RegardingComparator : PSDO.peer_average_comparator]
+            and candid.value(SLOWMO.AcceptableBy).value == causal_pathway
+            for candid in candidates
+        )
+
+    return True
+
+
+def score_worse(
+    candidate: Resource, motivating_informations: List[Resource], mpm: dict
+) -> float:
+    moderators = comparator_moderators(candidate, motivating_informations, Comparison)
+
+    score = moderators["comparison_size"]  # * mpm["comparison_size"]
+
+    return score
+
+
+def score_improving(
+    candidate: Resource, motivating_informations: List[Resource], mpm: dict
+) -> float:
+    moderators = Trend.moderators(motivating_informations)[0]
+
+    score = moderators["trend_size"]  # * mpm["trend_size"]
+
+    return score
+
+
+def score_worsening(
+    candidate: Resource, motivating_informations: List[Resource], mpm: dict
+) -> float:
+    # TODO: what should the response be if the candidate is not acceptable by worsening
+    moderators = Trend.moderators(motivating_informations)[0]
+
+    score = moderators["trend_size"]  # * mpm["trend_size"]
+
+    return score
+
+
+def score_approach(
+    candidate: Resource, motivating_informations: List[Resource], mpm: dict
+) -> float:
+    moderators = comparator_moderators(candidate, motivating_informations, Approach)
+
+    score = (
+        moderators["comparison_size"] * mpm["comparison_size"]
+        + moderators["trend_size"] * mpm["trend_size"]
+        + moderators["achievement_recency"] * mpm["achievement_recency"]
+    ) / (mpm["comparison_size"] + mpm["trend_size"] + mpm["achievement_recency"])
+
+    return score
+
+
+def score_gain(
+    candidate: Resource, motivating_informations: List[Resource], mpm: dict
+) -> float:
+    moderators = comparator_moderators(candidate, motivating_informations, Achievement)
+
+    score = (
+        moderators["comparison_size"] * mpm["comparison_size"]
+        + moderators["trend_size"] * mpm["trend_size"]
+        + moderators["achievement_recency"] * mpm["achievement_recency"]
+    ) / (mpm["comparison_size"] + mpm["trend_size"] + mpm["achievement_recency"])
+
+    return score
+
+
+def score_loss(
+    candidate: Resource, motivating_informations: List[Resource], mpm: dict
+) -> float:
+    moderators = comparator_moderators(candidate, motivating_informations, Loss)
+
+    score = (
+        moderators["comparison_size"] * mpm["comparison_size"]
+        + moderators["trend_size"] * mpm["trend_size"]
+        + moderators["loss_recency"] * mpm["loss_recency"]
+    ) / (mpm["comparison_size"] + mpm["trend_size"] + mpm["loss_recency"])
+
+    return score
+
+
+def comparator_moderators(candidate, motivating_informations, signal: Signal):
+    comparator_type = candidate.value(SLOWMO.RegardingComparator).identifier
+
+    moderators = signal.moderators(motivating_informations)
+
+    scoring_detail = [
+        moderator
+        for moderator in moderators
+        if moderator["comparator_type"] == comparator_type
+    ][0]
+
+    return scoring_detail
+
+
+def score_history(candidate: Resource, history, mpm: dict) -> float:
     """
     calculates history sub-score.
 
     Parameters:
     - candidate_resource (Resource): The candidate resource.
-    - history (json): The history of messages.
+    - history (dict): The history of messages.
 
     Returns:
     float: history sub-score.
     """
-    return 0
+    if not history or not settings.use_history:
+        return 1.0
+
+    # turn candidate resource into a 'history' element for the current month
+    g: Graph = candidate.graph
+    performance_month = next(g.objects(None, SLOWMO.PerformanceMonth)).value
+
+    signals = History.detect(
+        history,
+        {datetime.fromisoformat(performance_month): History.to_element(candidate)},
+    )
+
+    if not signals:
+        return 1.0
+
+    mod = History.moderators(signals)[0]
+
+    return (
+        mod["message_recurrence"] * mpm["message_recurrence"]
+        + mod["message_recency"] * mpm["message_recency"]
+        + mod["measure_recency"] * mpm["measure_recency"]
+    ) / (mpm["message_recurrence"] + mpm["message_recency"] + mpm["measure_recency"])
 
 
-def calculate_preference_score(
-    candidate_resource: Resource, preferences: json
-) -> float:
+def score_preferences(candidate_resource: Resource, preferences: dict) -> float:
     """
     calculates preference sub-score.
 
@@ -128,39 +307,11 @@ def calculate_preference_score(
     Returns:
     float: preference sub-score.
     """
-    return 0
 
+    if not settings.use_preferences:
+        return 0.0
 
-def update_candidate_score(
-    candidate_resource: Resource, score: float, number_of_months: int
-):
-    """
-    updates candidate score
-
-    Parameters:
-    - candidate_resource (Resource): The candidate resource.
-    - score (float): The score.
-    - number_of_months (int): The number of months.
-
-    Returns:
-    """
-    performer_graph: Graph = candidate_resource.graph
-
-    performer_graph.add(
-        (
-            candidate_resource.identifier,
-            SLOWMO.Score,
-            Literal(score, datatype=XSD.double),
-        )
-    )
-
-    performer_graph.add(
-        (
-            candidate_resource.identifier,
-            SLOWMO.numberofmonths,
-            Literal(number_of_months),
-        )
-    )
+    return preferences.get(candidate_resource.value(SLOWMO.AcceptableBy).value, 0.0)
 
 
 def select_candidate(performer_graph: Graph) -> BNode:
@@ -178,148 +329,53 @@ def select_candidate(performer_graph: Graph) -> BNode:
     # 2. select candidate
 
     # Find the max score
+    if not set(performer_graph[: SLOWMO.AcceptableBy :]):
+        return None
+
+    # filter acceptable candidates
+    candidates = utils.candidates(performer_graph, filter_acceptable=True)
+
+    # filter scored candidates
+    candidates = [
+        candidate
+        for candidate in candidates
+        if (candidate.value(URIRef("coachiness_score")) is not None)
+    ]
+
+    if settings.use_coachiness:
+        # filter highest coachiness candidates
+        highest_coachiness_candidates = candidates_from_coachiness_category(
+            candidates, category=1.0
+        )
+        if not highest_coachiness_candidates:
+            highest_coachiness_candidates = candidates_from_coachiness_category(
+                candidates, category=0.5
+            )
+        if highest_coachiness_candidates:
+            candidates = highest_coachiness_candidates
+
     max_score = max(
-        [score for _, score in performer_graph.subject_objects(SLOWMO.Score)],
+        [candidate.value(SLOWMO.Score).value for candidate in candidates],
         default=None,
     )
 
     candidates_with_max_score = [
-        (candidate)
-        for candidate, score in performer_graph.subject_objects(SLOWMO.Score)
-        if score == max_score
+        (candidate.identifier)
+        for candidate in candidates
+        if candidate.value(SLOWMO.Score).value == max_score
     ]
 
     # Randomly select one of the candidates with the known maximum score
     selected_candidate = random.choice(candidates_with_max_score)
 
-    performer_graph.add((selected_candidate, URIRef("slowmo:selected"), Literal(True)))
+    performer_graph.add((selected_candidate, SLOWMO.Selected, Literal(True)))
 
     return selected_candidate
 
 
-def get_gap_info(candidate_resource: Resource) -> tuple[float, URIRef, None]:
-    """
-    returns gap size, gap type.
-
-    Parameters:
-    - candidate_resource (Resource): The candidate resource.
-
-
-    Returns:
-    tuple[float, URIRef, None]: [gap size, gap type, None]
-    """
-    performer_graph = candidate_resource.graph
-    measure = candidate_resource.value(SLOWMO.RegardingMeasure)
-    comparator = candidate_resource.value(SLOWMO.RegardingComparator)
-    p1 = performer_graph.resource(BNode("p1"))
-
-    dispositions: list[Resource] = [
-        disposition
-        for disposition in p1[RO.has_disposition]
-        if (
-            (
-                disposition.identifier,
-                SLOWMO.RegardingComparator,
-                comparator.identifier,
-            )
-            in performer_graph
-            and (
-                disposition.identifier,
-                SLOWMO.RegardingMeasure,
-                measure.identifier,
-            )
-            in performer_graph
-            and (
-                (
-                    disposition.identifier,
-                    RDF.type,
-                    PSDO.positive_performance_gap_content,
-                )
-                in performer_graph
-                or (
-                    disposition.identifier,
-                    RDF.type,
-                    PSDO.negative_performance_gap_content,
-                )
-                in performer_graph
-            )
-        )
+def candidates_from_coachiness_category(candidates, category):
+    return [
+        candidate
+        for candidate in candidates
+        if (candidate.value(URIRef("coachiness_score")).value == category)
     ]
-
-    if len(dispositions) == 0:
-        return 0, None
-
-    gap_size = performer_graph.value(
-        dispositions[0].identifier, SLOWMO.PerformanceGapSize, None
-    ).value
-
-    gap_type = performer_graph.value(
-        dispositions[0].identifier, RDF.type, None
-    )  # use gap_type.n3() to see the value
-    return gap_size, gap_type, None
-
-
-def get_trend_info(candidate_resource: Resource) -> tuple[float, URIRef, int]:
-    """
-    returns trend size, trend type and number of month.
-
-    Parameters:
-    - candidate_resource (Resource): The candidate resource.
-
-
-    Returns:
-    tuple[float, URIRef, None]: [trend size, trend type, number of month]
-    """
-    performer_graph: Graph = candidate_resource.graph
-    measure = candidate_resource.value(SLOWMO.RegardingMeasure)
-
-    p1 = performer_graph.resource(BNode("p1"))
-
-    dispositions: list[Resource] = [
-        disposition
-        for disposition in p1[RO.has_disposition]
-        if (
-            (
-                disposition.identifier,
-                SLOWMO.RegardingMeasure,
-                measure.identifier,
-            )
-            in performer_graph
-            and (
-                (
-                    disposition.identifier,
-                    RDF.type,
-                    PSDO.positive_performance_trend_content,
-                )
-                in performer_graph
-                or (
-                    disposition.identifier,
-                    RDF.type,
-                    PSDO.negative_performance_trend_content,
-                )
-                in performer_graph
-            )
-        )
-    ]
-
-    if len(dispositions) == 0:
-        return 0, None
-
-    trend_size = performer_graph.value(
-        dispositions[0].identifier,
-        SLOWMO.PerformanceTrendSlope,
-        None,
-    ).value
-
-    number_of_months = performer_graph.value(
-        dispositions[0].identifier,
-        SLOWMO.numberofmonths,
-        None,
-    ).value
-
-    trend_type = performer_graph.value(dispositions[0].identifier, RDF.type, None)
-    return {
-        "trend_size": float(trend_size),
-        "type": trend_type,
-        "number_of_months": number_of_months,
-    }
