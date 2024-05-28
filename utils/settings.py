@@ -55,6 +55,7 @@ class Settings:
         self.performance_month = config(
             "performance_month", default=None
         )  # performance_month for instance
+        self.use_mi = config("use_mi", cast=bool, default=True)  # use mi
         self.use_preferences = config(
             "use_preferences", cast=bool, default=True
         )  # use preferences
