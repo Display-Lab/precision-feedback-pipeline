@@ -51,7 +51,7 @@ def score(candidate: Resource, history: dict, preferences: dict, MPM: dict) -> R
 
     # MI
     if settings.use_mi:
-        mi_score = score_mi(candidate, motivating_informations)
+        mi_score = score_mi(candidate, motivating_informations, MPM[causal_pathway])
     else:
         mi_score = 0.0
 
@@ -278,8 +278,6 @@ def score_history(candidate: Resource, history, mpm: dict) -> float:
     # turn candidate resource into a 'history' element for the current month
     g: Graph = candidate.graph
     performance_month = next(g.objects(None, SLOWMO.PerformanceMonth)).value
-    # add to history
-    # history[performance_month] = History.to_element(candidate)
 
     signals = History.detect(
         history,
@@ -295,9 +293,7 @@ def score_history(candidate: Resource, history, mpm: dict) -> float:
         mod["message_recurrence"] * mpm["message_recurrence"]
         + mod["message_recency"] * mpm["message_recency"]
         + mod["measure_recency"] * mpm["measure_recency"]
-    ) / (
-        mpm["message_recurrence"] + mpm["message_recency"] + mpm["measure_recency"]
-    )
+    ) / (mpm["message_recurrence"] + mpm["message_recency"] + mpm["measure_recency"])
 
 
 def score_preferences(candidate_resource: Resource, preferences: dict) -> float:

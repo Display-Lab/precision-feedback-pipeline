@@ -80,9 +80,9 @@ class History(Signal):
     def _detect(
         history: dict, current_month_dict: dict
     ) -> Tuple[float, float, float, float]:
-        message_count = 0
+        message_recurrence = 0
         message_recency = 0
-        measure_count = 0
+        measure_recurrence = 0
         measure_recency = 0
 
         current_month, history_element = list(current_month_dict.items())[0]
@@ -93,11 +93,11 @@ class History(Signal):
         for key, value in history.items():
             month = datetime.fromisoformat(key)
             if history[key]["message_template"] == message_template:
-                message_count += 1
+                message_recurrence += 1
                 most_recent_message = month
 
             if history[key]["measure"] == measure:
-                measure_count += 1
+                measure_recurrence += 1
                 most_recent_measure = month
 
         difference = relativedelta(current_month, most_recent_message)
@@ -106,7 +106,7 @@ class History(Signal):
         difference = relativedelta(current_month, most_recent_measure)
         measure_recency = difference.years * 12 + difference.months
 
-        return message_count, message_recency, measure_count, measure_recency
+        return message_recurrence, message_recency, measure_recurrence, measure_recency
 
     @staticmethod
     def to_element(candidate: Resource):
