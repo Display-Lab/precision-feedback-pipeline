@@ -37,6 +37,7 @@ class Settings:
         self.measures = config("measures", cast=str, default=None)
         self.mpm = config("mpm", cast=str, default=None)
         self.comparators = config("comparators", cast=str, default=None)
+        self.preferences = config("preferences", cast=str, default=None)
 
         # Instance settings
         self.log_level = config(

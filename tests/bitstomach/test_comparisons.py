@@ -145,7 +145,7 @@ def test_moderators_return_dictionary1():
         if moderator["comparator_type"] == PSDO.peer_90th_percentile_benchmark
     ][0]
 
-    assert moderator["gap_size"] == 23
+    assert moderator["comparison_size"] == 23
 
 
 def test_comparison_has_super_type(perf_data):

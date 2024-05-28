@@ -1,9 +1,11 @@
+import csv
 import json
 import os
 import sys
 import time
 import webbrowser
 from datetime import timedelta
+from io import StringIO
 from pathlib import Path
 
 import matplotlib
@@ -35,8 +37,6 @@ logger.info(
     f"Initial system memory: {psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024}"
 )
 
-global templates, pathways, measures, comparators_text
-
 ### Logging module setup (using loguru module)
 logger.remove()
 logger.add(
@@ -55,7 +55,8 @@ for attribute in dir(settings):
 
 
 ### Create RDFlib graph from locally saved json files
-def local_to_graph(thisDirectory, thisGraph):
+def local_to_graph(thisDirectory):
+    g: Graph = Graph()
     logger.debug("Starting function local_to_graph...")
 
     # Scrape directory, filter to only JSON files, build list of paths to the files (V2)
@@ -71,12 +72,14 @@ def local_to_graph(thisDirectory, thisGraph):
         temp_graph.parse(
             json_only[n], format="json-ld"
         )  # Parse list data in JSON format
-        thisGraph = thisGraph + temp_graph  # Add parsed data to graph object
-    return thisGraph
+        g = g + temp_graph  # Add parsed data to graph object
+    return g
 
 
 ### Create RDFlib graph from remote knowledgebase JSON files
-def remote_to_graph(contentURL, thisGraph):
+def remote_to_graph(contentURL):
+    g: Graph = Graph()
+
     logger.debug("Starting function remote_to_graph...")
 
     # Fetch JSON content from URL (directory)
@@ -96,27 +99,41 @@ def remote_to_graph(contentURL, thisGraph):
                     data=json.dumps(file_jsoned), format="json-ld"
                 )  # Parse JSON, store as graph
                 logger.debug(f"Graphed file {file_name}")
-                thisGraph += temp_graph
+                g += temp_graph
 
     except json.JSONDecodeError:
         raise Exception("Failed parsing JSON content.")
 
-    return thisGraph
+    return g
 
 
-### Create empty RDFlib graphs to store resource description triples
-pathway_graph = Graph()
-template_graph = Graph()
+### read csv file to a dictionary
+def load_mpm() -> dict:
+    mpm_dict = {}
 
-### Changes loading strategy depending on the source of PFKB content
-if not settings.pathways.startswith("http"):
-    # Build graphs with local os.dirname method if using file URI
-    causal_pathways = local_to_graph(settings.pathways, pathway_graph)
-    templates = local_to_graph(settings.templates, template_graph)
-else:
-    # Build graphs from remote resource if using URLs
-    causal_pathways = remote_to_graph(settings.pathways, pathway_graph)
-    templates = remote_to_graph(settings.templates, template_graph)
+    if settings.mpm.startswith("http"):
+        response = requests.get(settings.mpm)
+        response.raise_for_status()
+        csv_content = StringIO(response.text)
+        file = csv_content
+    else:
+        file = open(settings.mpm, mode="r")
+
+    reader = csv.DictReader(file)
+    for row in reader:
+        outer_key = row["Causal_pathway"]
+        inner_dict = {
+            key: float(value) if value != "--" else None
+            for key, value in row.items()
+            if key != "Causal_pathway"
+        }
+        mpm_dict[outer_key] = inner_dict
+
+    if not settings.mpm.startswith("http"):
+        file.close()
+
+    return mpm_dict
+
 
 # Set up request session as se, config to handle file URIs with FileAdapter
 se = requests.Session()
@@ -127,10 +144,34 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     try:
-        global measures_text, comparators_text
+        global \
+            comparators_graph, \
+            measures_graph, \
+            mpm, \
+            default_preferences, \
+            causal_pathways_graph, \
+            templates_graph
 
         measures_text = se.get(settings.measures).text
+        measures_graph = read_graph(measures_text)
+
         comparators_text = se.get(settings.comparators).text
+        comparators_graph = read_graph(comparators_text)
+
+        mpm = load_mpm()
+
+        preferences_text = se.get(settings.preferences).text
+        default_preferences = json.loads(preferences_text)
+
+        ### Changes loading strategy depending on the source of PFKB content
+        if not settings.pathways.startswith("http"):
+            # Build graphs with local os.dirname method if using file URI
+            causal_pathways_graph = local_to_graph(settings.pathways)
+            templates_graph = local_to_graph(settings.templates)
+        else:
+            # Build graphs from remote resource if using URLs
+            causal_pathways_graph = remote_to_graph(settings.pathways)
+            templates_graph = remote_to_graph(settings.templates)
 
     except Exception as e:
         print("Startup aborted, see traceback:")
@@ -160,23 +201,16 @@ async def createprecisionfeedback(info: Request):
     if settings.performance_month:
         req_info["performance_month"] = settings.performance_month
 
-    # TODO: consolidate all display handling in render
-    preferences_utilities = req_info.get("Preferences", {}).get("Utilities", {})
-
-    Display_Format_preference = None
-    for key, value in preferences_utilities.get("Display_Format", {}).items():
-        if value == 1 and key != "System-generated":
-            Display_Format_preference = key.lower()
-
-    preferences = set_preferences(preferences_utilities)
+    preferences = set_preferences(req_info)
 
     initial_tic = tic = time.perf_counter()
+
     cool_new_super_graph = Graph()
-    comparators_graph = read_graph(comparators_text)
     cool_new_super_graph += comparators_graph
-    cool_new_super_graph += causal_pathways
-    cool_new_super_graph += read_graph(measures_text)
-    cool_new_super_graph += templates
+    cool_new_super_graph += causal_pathways_graph
+    cool_new_super_graph += measures_graph
+    cool_new_super_graph += templates_graph
+
     toc = time.perf_counter()
     timing = {"load base graph": f"{(toc-tic)*1000.:2.2f} ms"}
     debug_output_if_set(cool_new_super_graph, "outputs/base.json")
@@ -241,11 +275,11 @@ async def createprecisionfeedback(info: Request):
             cool_new_super_graph, filter_acceptable=True, measure=measure
         )
         for candidate in candidates:
-            esteemer.score(candidate, history, preferences)
+            esteemer.score(candidate, history, preferences["Message_Format"], mpm)
     selected_candidate = esteemer.select_candidate(cool_new_super_graph)
-    if Display_Format_preference:
+    if preferences["Display_Format"]:
         cool_new_super_graph.resource(selected_candidate)[SLOWMO.Display] = Literal(
-            Display_Format_preference
+            preferences["Display_Format"]
         )
     toc = time.perf_counter()
     timing["esteemer"] = f"{(toc-tic)*1000.:.2f} ms"
@@ -308,26 +342,15 @@ async def createprecisionfeedback(info: Request):
     return response
 
 
-def set_preferences(preferences_utilities):
+def set_preferences(req_info):
+    preferences_utilities = req_info.get("Preferences", {}).get("Utilities", {})
     input_preferences: dict = preferences_utilities.get("Message_Format", {})
-
+    individual_preferences: dict = {}
     for key in input_preferences:
-        input_preferences[key] = float(input_preferences[key])
+        individual_preferences[key.lower()] = float(input_preferences[key])
 
-    preferences = {
-        "Social gain": 1.007650319,
-        "Social stayed better": 0.4786461911,
-        "Worsening": -1.7261141,
-        "Improving": 0.258245277,
-        "Social loss": 0.7730646814,
-        "Social stayed worse": -0.5986969529,
-        "Social better": -0.1251083934,
-        "Social worse": -1.154453186,
-        "Social approach": 1.086765623,
-        "Goal gain": 1.007650319,
-        "Goal approach": 1.086765623,
-    }.copy()
-    preferences.update(input_preferences)
+    preferences: dict = default_preferences.copy()
+    preferences.update(individual_preferences)
 
     min_value = min(preferences.values())
     max_value = max(preferences.values())
@@ -335,7 +358,12 @@ def set_preferences(preferences_utilities):
     for key in preferences:
         preferences[key] = (preferences[key] - min_value) / (max_value - min_value)
 
-    return preferences
+    display_format = None
+    for key, value in preferences_utilities.get("Display_Format", {}).items():
+        if value == 1 and key != "System-generated":
+            display_format = key.lower()
+
+    return {"Message_Format": preferences, "Display_Format": display_format}
 
 
 def debug_output_if_set(graph: Graph, file_location):
