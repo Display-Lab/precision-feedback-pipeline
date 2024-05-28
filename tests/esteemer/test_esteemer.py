@@ -54,8 +54,9 @@ MPM = {
         "message_recurrence": 0.5,
         "measure_recency": 0.5,
         "coachiness": 1.0,
-    }
+    },
 }
+
 
 @pytest.fixture
 def history():
@@ -128,7 +129,7 @@ def candidate_resource(performance_data_frame):
 
 
 def test_score(candidate_resource):
-    esteemer.score(candidate_resource, None, {},MPM)
+    esteemer.score(candidate_resource, None, {}, MPM)
     assert candidate_resource.value(SLOWMO.Score).value == pytest.approx(2.05)
 
 
@@ -182,7 +183,7 @@ def test_no_history_signal_is_score_0(candidate_resource):
 
 
 def test_history_with_two_recurrances(candidate_resource, history):
-    score = esteemer.score_history(candidate_resource, history,MPM["social better"])
+    score = esteemer.score_history(candidate_resource, history, MPM["social better"])
 
     assert score == pytest.approx(0.409413)
 
@@ -194,7 +195,9 @@ def test_social_better_score(performance_data_frame):
     candidate_resource[SLOWMO.AcceptableBy] = Literal("social better")
 
     motivating_informations = Comparison.detect(performance_data_frame)
-    score = esteemer.score_better(candidate_resource, motivating_informations,MPM["social better"])
+    score = esteemer.score_better(
+        candidate_resource, motivating_informations, MPM["social better"]
+    )
     assert score == pytest.approx(0.05)
 
 
@@ -223,7 +226,9 @@ def test_social_worse_score():
     candidate_resource[SLOWMO.AcceptableBy] = Literal("social worse")
 
     motivating_informations = Comparison.detect(data_frame)
-    score = esteemer.score_worse(candidate_resource, motivating_informations,MPM["social worse"])
+    score = esteemer.score_worse(
+        candidate_resource, motivating_informations, MPM["social worse"]
+    )
     assert score == pytest.approx(0.02)
 
 
@@ -241,7 +246,9 @@ def test_improving_score():
             },  # slope 1.0
         )
     )
-    score = esteemer.score_improving(candidate_resource, motivating_informations, MPM["improving"])
+    score = esteemer.score_improving(
+        candidate_resource, motivating_informations, MPM["improving"]
+    )
     assert score == pytest.approx(0.02)
 
 
@@ -259,7 +266,9 @@ def test_worsening_score():
             },  # slope 1.0
         )
     )
-    score = esteemer.score_worsening(candidate_resource, motivating_informations,MPM["worsening"])
+    score = esteemer.score_worsening(
+        candidate_resource, motivating_informations, MPM["worsening"]
+    )
     assert score == pytest.approx(0.02)
 
 
@@ -288,7 +297,9 @@ def test_goal_gain_score():
     candidate_resource[SLOWMO.RegardingComparator] = PSDO.goal_comparator_content
 
     motivating_informations = Achievement.detect(data_frame)
-    score = esteemer.score_gain(candidate_resource, motivating_informations, MPM["goal gain"])
+    score = esteemer.score_gain(
+        candidate_resource, motivating_informations, MPM["goal gain"]
+    )
     assert score == pytest.approx(0.062407407407407404)
 
 
@@ -317,5 +328,7 @@ def test_goal_loss_score():
     candidate_resource[SLOWMO.RegardingComparator] = PSDO.goal_comparator_content
 
     motivating_informations = Loss.detect(data_frame)
-    score = esteemer.score_loss(candidate_resource, motivating_informations,MPM["goal loss"])
+    score = esteemer.score_loss(
+        candidate_resource, motivating_informations, MPM["goal loss"]
+    )
     assert score == pytest.approx(0.0696296)

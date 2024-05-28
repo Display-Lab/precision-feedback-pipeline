@@ -39,6 +39,9 @@ def graph():
             "https://schema.metadatacenter.org/properties/5b4f16a9-feb7-4724-8741-2739d8808760"
         )
     ] = Literal("Line chart")
+    template[URIRef("http://purl.obolibrary.org/obo/cpo_0000056")] = URIRef(
+        "https://repo.metadatacenter.org/template-instances/0b160448-c376-476d-b4a9-5e8a5496eaf0"
+    )
 
     performance_content = graph.resource(BNode("performance_content"))
     performance_content.set(RDF.type, PSDO.performance_content)

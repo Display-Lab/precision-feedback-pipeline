@@ -1,6 +1,6 @@
 from typing import Optional
 
-from rdflib import RDF, XSD, BNode, Graph, Literal, URIRef
+from rdflib import RDF, BNode, Graph, Literal, URIRef
 from rdflib.resource import Resource
 
 from bitstomach.signals import Signal
@@ -28,8 +28,6 @@ def create_candidate(measure: Resource, template: Resource) -> Optional[Resource
     if not add_motivating_information(candidate):
         g.remove((candidate.identifier, None, None))
         return None
-
-    add_causal_pathway(candidate)
 
     add_convenience_properties(candidate)
 
@@ -63,7 +61,7 @@ def add_motivating_information(candidate: Resource):
 
 
 def acceptable_by(candidate: Resource):
-    pathway = candidate.value(SLOWMO.AncestorTemplate / CPO.causal_pathway)
+    pathway = candidate.value(SLOWMO.AncestorTemplate / CPO.has_causal_pathway)
 
     roles = list(candidate[SLOWMO.AncestorTemplate / IAO.is_about])
 
@@ -76,41 +74,6 @@ def acceptable_by(candidate: Resource):
     if pre_conditions.issubset(dispositions):
         candidate[SLOWMO.AcceptableBy] = pathway.value(SCHEMA.name)
 
-    return candidate
-
-
-def add_causal_pathway(candidate: Resource):
-    # map message templates schema:name to causal pathway schema:name
-    causal_pathway_map: dict = {
-        "Top Performer": "social better",
-        "Getting Worse": "worsening",
-        "In Top 25%": "social better",
-        "Opportunity to Improve Top 10 Peer Benchmark": "social worse",
-        "Not Top Performer": "social worse",
-        "Performance Improving": "improving",
-        "Reached Goal": "goal gain",
-        "Drop Below Goal": "goal loss",
-        "Opportunity to Improve Peer Average": "social worse",
-        "Achieved Peer Average": "social gain",
-        "Achieved Top 25 Peer Benchmark": "social gain",
-        "Achieved Top 10 Peer Benchmark": "social gain",
-        "No Longer Top Performer": "social loss",
-        "Drop Below Peer Average": "social loss",
-        "Opportunity to Improve Goal": "goal worse",
-        "Approach Peer Average": "social approach",
-        "Approach Top 10 Peer Benchmark": "social approach",
-        "Approach Top 25 Peer Benchmark": "social approach",
-        "Approach Goal": "goal approach",
-    }
-    ancestor_template = candidate.value(SLOWMO.AncestorTemplate)
-    template_name = ancestor_template.value(URIRef("http://schema.org/name")).value
-    causal_pathway_name = causal_pathway_map[template_name]
-    causal_pathway_id = candidate.graph.value(
-        None,
-        URIRef("http://schema.org/name"),
-        Literal(causal_pathway_name, datatype=XSD.string),
-    )
-    candidate.value(SLOWMO.AncestorTemplate)[CPO.causal_pathway] = causal_pathway_id
     return candidate
 
 
