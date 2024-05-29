@@ -67,13 +67,13 @@ class History(Signal):
                 (signal.value(URIRef("message_recurrence")).value / 12), 4
             )
             history_dict["message_recency"] = round(
-                1 - (message_recency / 12) if message_recency else 1.0, 4
+                1 - (message_recency / 12) if message_recency else 0.0, 4
             )
             history_dict["measure_recurrence"] = round(
                 (signal.value(URIRef("measure_recurrence")).value / 12), 4
             )
             history_dict["measure_recency"] = round(
-                1 - (measure_recency / 12) if measure_recency else 1.0, 4
+                1 - (measure_recency / 12) if measure_recency else 0.0, 4
             )
             mods.append(history_dict)
 
