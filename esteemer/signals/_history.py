@@ -10,6 +10,9 @@ from utils.namespace import SLOWMO
 
 
 class History(Signal):
+    """
+    See the documentation for prioritization_algorithms in the the knowledge base
+    """
     # TODO: Allow an array of types
     signal_type = SLOWMO.MessageRecurrance
 
@@ -61,16 +64,16 @@ class History(Signal):
             measure_recency = signal.value(URIRef("measure_recency")).value
 
             history_dict["message_recurrence"] = round(
-                1 - (signal.value(URIRef("message_recurrence")).value / 12), 4
+                (signal.value(URIRef("message_recurrence")).value / 12), 4
             )
             history_dict["message_recency"] = round(
-                (message_recency / 12) if message_recency else 1.0, 4
+                1 - (message_recency / 12) if message_recency else 1.0, 4
             )
             history_dict["measure_recurrence"] = round(
-                1 - (signal.value(URIRef("measure_recurrence")).value / 12), 4
+                (signal.value(URIRef("measure_recurrence")).value / 12), 4
             )
             history_dict["measure_recency"] = round(
-                measure_recency / 12 if measure_recency else 1.0, 4
+                1 - (measure_recency / 12) if measure_recency else 1.0, 4
             )
             mods.append(history_dict)
 

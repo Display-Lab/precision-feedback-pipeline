@@ -85,7 +85,7 @@ def final_score(m, h, p):
     the function, final_score,  takes two inputs, s and p. the range for s is 0 to 1. the range for p is -2 to +2.  The function f(s,p) increases with either s or p increasing. The function should have the following constraints: f(1,-2) == f(.5, 0) == f(0,2) and f(0.5, -2) == f(0.25, -1) == f(0, 0).
     """
 
-    score = m * 1 + h * 2 + p * 1.3
+    score = m * 1 + (1 - h) * 2 + p * 1.3
 
     return round(score, 2)
 
