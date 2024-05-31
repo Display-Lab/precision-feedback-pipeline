@@ -13,6 +13,7 @@ class History(Signal):
     """
     See the documentation for prioritization_algorithms in the the knowledge base
     """
+
     # TODO: Allow an array of types
     signal_type = SLOWMO.MessageRecurrance
 

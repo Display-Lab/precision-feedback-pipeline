@@ -72,6 +72,9 @@ def generate_history(filename):
                     "message_template": response_data["selected_candidate"][
                         "message_template_id"
                     ],
+                    "message_template_name": response_data["selected_candidate"][
+                        "message_template_name"
+                    ],
                     "message_generated_datetime": datetime.now().strftime(
                         "%Y-%m-%dT%H:%M:%S"
                     ),
