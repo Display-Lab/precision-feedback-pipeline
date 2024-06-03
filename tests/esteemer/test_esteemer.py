@@ -22,6 +22,7 @@ MPM = {
         "message_recurrence": 0.9,
         "measure_recency": 0.5,
         "coachiness": 0.0,
+        "history": 0.7
     },
     "improving": {
         "trend_size": 0.8,
@@ -185,7 +186,7 @@ def test_no_history_signal_is_score_0(candidate_resource):
 def test_history_with_two_recurrances(candidate_resource, history):
     score = esteemer.score_history(candidate_resource, history, MPM["social better"])
 
-    assert score == pytest.approx(0.409413)
+    assert score == pytest.approx(0.586589)
 
 
 def test_social_better_score(performance_data_frame):

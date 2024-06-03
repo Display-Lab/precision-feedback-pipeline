@@ -6,7 +6,6 @@ from concurrent.futures import ThreadPoolExecutor
 
 import pandas as pd
 
-
 # Path to the directory containing input files
 INPUT_DIR = os.environ.setdefault("INPUT_DIR", "/home/faridsei/dev/test/history_new")
 WORKERS = int(os.environ.setdefault("WORKERS", "1"))
@@ -14,6 +13,7 @@ OUTPUT = os.environ.get("OUTPUT", "history_output.csv")
 
 history_df: pd.DataFrame = pd.DataFrame()
 lock = threading.Lock()
+
 
 def add_history(filename):
     global history_df
@@ -28,15 +28,13 @@ def add_history(filename):
                 return
 
             with lock:
-                
-                for key,value in data["History"].items():
-                    
+                for key, value in data["History"].items():
                     history_dict: dict = {
                         "staff_number": data["Performance_data"][1][0],
                         "month": key,
-                        "selected message":value["message_template_name"],
-                        "selected measure":value["measure"],
-                        "causal_pathway":value["acceptable_by"][0],        
+                        "selected message": value["message_template_name"],
+                        "selected measure": value["measure"],
+                        "causal_pathway": value["acceptable_by"][0],
                     }
                     history_df = pd.concat(
                         [history_df, pd.DataFrame([history_dict])], ignore_index=True
@@ -60,13 +58,14 @@ def main():
 
     input_files = sorted(
         [f for f in os.listdir(INPUT_DIR) if f.endswith(".json")], key=extract_number
-    )   
+    )
 
     with ThreadPoolExecutor(WORKERS) as executor:
         executor.map(add_history, input_files)
 
     if OUTPUT:
         history_df.to_csv(OUTPUT, index=False)
-   
+
+
 if __name__ == "__main__":
     main()
