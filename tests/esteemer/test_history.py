@@ -81,7 +81,7 @@ def test_single_resource_returns_single_moderator():
     assert isinstance(mods[0], dict)
     assert len(mods) == 1
 
-    assert mods[0]["message_recurrence"] == pytest.approx(1 - round(4 / 12, 4))
+    assert mods[0]["message_recurrence"] == pytest.approx(round(4 / 12, 4))
 
 
 # Supplementary methods

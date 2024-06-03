@@ -121,13 +121,10 @@ def load_mpm() -> dict:
 
     reader = csv.DictReader(file)
     for row in reader:
-        outer_key = row["Causal_pathway"]
-        inner_dict = {
-            key: float(value) if value != "--" else None
-            for key, value in row.items()
-            if key != "Causal_pathway"
+        outer_key = row.pop("causal_pathway")
+        mpm_dict[outer_key] = {
+            k: (float(v) if v != "" else None) for k, v in row.items()
         }
-        mpm_dict[outer_key] = inner_dict
 
     if not settings.mpm.startswith("http"):
         file.close()
