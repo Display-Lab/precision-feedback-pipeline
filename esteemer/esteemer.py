@@ -289,11 +289,13 @@ def score_history(candidate: Resource, history, mpm: dict) -> float:
 
     mod = History.moderators(signals)[0]
 
-    return 1 - (
+    history_moderator = (
         mod["message_recurrence"] * mpm["message_recurrence"]
         + mod["message_recency"] * mpm["message_recency"]
         + mod["measure_recency"] * mpm["measure_recency"]
-    ) / (mpm["message_recurrence"] + mpm["message_recency"] + mpm["measure_recency"]) * mpm["history"]
+    ) / (mpm["message_recurrence"] + mpm["message_recency"] + mpm["measure_recency"])
+
+    return 1 - history_moderator * mpm["history"]
 
 
 def score_preferences(candidate_resource: Resource, preferences: dict) -> float:
