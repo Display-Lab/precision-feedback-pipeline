@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 import pandas as pd
 
 # Path to the directory containing input files
-INPUT_DIR = os.environ.setdefault("INPUT_DIR", "/home/faridsei/dev/test/history_new")
+INPUT_DIR = os.environ.setdefault("INPUT_DIR", "")
 WORKERS = int(os.environ.setdefault("WORKERS", "1"))
 OUTPUT = os.environ.get("OUTPUT", "history_output.csv")
 
@@ -27,11 +27,19 @@ def add_history(filename):
                 print(f"file: {filename} failed. {e}")
                 return
 
+            performance_data = data["Performance_data"][1:]
+            passed_rate = {}
+            for row in performance_data:
+                if row[1] not in passed_rate:
+                    passed_rate[row[1]] = {}
+                passed_rate[row[1]][row[2]] = int(row[3]) / int(row[5])
+
             with lock:
                 for key, value in data["History"].items():
                     history_dict: dict = {
                         "staff_number": data["Performance_data"][1][0],
                         "month": key,
+                        "passed_rate": passed_rate[value["measure"]][key],
                         "selected message": value["message_template_name"],
                         "selected measure": value["measure"],
                         "causal_pathway": value["acceptable_by"][0],
