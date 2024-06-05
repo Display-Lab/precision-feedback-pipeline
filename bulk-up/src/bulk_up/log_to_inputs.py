@@ -40,6 +40,6 @@ for index, message in enumerate(df["Input_Message"]):
     file_path = os.path.join(directory, file_name)
 
     with open(file_path, "w", encoding="utf-8") as file:
-        file.write(str(message))
+        file.write(str(message.replace("_x000D_", "")))
 print("Text files have been created for each cell in the 'Input_Message' column.")
 print("all measures:\n", set(measures))

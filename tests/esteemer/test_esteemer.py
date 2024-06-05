@@ -22,7 +22,7 @@ MPM = {
         "message_recurrence": 0.9,
         "measure_recency": 0.5,
         "coachiness": 0.0,
-        "history": 0.7
+        "history": 0.7,
     },
     "improving": {
         "trend_size": 0.8,

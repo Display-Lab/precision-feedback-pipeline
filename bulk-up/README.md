@@ -155,3 +155,33 @@ TARGET_AUDIENCE=123-xyz.apps.googleusercontent.com SERVICE_ACCOUNT_KEY_PATH=~/my
 34   TOC02   0.7    422        60        14.2
 35   TOC03   0.0      8         1        12.5 
 ```
+
+## Additional scripts with examples on how to run them
+
+### history.py
+Generates history for input files in a given directory for CURRENT_MONTH going back for DURATION number of month.
+
+```
+INPUT_DIR=~/dev/inputs START=0 END=-1 CURRENT_MONTH=2024-04-01 DURATION=6 OUTPUT_DIR=~/dev/inputs_with_history WORKERS=5 python src/bulk_up/history.py
+```
+
+### log_to_reports.py
+Extracts statistic report from a log file.
+
+```
+INPUT_DIR=~/dev/PrecisionFeedbackMessageLog2024-05-20.xlsx python src/bulk_up/log_to_reports.py
+```
+
+### log_to_inputs.py
+Extracts input files from a log file.
+
+```
+INPUT_DIR=~/dev/PrecisionFeedbackMessageLog2024-05-20.xlsx OUTPUT_DIR=~/dev/inputs_2024-05-20/   python src/bulk_up/log_to_inputs.py
+```
+
+### history_extractor.py
+Extracts history from a folder containing input files into a csv file.
+
+```
+INPUT_DIR=~/dev/inputs_2024-05-20/ WORKERS=5 OUTPUT==~/dev/history.csv python src/bulk_up/history_extractor.py
+```
