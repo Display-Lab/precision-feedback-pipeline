@@ -185,3 +185,14 @@ Extracts history from a folder containing input files into a csv file.
 ```
 INPUT_DIR=~/dev/inputs_2024-05-20/ WORKERS=5 OUTPUT==~/dev/history.csv python src/bulk_up/history_extractor.py
 ```
+
+### stats.py
+Currently calculates average and standard deviation of unique counts per provider for measures, messages and causal pathways. Use this as an example of one way to analyse messages from the pipeline. 
+
+```
+INPUT=~/dev/inputs_2024-05-20/history.csv python src/bulk_up/stats.py
+```
+
+```
+cat ~/dev/inputs_2024-05-20/history.csv | python src/bulk_up/stats.py
+```
