@@ -55,16 +55,23 @@ for attribute in dir(settings):
 
 
 ### Create RDFlib graph from locally saved json files
-def local_to_graph(thisDirectory):
+def local_to_graph(thisDirectory, file_list = None):
     g: Graph = Graph()
     logger.debug("Starting function local_to_graph...")
 
-    # Scrape directory, filter to only JSON files, build list of paths to the files (V2)
-    json_only = [
-        entry.path
-        for entry in os.scandir(thisDirectory)
-        if entry.name.endswith(".json")
-    ]
+    if file_list:
+        with open(file_list, "r") as file:
+            json_only = [
+                os.path.join(thisDirectory,entry)
+                for entry in json.load(file)            
+            ]
+    else:        
+        # Scrape directory, filter to only JSON files, build list of paths to the files (V2)
+        json_only = [
+            entry.path
+            for entry in os.scandir(thisDirectory)
+            if entry.name.endswith(".json")
+        ]
 
     # Iterate through list, parsing list information into RDFlib graph object
     for n in range(len(json_only)):
@@ -72,12 +79,13 @@ def local_to_graph(thisDirectory):
         temp_graph.parse(
             json_only[n], format="json-ld"
         )  # Parse list data in JSON format
+        logger.debug(f"Graphed file {json_only[n]}")
         g = g + temp_graph  # Add parsed data to graph object
     return g
 
 
 ### Create RDFlib graph from remote knowledgebase JSON files
-def remote_to_graph(contentURL):
+def remote_to_graph(contentURL, file_list = None):
     g: Graph = Graph()
 
     logger.debug("Starting function remote_to_graph...")
@@ -89,8 +97,16 @@ def remote_to_graph(contentURL):
 
     try:
         contents = response.json()
+        
+        if file_list:
+            file_list_response = requests.get(file_list)
+            file_list = file_list_response.json()
+        
         for item in contents:
             file_name = item["name"]
+            if file_list and file_name not in file_list:
+                continue
+                
             if file_name.endswith(".json"):  # Check if the file has a .json extension
                 file_jsoned = json.loads(
                     requests.get(item["download_url"]).content
@@ -164,11 +180,17 @@ async def startup_event():
         if not settings.pathways.startswith("http"):
             # Build graphs with local os.dirname method if using file URI
             causal_pathways_graph = local_to_graph(settings.pathways)
-            templates_graph = local_to_graph(settings.templates)
         else:
             # Build graphs from remote resource if using URLs
             causal_pathways_graph = remote_to_graph(settings.pathways)
-            templates_graph = remote_to_graph(settings.templates)
+
+        if not settings.templates.startswith("http"):
+            # Build graphs with local os.dirname method if using file URI
+            templates_graph = local_to_graph(settings.templates, settings.templates_local)
+        else:
+            # Build graphs from remote resource if using URLs
+            templates_graph = remote_to_graph(settings.templates, settings.templates_local)
+
 
     except Exception as e:
         print("Startup aborted, see traceback:")

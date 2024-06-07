@@ -33,6 +33,8 @@ class Settings:
 
         # Knowledge settings
         self.templates = config("templates", cast=str, default=None)
+        self.templates_local = config("templates_local", cast=str, default=None)
+
         self.pathways = config("pathways", cast=str, default=None)
         self.measures = config("measures", cast=str, default=None)
         self.mpm = config("mpm", cast=str, default=None)
