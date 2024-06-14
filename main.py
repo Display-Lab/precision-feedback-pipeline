@@ -26,7 +26,7 @@ from bitstomach import bitstomach
 from candidate_pudding import candidate_pudding
 from esteemer import esteemer, utils
 from pictoralist.pictoralist import Pictoralist
-from utils.graph_operations import read_graph
+from utils.graph_operations import manifest_to_graph
 from utils.namespace import PSDO, SLOWMO
 from utils.settings import settings
 
@@ -52,75 +52,6 @@ for attribute in dir(settings):
     if not attribute.startswith("__"):
         value = getattr(settings, attribute)
         logger.debug(f"{attribute}:\t{value}")
-
-
-### Create RDFlib graph from locally saved json files
-def local_to_graph(thisDirectory, file_list = None):
-    g: Graph = Graph()
-    logger.debug("Starting function local_to_graph...")
-
-    if file_list:
-        with open(file_list, "r") as file:
-            json_only = [
-                os.path.join(thisDirectory,entry)
-                for entry in json.load(file)            
-            ]
-    else:        
-        # Scrape directory, filter to only JSON files, build list of paths to the files (V2)
-        json_only = [
-            entry.path
-            for entry in os.scandir(thisDirectory)
-            if entry.name.endswith(".json")
-        ]
-
-    # Iterate through list, parsing list information into RDFlib graph object
-    for n in range(len(json_only)):
-        temp_graph = Graph()  # Creates empty RDFlib graph
-        temp_graph.parse(
-            json_only[n], format="json-ld"
-        )  # Parse list data in JSON format
-        logger.debug(f"Graphed file {json_only[n]}")
-        g = g + temp_graph  # Add parsed data to graph object
-    return g
-
-
-### Create RDFlib graph from remote knowledgebase JSON files
-def remote_to_graph(contentURL, file_list = None):
-    g: Graph = Graph()
-
-    logger.debug("Starting function remote_to_graph...")
-
-    # Fetch JSON content from URL (directory)
-    response = requests.get(contentURL)
-    if response.status_code != 200:
-        raise Exception(f"Failed to fetch JSON content from URL: {contentURL}")
-
-    try:
-        contents = response.json()
-        
-        if file_list:
-            file_list_response = requests.get(file_list)
-            file_list = file_list_response.json()
-        
-        for item in contents:
-            file_name = item["name"]
-            if file_list and file_name not in file_list:
-                continue
-                
-            if file_name.endswith(".json"):  # Check if the file has a .json extension
-                file_jsoned = json.loads(
-                    requests.get(item["download_url"]).content
-                )  # Download content, store as JSON
-                temp_graph = Graph().parse(
-                    data=json.dumps(file_jsoned), format="json-ld"
-                )  # Parse JSON, store as graph
-                logger.debug(f"Graphed file {file_name}")
-                g += temp_graph
-
-    except json.JSONDecodeError:
-        raise Exception("Failed parsing JSON content.")
-
-    return g
 
 
 ### read csv file to a dictionary
@@ -166,31 +97,18 @@ async def startup_event():
             templates_graph
 
         measures_text = se.get(settings.measures).text
-        measures_graph = read_graph(measures_text)
+        measures_graph = Graph().parse(data=measures_text, format="json-ld")
 
         comparators_text = se.get(settings.comparators).text
-        comparators_graph = read_graph(comparators_text)
+        comparators_graph = Graph().parse(data=comparators_text, format="json-ld")
 
         mpm = load_mpm()
 
         preferences_text = se.get(settings.preferences).text
         default_preferences = json.loads(preferences_text)
 
-        ### Changes loading strategy depending on the source of PFKB content
-        if not settings.pathways.startswith("http"):
-            # Build graphs with local os.dirname method if using file URI
-            causal_pathways_graph = local_to_graph(settings.pathways)
-        else:
-            # Build graphs from remote resource if using URLs
-            causal_pathways_graph = remote_to_graph(settings.pathways)
-
-        if not settings.templates.startswith("http"):
-            # Build graphs with local os.dirname method if using file URI
-            templates_graph = local_to_graph(settings.templates, settings.templates_local)
-        else:
-            # Build graphs from remote resource if using URLs
-            templates_graph = remote_to_graph(settings.templates, settings.templates_local)
-
+        causal_pathways_graph = manifest_to_graph(settings.pathways_local)
+        templates_graph = manifest_to_graph(settings.templates_local)
 
     except Exception as e:
         print("Startup aborted, see traceback:")

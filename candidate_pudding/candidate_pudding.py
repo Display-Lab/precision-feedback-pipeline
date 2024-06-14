@@ -20,16 +20,16 @@ DEFAULT_DISPLAY = URIRef(
 
 def create_candidate(measure: Resource, template: Resource) -> Optional[Resource]:
     g: Graph = measure.graph
-    
+
     if not template.value(CPO.has_causal_pathway):
         return None
-    
+
     candidate = g.resource(BNode())
     candidate[RDF.type] = SLOWMO.Candidate
     candidate[SLOWMO.RegardingMeasure] = measure
     candidate[SLOWMO.AncestorTemplate] = template
     # TODO: Add candidate[SLOWMO.CausalPathway] = causal_pathway, to make it easier for down stream code
-    
+
     if not add_motivating_information(candidate):
         g.remove((candidate.identifier, None, None))
         return None

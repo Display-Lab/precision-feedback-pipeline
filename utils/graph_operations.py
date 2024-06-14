@@ -1,21 +1,31 @@
-import logging
-import time
+import json
 import warnings
+from urllib.parse import urljoin, urlparse
+from urllib.request import urlopen
 
+from loguru import logger
 from rdflib import Graph
 
 warnings.filterwarnings("ignore")
 
 
-def read_graph(file):
-    start_time = time.time()
-    g = Graph()
-    g.parse(data=file, format="json-ld")
+def manifest_to_graph(templates_local) -> Graph:
+    with urlopen(templates_local) as f:
+        manifest = json.loads(f.read().decode("utf-8"))
 
-    logging.debug(" reading graph--- %s seconds ---" % (time.time() - start_time))
+    g: Graph = Graph()
+    for item in manifest:
+        temp_graph = Graph()
+        parsed_url = urlparse(item)
+        if not parsed_url.scheme:
+            item = urljoin(templates_local, item)
+
+        with urlopen(item) as f:
+            template = f.read().decode("utf-8")
+
+        temp_graph = Graph().parse(data=template, format="json-ld")
+        g += temp_graph
+
+        logger.debug(f"Graphed file {item}")
+
     return g
-
-
-def create_base_graph(g1, g2, g3, g4):
-    base_graph = g1 + g2 + g3 + g4  # merging graphs
-    return base_graph
