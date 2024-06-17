@@ -89,26 +89,17 @@ app = FastAPI()
 async def startup_event():
     try:
         global \
-            comparators_graph, \
-            measures_graph, \
+            base_graph, \
             mpm, \
-            default_preferences, \
-            causal_pathways_graph, \
-            templates_graph
+            default_preferences
 
-        measures_text = se.get(settings.measures).text
-        measures_graph = Graph().parse(data=measures_text, format="json-ld")
-
-        comparators_text = se.get(settings.comparators).text
-        comparators_graph = Graph().parse(data=comparators_text, format="json-ld")
 
         mpm = load_mpm()
 
         preferences_text = se.get(settings.preferences).text
         default_preferences = json.loads(preferences_text)
 
-        causal_pathways_graph = manifest_to_graph(settings.pathways_local)
-        templates_graph = manifest_to_graph(settings.templates_local)
+        base_graph = manifest_to_graph(settings.manifest)
 
     except Exception as e:
         print("Startup aborted, see traceback:")
@@ -143,10 +134,8 @@ async def createprecisionfeedback(info: Request):
     initial_tic = tic = time.perf_counter()
 
     cool_new_super_graph = Graph()
-    cool_new_super_graph += comparators_graph
-    cool_new_super_graph += causal_pathways_graph
-    cool_new_super_graph += measures_graph
-    cool_new_super_graph += templates_graph
+    cool_new_super_graph += base_graph
+
 
     toc = time.perf_counter()
     timing = {"load base graph": f"{(toc-tic)*1000.:2.2f} ms"}
