@@ -88,11 +88,7 @@ app = FastAPI()
 @app.on_event("startup")
 async def startup_event():
     try:
-        global \
-            base_graph, \
-            mpm, \
-            default_preferences
-
+        global base_graph, mpm, default_preferences
 
         mpm = load_mpm()
 
@@ -135,7 +131,6 @@ async def createprecisionfeedback(info: Request):
 
     cool_new_super_graph = Graph()
     cool_new_super_graph += base_graph
-
 
     toc = time.perf_counter()
     timing = {"load base graph": f"{(toc-tic)*1000.:2.2f} ms"}
