@@ -1,6 +1,6 @@
 ## Precision feedback pipeline
 
-This is the pipeline service that implements the Precision Feedback Pipeline. The underlying model of precision feedback is captured in [this information model](https://docs.google.com/drawings/d/1fFkd6n6c4DaL93rgwwbm1vcXGJ1CUVOgYMFPHjwZG8E/edit?usp=sharing).
+This is the pipeline service that implements the Precision Feedback Pipeline. The underlying model of precision feedback is captured in [this conceptual model](https://onlinelibrary.wiley.com/doi/full/10.1002/lrh2.10419).
 
 Read through our [wiki pages](https://github.com/Display-Lab/precision-feedback-pipeline/wiki) for more detail on testing. Please note that this wiki might not be completely up to date.
 
