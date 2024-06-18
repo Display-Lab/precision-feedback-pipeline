@@ -1,19 +1,16 @@
-import json
 from urllib.parse import urljoin, urlparse
 from urllib.request import urlopen
 
+import yaml
 from loguru import logger
 from rdflib import Graph
 
 
 def manifest_to_graph(manifest_path: str) -> Graph:
     g: Graph = Graph()
+    
     try:
-        with urlopen(manifest_path) as f:
-            manifest = extract_paths(
-                json.loads(f.read().decode("utf-8")), manifest_path
-            )
-
+        manifest = extract_manifest(manifest_path)   
     except Exception as e:
         logger.error(f"Error loading manifest: {e}")
         return g  # Return an empty graph if the manifest cannot be loaded
@@ -33,23 +30,15 @@ def manifest_to_graph(manifest_path: str) -> Graph:
 
     return g
 
-
-def extract_paths(data, base_path=""):
-    paths = []
-    if isinstance(data, dict):
-        for key, value in data.items():
-            parsed_url = urlparse(key)
-            if parsed_url.scheme:
-                base_path = ""
-
-            if isinstance(value, (list, dict)):
-                # Recurse into the list or dict
-                paths.extend(extract_paths(value, urljoin(base_path, key)))
-            else:
-                paths.append(urljoin(base_path, urljoin(key, value)))
-    elif isinstance(data, list):
-        for item in data:
-            paths.extend(extract_paths(item, base_path))
-    else:
-        paths.append(urljoin(base_path, data))
-    return paths
+def extract_manifest(manifest_path: str) -> list:
+    manifest = []
+    with urlopen(manifest_path) as f:
+        manifest_file = yaml.safe_load(f.read().decode("utf-8"))
+        
+    for key, values in manifest_file.items():
+        parsed_url = urlparse(key)
+        if not parsed_url.scheme:
+            key = urljoin(manifest_path, key)
+        for value in values:
+            manifest.append(urljoin(key,value))
+    return manifest
