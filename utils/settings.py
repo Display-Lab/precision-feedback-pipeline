@@ -32,13 +32,9 @@ class Settings:
         # self.version = pypro["tool"]["poetry"]["version"]
 
         # Knowledge settings
-        self.templates = config("templates", cast=str, default=None)
-        self.templates_local = config("templates_local", cast=str, default=None)
 
-        self.pathways = config("pathways", cast=str, default=None)
-        self.measures = config("measures", cast=str, default=None)
+        self.manifest = config("manifest", cast=str, default=None)
         self.mpm = config("mpm", cast=str, default=None)
-        self.comparators = config("comparators", cast=str, default=None)
         self.preferences = config("preferences", cast=str, default=None)
 
         # Instance settings

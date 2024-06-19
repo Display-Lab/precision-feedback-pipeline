@@ -32,6 +32,7 @@ psutil = "^5.9.8"
 # requests-file = "^2.0.0"
 # python-decouple = "^3.8"
 # gunicorn = "^22.0.0"
+pyyaml = "^6.0.1"
 
 [tool.poetry.group.dev.dependencies]
 uvicorn = "^0.20.0"

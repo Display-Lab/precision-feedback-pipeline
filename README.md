@@ -49,17 +49,11 @@ ENV_PATH=path/to/env_file/dev.env uvicorn main:app
 ### Knowledge base settings
 Local file path or URL (see .env.remote for github URL formats). All are required.
 
-#### comparators: Path to the comparators json file
-
-#### measures: Path to the measures json file
-
 #### mpm: Path to the mpm csv file
-
-#### pathways: Path to the causal pathways folder
 
 #### preferences: Path to the preferences json file
 
-#### templates: Path to the templates folder
+#### manifest: Path to the manifest file that includes differend pieces of the base graph including (causal pathways, message templates, measures and comparators). See [manifest configuration](#manifest-configuration) for more detail.
 
 ### Flags
 
@@ -91,6 +85,13 @@ These control the elements of the scoring algorithm.
 
 #### use_preferences: Switch to turn on and off preferences
 - default: True
+
+### manifest configuration
+The manifest file includes all different pieces that should be loaded to the base graph including causal pathways, message templates, measures and comparators. It is a yaml file which specifies a directory structure containing JSON files for all those different categories. 
+
+Each entry consists of a ***key*** which is a URL (file:// or https:// or relative, see [Uniform Resource Identifier (URI)](https://datatracker.ietf.org/doc/html/rfc3986)) and a ***value*** which is a file path relative to the url. See manifest examples in the [knowledge base](https://github.com/Display-Lab/knowledge-base).
+
+If the key is a relative path, it must end with a '/'. In that case the key is going to be resolved towards the location of the manifest file by the pipeline.
 
 ### examples
 ```zsh

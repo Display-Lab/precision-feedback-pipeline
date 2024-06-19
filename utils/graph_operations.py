@@ -1,21 +1,35 @@
-import logging
-import time
-import warnings
+from urllib.parse import urljoin
+from urllib.request import urlopen
 
+import yaml
+from loguru import logger
 from rdflib import Graph
 
-warnings.filterwarnings("ignore")
 
+def manifest_to_graph(manifest_path: str) -> Graph:
+    g: Graph = Graph()
+    
+    try:    
+        with urlopen(manifest_path) as f:
+            manifest_file = yaml.safe_load(f.read().decode("utf-8"))
+    except Exception as e:
+        logger.error(f"Error loading manifest: {e}")
+        return g  # Return an empty graph if the manifest cannot be loaded  
+          
+    for key, values in manifest_file.items():
+        base = urljoin(manifest_path, key)
+        for value in values:
+            file = urljoin(base,value)
+            try:
+                with urlopen(file) as f:
+                    file_content = f.read().decode("utf-8")
 
-def read_graph(file):
-    start_time = time.time()
-    g = Graph()
-    g.parse(data=file, format="json-ld")
+                temp_graph = Graph().parse(data=file_content, format="json-ld")
+                g += temp_graph
 
-    logging.debug(" reading graph--- %s seconds ---" % (time.time() - start_time))
+                logger.debug(f"Graphed file {file}")
+            except Exception as e:
+                logger.error(f"Error processing item {file}: {e}")
+                continue   
+
     return g
-
-
-def create_base_graph(g1, g2, g3, g4):
-    base_graph = g1 + g2 + g3 + g4  # merging graphs
-    return base_graph

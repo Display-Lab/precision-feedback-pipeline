@@ -27,6 +27,9 @@ def graph():
     ] = Literal(
         "You may have an opportunity to improve for the measure [measure name]. Your performance was [recipient performance level], below the top 10% peer benchmark, which was [comparator performance level] this month."
     )
+    template[URIRef("http://purl.obolibrary.org/obo/cpo_0000056")] = URIRef(
+        "https://repo.metadatacenter.org/template-instances/f4006042-5750-4f6c-a039-fe0a88466464"
+    )
     template.add(IAO.is_about, PSDO.negative_performance_gap_set)
     template.add(IAO.is_about, PSDO.peer_90th_percentile_benchmark)
     template.add(
