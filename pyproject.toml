@@ -7,7 +7,7 @@ readme = "README.md"
 # packages = [{include = "pfp_api"}]
 
 [tool.poetry.dependencies]
-python = "^3.10,<3.12"
+python = "^3.10,<3.13"
 gunicorn = "20.1.0"
 fastapi = "^0.110.0"
 rdflib = "^6.2.0"

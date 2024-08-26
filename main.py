@@ -151,6 +151,7 @@ async def createprecisionfeedback(info: Request):
 
     performance_content = g.resource(BNode("performance_content"))
     if len(list(performance_content[PSDO.motivating_information])) == 0:
+        logger.debug(f"performance_content has motivating information:\n{performance_content[PSDO.motivating_information]}")
         cool_new_super_graph.close()
         detail = {
             "message": "Insufficient significant data found for providing feedback, process aborted.",
@@ -162,6 +163,8 @@ async def createprecisionfeedback(info: Request):
             detail=detail,
             headers={"400-Error": "Invalid Input Error"},
         )
+    else:
+        logger.debug("performance_content has motivating information loaded")
 
     cool_new_super_graph += g
     toc = time.perf_counter()

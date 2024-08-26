@@ -48,7 +48,7 @@ def prepare(req_info):
         performance_df["month"] <= performance_df.attrs["performance_month"]
     ]
 
-    performance_df["valid"] = performance_df["denominator"] >= 10
+    performance_df["valid"] = performance_df["denominator"] #>= 10
 
     performance_df["passed_rate"] = (
         performance_df["passed_count"] / performance_df["denominator"]
