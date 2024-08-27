@@ -3,12 +3,13 @@ import os
 from datetime import datetime
 import sys
 import pandas as pd
+from rdflib import Graph, URIRef
 
 INPUT_DIR = os.environ.get("INPUT_DIR", "/home/faridsei/dev/test/pfp2.xlsx")
 SHEET_NAME = "Sheet1"  # Change this to the name of the sheet in your .xlsx file
 
 
-def add_response(output_message, input_message):
+def add_response(graph, output_message, input_message):
     global response_df
 
     selected_candidate = output_message.get("selected_candidate", None)
@@ -25,8 +26,8 @@ def add_response(output_message, input_message):
     
     # module_path = '/home/faridsei/dev/code/precision-feedback-pipeline/bitstomach/signals/'
     # sys.path.append(module_path)
-    module_path = '/home/faridsei/dev/code/precision-feedback-pipeline/'
-    sys.path.append(module_path)
+    # module_path = '/home/faridsei/dev/code/precision-feedback-pipeline/'
+    # sys.path.append(module_path)
     # from _comparison import Comparison
     # from _trend import Trend
     # from bitstomach.bitstomach import prepare
@@ -43,9 +44,7 @@ def add_response(output_message, input_message):
     # except:
     #      pass   
     
-    from utils.graph_operations import manifest_to_graph
-    manifest_to_graph("file:///home/faridsei/dev/code/knowledge-base/mpog_local_manifest.yaml")
-
+    is_about = list(graph[IAO.is_about])
     #use templates from the graph here 
     
     response_dict: dict = {
@@ -67,6 +66,13 @@ def add_response(output_message, input_message):
 df = pd.read_excel(INPUT_DIR, sheet_name=SHEET_NAME, engine="openpyxl")
 response_df: pd.DataFrame = pd.DataFrame()
 
+module_path = '/home/faridsei/dev/code/precision-feedback-pipeline/'
+sys.path.append(module_path)
+from utils.namespace._IAO import IAO
+from utils.graph_operations import manifest_to_graph
+graph: Graph = manifest_to_graph("file:///home/faridsei/dev/code/knowledge-base/mpog_local_manifest.yaml")
+
+
 for index, message in enumerate(df["Output_Message"]):
     if pd.isnull(message):
         continue
@@ -79,6 +85,6 @@ for index, message in enumerate(df["Output_Message"]):
     
     input_message = json.loads(df.at[index, "Input_Message"].replace("_x000D_", ""))        
 
-    add_response(output_message, input_message)
+    add_response(graph, output_message, input_message)
 response_df.to_excel('output.xlsx', index=False)
 
