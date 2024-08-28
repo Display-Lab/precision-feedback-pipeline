@@ -179,6 +179,13 @@ Extracts input files from a log file.
 INPUT_DIR=~/dev/PrecisionFeedbackMessageLog2024-05-20.xlsx OUTPUT_DIR=~/dev/inputs_2024-05-20/   python src/bulk_up/log_to_inputs.py
 ```
 
+### log_to_data.py
+Extracts analytical data from a log file. This script uses some of the PFP modules and therefore you need to run it from the bulk-up folder. This will let it add the directory above (which is precision-feedback-pipeline/) to system path to be able to import those pipeline modules
+
+```
+INPUT_DIR=~/dev/PrecisionFeedbackMessageLog2024-05-20.xlsx OUTPUT_DIR=~/dev/AnalyticalData.xlsx   python src/bulk_up/log_to_data.py
+```
+
 ### history_extractor.py
 Extracts history from a folder containing input files into a csv file.
 
