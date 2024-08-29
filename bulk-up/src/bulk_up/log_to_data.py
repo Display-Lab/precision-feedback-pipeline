@@ -3,14 +3,20 @@ import os
 import sys
 
 import pandas as pd
-from rdflib import RDFS, Graph, URIRef
+from rdflib import RDF, RDFS, Graph, URIRef
 
-# TO Do: make the module path relative
-module_path = ".." # run this script from the bulk-up folder. This will add the directory above (which is precision-feedback-pipeline/) to system path to be able to import pipeline modules
+module_path = ".."  # run this script from the bulk-up folder. This will add the directory above (which is precision-feedback-pipeline/) to system path to be able to import pipeline modules
 sys.path.append(module_path)
+from bitstomach.bitstomach import prepare
+from bitstomach.signals._achievement import Achievement
+from bitstomach.signals._approach import Approach
+from bitstomach.signals._comparison import Comparison
+from bitstomach.signals._loss import Loss
+from bitstomach.signals._trend import Trend
 from utils.graph_operations import manifest_to_graph
 from utils.namespace._IAO import IAO
 from utils.namespace._PSDO import PSDO
+from utils.namespace._SLOWMO import SLOWMO
 
 INPUT_DIR = os.environ.get(
     "INPUT_DIR",
@@ -42,6 +48,14 @@ is_about_to_columns: dict = {
     PSDO.positive_performance_gap_set: "performance gap set",
 }
 
+comparator_name_to_iri: dict = {
+    "peer 90th percentile benchmark": PSDO.peer_90th_percentile_benchmark,
+    "peer 75th percentile benchmark": PSDO.peer_75th_percentile_benchmark,
+    "peer average comparator": PSDO.peer_average_comparator,
+    "goal comparator content": PSDO.goal_comparator_content,
+}
+
+
 def generate_response(output_message, input_message):
     selected_candidate = output_message.get("selected_candidate", None)
     global response_df
@@ -63,23 +77,79 @@ def generate_response(output_message, input_message):
     }
 
     is_about_set = set(
-        graph.objects(URIRef(selected_candidate["message_template_id"]) , IAO.is_about)
+        graph.objects(URIRef(selected_candidate["message_template_id"]), IAO.is_about)
     )
-    
-    if {PSDO.negative_performance_gap_set, PSDO.positive_performance_gap_set} & is_about_set:
+
+    if {
+        PSDO.negative_performance_gap_set,
+        PSDO.positive_performance_gap_set,
+    } & is_about_set:
         response_dict["represented set"] = "performance gap set"
-               
-    if {PSDO.negative_performance_trend_set, PSDO.positive_performance_trend_set} & is_about_set:
+
+    if {
+        PSDO.negative_performance_trend_set,
+        PSDO.positive_performance_trend_set,
+    } & is_about_set:
         response_dict["represented set"] = "performance trend set"
 
     for is_about in is_about_set:
         if is_about in is_about_to_columns:
             column_name = is_about_to_columns[is_about]
-            response_dict[column_name] = graph.value(is_about,RDFS.label).value
+            response_dict[column_name] = graph.value(is_about, RDFS.label).value
 
     return pd.DataFrame(response_dict)
 
 
+def add_signal_properties(row, output_message, input_message):
+    performance_df = prepare(input_message)
+    performance_df.attrs["measures"] = None
+    performance_df.attrs["valid_measures"] = None
+    performance_df = performance_df[
+        performance_df["measure"] == output_message["selected_candidate"]["measure"]
+    ].tail(12)
+
+    represented_set = row["represented set"][0]
+    if represented_set == "performance gap set":
+        comparison = Comparison.detect(performance_df)
+        comparator = comparator_name_to_iri[row["comparator content"][0]]
+        for signal in comparison:
+            if (
+                signal.value(SLOWMO.RegardingComparator / RDF.type).identifier
+                == comparator
+            ):
+                row["PerformanceGapSize"] = signal.value(
+                    SLOWMO.PerformanceGapSize
+                ).value
+    elif represented_set == "performance trend set":
+        signal = Trend.detect(performance_df)[0]
+        row["PerformanceTrendSlope"] = signal.value(SLOWMO.PerformanceTrendSlope).value
+    elif represented_set in {"achievement set", "loss set", "approach set"}:
+        signal_class = {
+            "achievement set": Achievement,
+            "loss set": Loss,
+            "approach set": Approach,
+        }.get(represented_set)
+        signals = signal_class.detect(performance_df)
+        comparator = comparator_name_to_iri[row["comparator content"][0]]
+        for signal in signals:
+            if (
+                signal.value(SLOWMO.RegardingComparator / RDF.type).identifier
+                == comparator
+            ):
+                row["PerformanceGapSize"] = signal.value(
+                    SLOWMO.PerformanceGapSize
+                ).value
+                row["PerformanceTrendSlope"] = signal.value(
+                    SLOWMO.PerformanceTrendSlope
+                ).value
+                row["PriorPerformanceGapSize"] = signal.value(
+                    SLOWMO.PriorPerformanceGapSize
+                ).value
+                row["StreakLength"] = signal.value(SLOWMO.StreakLength).value
+    return row
+
+
+total_messages = len(df["Output_Message"])
 for index, message in enumerate(df["Output_Message"]):
     if pd.isnull(message):
         continue
@@ -93,28 +163,10 @@ for index, message in enumerate(df["Output_Message"]):
     input_message = json.loads(df.at[index, "Input_Message"].replace("_x000D_", ""))
 
     new_row = generate_response(output_message, input_message)
-    response_df = pd.concat([response_df, new_row ], ignore_index=True)
+    add_signal_properties(new_row, output_message, input_message)
 
+    response_df = pd.concat([response_df, new_row], ignore_index=True)
+
+    percentage_complete = ((index + 1) / total_messages) * 100
+    print(f"\rProgress: {percentage_complete:.2f}% complete", end="")
 response_df.to_excel(OUTPUT_DIR, index=False)
-
-
-## sample code to use signals
-# module_path = '/home/faridsei/dev/code/precision-feedback-pipeline/bitstomach/signals/'
-# sys.path.append(module_path)
-# module_path = '/home/faridsei/dev/code/precision-feedback-pipeline/'
-# sys.path.append(module_path)
-# from _comparison import Comparison
-# from _trend import Trend
-# from bitstomach.bitstomach import prepare
-# performance_data = eval(output_message.get("performance_data", None))
-# performance_df = prepare({"Performance_data":performance_data,"performance_month":output_message.get("performance_month", None)})
-# performance_df = performance_df[performance_df["measure"]==output_message["selected_candidate"]["measure"]]
-# comparison = Comparison._detect(performance_df)
-# gap_size = None
-# trend = None
-# try:
-#     trend = Trend._detect(performance_df)
-#     comparison[comparator_mapping[output_message["selected_comparator"]]]
-#     gap_size=round(comparison[comparator_mapping[output_message["selected_comparator"]]][0],3)
-# except:
-#      pass
