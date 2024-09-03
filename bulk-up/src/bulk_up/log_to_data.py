@@ -102,8 +102,6 @@ def generate_response(output_message, input_message):
 
 def add_signal_properties(row, output_message, input_message):
     performance_df = prepare(input_message)
-    performance_df.attrs["measures"] = None
-    performance_df.attrs["valid_measures"] = None
     performance_df = performance_df[
         performance_df["measure"] == output_message["selected_candidate"]["measure"]
     ].tail(12)
