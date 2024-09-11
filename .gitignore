@@ -28,3 +28,4 @@ venv/
 PFPenv/
 *.pyc
 .vscode
+.env.local
