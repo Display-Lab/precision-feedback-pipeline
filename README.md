@@ -60,6 +60,11 @@ Run the pipeline
 ENV_PATH=.env.local uvicorn main:app
 ```
 
+You can use Postman or your favorite tool to send a message and check the results. There is a sample message at `tests/test_cases/input_message.json`. Here is a sample `curl` request:
+```zsh
+curl --data "@tests/test_cases/input_message.json" http://localhost:8000/createprecisionfeedback/
+```
+
 ## Environment variables
 
 ### Knowledge base settings
