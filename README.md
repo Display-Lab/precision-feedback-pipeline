@@ -5,43 +5,64 @@ This is the pipeline service that implements the Precision Feedback Pipeline. Th
 Read through our [wiki pages](https://github.com/Display-Lab/precision-feedback-pipeline/wiki) for more detail on testing. Please note that this wiki might not be completely up to date.
 
 ### Quick start
+This is a Python software project and running the pipeline requires some familiarity with [Python](https://www.python.org/downloads/) and virtual environments. This quick start gives directions using python's built in virtual environment tool [venv](https://docs.python.org/3/library/venv.html) and [Poetry](https://python-poetry.org/).
 
-Clone the precision feedback pipeline repo using
-
+#### Clone the precision feedback pipeline
 ```zsh
 git clone https://github.com/Display-Lab/precision-feedback-pipeline.git
 
 cd precision-feedback-pipeline
 ```
 
-Create a virtual enviromnent, install the dependencies, and use the virtual environment. This is a poetry project so running poetry install will do both. Poetry will look for a python 3.11+ version, so make sure you have it available. Once the reqirements are installed you can activate the enviroment with `poetry shell`
-
-```zsh
-poetry env use 3.11 # optional, but makes sure you have python 3.11 available
-poetry install
-poetry shell
-```
-
-Alternatively you can use `venv` and `pip`
+#### Setup a virtual environment and install dependencies
+**Using `venv` and `pip`**
 
 ```zsh
 python --version # make sure you have python 3.11
 python -m venv .venv
-myenv\Scripts\activate.bat # on Windows 
-# source myenv/bin/activate  # on Mac
-pip install -r requirements.txt # use `poetry export --output requirements.txt` to generate the reqs file
+.venv\Scripts\activate.bat # on Windows 
+# source .venv/bin/activate  # on Mac or Linux
+pip install -r requirements.txt # this will take a while, so go get a cup of coffee
+pip install uvicorn # not installed by default (needed for running locally)
 ```
 
-clone the knowledge base repository in a separate location
+**Alternative: Using [Poetry](https://python-poetry.org/) (for developers)**
+
 ```zsh
-git clone https://github.com/Display-Lab/knowledge-base.git <path/to/knowledge_base>
+poetry env use 3.11 # optional, but makes sure you have python 3.11 available
+poetry install # creates a virtual environment and install dependencies
+poetry shell # activates the enviroment
 ```
 
-Copy the .env.devexample file to a local location (i.e. <path/to/env_file/dev.env>), outside the repository, and update it's content based on the path to the local knowledge base.
-
-Run the pipeline from the root of the precision feedback pipeline repository
+#### Clone the knowledge base
+Clone the knowledge base repository in a separate location 
 ```zsh
-ENV_PATH=path/to/env_file/dev.env uvicorn main:app
+cd ..
+git clone https://github.com/Display-Lab/knowledge-base.git 
+```
+
+#### Running the pipeline
+Change back to the root of precision-feedback-pipeline
+```zsh
+cd precision-feedback-pipeline
+```
+Update the `.env.local` file and change `path/to/knowledge-base` to point to the local knowledge base that you just checked out. (Don't remove the `file://` for preferences and manifest.)
+```properties
+# .env.local
+preferences=file:///Users/bob/knowledge-base/preferences.json 
+mpm=/Users/bob/knowledge-base/prioritization_algorithms/motivational_potential_model.csv
+manifest=file:////Users/bob/knowledge-base/mpog_local_manifest.yaml
+...
+```
+
+Run the pipeline
+```zsh
+ENV_PATH=.env.local uvicorn main:app
+```
+
+You can use Postman or your favorite tool to send a message and check the results. There is a sample message at `tests/test_cases/input_message.json`. Here is a sample `curl` request:
+```zsh
+curl --data "@tests/test_cases/input_message.json" http://localhost:8000/createprecisionfeedback/
 ```
 
 ## Environment variables
