@@ -20,8 +20,20 @@ cd precision-feedback-pipeline
 ```zsh
 python --version # make sure you have python 3.11
 python -m venv .venv
-.venv\Scripts\activate.bat # on Windows 
-# source .venv/bin/activate  # on Mac or Linux
+```
+
+##### For Windows do this next to activate the virtual environment:
+```zsh
+.venv\Scripts\activate.bat
+```
+
+##### For Mac or Linux do this next to activate the virtual environment: 
+```zsh
+source .venv/bin/activate
+```
+
+##### For Windows, Mac, and Linux, now complete the following two installs:
+```zsh
 pip install -r requirements.txt # this will take a while, so go get a cup of coffee
 pip install uvicorn # not installed by default (needed for running locally)
 ```
@@ -51,16 +63,17 @@ Update the `.env.local` file and change `path/to/knowledge-base` to point to the
 # .env.local
 preferences=file:///Users/bob/knowledge-base/preferences.json 
 mpm=/Users/bob/knowledge-base/prioritization_algorithms/motivational_potential_model.csv
-manifest=file:////Users/bob/knowledge-base/mpog_local_manifest.yaml
+manifest=file:///Users/bob/knowledge-base/mpog_local_manifest.yaml
 ...
 ```
 
 Run the pipeline
 ```zsh
 ENV_PATH=.env.local uvicorn main:app
+# Expect to see a server start message like this "INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)"
 ```
 
-You can use Postman or your favorite tool to send a message and check the results. There is a sample message at `tests/test_cases/input_message.json`. Here is a sample `curl` request:
+You can use Postman or your favorite tool to send a message and check the results. There is a sample input message file located at `tests/test_cases/input_message.json`. Here is a sample `curl` request:
 ```zsh
 curl --data "@tests/test_cases/input_message.json" http://localhost:8000/createprecisionfeedback/
 ```
