@@ -2,9 +2,11 @@ import json
 import os
 
 import pandas as pd
-
+import uuid
+import copy
 OUTPUT_DIR = os.environ.get("OUTPUT_DIR", "outputs")
 INPUT_DIR = os.environ.get("INPUT_DIR", "/home/faridsei/dev/test/OBI/obi_cat2_dystocia_compliance.xlsx")
+PERFORMANCE_MONTH = os.environ.get("PERFORMANCE_MONTH", None)
 
 INPUT_TEMPLATE = {
   "@context": {
@@ -35,8 +37,7 @@ INPUT_TEMPLATE = {
   "History": {
     
   },
-  "Preferences": {},
-  "debug": "no"
+  "Preferences": {}
 }
 
 measure_name_to_id={
@@ -56,15 +57,20 @@ unique_site_ids = df['site_id'].unique()
 site_id= None
 for site_id in unique_site_ids:
     site_rows = df[df['site_id'] == site_id]
-    input_file = INPUT_TEMPLATE
+    input_file = copy.deepcopy(INPUT_TEMPLATE)
     
     for _, row in site_rows.iterrows():
         if not row["Performance level (monthly rate)"]:
             continue
         # Format the row and write it to the file
-        input_file["Performance_data"].append([site_id,measure_name_to_id[row["Performance measure name"]],row["Time interval"],
+        input_file["Performance_data"].append([int(site_id),measure_name_to_id[row["Performance measure name"]],row["Time interval"],
                                                row["Numerator"],row["Denominator"]-row["Numerator"],row["Denominator"],0,0,0,row["Target"]*100  ])
-   
+        input_file["message_instance_id"] = str(uuid.uuid4())
+        if PERFORMANCE_MONTH:
+          input_file["performance_month"] = PERFORMANCE_MONTH
+        else:
+          input_file["performance_month"] = df['Time interval'].max()
+        
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     output_file_name = f"Provider_{site_id}.json"
