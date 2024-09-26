@@ -186,11 +186,18 @@ Extracts analytical data from a log file. This script uses some of the PFP modul
 INPUT_DIR=~/dev/PrecisionFeedbackMessageLog2024-05-20.xlsx OUTPUT_DIR=~/dev/AnalyticalData.xlsx KNOWLEDGE_BASE_LOCAL_MANIFEST=/path/to/knowledge-base/mpog_local_manifest.yaml  python src/bulk_up/log_to_data.py
 ```
 
+### dataset_to_inputs.py
+Extracts input files from a dataset file.
+
+```
+INPUT_DIR=~/dev/OBI_dataset.xlsx OUTPUT_DIR=~/dev/inputs/  python src/bulk_up/dataset_to_inputs.py
+```
+
 ### history_extractor.py
 Extracts history from a folder containing input files into a csv file.
 
 ```
-INPUT_DIR=~/dev/inputs_2024-05-20/ WORKERS=5 OUTPUT==~/dev/history.csv python src/bulk_up/history_extractor.py
+INPUT_DIR=~/dev/inputs_2024-05-20/ WORKERS=5 OUTPUT=~/dev/history.csv python src/bulk_up/history_extractor.py
 ```
 
 ### stats.py
