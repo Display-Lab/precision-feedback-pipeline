@@ -180,10 +180,10 @@ INPUT_DIR=~/dev/PrecisionFeedbackMessageLog2024-05-20.xlsx OUTPUT_DIR=~/dev/inpu
 ```
 
 ### log_to_data.py
-Extracts analytical data from a log file. This script uses some of the PFP modules and therefore you need to run it from the bulk-up folder. This will let it add the directory above (which is precision-feedback-pipeline/) to system path to be able to import those pipeline modules
+Extracts analytical data from a log file. This script uses some of the PFP modules and therefore you need to run it from the bulk-up folder. This will let it add the directory above (which is precision-feedback-pipeline/) to system path to be able to import those pipeline modules. This script loads knowledge base to a graph from KNOWLEDGE_BASE_LOCAL_MANIFEST local variable so make sure the local knowledge base is fine.
 
 ```
-INPUT_DIR=~/dev/PrecisionFeedbackMessageLog2024-05-20.xlsx OUTPUT_DIR=~/dev/AnalyticalData.xlsx   python src/bulk_up/log_to_data.py
+INPUT_DIR=~/dev/PrecisionFeedbackMessageLog2024-05-20.xlsx OUTPUT_DIR=~/dev/AnalyticalData.xlsx KNOWLEDGE_BASE_LOCAL_MANIFEST=/path/to/knowledge-base/mpog_local_manifest.yaml  python src/bulk_up/log_to_data.py
 ```
 
 ### history_extractor.py

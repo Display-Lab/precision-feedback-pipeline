@@ -22,6 +22,10 @@ INPUT_DIR = os.environ.get(
     "INPUT_DIR",
     "/home/faridsei/dev/test/Precision Feedback Message Log 2024-08-20.xlsx",
 )
+KNOWLEDGE_BASE_LOCAL_MANIFEST = os.environ.get(
+    "KNOWLEDGE_BASE_LOCAL_MANIFEST",
+    "file:///home/faridsei/dev/code/knowledge-base/mpog_local_manifest.yaml",
+)
 OUTPUT_DIR = os.environ.get("OUTPUT_DIR", "output.xlsx")
 SHEET_NAME = "Sheet1"  # Change this to the name of the sheet in your .xlsx file
 
@@ -29,7 +33,7 @@ df = pd.read_excel(INPUT_DIR, sheet_name=SHEET_NAME, engine="openpyxl")
 response_df: pd.DataFrame = pd.DataFrame()
 
 graph: Graph = manifest_to_graph(
-    "file:///home/faridsei/dev/code/knowledge-base/mpog_local_manifest.yaml"
+    KNOWLEDGE_BASE_LOCAL_MANIFEST
 )
 
 is_about_to_columns: dict = {
