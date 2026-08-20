@@ -45,10 +45,10 @@ Then activate it.
 source .venv/bin/activate
 ```
 
-##### For Windows, Mac, and Linux, now complete the following two installs
+##### Now complete the following two installs
 
 ```zsh
-pip install .\scaffold-sdk
+pip install .\scaffold-sdk  #depending on your OS you may need to use pip install ./scaffold-sdk 
 pip install . # this will install scaffold 
 ```
 
@@ -205,10 +205,15 @@ This configuration file specifies which candidate selection algorithm (plugin) S
 
 - default: None
 
-#### meas_period: Defines the length of periods in month for the input data
+#### meas_period_type: Defines the type of periods whather it is monthly or weekly
+
+- default: monthly
+- note: monthly and weekly are supported
+
+#### meas_period_length: Defines the length of periods for the input data
 
 - default: 1
-- note: for example for a data that is collected quarterly this needs to be set to 3
+- note: for example for a data that is collected quarterly this needs to be set to 3 meas_period_type should be set to monthly. For weekly data it should be set to 1 while meas_period_type is weekly. 
 
 #### min_count: Defines the minumum counts to consider a performance rate valid
 

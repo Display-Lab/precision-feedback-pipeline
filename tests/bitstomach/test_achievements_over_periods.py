@@ -47,7 +47,8 @@ context.subject_graph = Graph().parse(data=jsonld_str, format="json-ld")
 @pytest.fixture(autouse=True)
 def reset_global():
     yield
-    settings.meas_period = 1
+    settings.meas_period_length = 1
+    settings.meas_period_type = "monthly"
 
 
 @pytest.fixture
@@ -179,7 +180,8 @@ def test_signal_properties(perf_data, comparator_data):
 
 
 def test_signal_properties_quarterly(perf_data_quarterly, comparator_data_quarterly):
-    settings.meas_period = 3
+    settings.meas_period_length = 3
+    settings.meas_period_type = "monthly"
     signals = Achievement.detect(perf_data_quarterly, comparator_data_quarterly)
     signal = None
     for s in signals:

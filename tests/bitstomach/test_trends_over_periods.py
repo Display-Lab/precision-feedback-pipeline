@@ -19,7 +19,8 @@ startup.base_graph = g
 @pytest.fixture(autouse=True)
 def reset_global():
     yield
-    settings.meas_period = 1
+    settings.meas_period_length = 1
+    settings.meas_period_type = "monthly"
 
 
 def test_no_trend_returns_none():
@@ -86,7 +87,8 @@ def test_trend_as_resource():
     assert Trend.is_rdf_type_of(signal)
     # assert signal.value(RDF.type).identifier == PSDO.performance_trend_content
     assert signal.value(SLOWMO.PerformanceTrendSlope) == Literal(1.0)
-    settings.meas_period = 3
+    settings.meas_period_length = 3
+    settings.meas_period_type = "monthly"
     signal = Trend.detect(
         pd.DataFrame(
             {

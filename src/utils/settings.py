@@ -33,7 +33,8 @@ class Settings:
 
         # Knowledge settings
         self.min_count = config("min_count", cast=int, default=10)
-        self.meas_period = config("meas_period", cast=int, default=1)
+        self.meas_period_length = config("meas_period_length", cast=int, default=1)
+        self.meas_period_type = config("meas_period_type", cast=str, default="monthly")
         self.manifest = config("manifest", cast=str, default=None)
         self.config = config("config", cast=str, default=None)
         self.default_preferences = config("default_preferences", cast=str, default=None)

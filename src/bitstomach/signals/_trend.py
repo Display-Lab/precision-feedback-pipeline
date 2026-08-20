@@ -56,15 +56,20 @@ class Trend(Signal):
         last_last_period = pd.to_datetime(
             perf_data.loc[perf_data.index[-3], "period.start"]
         )
+
+        period_type = str(getattr(settings, "meas_period_type", "monthly")).lower()
+        if period_type == "weekly":
+            period_delta = relativedelta(weeks=settings.meas_period_length)
+        else:
+            period_delta = relativedelta(months=settings.meas_period_length)
+
         if (
-            current_period - relativedelta(months=1 * settings.meas_period)
-            != last_period
+            current_period - period_delta != last_period
         ):
             return False
 
         if (
-            current_period - relativedelta(months=2 * settings.meas_period)
-            != last_last_period
+            last_period - period_delta != last_last_period
         ):
             return False
 
