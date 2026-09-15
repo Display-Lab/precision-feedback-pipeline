@@ -13,6 +13,7 @@ from src.pictoralist.pictoralist import Pictoralist
 from src.utils.namespace import PSDO, SLOWMO
 from src.utils.settings import settings
 from src.utils.utils import (
+    build_message_bundle,
     candidates_records,
     load_esteemer,
     merge_and_pivot,
@@ -59,6 +60,8 @@ def pipeline():
 
     ### Pictoralist 2, now on the Nintendo DS: ###
     logger.debug("Calling Pictoralist from main...")
+    image = None
+    message_text = None
     if selected_message["message_text"] != "No message selected":
         ## Initialize and run message and display generation:
         pc = Pictoralist(
@@ -73,6 +76,8 @@ def pipeline():
         pc.graph_controller()  # Select and run graphing based on display type
 
         full_selected_message = pc.prepare_selected_message()
+        image = pc.base64_image
+        message_text = pc.message_text
     else:
         full_selected_message = selected_message
 
@@ -90,7 +95,14 @@ def pipeline():
 
     response.update(full_selected_message)
 
-    return response
+    new_response = build_message_bundle(selected_candidate, image=image, message_text=message_text)
+    if new_response is None:
+        return response
+
+    if logger.at_least("INFO"):
+        new_response["candidates"] = candidates_records(context.subject_graph)
+
+    return new_response
 
 def raise_error(message):
     context.subject_graph.close()
